@@ -6,6 +6,9 @@ import sbtrelease.ReleaseStateTransformations._
 
 object Publishing {
 
+  lazy val botBuild =
+    settingKey[Boolean]("Build by TravisCI instead of local dev environment")
+
   lazy val sharedPublishSettings = Seq(
     releaseCrossBuild := true,
     // releaseTagName := tagName.value,
@@ -44,7 +47,7 @@ object Publishing {
     scmInfo := Some(ScmInfo(url("https://github.com/edmundnoble/cats-mtl"), "scm:git:git@github.com:edmundnoble/cats-mtl.git")),
     autoAPIMappings := true,
     apiURL := None,
-    pomExtra := (
+    pomExtra :=
       <developers>
         <developer>
           <id>edmundnoble</id>
@@ -52,22 +55,21 @@ object Publishing {
           <url>https://github.com/edmundnoble/</url>
         </developer>
       </developers>
-      )
   ) ++ credentialSettings ++ sharedPublishSettings ++ sharedReleaseProcess
 
-lazy val noPublishSettings = Seq(
-  publish := (),
-  publishLocal := (),
-  publishArtifact := false
-)
+  lazy val noPublishSettings = Seq(
+    publish := (),
+    publishLocal := (),
+    publishArtifact := false
+  )
 
-lazy val credentialSettings = Seq(
-  // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
-  credentials ++= (for {
-    username <- Option(System.getenv().get("SONATYPE_USERNAME"))
-    password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
-  } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
-)
+  lazy val credentialSettings = Seq(
+    // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
+    credentials ++= (for {
+      username <- Option(System.getenv().get("SONATYPE_USERNAME"))
+      password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+    } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
+  )
 
 
 }

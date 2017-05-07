@@ -1,162 +1,6 @@
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
-import ReleaseTransformations._
-import sbtunidoc.ScalaUnidocPlugin.autoImport._
-import scala.xml.transform.{RewriteRule, RuleTransformer}
-import org.scalajs.sbtplugin.cross.CrossProject
-
-// CI
-
-lazy val botBuild = settingKey[Boolean]("Build by TravisCI instead of local dev environment")
-
-// coverage
-
-lazy val scoverageSettings = Seq(
-  coverageMinimum := 90,
-  coverageFailOnMinimum := false
-)
-
-def disableScoverage210Js(crossProject: CrossProject) =
-  crossProject
-  .jsSettings(
-    coverageEnabled := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 10)) => false
-        case _ => coverageEnabled.value
-      }
-    }
-  )
-
-def disableScoverage210Js: Project ⇒ Project = p =>
-  p.settings(
-    coverageEnabled := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 10)) => false
-        case _ => coverageEnabled.value
-      }
-    }
-  )
-
-def disableScoverage210Jvm(crossProject: CrossProject) =
-  crossProject
-  .jvmSettings(
-    coverageEnabled := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 10)) => false
-        case _ => coverageEnabled.value
-      }
-    }
-  )
-
 // project info
 
 organization in ThisBuild := "org.typelevel"
-
-// scalac settings
-
-lazy val warnUnusedImport = Seq(
-  scalacOptions ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 10)) =>
-        Seq()
-      case Some((2, n)) if n >= 11 =>
-        Seq("-Ywarn-unused-import")
-    }
-  },
-  scalacOptions in (Compile, console) ~= {_.filterNot("-Ywarn-unused-import" == _)},
-  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value
-)
-
-lazy val update2_12 = Seq(
-  scalacOptions -= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 12)) => "-Yinline-warnings"
-      case _ => ""
-    }
-  }
-)
-
-val commonScalacOptions = Seq(
-  "-deprecation",
-  "-encoding", "UTF-8",
-  "-feature",
-  "-language:existentials",
-  "-language:higherKinds",
-  "-language:implicitConversions",
-  "-unchecked",
-  "-Xfatal-warnings",
-  "-Xlint",
-  "-Yno-adapted-args",
-  "-Ywarn-dead-code",
-  "-Ywarn-numeric-widen",
-  "-Ywarn-value-discard",
-  "-Xfuture"
-)
-
-// docs
-
-def docsSourcesAndProjects(sv: String): (Boolean, Seq[ProjectReference]) =
-  CrossVersion.partialVersion(sv) match {
-    case Some((2, 10)) => (false, Nil)
-    case _ => (true, Seq()) // kernelJVM, coreJVM, freeJVM))
-  }
-
-lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
-
-lazy val javadocSettings = Seq(
-  sources in (Compile, doc) := (if (docsSourcesAndProjects(scalaVersion.value)._1) (sources in (Compile, doc)).value else Nil)
-)
-
-lazy val docSettings = Seq(
-  micrositeName := "Cats MTL",
-  micrositeDescription := "Companion library to cats providing monad transformers",
-  micrositeAuthor := "Typelevel contributors",
-  micrositeHighlightTheme := "atom-one-light",
-//  micrositeHomepage := "http://typelevel.org/cats",
-  micrositeBaseUrl := "cats-mtl",
-  micrositeDocumentationUrl := "api",
-  micrositeGithubOwner := "edmundnoble",
-  micrositeExtraMdFiles := Map(file("CONTRIBUTING.md") -> "contributing.md"),
-  micrositeGithubRepo := "cats-mtl",
-  micrositePalette := Map(
-    "brand-primary" -> "#5B5988",
-    "brand-secondary" -> "#292E53",
-    "brand-tertiary" -> "#222749",
-    "gray-dark" -> "#49494B",
-    "gray" -> "#7B7B7E",
-    "gray-light" -> "#E5E5E6",
-    "gray-lighter" -> "#F4F3F4",
-    "white-color" -> "#FFFFFF"),
-  autoAPIMappings := true,
-  unidocProjectFilter in (ScalaUnidoc, unidoc) :=
-    inProjects(docsSourcesAndProjects(scalaVersion.value)._2:_*),
-  docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
-  ghpagesNoJekyll := false,
-  fork in tut := true,
-  fork in (ScalaUnidoc, unidoc) := true,
-  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
-    "-Xfatal-warnings",
-    "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
-    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
-    "-diagrams"
-  ),
-  git.remoteRepo := "git@github.com:edmundnoble/cats-mtl.git",
-  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
-)
-
-lazy val crossVersionSharedSources: Seq[Setting[_]] =
-  Seq(Compile, Test).map { sc =>
-    (unmanagedSourceDirectories in sc) ++= {
-      (unmanagedSourceDirectories in sc ).value.map {
-        dir:File => new File(dir.getPath + "_" + scalaBinaryVersion.value)
-      }
-    }
-  }
-
-val saneSettings = Seq(
-  fork in test := true
-
-)
 
 // aliases
 
@@ -172,4 +16,97 @@ addCommandAlias("validateFreeJS", "freeJS/test") //separated due to memory const
 
 addCommandAlias("validate", ";clean;validateJS;validateKernelJS;validateFreeJS;validateJVM")
 
+// projects
+
+val core = crossProject.crossType(CrossType.Pure)
+  .settings(moduleName := "cats-mtl-core", name := "Cats core")
+  .settings(Settings.coreSettings:_*)
+  .settings(Settings.includeGeneratedSrc)
+  .settings(Dependencies.cats)
+  .settings(Dependencies.scalaCheck)
+  .configureCross(Coverage.disableScoverage210Jvm)
+  .configureCross(Coverage.disableScoverage210Js)
+  .jsSettings(Settings.commonJsSettings:_*)
+  .jvmSettings(Settings.commonJvmSettings:_*)
+
+val coreJVM = core.jvm
+val coreJS = core.js
+
+val docs = project
+  .enablePlugins(MicrositesPlugin)
+  .enablePlugins(ScalaUnidocPlugin)
+  .settings(moduleName := "cats-mtl-docs")
+  .settings(Settings.coreSettings)
+  .settings(Publishing.noPublishSettings)
+  .settings(ghpages.settings)
+  .settings(Docs.docSettings)
+  .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
+  .settings(Settings.commonJvmSettings)
+  .dependsOn(coreJVM)
+
+val laws = crossProject.crossType(CrossType.Pure)
+  .dependsOn(core)
+  .settings(moduleName := "cats-mtl-laws", name := "Cats MTL laws")
+  .settings(Settings.coreSettings:_*)
+  .settings(Dependencies.discipline:_*)
+  .configureCross(Coverage.disableScoverage210Jvm)
+  .settings(Dependencies.catalystsAndScalatest: _*)
+  .jsSettings(Settings.commonJsSettings:_*)
+  .jvmSettings(Settings.commonJvmSettings:_*)
+  .jsSettings(coverageEnabled := false)
+
+val lawsJVM = laws.jvm
+val lawsJS = laws.js
+
+val tests = crossProject.crossType(CrossType.Pure)
+  .dependsOn(core, laws)
+  .settings(moduleName := "cats-mtl-tests")
+  .settings(Settings.coreSettings:_*)
+  .settings(Dependencies.discipline:_*)
+  .settings(Dependencies.scalaCheck:_*)
+  .settings(Publishing.noPublishSettings:_*)
+  .settings(Dependencies.catalystsAndScalatest: _*)
+  .jsSettings(Settings.commonJsSettings:_*)
+  .jvmSettings(Settings.commonJvmSettings:_*)
+
+val testsJVM = tests.jvm
+val testsJS = tests.js
+
+// cats-mtl-js is JS-only
+val js = project
+  .dependsOn(coreJS, testsJS % "test-internal -> test")
+  .settings(moduleName := "cats-mtl-js")
+  .settings(Settings.coreSettings:_*)
+  .settings(Settings.commonJsSettings:_*)
+  .configure(Coverage.disableScoverage210Js)
+  .enablePlugins(ScalaJSPlugin)
+
+// cats-mtl-jvm is JVM-only
+val jvm = project
+  .dependsOn(coreJVM, testsJVM % "test-internal -> test")
+  .settings(moduleName := "cats-mtl-jvm")
+  .settings(Settings.coreSettings:_*)
+  .settings(Settings.commonJvmSettings:_*)
+
+val catsMtlJVM = project.in(file(".catsJVM"))
+  .settings(moduleName := "cats-mtl")
+  .settings(Settings.coreSettings)
+  .settings(Settings.commonJvmSettings)
+  .aggregate(coreJVM, lawsJVM, testsJVM, jvm, docs)
+  .dependsOn(coreJVM, lawsJVM, testsJVM % "test-internal -> test", jvm)
+
+val catsMtlJS = project.in(file(".catsJS"))
+  .settings(moduleName := "cats-mtl")
+  .settings(Settings.coreSettings)
+  .settings(Settings.commonJsSettings)
+  .aggregate(coreJS, lawsJS, testsJS, js)
+  .dependsOn(coreJS, lawsJS, testsJS % "test-internal -> test", js)
+  .enablePlugins(ScalaJSPlugin)
+
+val catsMtl = project.in(file("."))
+  .settings(moduleName := "root")
+  .settings(Settings.coreSettings)
+  .settings(Publishing.noPublishSettings)
+  .aggregate(catsMtlJVM, catsMtlJS)
+  .dependsOn(catsMtlJVM, catsMtlJS, testsJVM % "test-internal -> test")
 
