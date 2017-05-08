@@ -49,3 +49,9 @@ object AskN {
 
 
 }
+
+object AskMaterializer {
+  def askSummon[N <: Nat, F[_], E](implicit find: Find.Aux[EffAsk[E], F, N],
+                                           askN: AskN[N, F, E]): Ask[E, F] =
+    askN.asInstanceOf[Ask[E, F]]
+}

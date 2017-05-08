@@ -2,44 +2,48 @@ package cats
 package mtl
 package evidence
 
-trait FindTrue[L <: BoolList] {
+trait Find[Eff, M[_]] {
   type Out <: Nat
 }
 
-object FindTrue {
-  implicit def findTrueTCons[Tail <: BoolList]: FindTrue[BoolList.Cons[Bool.True, Tail]] = {
-    new FindTrue[BoolList.Cons[Bool.True, Tail]] {
+
+object Find extends FindLowPri {
+
+  type Aux[Eff, M[_], N <: Nat] = Find[Eff, M] { type Out = N }
+  implicit def findTCons[Eff, M[_]](implicit ev: CanDo[M, Eff]): Find[Eff, M] = {
+    new Find[Eff, M] {
       override type Out = Nat.Zero
     }
   }
 
-  implicit def findTrueFCons[Tail <: BoolList](implicit under: FindTrue[Tail]): FindTrue[BoolList.Cons[Bool.False, Tail]] = {
-    new FindTrue[BoolList.Cons[Bool.False, Tail]] {
-      override type Out = Nat.Succ[under.Out]
+}
+
+trait FindLowPri {
+  implicit def findFCons[Eff, T[_[_], _], M[_]](implicit ev: Find[Eff, M]): Find[Eff, CurryT[T, M]#l] = {
+    new Find[Eff, CurryT[T, M]#l] {
+      override type Out = Nat.Succ[ev.Out]
     }
   }
 }
 
-trait CanDo[M[_], Eff] {
-  type Out <: Bool
-}
+final class CanDo[M[_], Eff]
 
-trait MapCanDo[Eff, M[_]] {
-  type Out <: BoolList
-}
-
-object MapCanDo {
-  implicit def mapCanDoBase[Eff, M[_]](implicit ev: CanDo[M, Eff]): MapCanDo[Eff, M] =
-    new MapCanDo[Eff, M] {
-      type Out = BoolList.Cons[ev.Out, BoolList.Nil]
-    }
-
-  implicit def mapCanDoInd[Eff, T[_[_], _], M[_]](implicit ev: CanDo[CurryT[T, M]#l, Eff],
-                                                  under: MapCanDo[Eff, M]): MapCanDo[Eff, CurryT[T, M]#l] =
-    new MapCanDo[Eff, CurryT[T, M]#l] {
-      type Out = BoolList.Cons[ev.Out, under.Out]
-    }
-}
+//trait MapCanDo[Eff, M[_]] {
+//  type Out <: BoolList
+//}
+//
+//object MapCanDo {
+//  implicit def mapCanDoBase[Eff, M[_]](implicit ev: CanDo[M, Eff]): MapCanDo[Eff, M] =
+//    new MapCanDo[Eff, M] {
+//      type Out = BoolList.Cons[ev.Out, BoolList.Nil]
+//    }
+//
+//  implicit def mapCanDoInd[Eff, T[_[_], _], M[_]](implicit ev: CanDo[M, Eff],
+//                                                  under: MapCanDo[Eff, M]): MapCanDo[Eff, CurryT[T, M]#l] =
+//    new MapCanDo[Eff, CurryT[T, M]#l] {
+//      type Out = BoolList.Cons[ev.Out, under.Out]
+//    }
+//}
 
 trait MonadLiftN[N <: Nat, M[_]] {
   type Down[A]
