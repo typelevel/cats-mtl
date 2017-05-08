@@ -1,10 +1,11 @@
-package cats.mtl.evidence
+package cats
+package mtl
+package evidence
 
 sealed trait Nat
 
 object Nat {
-  sealed trait Succ[S <: Nat] extends Nat
+  final class Succ[S <: Nat] extends Nat
 
-  sealed trait Zero extends Nat
+  final class Zero extends Nat
 }
-
