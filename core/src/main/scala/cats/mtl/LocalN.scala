@@ -5,7 +5,7 @@ import cats.data.ReaderT
 import evidence.Nat
 
 trait LocalN[N <: Nat, F[_], E] {
-  val read: AskN[N, F, E]
+  val read: AskN.Aux[N, F, E]
 
   def local[A](fa: F[A])(f: E => E): F[A]
 
@@ -18,10 +18,10 @@ object LocalN {
   implicit def localNReader[M[_], E](implicit M: Monad[M]): LocalN[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
     new LocalN[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] {
       val monad = M
-      val read: AskN[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
+      val read: AskN.Aux[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
         AskN.askNReader[M, E]
 
-      def local[A](fa: ReaderT[M, E, A])(f: (E) => E): ReaderT[M, E, A] =
+      def local[A](fa: ReaderT[E, M, A])(f: (E) => E): ReaderT[E, M, A] =
         ReaderT.local(f)(fa)
     }
 
@@ -32,7 +32,7 @@ object LocalN {
                                                        ): LocalN[Nat.Succ[N], CurryT[T, M]#l, E] =
     new LocalN[Nat.Succ[N], CurryT[T, M]#l, E] {
       val monad = TM
-      val read: AskN[Nat.Succ[N], CurryT[T, M]#l, E] =
+      val read: AskN.Aux[Nat.Succ[N], CurryT[T, M]#l, E] =
         AskN.askNInd[N, T, M, E](TM, lift, under.read)
 
       def local[A](fa: T[M, A])(f: (E) => E): T[M, A] =

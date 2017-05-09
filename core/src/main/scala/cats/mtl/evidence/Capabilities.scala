@@ -2,14 +2,22 @@ package cats
 package mtl
 package evidence
 
-object Caps {
-
+trait Capabilities {
+//
+//  trait StateIsReader {
+//    implicit def stateCanAsk[E, M[_]]: CanDo[CurryT[StateTC[E]#l, M]#l, EffAsk[E]] =
+//      new CanDo[CurryT[StateTC[E]#l, M]#l, EffAsk[E]]
+//
+//    implicit def stateCanLocal[E, M[_]]: CanDo[CurryT[StateTC[E]#l, M]#l, EffLocal[E]] =
+//      new CanDo[CurryT[StateTC[E]#l, M]#l, EffLocal[E]]
+//  }
+//
   trait HighPri extends LowPri1 {
-    implicit def readerCanAsk[E, M[_]]: CanDo[CurryT[ReaderTC[E]#l, M]#l, EffAsk[E]] =
-      new CanDo[CurryT[ReaderTC[E]#l, M]#l, EffAsk[E]]
-
-    implicit def readerCanLocal[E, M[_]]: CanDo[CurryT[ReaderTC[E]#l, M]#l, EffLocal[E]] =
-      new CanDo[CurryT[ReaderTC[E]#l, M]#l, EffLocal[E]]
+//    implicit def readerCanAsk[E, M[_]]: CanDo[CurryT[ReaderTC[E]#l, M]#l, EffAsk[E]] =
+//      new CanDo[CurryT[ReaderTC[E]#l, M]#l, EffAsk[E]]
+//
+//    implicit def readerCanLocal[E, M[_]]: CanDo[CurryT[ReaderTC[E]#l, M]#l, EffLocal[E]] =
+//      new CanDo[CurryT[ReaderTC[E]#l, M]#l, EffLocal[E]]
   }
 
   trait LowPri1 {
@@ -21,4 +29,4 @@ object Caps {
 
 }
 
-object Capabilities extends Caps.HighPri
+object Capabilities

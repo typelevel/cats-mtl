@@ -5,53 +5,95 @@ import cats.data.{ReaderT, StateT}
 import cats.mtl.evidence._
 import syntax.functor._
 
-trait AskN[N <: Nat, F[_], E] {
+trait AskN[F[_], E] {
   implicit val monad: Monad[F]
+
+  type N <: Nat
 
   def askN: F[E]
 
-  def reader[A](f: E => A)(implicit F: Functor[F]): F[A] =
+  def reader[A](f: E => A): F[A] =
     askN.map(f)
 }
 
-object AskN {
+object AskN extends LowPri {
 
-  implicit def askNReader[M[_], E](implicit M: Monad[M]): AskN[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
-    new AskN[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] {
-      val monad =
-        ReaderT.catsDataMonadReaderForKleisli(M)
-
-      def askN: ReaderT[M, E, E] =
-        ReaderT.ask[M, E]
-    }
+  type Aux[N0 <: Nat, F[_], E] = AskN[F, E] {type N = N0}
 
   object State {
-    implicit def askNState[M[_], E](implicit M: Monad[M]): AskN[Nat.Zero, CurryT[StateTC[E]#l, M]#l, E] =
-      new AskN[Nat.Zero, CurryT[StateTC[E]#l, M]#l, E] {
+    implicit def askNState[M[_], E](implicit M: Monad[M]): AskN.Aux[Nat.Zero, CurryT[StateTC[E]#l, M]#l, E] =
+      new AskN[CurryT[StateTC[E]#l, M]#l, E] {
         val monad =
           StateT.catsDataMonadForStateT(M)
+
+        type N = Nat.Zero
 
         def askN: StateT[M, E, E] =
           StateT.get[M, E]
       }
   }
 
-  implicit def askNInd[N <: Nat, T[_[_], _], M[_], E](implicit TM: Monad[CurryT[T, M]#l],
-                                                      lift: TransLift.AuxId[T],
-                                                      under: AskN[N, M, E]
-                                                     ): AskN[Nat.Succ[N], CurryT[T, M]#l, E] =
-    new AskN[Nat.Succ[N], CurryT[T, M]#l, E] {
+  implicit def askNInd[N0 <: Nat, T[_[_], _], M[_], E](implicit TM: Monad[CurryT[T, M]#l],
+                                                       lift: TransLift.AuxId[T],
+                                                       under: AskN.Aux[N0, M, E]
+                                                      ): AskN.Aux[Nat.Succ[N0], CurryT[T, M]#l, E] =
+    new AskN[CurryT[T, M]#l, E] {
       val monad = TM
+
+      type N = Nat.Succ[N0]
 
       def askN: T[M, E] =
         lift.liftT(under.askN)
     }
 
+  def ask[F[_], E](implicit askN: AskN[F, E]): F[E] =
+    askN.askN
+
+  def askE[E] = new askEPartiallyApplied[E]
+
+  def askF[F[_]] = new askFPartiallyApplied[F]
+
+  def askN[N <: Nat] = new askNPartiallyApplied[N]
+
+  final private[mtl] class askEPartiallyApplied[E](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[F[_]]()(implicit askN: AskN[F, E]): F[E] =
+      askN.askN
+  }
+
+  final private[mtl] class askFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[E]()(implicit askN: AskN[F, E]): F[E] =
+      askN.askN
+  }
+
+  final private[mtl] class askNPartiallyApplied[N <: Nat](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[E, F[_]]()(implicit askN: AskN.Aux[N, F, E]): F[E] =
+      askN.askN
+  }
+
+  def reader[F[_], E, A](fun: E => A)(implicit askN: AskN[F, E]): F[A] =
+    askN.reader(fun)
+
+  final class ReaderOps[E, A](val fun: E => A) extends AnyVal {
+    def reader[F[_]](implicit askN: AskN[F, E]): F[A] =
+      askN.reader(fun)
+  }
+
 
 }
 
-object AskMaterializer {
-  def askSummon[N <: Nat, F[_], E](implicit find: Find.Aux[EffAsk[E], F, N],
-                                           askN: AskN[N, F, E]): Ask[E, F] =
-    askN.asInstanceOf[Ask[E, F]]
+trait LowPri {
+
+  implicit def askNReader[M[_], E](implicit M: Monad[M]): AskN.Aux[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
+    new AskN[CurryT[ReaderTC[E]#l, M]#l, E] {
+
+      val monad =
+        ReaderT.catsDataMonadReaderForKleisli
+
+      type N = Nat.Zero
+
+      def askN: ReaderT[E, M, E] =
+        ReaderT.ask[M, E]
+    }
+
 }
+

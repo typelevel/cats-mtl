@@ -4,6 +4,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Dependencies {
 
+  //noinspection TypeAnnotation
   object Versions {
     val scalaCheck = "1.13.4"
     val scalaTest = "3.0.0"
@@ -12,7 +13,8 @@ object Dependencies {
     val kindProjector = "0.9.3"
     val simulacrum = "0.10.0"
     val machinist = "0.6.1"
-    val cats = "0.9.0"
+    val cats = "0.9.1-SNAPSHOT"
+    val shapeless = "2.3.2"
   }
 
   val discipline: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
@@ -35,7 +37,11 @@ object Dependencies {
   ))
 
   val cats: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    "org.typelevel" %%% "cats" % Versions.cats
+    "org.typelevel" %%% "cats-core" % Versions.cats
+  ))
+
+  val shapeless: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
+    "com.chuusai" %%% "shapeless" % Versions.shapeless
   ))
 
   val simulacrumAndMachinist: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
