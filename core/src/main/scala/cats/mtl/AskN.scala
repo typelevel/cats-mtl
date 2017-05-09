@@ -20,19 +20,6 @@ object AskN extends LowPri {
 
   type Aux[N0 <: Nat, F[_], E] = AskN[F, E] {type N = N0}
 
-  object State {
-    implicit def askNState[M[_], E](implicit M: Monad[M]): AskN.Aux[Nat.Zero, CurryT[StateTC[E]#l, M]#l, E] =
-      new AskN[CurryT[StateTC[E]#l, M]#l, E] {
-        val monad =
-          StateT.catsDataMonadForStateT(M)
-
-        type N = Nat.Zero
-
-        def askN: StateT[M, E, E] =
-          StateT.get[M, E]
-      }
-  }
-
   implicit def askNInd[N0 <: Nat, T[_[_], _], M[_], E](implicit TM: Monad[CurryT[T, M]#l],
                                                        lift: TransLift.AuxId[T],
                                                        under: AskN.Aux[N0, M, E]
@@ -91,9 +78,22 @@ trait LowPri {
 
       type N = Nat.Zero
 
-      def askN: ReaderT[E, M, E] =
+      def askN: ReaderT[M, E, E] =
         ReaderT.ask[M, E]
     }
+
+  object State {
+    implicit def askNState[M[_], E](implicit M: Monad[M]): AskN.Aux[Nat.Zero, CurryT[StateTC[E]#l, M]#l, E] =
+      new AskN[CurryT[StateTC[E]#l, M]#l, E] {
+        val monad =
+          StateT.catsDataMonadForStateT(M)
+
+        type N = Nat.Zero
+
+        def askN: StateT[M, E, E] =
+          StateT.get[M, E]
+      }
+  }
 
 }
 

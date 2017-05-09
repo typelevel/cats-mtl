@@ -21,7 +21,7 @@ object LocalN {
       val read: AskN.Aux[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
         AskN.askNReader[M, E]
 
-      def local[A](fa: ReaderT[E, M, A])(f: (E) => E): ReaderT[E, M, A] =
+      def local[A](fa: ReaderT[M, E, A])(f: (E) => E): ReaderT[M, E, A] =
         ReaderT.local(f)(fa)
     }
 

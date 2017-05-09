@@ -12,7 +12,7 @@ package object mtl {
 //  type Local[E, M[_]] = LocalN[_, M, E]
 //  type Raise[E, M[_]] = RaiseN[_, M, E]
 
-  type ReaderTC[E] = {type l[M[_], A] = ReaderT[E, M, A]}
+  type ReaderTC[E] = {type l[M[_], A] = ReaderT[M, E, A]}
   type StateTC[S] = {type l[M[_], A] = StateT[M, S, A]}
   type EitherTC[E] = {type l[M[_], A] = EitherT[M, E, A]}
   type WriterTC[L] = {type l[M[_], A] = WriterT[M, L, A]}

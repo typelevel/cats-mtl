@@ -13,7 +13,7 @@ object Dependencies {
     val kindProjector = "0.9.3"
     val simulacrum = "0.10.0"
     val machinist = "0.6.1"
-    val cats = "0.9.1-SNAPSHOT"
+    val cats = "0.9.0"
     val shapeless = "2.3.2"
   }
 
@@ -36,8 +36,12 @@ object Dependencies {
     compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
   ))
 
-  val cats: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
+  val catsCore: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % Versions.cats
+  ))
+
+  val catsLaws: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
+    "org.typelevel" %%% "cats-laws" % Versions.cats
   ))
 
   val shapeless: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
