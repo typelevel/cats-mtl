@@ -19,13 +19,13 @@ class Usage extends BaseSuite {
   test("ask") {
     val askWithExpectedTypeNoArgsTopLevel: ReaderIntId[Int] =
       Ask.ask
-    val askNoExpectedTypeWithArgsNestedInReader =
+    val _ =
       Ask.ask[ReaderStrInt, Int]
-    val askNoExpectedTypeWithArgsTopLevel =
+    val _1 =
       Ask.ask[ReaderStrInt, String]
     val askFNoExpectedTypeWithArgsNestedInReader =
       Ask.askF[ReaderStrInt]()
-    val _: ReaderStrInt[Int] =
+    val _2: ReaderStrInt[Int] =
       askFNoExpectedTypeWithArgsNestedInReader
     val askFExpectedTypeWithArgsNestedInReader: ReaderStrInt[Int] =
       Ask.askF[ReaderStrInt]()

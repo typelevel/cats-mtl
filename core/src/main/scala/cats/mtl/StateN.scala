@@ -3,8 +3,11 @@ package mtl
 
 /*
 import evidence._
-trait StateN[N <: Nat, F, S] {
+trait StateN[F, S] {
+
   val monad: Monad[F]
+
+  type N <: Nat
 
 }
 

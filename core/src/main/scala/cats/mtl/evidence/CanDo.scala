@@ -16,9 +16,8 @@ object MonadLiftN {
       def liftN[A](down: M[A]): M[A] = down
     }
 
-  implicit def zMonadLiftNInd[N <: Nat, T[_[_], _], M[_]](
-                                                           implicit under: MonadLiftN[N, M],
-                                                           lift: TransLift.AuxId[T]
+  implicit def zMonadLiftNInd[N <: Nat, T[_[_], _], M[_]](implicit under: MonadLiftN[N, M],
+                                                          lift: TransLift.AuxId[T]
                                                          ): MonadLiftN[Nat.Succ[N], CurryT[T, M]#l] =
     new MonadLiftN[Nat.Succ[N], CurryT[T, M]#l] {
       override type Down[A] = under.Down[A]
