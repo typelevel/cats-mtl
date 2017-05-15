@@ -7,11 +7,11 @@ import cats.mtl.evidence.Nat
 
 trait LocalInstances extends LocalLowPriorityInstances {
 
-  implicit def localNReader[M[_], E](implicit M: Monad[M]): Local.Aux[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
-    new Local[CurryT[ReaderTC[E]#l, M]#l, E] {
+  implicit def localNReader[M[_], E](implicit M: Monad[M]): Local.Aux[Nat.Zero, CurryT[ReaderTCE[E]#l, M]#l, E] =
+    new Local[CurryT[ReaderTCE[E]#l, M]#l, E] {
       val monad = M
       type N = Nat._0
-      val ask: Ask.Aux[Nat.Zero, CurryT[ReaderTC[E]#l, M]#l, E] =
+      val ask: Ask.Aux[Nat.Zero, CurryT[ReaderTCE[E]#l, M]#l, E] =
         ask.askReader[M, E]
 
       def local[A](fa: ReaderT[M, E, A])(f: (E) => E): ReaderT[M, E, A] =

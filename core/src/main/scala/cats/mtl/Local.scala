@@ -5,9 +5,7 @@ import evidence.Nat
 
 trait Local[F[_], E] {
 
-  type N <: Nat
-
-  val ask: Ask.Aux[N, F, E]
+  val ask: Ask[F, E]
 
   def local[A](fa: F[A])(f: E => E): F[A]
 
@@ -15,8 +13,3 @@ trait Local[F[_], E] {
     local(fa)(_ => e)
 }
 
-object Local {
-
-  type Aux[N0 <: Nat, F[_], E] = Local[F, E] { type N = N0 }
-
-}

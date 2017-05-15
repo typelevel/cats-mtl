@@ -93,12 +93,12 @@ trait HandleInstancesLowPriority {
     }
 
   implicit def handleNIndReader[N0 <: Nat, M[_], Env, Err](implicit under: Handle.Aux[N0, M, Err]
-                                                          ): Handle.Aux[Nat.Succ[N0], CurryT[ReaderTC[Env]#l, M]#l, Err] =
-    new Handle[CurryT[ReaderTC[Env]#l, M]#l, Err] {
-      val raise: Raise.Aux[Nat.Succ[N0], CurryT[ReaderTC[Env]#l, M]#l, Err] =
-        instances.raise.raiseNInd[N0, ReaderTC[Env]#l, M, Err](
+                                                          ): Handle.Aux[Nat.Succ[N0], CurryT[ReaderTCE[Env]#l, M]#l, Err] =
+    new Handle[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
+      val raise: Raise.Aux[Nat.Succ[N0], CurryT[ReaderTCE[Env]#l, M]#l, Err] =
+        instances.raise.raiseNInd[N0, ReaderTCE[Env]#l, M, Err](
           Kleisli.catsDataMonadReaderForKleisli(under.raise.monad),
-          new TransLift[ReaderTC[Env]#l] {
+          new TransLift[ReaderTCE[Env]#l] {
             type TC[F[_]] = Applicative[F]
 
             def liftT[F[_] : Applicative, A](ma: F[A]): ReaderT[F, Env, A] =

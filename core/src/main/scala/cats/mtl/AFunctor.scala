@@ -30,8 +30,8 @@ object AFunctor {
         StateT.lift(ma)
     }
 
-  implicit def readerTMMonad[E]: AFunctor[ReaderTC[E]#l] =
-    new AFunctor[ReaderTC[E]#l] {
+  implicit def readerTMMonad[E]: AFunctor[ReaderTCE[E]#l] =
+    new AFunctor[ReaderTCE[E]#l] {
       def hoist[F[_]: Functor, G[_], A](input: ReaderT[F, E, A])(trans: F ~> G): ReaderT[G, E, A] =
         ReaderT[G, E, A](input.run.andThen(trans(_)))
 

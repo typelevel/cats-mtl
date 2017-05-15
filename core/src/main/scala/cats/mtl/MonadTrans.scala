@@ -13,3 +13,13 @@ trait MonadTrans[M[_]] extends MonadLayer[M] {
                                       backward: NInner ~> Inner)(implicit other: MonadLayer[N]): N[A]
 }
 
+object MonadTrans {
+  type AuxO[M[_], Outer0[F[_], A]] = MonadTrans[M] {type Outer[F[_], A] = Outer0[F, A]}
+  type AuxI[M[_], Inner0[A]] = MonadTrans[M] {type Inner[A] = Inner0[A]}
+  type AuxIO[M[_], Inner0[A], Outer0[F[_], A]] =
+    MonadTrans[M] {
+      type Inner[A] = Inner0[A]
+      type Outer[F[_], A] = Outer0[F, A]
+    }
+}
+

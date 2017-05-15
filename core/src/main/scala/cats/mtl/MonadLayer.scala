@@ -13,5 +13,4 @@ trait MonadLayer[M[_]] {
 
 object MonadLayer {
   type Aux[M[_], T[_[_], _]] = MonadLayer[M] {type Inner[F[_], A] = T[F, A]}
-
 }

@@ -6,7 +6,7 @@ import cats.syntax.flatMap._
 
 trait Listen[F[_], L] {
 
-  val tell: Tell[N, F, L]
+  val tell: Tell[F, L]
 
   def listen[A](fa: F[A]): F[(A, L)]
 
@@ -14,10 +14,5 @@ trait Listen[F[_], L] {
     listen(fa)
       .flatMap { case ((a, f), l) => tell.writer(a, f(l)) }
 
-  type N <: Nat
-
 }
 
-object Listen {
-  type Aux[N0 <: Nat, F[_], L] = Listen[F, L] {type N = N0}
-}
