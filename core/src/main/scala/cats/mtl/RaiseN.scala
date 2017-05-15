@@ -12,6 +12,6 @@ trait Raise[F[_], E] {
   def raiseError[A](e: E): F[A]
 }
 
-object RaiseN {
+object Raise {
   type Aux[N0 <: Nat, F[_], E] = Raise[F, E] {type N = N0}
 }
