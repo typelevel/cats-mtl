@@ -1,7 +1,6 @@
 package cats
 package mtl
 
-import cats.mtl.evidence._
 import cats.syntax.cartesian._
 import cats.syntax.applicative._
 

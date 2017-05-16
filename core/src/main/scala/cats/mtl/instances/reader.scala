@@ -2,48 +2,84 @@ package cats
 package mtl
 package instances
 
-import cats.data.{Reader, ReaderT}
-import cats.mtl.MonadTrans.{AuxI, AuxIO}
+import cats.data.ReaderT
+import cats.syntax.all._
+import cats.mtl.MonadTrans.AuxIO
 
 object reader {
 
-  def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] =
+  def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] = {
     new MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] {
-      override type State[A] = Reader[E, A]
+      type State[A] = A
 
-      override type Inner[A] = M[A]
+      type Inner[A] = M[A]
 
-      override type Outer[F[_], A] = ReaderT[F, E, A]
+      type Outer[F[_], A] = ReaderTCE[E]#l[F, A]
 
-      override def transControl[N[_], NInner[_], A](cps: (N ~> (NInner of ReaderC[E]#l)#l) => NInner[A])
-                                                   (implicit mt: AuxIO[N, NInner, ReaderTCE[E]#l]): ReaderT[M, E, A] = {
-        ReaderT.apply[M, E, N[A]] { (r: E) =>
-          val x: NInner[A] =
-              cps(new (N ~> (NInner of ReaderC[E]#l)#l) {
-                def apply[A](fa: N[A]): NInner[A] =
-                  mt.showLayers[Id, A](fa).run(r)
-              })
-          x
+      def transControl[A](cps: MonadTransContinuation[Id, Outer, A]): ReaderT[M, E, A] = {
+        ReaderT[M, E, A]((r: E) =>
+          cps(new (ReaderTC[M, E]#l ~> M) {
+            def apply[X](rea: ReaderT[M, E, X]): M[X] = rea.run(r)
+          })(this)
+        )
+      }
+
+      def restore[A](state: A): ReaderT[M, E, A] = ReaderT.pure(state)
+
+      def layerControl[A](cps: (ReaderTC[M, E]#l ~> M) => M[A]): ReaderT[M, E, A] = {
+        ReaderT[M, E, A]((r: E) =>
+          cps(new (ReaderTC[M, E]#l ~> M) {
+            def apply[X](rea: ReaderT[M, E, X]): M[X] = rea.run(r)
+          })
+        )
+      }
+
+      def zero[A](state: A): Boolean = false
+
+      def layerMap[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
+
+      val monad: Monad[CurryT[ReaderTCE[E]#l, M]#l] = ReaderT.catsDataMonadReaderForKleisli
+      val innerMonad: Monad[(M of CurryT[ReaderTCE[E]#l, M]#l)#l] = new Monad[(M of CurryT[ReaderTCE[E]#l, M]#l)#l] {
+        def pure[A](x: A): M[ReaderT[M, E, A]] = M.pure(ReaderT.pure(x))
+
+        def flatMap[A, B](fa: M[ReaderT[M, E, A]])(f: (A) => M[ReaderT[M, E, B]]): M[ReaderT[M, E, B]] = {
+          for {
+            r <- fa
+            a = ReaderT((e: E) => M.flatMap(r(e))(f))
+          } yield monad.flatten(a)
+        }
+
+        def tailRecM[A, B](a: A)(f: (A) => M[ReaderT[M, E, Either[A, B]]]): M[ReaderT[M, E, B]] = {
+          M.pure(monad.tailRecM(a) { e =>
+            ReaderT((env: E) =>
+              f(e).flatMap(_.run(env))
+            )
+          })
         }
       }
 
-      def restore[A](state: Reader[E, A]): ReaderT[M, E, A] =
-        state.mapF(M.pure)
+      def layer[A](inner: M[A]): ReaderT[M, E, A] = {
+        ReaderT.lift(inner)
+      }
 
-      def layerControl[A](cps: (ReaderTC[M, E]#l ~> (M of ReaderC[E]#l)) => M[A]): ReaderT[M, E, A] = ???
+      def imapK[A](ma: ReaderT[M, E, A])(forward: M ~> M, backward: M ~> M): ReaderT[M, E, A] = {
+        layerMap(ma)(forward)
+      }
 
-      def zero[A](state: Reader[E, A]): Boolean = false
+      def showLayers[F[_], A](ma: F[ReaderT[M, E, A]]): F[ReaderT[M, E, A]] = ma
 
-      def layerMap[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] =
-        ma.transform(trans)
+      def hideLayers[F[_], A](foia: F[ReaderT[M, E, A]]): F[ReaderT[M, E, A]] = foia
 
-      val monad: Monad[M] = M
-      val innerMonad: Monad[CurryT[ReaderTCE[E]#l, M]#l] = ReaderT.catsDataMonadReaderForKleisli
+      def transInvMap[N[_], NInner[_], A](ma: ReaderT[M, E, A])(forward: M ~> NInner, backward: NInner ~> M)
+                                         (implicit other: MonadTrans.AuxIO[N, NInner, ReaderTCE[E]#l]): N[A] = {
+        transMap(ma)(forward)
+      }
 
-      def layer[A](inner: M[A]): ReaderT[M, E, A] = ???
-
-      def imapK[A](ma: ReaderT[M, E, A])(forward: ~>[M, M], backward: ~>[M, M]): ReaderT[M, E, A] = ???
+      def transMap[A, N[_], NInner[_]](ma: ReaderT[M, E, A])(trans: M ~> NInner)
+                                      (implicit mt: AuxIO[N, NInner, ReaderTCE[E]#l]): N[A] = {
+        mt.hideLayers[Id, A](ma.transform(trans))
+      }
     }
-
+  }
 
 }

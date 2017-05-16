@@ -1,9 +1,7 @@
 package cats
 package mtl
 
-import cats.mtl.evidence._
-
-trait StateN[F, S] {
+trait StateN[F[_], S] {
 
   val monad: Monad[F]
 

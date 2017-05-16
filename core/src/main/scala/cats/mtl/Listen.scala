@@ -1,7 +1,6 @@
 package cats
 package mtl
 
-import cats.mtl.evidence.Nat
 import cats.syntax.flatMap._
 
 trait Listen[F[_], L] {

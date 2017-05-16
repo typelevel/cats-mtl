@@ -1,8 +1,6 @@
 package cats
 package mtl
 
-import evidence.Nat
-
 trait Local[F[_], E] {
 
   val ask: Ask[F, E]

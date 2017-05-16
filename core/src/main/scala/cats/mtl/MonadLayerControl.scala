@@ -12,3 +12,11 @@ trait MonadLayerControl[M[_]] extends MonadLayerFunctor[M] {
   def zero[A](state: State[A]): Boolean
 
 }
+
+object MonadLayerControl {
+  type Aux[M[_], Inner0[_], State0[_]] = MonadLayerControl[M] {
+    type Inner[A] = Inner0[A]
+    type State[A] = State0[A]
+  }
+}
+

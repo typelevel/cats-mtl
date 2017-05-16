@@ -4,6 +4,6 @@ object all extends AskInstances
   with HandleInstances
   with ListenInstances
   with RaiseInstances
-  with StateInstances
-  with TellInstances
+  // with StateInstances
+  // with TellInstances
 

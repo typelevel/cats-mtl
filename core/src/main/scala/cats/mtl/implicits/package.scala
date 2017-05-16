@@ -1,5 +1,6 @@
-package cats.mtl
+package cats
+package mtl
 
-package object implicits extends BH0 {
+package object implicits {
 
 }

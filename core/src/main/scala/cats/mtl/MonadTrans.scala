@@ -10,7 +10,7 @@ trait MonadTrans[M[_]] extends MonadLayer[M] {
 
   def transInvMap[N[_], NInner[_], A](ma: M[A])
                                      (forward: Inner ~> NInner,
-                                      backward: NInner ~> Inner)(implicit other: MonadLayer[N]): N[A]
+                                      backward: NInner ~> Inner)(implicit other: MonadTrans.AuxIO[N, NInner, Outer]): N[A]
 }
 
 object MonadTrans {
