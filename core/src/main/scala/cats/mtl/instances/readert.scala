@@ -4,7 +4,7 @@ package instances
 
 import cats.data.ReaderT
 
-object reader {
+object readert {
 
   def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] = {
     new MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] {

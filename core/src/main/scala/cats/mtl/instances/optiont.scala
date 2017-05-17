@@ -4,7 +4,7 @@ package instances
 
 import cats.data.OptionT
 
-object option {
+object optiont {
   def optionMonadTransControl[M[_]]
   (implicit M: Monad[M]): MonadTransControl[OptionTC[M]#l] = {
     new MonadTransControl[OptionTC[M]#l] {

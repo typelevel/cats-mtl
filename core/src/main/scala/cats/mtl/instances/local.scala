@@ -21,6 +21,16 @@ trait LocalInstances extends LocalLowPriorityInstances {
             def apply[A](fa: Inner[A]): Inner[A] = under.local(fa)(_ => r)
           }))
       }
+
+      def scope[A](fa: M[A])(e: E): M[A] = {
+        ml.monad.flatMap(ask.ask)(r =>
+          ml.imapK(fa)(new (Inner ~> Inner) {
+            def apply[A](fa: Inner[A]): Inner[A] = under.local(fa)(_ => e)
+          }, new (Inner ~> Inner) {
+            def apply[A](fa: Inner[A]): Inner[A] = under.local(fa)(_ => r)
+          }))
+      }
+
     }
   }
 }
@@ -35,6 +45,10 @@ trait LocalLowPriorityInstances {
 
       def local[A](fa: ReaderT[M, E, A])(f: (E) => E): ReaderT[M, E, A] = {
         ReaderT.local(f)(fa)
+      }
+
+      def scope[A](fa: ReaderT[M, E, A])(e: E): ReaderT[M, E, A] = {
+        ReaderT((_: E) => fa.run(e))
       }
     }
   }

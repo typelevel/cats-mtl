@@ -5,7 +5,7 @@ package instances
 import cats.data.{Writer, WriterT}
 import cats.syntax.all._
 
-object writer {
+object writert {
   def writerMonadTransControl[M[_], L]
   (implicit L: Monoid[L], M: Monad[M]): MonadTransControl[CurryT[WriterTCL[L]#l, M]#l] = {
     new MonadTransControl[CurryT[WriterTCL[L]#l, M]#l] {

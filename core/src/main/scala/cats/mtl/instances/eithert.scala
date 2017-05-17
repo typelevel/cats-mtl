@@ -4,7 +4,7 @@ package instances
 
 import cats.data.EitherT
 
-object either {
+object eithert {
   def eitherMonadTransControl[M[_], E]
   (implicit M: Monad[M]): MonadTransControl[CurryT[EitherTCE[E]#l, M]#l] = {
     new MonadTransControl[CurryT[EitherTCE[E]#l, M]#l] {
