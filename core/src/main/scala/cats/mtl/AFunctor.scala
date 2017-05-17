@@ -12,8 +12,8 @@ trait AFunctor[T[_[_], _]] extends TransLift[T] {
 
 
 object AFunctor {
-  implicit def eitherTMMonad[E]: AFunctor[EitherTC[E]#l] =
-    new AFunctor[EitherTC[E]#l] {
+  implicit def eitherTMMonad[E]: AFunctor[EitherTCE[E]#l] =
+    new AFunctor[EitherTCE[E]#l] {
       def hoist[F[_]: Functor, G[_], A](input: EitherT[F, E, A])(trans: F ~> G): EitherT[G, E, A] =
         EitherT(trans(input.value))
 
@@ -21,8 +21,8 @@ object AFunctor {
         EitherT.liftT(ma)
     }
 
-  implicit def stateTMMonad[S]: AFunctor[StateTC[S]#l] =
-    new AFunctor[StateTC[S]#l] {
+  implicit def stateTMMonad[S]: AFunctor[StateTCS[S]#l] =
+    new AFunctor[StateTCS[S]#l] {
       def hoist[F[_]: Functor, G[_], A](input: StateT[F, S, A])(trans: F ~> G): StateT[G, S, A] =
         StateT.applyF[G, S, A](trans(input.runF.map(_.andThen(trans(_)))))
 
@@ -39,8 +39,8 @@ object AFunctor {
         ReaderT.lift(ma)
     }
 
-  implicit def writerTMMonad[L: Monoid]: AFunctor[WriterTC[L]#l] =
-    new AFunctor[WriterTC[L]#l] {
+  implicit def writerTMMonad[L: Monoid]: AFunctor[WriterTCL[L]#l] =
+    new AFunctor[WriterTCL[L]#l] {
       def hoist[F[_]: Functor, G[_], A](input: WriterT[F, L, A])(trans: F ~> G): WriterT[G, L, A] =
         WriterT[G, L, A](trans(input.run))
 

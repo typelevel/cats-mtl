@@ -2,12 +2,12 @@ package cats
 package mtl
 package instances
 
-// import cats.data.{ReaderT, StateT}
+import cats.data.{ReaderT, StateT}
 
 trait AskInstances extends AskInstancesLowPriority {
-/*
+
   implicit def askInd[M[_], Inner[_], E](implicit
-                                         lift: MonadTrans.AuxI[M, Inner],
+                                         lift: MonadLayer.Aux[M, Inner],
                                          under: Ask[Inner, E]
                                         ): Ask[M, E] =
     new Ask[M, E] {
@@ -16,12 +16,11 @@ trait AskInstances extends AskInstancesLowPriority {
       def ask: M[E] =
         lift.layer(under.ask)
     }
- */
 
 }
 
 trait AskInstancesLowPriority {
-/*
+
   implicit def askReader[M[_], E](implicit M: Monad[M]): Ask[CurryT[ReaderTCE[E]#l, M]#l, E] =
     new Ask[CurryT[ReaderTCE[E]#l, M]#l, E] {
 
@@ -32,15 +31,15 @@ trait AskInstancesLowPriority {
         ReaderT.ask[M, E]
     }
 
-  implicit def askNState[M[_], E](implicit M: Monad[M]): Ask[CurryT[StateTC[E]#l, M]#l, E] =
-    new Ask[CurryT[StateTC[E]#l, M]#l, E] {
+  implicit def askState[M[_], S](implicit M: Monad[M]): Ask[CurryT[StateTCS[S]#l, M]#l, S] =
+    new Ask[CurryT[StateTCS[S]#l, M]#l, S] {
       val monad =
         StateT.catsDataMonadForStateT(M)
 
-      def ask: StateT[M, E, E] =
-        StateT.get[M, E]
+      def ask: StateT[M, S, S] =
+        StateT.get[M, S]
     }
- */
+
 }
 
 object ask extends AskInstances

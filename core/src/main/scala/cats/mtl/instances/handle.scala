@@ -24,7 +24,6 @@ trait HandleInstances extends HandleInstancesLowPriority {
 trait HandleInstancesLowPriority {
 
 /*
-  private type EitherC[E] = {type l[A] = E Either A}
 
   implicit def handleNIndEither[M[_], E, Err](implicit under: Handle[M, E]
                                                         ): Handle[CurryT[EitherTC[Err]#l, M]#l, E] =

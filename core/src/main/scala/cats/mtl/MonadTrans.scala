@@ -14,9 +14,9 @@ trait MonadTrans[M[_]] extends MonadLayer[M] {
 }
 
 object MonadTrans {
-  type AuxO[M[_], Outer0[F[_], A]] = MonadTrans[M] {type Outer[F[_], A] = Outer0[F, A]}
-  type AuxI[M[_], Inner0[A]] = MonadTrans[M] {type Inner[A] = Inner0[A]}
-  type AuxIO[M[_], Inner0[A], Outer0[F[_], A]] =
+  type AuxO[M[_], Outer0[_[_], _]] = MonadTrans[M] {type Outer[F[_], A] = Outer0[F, A]}
+  type AuxI[M[_], Inner0[_]] = MonadTrans[M] {type Inner[A] = Inner0[A]}
+  type AuxIO[M[_], Inner0[_], Outer0[_[_], _]] =
     MonadTrans[M] {
       type Inner[A] = Inner0[A]
       type Outer[F[_], A] = Outer0[F, A]
