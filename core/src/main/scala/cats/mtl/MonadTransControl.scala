@@ -5,6 +5,14 @@ trait MonadTransControl[M[_]] extends MonadLayerControl[M] with MonadTransFuncto
   def transControl[A](cps: MonadTransContinuation[State, Outer, A]): M[A]
 }
 
+object MonadTransControl {
+  type Aux[M[_], State0[_], Inner0[_], Outer0[_[_], _]] = MonadTransControl[M] {
+    type State[A] = State0[A]
+    type Inner[A] = Inner0[A]
+    type Outer[F[_], A] = Outer0[F, A]
+  }
+}
+
 trait MonadTransContinuation[State[_], Outer[_[_], _], A] {
   def apply[N[_], NInner[_]](cps: (N ~> (NInner of State)#l))
                             (implicit mt: MonadTrans.AuxIO[N, NInner, Outer]): NInner[A]

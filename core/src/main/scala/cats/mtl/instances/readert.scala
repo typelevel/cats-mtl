@@ -4,9 +4,14 @@ package instances
 
 import cats.data.ReaderT
 
-object readert {
+trait ReaderTInstances extends ReaderTInstancesLowPriority {
+  implicit def readerMonadLayer[M[_], E](implicit M: Monad[M]): MonadLayer.Aux[CurryT[ReaderTCE[E]#l, M]#l, M] =
+    readerMonadTransControl[M, E]
+}
 
-  def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] = {
+trait ReaderTInstancesLowPriority {
+
+  implicit def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl.Aux[CurryT[ReaderTCE[E]#l, M]#l, Id, M, ReaderTCE[E]#l] = {
     new MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] {
       type State[A] = A
 
@@ -60,5 +65,9 @@ object readert {
       }
     }
   }
+
+}
+
+object readert extends ReaderTInstances {
 
 }

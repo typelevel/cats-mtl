@@ -2,8 +2,9 @@ package cats
 package mtl
 
 import cats.data._
-//import evidence._
-//import cats.implicits._
+import instances.ask._
+import instances.readert._
+import cats.implicits._
 
 class Usage extends BaseSuite {
 
@@ -17,8 +18,8 @@ class Usage extends BaseSuite {
 
   // ask
   test("ask") {
-    val askWithExpectedTypeNoArgsTopLevel: ReaderIntId[Int] =
-      Ask.ask
+    val askWithExpectedTypeArgsTopLevel: ReaderIntId[Int] =
+      Ask.ask[ReaderIntId, Int]
     val _ =
       Ask.ask[ReaderStrInt, Int]
     val _1 =
@@ -33,15 +34,19 @@ class Usage extends BaseSuite {
 
   // reader
   test("reader") {
-    val readerNoExpectedTypeWithAnnotatedLambdaArgNoArgs = Ask.reader((e: Int) => e + "!")
-    val _: ReaderIntId[String] =
-      readerNoExpectedTypeWithAnnotatedLambdaArgNoArgs
+    illTyped {
+      """
+      val readerExpectedTypeWithAnnotatedLambdaArgNoArgs: ReaderIntId[String] = Ask.reader((e: Int) => e + "!")
+      """
+    }
     illTyped {
       """
       val readerExpectedTypeNoAnnotatedArgNoArgs: ReaderIntId[String] =
         AskN.reader(e => e + "!"): ReaderIntId[String]
       """
     }
+    val _ =
+      Ask.reader[ReaderIntId, Int, String](_ + "!")
   }
 
   test("summon") {
