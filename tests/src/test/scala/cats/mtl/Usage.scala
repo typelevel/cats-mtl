@@ -18,8 +18,6 @@ class Usage extends BaseSuite {
 
   // ask
   test("ask") {
-    val askWithExpectedTypeArgsTopLevel: ReaderIntId[Int] =
-      Ask.ask[ReaderIntId, Int]
     val _ =
       Ask.ask[ReaderStrInt, Int]
     val _1 =
@@ -47,6 +45,9 @@ class Usage extends BaseSuite {
     }
     val _ =
       Ask.reader[ReaderIntId, Int, String](_ + "!")
+    val _1: ReaderIntId[String] =
+      Ask.readerFE[ReaderIntId, Int](_ + "!")
+
   }
 
   test("summon") {

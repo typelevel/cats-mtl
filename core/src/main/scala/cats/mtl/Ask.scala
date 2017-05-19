@@ -31,6 +31,13 @@ object Ask {
       ask.ask
   }
 
+  final private[mtl] class readerFEPartiallyApplied[F[_], E](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[A](f: E => A)(implicit ask: Ask[F, E]): F[A] =
+      ask.reader(f)
+  }
+
+  def readerFE[F[_], E] = new readerFEPartiallyApplied[F, E]
+
   def reader[F[_], E, A](fun: E => A)(implicit ask: Ask[F, E]): F[A] =
     ask.reader(fun)
 
