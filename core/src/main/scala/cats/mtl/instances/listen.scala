@@ -5,14 +5,12 @@ package instances
 import cats.data.WriterT
 import cats.syntax.functor._
 
-trait ListenInstances extends ListenLowPriorityInstances {
+trait ListeningInstances extends ListenLowPriorityInstances {
   implicit def localInd[M[_], Inner[_], L](implicit
-                                           lift: MonadLayer.Aux[M, Inner],
-                                           under: Listen[Inner, L]
-                                          ): Listen[M, L] =
-    new Listen[M, L] {
-      val monad = lift.monad
-
+                                           lift: MonadLayer[M, Inner],
+                                           under: Listening[Inner, L]
+                                          ): Listening[M, L] =
+    new Listening[M, L] {
       val tell = instances.tell.tellInd[M, Inner, L](lift, under.tell)
 
       def listen[A](fa: M[A]): M[(A, L)] = lift.monad.flatMap(fa) { a =>
@@ -26,10 +24,8 @@ trait ListenInstances extends ListenLowPriorityInstances {
 }
 
 trait ListenLowPriorityInstances {
-  implicit def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): Listen[WriterTC[M, L]#l, L] =
-    new Listen[WriterTC[M, L]#l, L] {
-      val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
-
+  implicit def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): Listening[WriterTC[M, L]#l, L] =
+    new Listening[WriterTC[M, L]#l, L] {
       val tell = instances.tell.tellWriter[M, L]
 
       def listen[A](fa: WriterT[M, L, A]): WriterT[M, L, (A, L)] = {

@@ -1,9 +1,9 @@
 package cats
 package mtl
 
-trait Listen[F[_], L] {
+trait Listening[F[_], L] {
 
-  val tell: Tell[F, L]
+  val tell: Telling[F, L]
 
   def listen[A](fa: F[A]): F[(A, L)]
 

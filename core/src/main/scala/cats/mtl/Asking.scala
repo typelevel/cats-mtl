@@ -1,20 +1,15 @@
 package cats
 package mtl
 
-import cats.syntax.functor._
-
-trait Ask[F[_], E] {
-  implicit val monad: Monad[F]
-
+trait Asking[F[_], E] {
   def ask: F[E]
 
-  def reader[A](f: E => A): F[A] =
-    ask.map(f)
+  def reader[A](f: E => A): F[A]
 }
 
-object Ask {
+object Asking {
 
-  def ask[F[_], E](implicit ask: Ask[F, E]): F[E] =
+  def ask[F[_], E](implicit ask: Asking[F, E]): F[E] =
     ask.ask
 
   def askE[E] = new askEPartiallyApplied[E]
@@ -22,23 +17,23 @@ object Ask {
   def askF[F[_]] = new askFPartiallyApplied[F]
 
   final private[mtl] class askEPartiallyApplied[E](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[F[_]]()(implicit ask: Ask[F, E]): F[E] =
+    @inline def apply[F[_]]()(implicit ask: Asking[F, E]): F[E] =
       ask.ask
   }
 
   final private[mtl] class askFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[E]()(implicit ask: Ask[F, E]): F[E] =
+    @inline def apply[E]()(implicit ask: Asking[F, E]): F[E] =
       ask.ask
   }
 
   final private[mtl] class readerFEPartiallyApplied[F[_], E](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[A](f: E => A)(implicit ask: Ask[F, E]): F[A] =
+    @inline def apply[A](f: E => A)(implicit ask: Asking[F, E]): F[A] =
       ask.reader(f)
   }
 
   def readerFE[F[_], E] = new readerFEPartiallyApplied[F, E]
 
-  def reader[F[_], E, A](fun: E => A)(implicit ask: Ask[F, E]): F[A] =
+  def reader[F[_], E, A](fun: E => A)(implicit ask: Asking[F, E]): F[A] =
     ask.reader(fun)
 
 }

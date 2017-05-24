@@ -17,7 +17,7 @@ package object mtl {
   type EitherTCE[E] = {type l[M[_], A] = EitherT[M, E, A]}
   type WriterTC[M[_], L] = {type l[A] = WriterT[M, L, A]}
   type WriterTCL[L] = {type l[M[_], A] = WriterT[M, L, A]}
-  type WriterC[L] = {type l[A] = Writer[L, A]}
+  type TupleC[L] = {type l[A] = (L, A)}
   type of[F[_], G[_]] = {type l[A] = F[G[A]]}
 
 }

@@ -5,14 +5,15 @@ package instances
 import cats.data.ReaderT
 
 trait ReaderTInstances extends ReaderTInstancesLowPriority {
-  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): MonadLayer.Aux[CurryT[ReaderTCE[E]#l, M]#l, M] =
+  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): MonadLayer[CurryT[ReaderTCE[E]#l, M]#l, M] =
     readerMonadTransControl[M, E]
 }
 
 trait ReaderTInstancesLowPriority {
 
-  implicit final def readerMonadTransControl[M[_], E](implicit M: Monad[M]): MonadTransControl.Aux[CurryT[ReaderTCE[E]#l, M]#l, Id, M, ReaderTCE[E]#l] = {
-    new MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l] {
+  implicit final def readerMonadTransControl[M[_], E]
+  (implicit M: Monad[M]): MonadTransControl.Aux[CurryT[ReaderTCE[E]#l, M]#l, Id, M, ReaderTCE[E]#l] = {
+    new MonadTransControl[CurryT[ReaderTCE[E]#l, M]#l, M] {
       type State[A] = A
 
       type Inner[A] = M[A]

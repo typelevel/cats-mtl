@@ -5,7 +5,7 @@ package instances
 import cats.data.OptionT
 
 trait OptionTInstances extends OptionTInstancesLowPriority {
-  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): MonadLayer.Aux[OptionTC[M]#l, M] =
+  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): MonadLayer[OptionTC[M]#l, M] =
     optionMonadTransControl[M]
 }
 
@@ -13,7 +13,7 @@ trait OptionTInstancesLowPriority {
 
   implicit final def optionMonadTransControl[M[_]]
   (implicit M: Monad[M]): MonadTransControl.Aux[OptionTC[M]#l, Option, M, OptionT] = {
-    new MonadTransControl[OptionTC[M]#l] {
+    new MonadTransControl[OptionTC[M]#l, M] {
       type State[A] = Option[A]
       type Inner[A] = M[A]
       type Outer[F[_], A] = OptionT[F, A]

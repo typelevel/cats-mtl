@@ -1,14 +1,13 @@
 package cats
 package mtl
 
-trait MonadTransControl[M[_]] extends MonadLayerControl[M] with MonadTransFunctor[M] {
+trait MonadTransControl[M[_], Inner[_]] extends MonadLayerControl[M, Inner] with MonadTransFunctor[M, Inner] {
   def transControl[A](cps: MonadTransContinuation[State, Outer, A]): M[A]
 }
 
 object MonadTransControl {
-  type Aux[M[_], State0[_], Inner0[_], Outer0[_[_], _]] = MonadTransControl[M] {
+  type Aux[M[_], State0[_], Inner0[_], Outer0[_[_], _]] = MonadTransControl[M, Inner0] {
     type State[A] = State0[A]
-    type Inner[A] = Inner0[A]
     type Outer[F[_], A] = Outer0[F, A]
   }
 }

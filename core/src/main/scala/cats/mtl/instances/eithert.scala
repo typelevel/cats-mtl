@@ -6,8 +6,8 @@ import cats.data.EitherT
 
 object eithert {
   def eitherMonadTransControl[M[_], E]
-  (implicit M: Monad[M]): MonadTransControl[CurryT[EitherTCE[E]#l, M]#l] = {
-    new MonadTransControl[CurryT[EitherTCE[E]#l, M]#l] {
+  (implicit M: Monad[M]): MonadTransControl.Aux[EitherTC[M, E]#l, EitherC[E]#l, M, EitherTCE[E]#l] = {
+    new MonadTransControl[CurryT[EitherTCE[E]#l, M]#l, M] {
       type State[A] = E Either A
       type Inner[A] = M[A]
       type Outer[F[_], A] = EitherT[F, E, A]

@@ -1,7 +1,7 @@
 package cats
 package mtl
 
-trait MonadTrans[M[_]] extends MonadLayer[M] {
+trait MonadTrans[M[_], Inner[_]] extends MonadLayer[M, Inner] {
   type Outer[F[_], A]
 
   def showLayers[F[_], A](ma: F[M[A]]): F[Outer[Inner, A]]
@@ -14,11 +14,8 @@ trait MonadTrans[M[_]] extends MonadLayer[M] {
 }
 
 object MonadTrans {
-  type AuxO[M[_], Outer0[_[_], _]] = MonadTrans[M] {type Outer[F[_], A] = Outer0[F, A]}
-  type AuxI[M[_], Inner0[_]] = MonadTrans[M] {type Inner[A] = Inner0[A]}
   type AuxIO[M[_], Inner0[_], Outer0[_[_], _]] =
-    MonadTrans[M] {
-      type Inner[A] = Inner0[A]
+    MonadTrans[M, Inner0] {
       type Outer[F[_], A] = Outer0[F, A]
     }
 }

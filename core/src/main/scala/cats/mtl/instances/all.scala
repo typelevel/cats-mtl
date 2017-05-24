@@ -1,9 +1,9 @@
 package cats.mtl.instances
 
 object all extends AskInstances
-  with HandleInstances
-  with ListenInstances
-  with RaiseInstances
+  with HandlingInstances
+  with ListeningInstances
+  with RaisingInstances
   // with StateInstances
   // with TellInstances
 

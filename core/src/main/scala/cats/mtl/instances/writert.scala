@@ -2,22 +2,26 @@ package cats
 package mtl
 package instances
 
-import cats.data.{Writer, WriterT}
-import cats.syntax.all._
+import cats.data.WriterT
 
-object writert {
-  def writerMonadTransControl[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): MonadTransControl[CurryT[WriterTCL[L]#l, M]#l] = {
-    new MonadTransControl[CurryT[WriterTCL[L]#l, M]#l] {
-      type State[A] = Writer[L, A]
+trait WriterTInstances extends WriterTInstancesLowPriority {
+  implicit final def writerMonadLayer[M[_], L](implicit L: Monoid[L], M: Monad[M]): MonadLayer[CurryT[WriterTCL[L]#l, M]#l, M] =
+    writerMonadTransControl[M, L]
+}
+
+private[instances] trait WriterTInstancesLowPriority {
+  implicit final def writerMonadTransControl[M[_], L]
+  (implicit L: Monoid[L], M: Monad[M]): MonadTransControl.Aux[CurryT[WriterTCL[L]#l, M]#l, TupleC[L]#l, M, WriterTCL[L]#l] = {
+    new MonadTransControl[CurryT[WriterTCL[L]#l, M]#l, M] {
+      type State[A] = (L, A)
 
       type Inner[A] = M[A]
 
-      type Outer[F[_], A] = WriterTCL[L]#l[F, A]
+      type Outer[F[_], A] = WriterT[F, L, A]
 
-      def restore[A](state: Writer[L, A]): WriterT[M, L, A] = WriterT(M.pure(state.run))
+      def restore[A](state: (L, A)): WriterT[M, L, A] = WriterT(M.pure(state))
 
-      def zero[A](state: Writer[L, A]): Boolean = false
+      def zero[A](state: (L, A)): Boolean = false
 
       val monad: Monad[CurryT[WriterTCL[L]#l, M]#l] =
         WriterT.catsDataMonadWriterForWriterT
@@ -25,16 +29,16 @@ object writert {
 
       def transControl[A](cps: MonadTransContinuation[State, Outer, A]): WriterT[M, L, A] = {
         WriterT.lift[M, L, A](
-          cps(new (WriterTC[M, L]#l ~> (M of WriterC[L]#l)#l) {
-            def apply[X](fa: WriterT[M, L, X]): M[Writer[L, X]] = fa.run.map(WriterT[Id, L, X](_))
+          cps(new (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) {
+            def apply[X](fa: WriterT[M, L, X]): M[(L, X)] = fa.run
           })(this)
         )
       }
 
-      def layerControl[A](cps: (WriterTC[M, L]#l ~> (M of WriterC[L]#l)#l) => M[A]): WriterT[M, L, A] = {
+      def layerControl[A](cps: (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) => M[A]): WriterT[M, L, A] = {
         WriterT.lift[M, L, A](
-          cps(new (WriterTC[M, L]#l ~> (M of WriterC[L]#l)#l) {
-            def apply[X](fa: WriterT[M, L, X]): M[Writer[L, X]] = fa.run.map(WriterT[Id, L, X](_))
+          cps(new (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) {
+            def apply[X](fa: WriterT[M, L, X]): M[(L, X)] = fa.run
           })
         )
       }
@@ -63,5 +67,8 @@ object writert {
 
     }
   }
+}
+
+object writert extends WriterTInstances {
 
 }

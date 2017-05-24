@@ -19,15 +19,15 @@ class Usage extends BaseSuite {
   // ask
   test("ask") {
     val _ =
-      Ask.ask[ReaderStrInt, Int]
+      Asking.ask[ReaderStrInt, Int]
     val _1 =
-      Ask.ask[ReaderStrInt, String]
+      Asking.ask[ReaderStrInt, String]
     val askFNoExpectedTypeWithArgsNestedInReader =
-      Ask.askF[ReaderStrInt]()
+      Asking.askF[ReaderStrInt]()
     val _2: ReaderStrInt[Int] =
       askFNoExpectedTypeWithArgsNestedInReader
     val askFExpectedTypeWithArgsNestedInReader: ReaderStrInt[Int] =
-      Ask.askF[ReaderStrInt]()
+      Asking.askF[ReaderStrInt]()
   }
 
   // reader
@@ -44,16 +44,16 @@ class Usage extends BaseSuite {
       """
     }
     val _ =
-      Ask.reader[ReaderIntId, Int, String](_ + "!")
+      Asking.reader[ReaderIntId, Int, String](_ + "!")
     val _1: ReaderIntId[String] =
-      Ask.readerFE[ReaderIntId, Int](_ + "!")
+      Asking.readerFE[ReaderIntId, Int](_ + "!")
 
   }
 
   test("summon") {
-    implicitly[Ask[ReaderStrId, String]]
-    implicitly[Ask[ReaderStrInt, Int]]
-    implicitly[Ask[ReaderStrInt, String]]
+    implicitly[Asking[ReaderStrId, String]]
+    implicitly[Asking[ReaderStrInt, Int]]
+    implicitly[Asking[ReaderStrInt, String]]
   }
 
 }

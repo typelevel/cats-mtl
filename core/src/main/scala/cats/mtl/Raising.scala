@@ -1,8 +1,6 @@
 package cats
 package mtl
 
-trait Raise[F[_], E] {
-  val monad: Monad[F]
-
+trait Raising[F[_], E] {
   def raiseError[A](e: E): F[A]
 }
