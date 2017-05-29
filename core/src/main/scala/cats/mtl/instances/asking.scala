@@ -3,11 +3,11 @@ package mtl
 package instances
 
 import cats.data.{ReaderT, StateT}
+import cats.mtl.monad.{Asking, Layer}
 
-trait AskInstances extends AskInstancesLowPriority1 {
-
+trait AskingInstances extends AskingInstancesLowPriority1 {
   implicit def askIndT[Inner[_], Outer[_[_], _], E](implicit
-                                                    lift: MonadTrans.AuxIO[CurryT[Outer, Inner]#l, Inner, Outer],
+                                                    lift: monad.Trans.AuxIO[CurryT[Outer, Inner]#l, Inner, Outer],
                                                     under: Asking[Inner, E]
                                                    ): Asking[CurryT[Outer, Inner]#l, E] =
     new Asking[CurryT[Outer, Inner]#l, E] {
@@ -20,10 +20,10 @@ trait AskInstances extends AskInstancesLowPriority1 {
 
 }
 
-trait AskInstancesLowPriority1 extends AskInstancesLowPriority2 {
+trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
 
   implicit def askInd[M[_], Inner[_], E](implicit
-                                         lift: MonadLayer[M, Inner],
+                                         lift: Layer[M, Inner],
                                          under: Asking[Inner, E]
                                         ): Asking[M, E] =
     new Asking[M, E] {
@@ -60,5 +60,5 @@ trait AskInstancesLowPriority {
 
 }
 
-object ask extends AskInstances
+object asking extends AskingInstances
 

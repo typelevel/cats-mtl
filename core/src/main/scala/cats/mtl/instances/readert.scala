@@ -3,9 +3,10 @@ package mtl
 package instances
 
 import cats.data.ReaderT
+import cats.mtl.monad.Layer
 
 trait ReaderTInstances extends ReaderTInstancesLowPriority {
-  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): MonadLayer[CurryT[ReaderTCE[E]#l, M]#l, M] =
+  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): Layer[CurryT[ReaderTCE[E]#l, M]#l, M] =
     readerMonadTransControl[M, E]
 }
 

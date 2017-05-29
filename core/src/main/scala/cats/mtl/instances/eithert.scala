@@ -6,9 +6,8 @@ import cats.data.EitherT
 
 object eithert {
   def eitherMonadTransControl[M[_], E]
-  (implicit M: Monad[M]): MonadTransControl.Aux[EitherTC[M, E]#l, EitherC[E]#l, M, EitherTCE[E]#l] = {
-    new MonadTransControl[CurryT[EitherTCE[E]#l, M]#l, M] {
-      type State[A] = E Either A
+  (implicit M: Monad[M]): monad.TransFunctor.Aux[EitherTC[M, E]#l, M, EitherTCE[E]#l] = {
+    new monad.TransFunctor[EitherTC[M, E]#l, M] {
       type Inner[A] = M[A]
       type Outer[F[_], A] = EitherT[F, E, A]
 
@@ -19,22 +18,6 @@ object eithert {
       val monad: Monad[CurryT[EitherTCE[E]#l, M]#l] =
         EitherT.catsDataMonadErrorForEitherT
       val innerMonad: Monad[M] = M
-
-      def transControl[A](cps: MonadTransContinuation[State, Outer, A]): EitherT[M, E, A] = {
-        EitherT.right[M, E, A](
-          cps(new (EitherTC[M, E]#l ~> (M of EitherC[E]#l)#l) {
-            def apply[X](fa: EitherT[M, E, X]): M[Either[E, X]] = fa.value
-          })(this)
-        )
-      }
-
-      def layerControl[A](cps: (EitherTC[M, E]#l ~> (M of EitherC[E]#l)#l) => M[A]): EitherT[M, E, A] = {
-        EitherT.right[M, E, A](
-          cps(new (EitherTC[M, E]#l ~> (M of EitherC[E]#l)#l) {
-            def apply[X](fa: EitherT[M, E, X]): M[Either[E, X]] = fa.value
-          })
-        )
-      }
 
       def layerMap[A](ma: EitherT[M, E, A])(trans: M ~> M): EitherT[M, E, A] = EitherT(trans(ma.value))
 

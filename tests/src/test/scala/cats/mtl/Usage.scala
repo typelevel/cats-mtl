@@ -2,9 +2,10 @@ package cats
 package mtl
 
 import cats.data._
-import instances.ask._
+import instances.asking._
 import instances.readert._
 import cats.implicits._
+import cats.mtl.monad.Asking
 
 class Usage extends BaseSuite {
 

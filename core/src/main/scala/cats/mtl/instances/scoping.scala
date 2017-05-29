@@ -3,18 +3,19 @@ package mtl
 package instances
 
 import cats.data.ReaderT
+import cats.mtl.monad.{Asking, Layer, Scoping}
 
-trait LocalInstances extends LocalLowPriorityInstances {
-  implicit def localNInd[M[_], Inner[_], E](implicit ml: MonadLayer[M, Inner],
-                                            under: Scoping[Inner, E]
+trait ScopingInstances extends ScopingLowPriorityInstances {
+  implicit def scopingNInd[M[_], Inner[_], E](implicit ml: Layer[M, Inner],
+                                              under: Scoping[Inner, E]
                                            ): Scoping[M, E] = {
     new Scoping[M, E] {
       val ask: Asking[M, E] =
-        instances.ask.askInd[M, Inner, E](ml, under.ask)
+        instances.asking.askInd[M, Inner, E](ml, under.ask)
 
       def local[A](fa: M[A])(f: (E) => E): M[A] = {
         ml.monad.flatMap(ask.ask)(r =>
-          ml.imapK(fa)(new (Inner ~> Inner) {
+          ml.layerImapK(fa)(new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.local(fa)(f)
           }, new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(r)
@@ -23,7 +24,7 @@ trait LocalInstances extends LocalLowPriorityInstances {
 
       def scope[A](fa: M[A])(e: E): M[A] = {
         ml.monad.flatMap(ask.ask)(r =>
-          ml.imapK(fa)(new (Inner ~> Inner) {
+          ml.layerImapK(fa)(new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(e)
           }, new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(r)
@@ -34,12 +35,12 @@ trait LocalInstances extends LocalLowPriorityInstances {
   }
 }
 
-trait LocalLowPriorityInstances {
+trait ScopingLowPriorityInstances {
 
-  implicit def localNReader[M[_], E](implicit M: Monad[M]): Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+  implicit def scopingNReader[M[_], E](implicit M: Monad[M]): Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] {
       val ask: Asking[CurryT[ReaderTCE[E]#l, M]#l, E] =
-        instances.ask.askReader[M, E]
+        instances.asking.askReader[M, E]
 
       def local[A](fa: ReaderT[M, E, A])(f: (E) => E): ReaderT[M, E, A] = {
         ReaderT.local(f)(fa)
@@ -53,4 +54,4 @@ trait LocalLowPriorityInstances {
 
 }
 
-object local extends LocalInstances
+object scoping extends ScopingInstances

@@ -3,9 +3,10 @@ package mtl
 package instances
 
 import cats.data.OptionT
+import cats.mtl.monad.Layer
 
 trait OptionTInstances extends OptionTInstancesLowPriority {
-  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): MonadLayer[OptionTC[M]#l, M] =
+  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): Layer[OptionTC[M]#l, M] =
     optionMonadTransControl[M]
 }
 

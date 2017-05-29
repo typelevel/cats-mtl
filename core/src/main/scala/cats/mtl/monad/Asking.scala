@@ -1,6 +1,23 @@
 package cats
 package mtl
+package monad
 
+/**
+  * Asking has one external law:
+  * {{{
+  * def askAndAskIsAsk = {
+  *   ask >> ask == ask
+  * }
+  * }}}
+  *
+  * Asking has one internal law:
+  * {{{
+  * def readerIsAskAndMap[A](f: E => A) = {
+  *   ask.map(f) == reader(f)
+  * }
+  * }}}
+  * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context.
+  */
 trait Asking[F[_], E] {
   def ask: F[E]
 

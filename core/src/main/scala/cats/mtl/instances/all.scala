@@ -1,6 +1,8 @@
-package cats.mtl.instances
+package cats
+package mtl
+package instances
 
-object all extends AskInstances
+object all extends AskingInstances
   with HandlingInstances
   with ListeningInstances
   with RaisingInstances

@@ -3,10 +3,11 @@ package mtl
 package instances
 
 import cats.data.StateT
+import cats.mtl.monad.Layer
 import cats.syntax.all._
 
 trait StateTInstances extends StateTInstancesLowPriority {
-  implicit final def stateMonadLayer[M[_], S](implicit M: Monad[M]): MonadLayer[StateTC[M, S]#l, M] =
+  implicit final def stateMonadLayer[M[_], S](implicit M: Monad[M]): Layer[StateTC[M, S]#l, M] =
     stateMonadTransControl[M, S]
 }
 

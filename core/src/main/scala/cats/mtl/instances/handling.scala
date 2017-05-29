@@ -4,8 +4,9 @@ package instances
 
 import cats.data._
 import cats.implicits._
+import cats.mtl.monad.{Handling, Raising}
 
-trait HandlingInstances extends HandleInstancesLowPriority {
+trait HandlingInstances extends HandlingInstancesLowPriority {
   implicit def handleNEither[M[_], E](implicit M: Monad[M]): Handling[EitherTC[M, E]#l, E] =
     new Handling[EitherTC[M, E]#l, E] {
       val raise: Raising[EitherTC[M, E]#l, E] =
@@ -19,7 +20,7 @@ trait HandlingInstances extends HandleInstancesLowPriority {
     }
 }
 
-trait HandleInstancesLowPriority {
+trait HandlingInstancesLowPriority {
   implicit def handleNIndEither[M[_], E, Err](implicit under: Handling[M, E],
                                               monad: Monad[M]
                                              ): Handling[CurryT[EitherTCE[Err]#l, M]#l, E] =
@@ -107,4 +108,4 @@ trait HandleInstancesLowPriority {
     }
 }
 
-object handle extends HandlingInstances
+object handling extends HandlingInstances

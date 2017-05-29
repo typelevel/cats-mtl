@@ -1,6 +1,8 @@
-package cats.mtl.syntax
+package cats
+package mtl
+package syntax
 
-import cats.mtl.Asking
+import cats.mtl.monad.Asking
 
 trait AskSyntax {
 

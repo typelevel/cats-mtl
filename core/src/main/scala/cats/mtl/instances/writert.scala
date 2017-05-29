@@ -3,16 +3,18 @@ package mtl
 package instances
 
 import cats.data.WriterT
+import cats.mtl.monad.{Layer, TransFunctor}
 
 trait WriterTInstances extends WriterTInstancesLowPriority {
-  implicit final def writerMonadLayer[M[_], L](implicit L: Monoid[L], M: Monad[M]): MonadLayer[CurryT[WriterTCL[L]#l, M]#l, M] =
+  implicit final def writerMonadLayer[M[_], L](implicit L: Monoid[L], M: Monad[M]): Layer[CurryT[WriterTCL[L]#l, M]#l, M] =
     writerMonadTransControl[M, L]
 }
 
 private[instances] trait WriterTInstancesLowPriority {
   implicit final def writerMonadTransControl[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): MonadTransControl.Aux[CurryT[WriterTCL[L]#l, M]#l, TupleC[L]#l, M, WriterTCL[L]#l] = {
-    new MonadTransControl[CurryT[WriterTCL[L]#l, M]#l, M] {
+  (implicit L: Monoid[L], M: Monad[M]): TransFunctor.Aux[CurryT[WriterTCL[L]#l, M]#l, M, WriterTCL[L]#l] = {
+    new TransFunctor[CurryT[WriterTCL[L]#l, M]#l, M] {
+      import cats.mtl.monad._
       type State[A] = (L, A)
 
       type Inner[A] = M[A]
@@ -27,27 +29,9 @@ private[instances] trait WriterTInstancesLowPriority {
         WriterT.catsDataMonadWriterForWriterT
       val innerMonad: Monad[M] = M
 
-      def transControl[A](cps: MonadTransContinuation[State, Outer, A]): WriterT[M, L, A] = {
-        WriterT.lift[M, L, A](
-          cps(new (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) {
-            def apply[X](fa: WriterT[M, L, X]): M[(L, X)] = fa.run
-          })(this)
-        )
-      }
-
-      def layerControl[A](cps: (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) => M[A]): WriterT[M, L, A] = {
-        WriterT.lift[M, L, A](
-          cps(new (WriterTC[M, L]#l ~> (M of TupleC[L]#l)#l) {
-            def apply[X](fa: WriterT[M, L, X]): M[(L, X)] = fa.run
-          })
-        )
-      }
-
-      def layerMap[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
+      def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
 
       def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.lift(inner)
-
-      def imapK[A](ma: WriterT[M, L, A])(forward: M ~> M, backward: M ~> M): WriterT[M, L, A] = layerMap(ma)(forward)
 
       def showLayers[F[_], A](ma: F[WriterT[M, L, A]]): F[WriterT[M, L, A]] = ma
 
@@ -55,13 +39,13 @@ private[instances] trait WriterTInstancesLowPriority {
 
       def transInvMap[N[_], NInner[_], A]
       (ma: WriterT[M, L, A])(forward: M ~> NInner, backward: NInner ~> M)
-      (implicit other: MonadTrans.AuxIO[N, NInner, WriterTCL[L]#l]): N[A] = {
+      (implicit other: Trans.AuxIO[N, NInner, WriterTCL[L]#l]): N[A] = {
         transMap(ma)(forward)
       }
 
       def transMap[A, N[_], NInner[_]]
       (ma: WriterT[M, L, A])(trans: M ~> NInner)
-      (implicit mt: MonadTrans.AuxIO[N, NInner, WriterTCL[L]#l]): N[A] = {
+      (implicit mt: Trans.AuxIO[N, NInner, WriterTCL[L]#l]): N[A] = {
         mt.hideLayers[Id, A](WriterT(trans(ma.run)))
       }
 
