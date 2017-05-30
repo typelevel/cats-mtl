@@ -23,3 +23,25 @@ trait Raising[F[_], E] {
 
   def raise[A](e: E): F[A]
 }
+
+object Raising {
+  def raise[F[_], E, A](e: E)(implicit raising: Raising[F, E]): F[A] =
+    raising.raise(e)
+
+  def raiseF[F[_]] =
+    new raiseFPartiallyApplied[F]()
+
+  def raiseE[E] =
+    new raiseEPartiallyApplied[E]()
+
+  final private[mtl] class raiseFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[E, A](e: E)(implicit raise: Raising[F, E]): F[A] =
+      raise.raise(e)
+  }
+
+  final private[mtl] class raiseEPartiallyApplied[E](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[F[_], A](e: E)(implicit raise: Raising[F, E]): F[A] =
+      raise.raise(e)
+  }
+
+}

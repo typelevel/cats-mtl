@@ -6,17 +6,10 @@ import cats.data.{ReaderT, StateT}
 import cats.mtl.monad.{Asking, Layer}
 
 trait AskingInstances extends AskingInstancesLowPriority1 {
-  implicit def askIndT[Inner[_], Outer[_[_], _], E](implicit
-                                                    lift: monad.Trans.AuxIO[CurryT[Outer, Inner]#l, Inner, Outer],
-                                                    under: Asking[Inner, E]
-                                                   ): Asking[CurryT[Outer, Inner]#l, E] =
-    new Asking[CurryT[Outer, Inner]#l, E] {
-      def ask: CurryT[Outer, Inner]#l[E] =
-        lift.layer(under.ask)
-
-      def reader[A](f: (E) => A): Outer[Inner, A] =
-        lift.layer(under.reader(f))
-    }
+  implicit def askIndT[Inner[_], Outer[_[_], _], E]
+  (implicit lift: monad.Trans.AuxIO[CurryT[Outer, Inner]#l, Inner, Outer],
+   under: Asking[Inner, E]): Asking[CurryT[Outer, Inner]#l, E] =
+    askInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
 
 }
 

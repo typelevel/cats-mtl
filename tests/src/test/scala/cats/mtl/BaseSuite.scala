@@ -8,7 +8,7 @@ import org.scalatest.prop.Configuration
 import org.scalatest.{FunSuite, Matchers}
 import org.typelevel.discipline.scalatest.Discipline
 
-class BaseSuite extends FunSuite
+abstract class BaseSuite extends FunSuite
   with Matchers
   with Configuration
   with StrictCatsEquality

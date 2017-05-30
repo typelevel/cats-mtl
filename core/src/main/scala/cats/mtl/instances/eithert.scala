@@ -4,8 +4,13 @@ package instances
 
 import cats.data.EitherT
 
-object eithert {
-  def eitherMonadTransControl[M[_], E]
+trait EitherTInstances extends EitherTInstancesLowPriority {
+  implicit final def eitherMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] =
+    eitherMonadTransFunctor[M, E]
+}
+
+trait EitherTInstancesLowPriority {
+  implicit final def eitherMonadTransFunctor[M[_], E]
   (implicit M: Monad[M]): monad.TransFunctor.Aux[EitherTC[M, E]#l, M, EitherTCE[E]#l] = {
     new monad.TransFunctor[EitherTC[M, E]#l, M] {
       type Outer[F[_], A] = EitherT[F, E, A]
@@ -31,3 +36,5 @@ object eithert {
     }
   }
 }
+
+object eithert extends EitherTInstances

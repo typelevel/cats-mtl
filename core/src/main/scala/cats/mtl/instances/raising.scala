@@ -34,5 +34,4 @@ trait RaisingLowPriorityInstances1 {
 
 }
 
-
-object raise extends RaisingInstances
+object raising extends RaisingInstances

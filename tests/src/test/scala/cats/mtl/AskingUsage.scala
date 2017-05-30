@@ -4,10 +4,9 @@ package mtl
 import cats.data._
 import instances.asking._
 import instances.readert._
-import cats.implicits._
 import cats.mtl.monad.Asking
 
-class Usage extends BaseSuite {
+final class AskingUsage extends BaseSuite {
 
   import shapeless.test._
 
@@ -29,6 +28,8 @@ class Usage extends BaseSuite {
       askFNoExpectedTypeWithArgsNestedInReader
     val askFExpectedTypeWithArgsNestedInReader: ReaderStrInt[Int] =
       Asking.askF[ReaderStrInt]()
+    val askE = Asking.askE[Int]()
+    val _3: ReaderIntId[Int] = askE
   }
 
   // reader
