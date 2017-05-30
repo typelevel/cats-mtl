@@ -2,8 +2,18 @@ package cats
 package mtl
 package monad
 
-import cats.~>
-
+/**
+  * monad.Trans has two external laws:
+  * {{{
+  * def transInvMapIdentity(ma: M[A]) = {
+  *   transInvMap(ma)(FunctionK.id, FunctionK.id) == ma
+  * }
+  * def transInvMapComposition[N[_], NInner[_]](ma: M[A], f1: Inner ~> NInner, f2: Inner ~> NInner,
+  *                                             b1: NInner ~> Inner, b2: NInner ~> Inner) = {
+  *   transInvMap(transInvMap(ma)(f2, b2))(f1, b1) == transInvMap(ma)(f1.andThen(f2), b1.andThen(b2))
+  * }
+  * }}}
+  */
 trait Trans[M[_], Inner[_]] extends Layer[M, Inner] {
   type Outer[F[_], A]
 

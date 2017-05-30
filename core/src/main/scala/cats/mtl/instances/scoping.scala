@@ -14,7 +14,7 @@ trait ScopingInstances extends ScopingLowPriorityInstances {
         instances.asking.askInd[M, Inner, E](ml, under.ask)
 
       def local[A](fa: M[A])(f: (E) => E): M[A] = {
-        ml.monad.flatMap(ask.ask)(r =>
+        ml.outerMonad.flatMap(ask.ask)(r =>
           ml.layerImapK(fa)(new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.local(fa)(f)
           }, new (Inner ~> Inner) {
@@ -23,7 +23,7 @@ trait ScopingInstances extends ScopingLowPriorityInstances {
       }
 
       def scope[A](fa: M[A])(e: E): M[A] = {
-        ml.monad.flatMap(ask.ask)(r =>
+        ml.outerMonad.flatMap(ask.ask)(r =>
           ml.layerImapK(fa)(new (Inner ~> Inner) {
             def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(e)
           }, new (Inner ~> Inner) {

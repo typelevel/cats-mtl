@@ -2,17 +2,21 @@ package cats
 package mtl
 package monad
 
-import cats.~>
-
 /**
   * laws:
   * {{{
-  *   def
+  *   def transMapIdentity(ma: M[A])(
   * }}}
   */
 trait TransFunctor[M[_], Inner[_]] extends LayerFunctor[M, Inner] with Trans[M, Inner] {
   def transMap[A, N[_], NInner[_]](ma: M[A])(trans: Inner ~> NInner)
                                   (implicit mt: Trans.AuxIO[N, NInner, Outer]): N[A]
+
+  def transInvMap[N[_], NInner[_], A](ma: M[A])
+                                     (forward: Inner ~> NInner,
+                                      backward: NInner ~> Inner)(implicit other: Trans.AuxIO[N, NInner, Outer]): N[A] = {
+    transMap(ma)(forward)
+  }
 
 }
 

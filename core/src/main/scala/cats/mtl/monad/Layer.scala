@@ -24,7 +24,7 @@ package monad
   * }}}
   */
 trait Layer[M[_], Inner[_]] {
-  val monad: Monad[M]
+  val outerMonad: Monad[M]
   val innerMonad: Monad[Inner]
 
   def layer[A](inner: Inner[A]): M[A]

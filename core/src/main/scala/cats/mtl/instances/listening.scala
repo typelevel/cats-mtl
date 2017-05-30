@@ -14,11 +14,11 @@ trait ListeningInstances extends ListenLowPriorityInstances {
     new Listening[M, L] {
       val tell = instances.telling.tellInd[M, Inner, L](lift, under.tell)
 
-      def listen[A](fa: M[A]): M[(A, L)] = lift.monad.flatMap(fa) { a =>
+      def listen[A](fa: M[A]): M[(A, L)] = lift.outerMonad.flatMap(fa) { a =>
         lift.layer(under.listen(lift.innerMonad.pure(a)))
       }
 
-      def pass[A](fa: M[(A, (L) => L)]): M[A] = lift.monad.flatMap(fa) { a =>
+      def pass[A](fa: M[(A, (L) => L)]): M[A] = lift.outerMonad.flatMap(fa) { a =>
         lift.layer(under.pass(lift.innerMonad.pure(a)))
       }
     }

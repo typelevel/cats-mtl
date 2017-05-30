@@ -11,7 +11,8 @@ trait TellingInstances extends TellingInstancesLowPriority {
                                           under: Telling[Inner, L]
                                          ): Telling[M, L] =
     new Telling[M, L] {
-      val monad: Monad[M] = lift.monad
+      val monad: Monad[M] = lift.outerMonad
+      val monoid: Monoid[L] = under.monoid
 
       def tell(l: L): M[Unit] = lift.layer(under.tell(l))
 
@@ -23,7 +24,8 @@ trait TellingInstancesLowPriority {
 
   implicit def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] =
     new Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
-      val monad: Monad[M] = M
+      val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
+      val monoid: Monoid[L] = L
 
       def tell(l: L): WriterT[M, L, Unit] =
         WriterT.tell(l)
