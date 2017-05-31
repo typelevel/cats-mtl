@@ -31,7 +31,7 @@ trait OptionTInstancesLowPriority {
 
       def transMap[A, N[_], NInner[_]]
       (ma: OptionT[M, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.AuxIO[N, NInner, OptionT]): N[A] = {
+      (implicit mt: monad.Trans.Aux[N, NInner, OptionT]): N[A] = {
         mt.hideLayers[Id, A](OptionT(trans(ma.value)))
       }
 

@@ -7,7 +7,7 @@ import cats.mtl.monad.{Asking, Layer}
 
 trait AskingInstances extends AskingInstancesLowPriority1 {
   implicit def askIndT[Inner[_], Outer[_[_], _], E]
-  (implicit lift: monad.Trans.AuxIO[CurryT[Outer, Inner]#l, Inner, Outer],
+  (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
    under: Asking[Inner, E]): Asking[CurryT[Outer, Inner]#l, E] =
     askInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
 

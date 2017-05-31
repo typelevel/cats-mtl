@@ -7,7 +7,7 @@ import cats.mtl.monad.{Layer, Raising}
 
 trait RaisingInstances extends RaisingLowPriorityInstances {
   implicit def raiseNIndT[T[_[_], _], M[_], E]
-  (implicit lift: monad.TransFunctor.Aux[CurryT[T, M]#l, M, T],
+  (implicit lift: monad.Trans.Aux[CurryT[T, M]#l, M, T],
    under: Raising[M, E]): Raising[CurryT[T, M]#l, E] =
     raiseNInd[CurryT[T, M]#l, M, E](lift, under)
 }

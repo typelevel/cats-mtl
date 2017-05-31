@@ -30,7 +30,7 @@ private[instances] trait WriterTInstancesLowPriority {
 
       def transMap[A, N[_], NInner[_]]
       (ma: WriterT[M, L, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.AuxIO[N, NInner, WriterTCL[L]#l]): N[A] = {
+      (implicit mt: monad.Trans.Aux[N, NInner, WriterTCL[L]#l]): N[A] = {
         mt.hideLayers[Id, A](WriterT(trans(ma.run)))
       }
 

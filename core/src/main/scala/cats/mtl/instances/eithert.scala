@@ -29,7 +29,7 @@ trait EitherTInstancesLowPriority {
 
       def transMap[A, N[_], NInner[_]]
       (ma: EitherT[M, E, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.AuxIO[N, NInner, EitherTCE[E]#l]): N[A] = {
+      (implicit mt: monad.Trans.Aux[N, NInner, EitherTCE[E]#l]): N[A] = {
         mt.hideLayers[Id, A](EitherT(trans(ma.value)))
       }
 

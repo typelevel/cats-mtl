@@ -31,7 +31,7 @@ private[instances] trait StateTInstancesLowPriority {
 
       def transMap[A, N[_], NInner[_]]
       (ma: StateT[M, S, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.AuxIO[N, NInner, StateTCS[S]#l]): N[A] = {
+      (implicit mt: monad.Trans.Aux[N, NInner, StateTCS[S]#l]): N[A] = {
         mt.hideLayers[Id, A](ma.transformF(trans(_))(innerMonad, mt.innerMonad))
       }
     }

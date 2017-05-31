@@ -31,7 +31,7 @@ trait ReaderTInstancesLowPriority {
 
       def transMap[A, N[_], NInner[_]]
       (ma: ReaderT[M, E, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.AuxIO[N, NInner, ReaderTCE[E]#l]): N[A] = {
+      (implicit mt: monad.Trans.Aux[N, NInner, ReaderTCE[E]#l]): N[A] = {
         mt.hideLayers[Id, A](ma.transform(trans))
       }
     }

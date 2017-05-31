@@ -28,7 +28,9 @@ package monad
   *
   */
 trait Stateful[F[_], S] {
-  val monad: Monad[F]
+  val fMonad: Monad[F]
+
+  val ask: Asking[F, S]
 
   def get: F[S]
 

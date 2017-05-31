@@ -8,7 +8,7 @@ import cats.mtl.monad.{Asking, Layer, Scoping}
 trait ScopingInstances extends ScopingLowPriorityInstances {
   implicit def scopingNInd[M[_], Inner[_], E](implicit ml: Layer[M, Inner],
                                               under: Scoping[Inner, E]
-                                           ): Scoping[M, E] = {
+                                             ): Scoping[M, E] = {
     new Scoping[M, E] {
       val ask: Asking[M, E] =
         instances.asking.askInd[M, Inner, E](ml, under.ask)
