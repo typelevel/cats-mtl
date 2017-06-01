@@ -3,11 +3,12 @@ package mtl
 package instances
 
 import cats.data.WriterT
-import cats.mtl.monad.Layer
 
 trait WriterTInstances extends WriterTInstancesLowPriority {
-  implicit final def writerMonadLayer[M[_], L](implicit L: Monoid[L], M: Monad[M]): Layer[CurryT[WriterTCL[L]#l, M]#l, M] =
+  implicit final def writerMonadLayer[M[_], L]
+  (implicit L: Monoid[L], M: Monad[M]): monad.Layer[CurryT[WriterTCL[L]#l, M]#l, M] = {
     writerMonadTransControl[M, L]
+  }
 }
 
 private[instances] trait WriterTInstancesLowPriority {
@@ -18,6 +19,7 @@ private[instances] trait WriterTInstancesLowPriority {
 
       val outerMonad: Monad[CurryT[WriterTCL[L]#l, M]#l] =
         WriterT.catsDataMonadWriterForWriterT
+
       val innerMonad: Monad[M] = M
 
       def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))

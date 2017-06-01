@@ -5,8 +5,9 @@ package instances
 import cats.data.EitherT
 
 trait EitherTInstances extends EitherTInstancesLowPriority {
-  implicit final def eitherMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] =
+  implicit final def eitherMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] = {
     eitherMonadTransFunctor[M, E]
+  }
 }
 
 trait EitherTInstancesLowPriority {
@@ -17,6 +18,7 @@ trait EitherTInstancesLowPriority {
 
       val outerMonad: Monad[CurryT[EitherTCE[E]#l, M]#l] =
         EitherT.catsDataMonadErrorForEitherT
+
       val innerMonad: Monad[M] = M
 
       def layerMapK[A](ma: EitherT[M, E, A])(trans: M ~> M): EitherT[M, E, A] = EitherT(trans(ma.value))

@@ -53,9 +53,9 @@ final class AskingUsage extends BaseSuite {
   }
 
   test("summon") {
-    implicitly[Asking[ReaderStrId, String]]
-    implicitly[Asking[ReaderStrInt, Int]]
-    implicitly[Asking[ReaderStrInt, String]]
+    implicitly[monad.Asking[ReaderStrId, String]]
+    implicitly[monad.Asking[ReaderStrInt, Int]]
+    implicitly[monad.Asking[ReaderStrInt, String]]
   }
 
 }

@@ -2,12 +2,10 @@ package cats
 package mtl
 package hierarchy
 
-import cats.mtl.monad.{Asking, Scoping}
-
 object BaseHierarchy {
 
   trait BH0 extends BH1 {
-    implicit def askFromLocal[F[_], E](local: Scoping[F, E]): Asking[F, E] = local.ask
+    implicit def askFromLocal[F[_], E](local: monad.Scoping[F, E]): monad.Asking[F, E] = local.ask
 
   }
 

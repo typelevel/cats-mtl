@@ -6,6 +6,6 @@ object all extends AskingInstances
   with HandlingInstances
   with ListeningInstances
   with RaisingInstances
-  // with StateInstances
-  // with TellInstances
+  with StatefulInstances
+  with TellingInstances
 

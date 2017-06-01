@@ -3,14 +3,13 @@ package mtl
 package instances
 
 import cats.data.WriterT
-import cats.mtl.monad.{Layer, Telling}
 
 trait TellingInstances extends TellingInstancesLowPriority {
   implicit def tellInd[M[_], Inner[_], L](implicit
-                                          lift: Layer[M, Inner],
-                                          under: Telling[Inner, L]
-                                         ): Telling[M, L] =
-    new Telling[M, L] {
+                                          lift: monad.Layer[M, Inner],
+                                          under: monad.Telling[Inner, L]
+                                         ): monad.Telling[M, L] = {
+    new monad.Telling[M, L] {
       val monad: Monad[M] = lift.outerMonad
       val monoid: Monoid[L] = under.monoid
 
@@ -18,21 +17,25 @@ trait TellingInstances extends TellingInstancesLowPriority {
 
       def writer[A](a: A, l: L): M[A] = lift.layer(under.writer(a, l))
     }
+  }
 }
 
 trait TellingInstancesLowPriority {
 
-  implicit def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] =
-    new Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
+  implicit def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
+    new monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val monoid: Monoid[L] = L
 
-      def tell(l: L): WriterT[M, L, Unit] =
+      def tell(l: L): WriterT[M, L, Unit] = {
         WriterT.tell(l)
+      }
 
-      def writer[A](a: A, l: L): WriterT[M, L, A] =
+      def writer[A](a: A, l: L): WriterT[M, L, A] = {
         WriterT.put(a)(l)
+      }
     }
+  }
 
 }
 

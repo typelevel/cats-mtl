@@ -3,10 +3,9 @@ package mtl
 package instances
 
 import cats.data.OptionT
-import cats.mtl.monad.Layer
 
 trait OptionTInstances extends OptionTInstancesLowPriority {
-  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): Layer[OptionTC[M]#l, M] =
+  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): monad.Layer[OptionTC[M]#l, M] =
     optionMonadTransFunctor[M]
 }
 
@@ -19,6 +18,7 @@ trait OptionTInstancesLowPriority {
 
       val outerMonad: Monad[OptionTC[M]#l] =
         OptionT.catsDataMonadForOptionT
+
       val innerMonad: Monad[M] = M
 
       def layerMapK[A](ma: OptionT[M, A])(trans: M ~> M): OptionT[M, A] = OptionT(trans(ma.value))

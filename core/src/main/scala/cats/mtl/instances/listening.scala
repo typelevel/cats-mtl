@@ -3,15 +3,14 @@ package mtl
 package instances
 
 import cats.data.WriterT
-import cats.mtl.monad.{Listening, Layer}
 import cats.syntax.functor._
 
 trait ListeningInstances extends ListenLowPriorityInstances {
   implicit def localInd[M[_], Inner[_], L](implicit
-                                           lift: Layer[M, Inner],
-                                           under: Listening[Inner, L]
-                                          ): Listening[M, L] =
-    new Listening[M, L] {
+                                           lift: monad.Layer[M, Inner],
+                                           under: monad.Listening[Inner, L]
+                                          ): monad.Listening[M, L] =
+    new monad.Listening[M, L] {
       val tell = instances.telling.tellInd[M, Inner, L](lift, under.tell)
 
       def listen[A](fa: M[A]): M[(A, L)] = lift.outerMonad.flatMap(fa) { a =>
@@ -25,8 +24,8 @@ trait ListeningInstances extends ListenLowPriorityInstances {
 }
 
 trait ListenLowPriorityInstances {
-  implicit def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): Listening[WriterTC[M, L]#l, L] =
-    new Listening[WriterTC[M, L]#l, L] {
+  implicit def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): monad.Listening[WriterTC[M, L]#l, L] =
+    new monad.Listening[WriterTC[M, L]#l, L] {
       val tell = instances.telling.tellWriter[M, L]
 
       def listen[A](fa: WriterT[M, L, A]): WriterT[M, L, (A, L)] = {

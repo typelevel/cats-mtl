@@ -3,10 +3,9 @@ package mtl
 package instances
 
 import cats.data.StateT
-import cats.mtl.monad.Layer
 
 trait StateTInstances extends StateTInstancesLowPriority {
-  implicit final def stateMonadLayer[M[_], S](implicit M: Monad[M]): Layer[StateTC[M, S]#l, M] =
+  implicit final def stateMonadLayer[M[_], S](implicit M: Monad[M]): monad.Layer[StateTC[M, S]#l, M] =
     stateMonadTransControl[M, S]
 }
 
@@ -19,6 +18,7 @@ private[instances] trait StateTInstancesLowPriority {
 
       val outerMonad: Monad[StateTC[M, S]#l] =
         StateT.catsDataMonadForStateT
+
       val innerMonad: Monad[M] = M
 
       def layerMapK[A](ma: StateT[M, S, A])(trans: M ~> M): StateT[M, S, A] = ma.transformF(trans(_))

@@ -3,12 +3,11 @@ package mtl
 package instances
 
 import cats.data.{ReaderT, StateT}
-import cats.mtl.monad.{Asking, Layer}
 
 trait AskingInstances extends AskingInstancesLowPriority1 {
   implicit def askIndT[Inner[_], Outer[_[_], _], E]
   (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
-   under: Asking[Inner, E]): Asking[CurryT[Outer, Inner]#l, E] =
+   under: monad.Asking[Inner, E]): monad.Asking[CurryT[Outer, Inner]#l, E] =
     askInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
 
 }
@@ -16,10 +15,10 @@ trait AskingInstances extends AskingInstancesLowPriority1 {
 trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
 
   implicit def askInd[M[_], Inner[_], E](implicit
-                                         lift: Layer[M, Inner],
-                                         under: Asking[Inner, E]
-                                        ): Asking[M, E] =
-    new Asking[M, E] {
+                                         lift: monad.Layer[M, Inner],
+                                         under: monad.Asking[Inner, E]
+                                        ): monad.Asking[M, E] =
+    new monad.Asking[M, E] {
       def ask: M[E] =
         lift.layer(under.ask)
 
@@ -31,8 +30,8 @@ trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
 
 trait AskInstancesLowPriority2 extends AskInstancesLowPriority {
 
-  implicit def askReader[M[_], E](implicit M: Applicative[M]): Asking[CurryT[ReaderTCE[E]#l, M]#l, E] =
-    new Asking[CurryT[ReaderTCE[E]#l, M]#l, E] {
+  implicit def askReader[M[_], E](implicit M: Applicative[M]): monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] =
+    new monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] {
       def ask: ReaderT[M, E, E] =
         ReaderT.ask[M, E]
       def reader[A](f: (E) => A): ReaderT[M, E, A] =
@@ -43,8 +42,8 @@ trait AskInstancesLowPriority2 extends AskInstancesLowPriority {
 
 trait AskInstancesLowPriority {
 
-  implicit def askState[M[_], S](implicit M: Applicative[M]): Asking[CurryT[StateTCS[S]#l, M]#l, S] =
-    new Asking[CurryT[StateTCS[S]#l, M]#l, S] {
+  implicit def askState[M[_], S](implicit M: Applicative[M]): monad.Asking[CurryT[StateTCS[S]#l, M]#l, S] =
+    new monad.Asking[CurryT[StateTCS[S]#l, M]#l, S] {
       def ask: StateT[M, S, S] =
         StateT.get[M, S]
       def reader[A](f: (S) => A): StateT[M, S, A] =

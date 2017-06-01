@@ -3,10 +3,9 @@ package mtl
 package instances
 
 import cats.data.ReaderT
-import cats.mtl.monad.Layer
 
 trait ReaderTInstances extends ReaderTInstancesLowPriority {
-  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): Layer[CurryT[ReaderTCE[E]#l, M]#l, M] =
+  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[CurryT[ReaderTCE[E]#l, M]#l, M] =
     readerMonadTransControl[M, E]
 }
 
@@ -19,6 +18,7 @@ trait ReaderTInstancesLowPriority {
 
       val outerMonad: Monad[CurryT[ReaderTCE[E]#l, M]#l] =
         ReaderT.catsDataMonadReaderForKleisli
+
       val innerMonad: Monad[M] = M
 
       def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
