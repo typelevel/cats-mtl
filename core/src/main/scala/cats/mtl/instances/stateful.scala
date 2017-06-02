@@ -7,7 +7,7 @@ import data.StateT
 trait StatefulInstances extends StatefulInstancesLowPriority {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
   // to lift Stateful into
-  implicit def statefulNInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],
+  implicit final def statefulNInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],
                                               under: monad.Stateful[Inner, E]
                                              ): monad.Stateful[M, E] = {
     new monad.Stateful[M, E] {
@@ -20,14 +20,14 @@ trait StatefulInstances extends StatefulInstancesLowPriority {
 
       def set(s: E): M[Unit] = ml.layer(under.set(s))
 
-      def modify(f: (E) => E): M[Unit] = ml.layer(under.modify(f))
+      def modify(f: E => E): M[Unit] = ml.layer(under.modify(f))
     }
   }
 }
 
 private[instances] trait StatefulInstancesLowPriority {
 
-  implicit def statefulState[M[_], S](implicit M: Monad[M]): monad.Stateful[CurryT[StateTCS[S]#l, M]#l, S] =
+  implicit final def statefulState[M[_], S](implicit M: Monad[M]): monad.Stateful[CurryT[StateTCS[S]#l, M]#l, S] =
     new monad.Stateful[StateTC[M, S]#l, S] {
       val fMonad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
 

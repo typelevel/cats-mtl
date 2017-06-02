@@ -6,14 +6,14 @@ import cats.data.WriterT
 
 trait WriterTInstances extends WriterTInstancesLowPriority {
   implicit final def writerMonadLayer[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): monad.Layer[CurryT[WriterTCL[L]#l, M]#l, M] = {
+  (implicit L: Monoid[L], M: Monad[M]): monad.Layer[WriterTC[M, L]#l, M] = {
     writerMonadTransControl[M, L]
   }
 }
 
 private[instances] trait WriterTInstancesLowPriority {
   implicit final def writerMonadTransControl[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): monad.TransFunctor.Aux[CurryT[WriterTCL[L]#l, M]#l, M, WriterTCL[L]#l] = {
+  (implicit L: Monoid[L], M: Monad[M]): monad.TransFunctor.Aux[WriterTC[M, L]#l, M, WriterTCL[L]#l] = {
     new monad.TransFunctor[CurryT[WriterTCL[L]#l, M]#l, M] {
       type Outer[F[_], A] = WriterT[F, L, A]
 
@@ -40,6 +40,5 @@ private[instances] trait WriterTInstancesLowPriority {
   }
 }
 
-object writert extends WriterTInstances {
+object writert extends WriterTInstances
 
-}

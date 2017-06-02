@@ -5,14 +5,15 @@ package instances
 import cats.data.ReaderT
 
 trait ReaderTInstances extends ReaderTInstancesLowPriority {
-  implicit final def readerMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[CurryT[ReaderTCE[E]#l, M]#l, M] =
+  implicit final def readerMonadLayer[M[_], E]
+  (implicit M: Monad[M]): monad.Layer[ReaderTC[M, E]#l, M] = {
     readerMonadTransControl[M, E]
+  }
 }
 
 trait ReaderTInstancesLowPriority {
-
   implicit final def readerMonadTransControl[M[_], E]
-  (implicit M: Monad[M]): monad.TransFunctor.Aux[CurryT[ReaderTCE[E]#l, M]#l, M, ReaderTCE[E]#l] = {
+  (implicit M: Monad[M]): monad.TransFunctor.Aux[ReaderTC[M, E]#l, M, ReaderTCE[E]#l] = {
     new monad.TransFunctor[CurryT[ReaderTCE[E]#l, M]#l, M] {
       type Outer[F[_], A] = ReaderTCE[E]#l[F, A]
 

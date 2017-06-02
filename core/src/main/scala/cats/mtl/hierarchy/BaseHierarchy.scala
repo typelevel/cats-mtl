@@ -5,7 +5,7 @@ package hierarchy
 object BaseHierarchy {
 
   trait BH0 extends BH1 {
-    implicit def askFromLocal[F[_], E](local: monad.Scoping[F, E]): monad.Asking[F, E] = local.ask
+    implicit final def askFromLocal[F[_], E](local: monad.Scoping[F, E]): monad.Asking[F, E] = local.ask
 
   }
 

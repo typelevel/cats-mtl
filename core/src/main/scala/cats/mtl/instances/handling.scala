@@ -6,7 +6,7 @@ import cats.data._
 import cats.implicits._
 
 trait HandlingInstances extends HandlingInstancesLowPriority {
-  implicit def handleNEither[M[_], E](implicit M: Monad[M]): monad.Handling[EitherTC[M, E]#l, E] =
+  implicit final def handleNEither[M[_], E](implicit M: Monad[M]): monad.Handling[EitherTC[M, E]#l, E] =
     new monad.Handling[EitherTC[M, E]#l, E] {
       val raise: monad.Raising[EitherTC[M, E]#l, E] =
         instances.raising.raiseNEither(M)
@@ -20,7 +20,7 @@ trait HandlingInstances extends HandlingInstancesLowPriority {
 }
 
 trait HandlingInstancesLowPriority {
-  implicit def handleNIndEither[M[_], E, Err](implicit under: monad.Handling[M, E],
+  implicit final def handleNIndEither[M[_], E, Err](implicit under: monad.Handling[M, E],
                                               M: Monad[M]
                                              ): monad.Handling[CurryT[EitherTCE[Err]#l, M]#l, E] =
     new monad.Handling[CurryT[EitherTCE[Err]#l, M]#l, E] {
@@ -42,7 +42,7 @@ trait HandlingInstancesLowPriority {
         EitherT(under.handleErrorWith(fa.value)(f.andThen(Right(_))))
     }
 
-  implicit def handleNIndState[M[_], S, Err](implicit under: monad.Handling[M, Err],
+  implicit final def handleNIndState[M[_], S, Err](implicit under: monad.Handling[M, Err],
                                              M: Monad[M]
                                             ): monad.Handling[CurryT[StateTCS[S]#l, M]#l, Err] =
     new monad.Handling[CurryT[StateTCS[S]#l, M]#l, Err] {
@@ -66,7 +66,7 @@ trait HandlingInstancesLowPriority {
         StateT((e: S) => under.handleErrorWith(fa.run(e))(f.andThen(a => (e, a))))
     }
 
-  implicit def handleNIndReader[M[_], Env, Err](implicit under: monad.Handling[M, Err],
+  implicit final def handleNIndReader[M[_], Env, Err](implicit under: monad.Handling[M, Err],
                                                 M: Monad[M]
                                                ): monad.Handling[CurryT[ReaderTCE[Env]#l, M]#l, Err] =
     new monad.Handling[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
@@ -84,7 +84,7 @@ trait HandlingInstancesLowPriority {
         ReaderT((e: Env) => under.handleErrorWith(fa.run(e))(f))
     }
 
-  implicit def handleNIndWriter[M[_], L, Err](implicit L: Monoid[L],
+  implicit final def handleNIndWriter[M[_], L, Err](implicit L: Monoid[L],
                                               under: monad.Handling[M, Err],
                                               M: Monad[M]
                                              ): monad.Handling[CurryT[WriterTCL[L]#l, M]#l, Err] =

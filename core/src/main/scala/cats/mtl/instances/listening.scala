@@ -6,7 +6,7 @@ import cats.data.WriterT
 import cats.syntax.functor._
 
 trait ListeningInstances extends ListenLowPriorityInstances {
-  implicit def localInd[M[_], Inner[_], L](implicit
+  implicit final def localInd[M[_], Inner[_], L](implicit
                                            lift: monad.Layer[M, Inner],
                                            under: monad.Listening[Inner, L]
                                           ): monad.Listening[M, L] =
@@ -17,14 +17,14 @@ trait ListeningInstances extends ListenLowPriorityInstances {
         lift.layer(under.listen(lift.innerMonad.pure(a)))
       }
 
-      def pass[A](fa: M[(A, (L) => L)]): M[A] = lift.outerMonad.flatMap(fa) { a =>
+      def pass[A](fa: M[(A, L => L)]): M[A] = lift.outerMonad.flatMap(fa) { a =>
         lift.layer(under.pass(lift.innerMonad.pure(a)))
       }
     }
 }
 
 trait ListenLowPriorityInstances {
-  implicit def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): monad.Listening[WriterTC[M, L]#l, L] =
+  implicit final def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): monad.Listening[WriterTC[M, L]#l, L] =
     new monad.Listening[WriterTC[M, L]#l, L] {
       val tell = instances.telling.tellWriter[M, L]
 
@@ -32,7 +32,7 @@ trait ListenLowPriorityInstances {
         WriterT[M, L, (A, L)](fa.run.map { case (l, a) => (l, (a, l)) })
       }
 
-      def pass[A](fa: WriterT[M, L, (A, (L) => L)]): WriterT[M, L, A] = {
+      def pass[A](fa: WriterT[M, L, (A, L => L)]): WriterT[M, L, A] = {
         WriterT[M, L, A](fa.run.map { case (l, (a, f)) => (f(l), a) })
       }
     }

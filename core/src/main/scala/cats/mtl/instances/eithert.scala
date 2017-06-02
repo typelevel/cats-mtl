@@ -5,7 +5,8 @@ package instances
 import cats.data.EitherT
 
 trait EitherTInstances extends EitherTInstancesLowPriority {
-  implicit final def eitherMonadLayer[M[_], E](implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] = {
+  implicit final def eitherMonadLayer[M[_], E]
+  (implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] = {
     eitherMonadTransFunctor[M, E]
   }
 }

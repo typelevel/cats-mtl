@@ -4,11 +4,19 @@ package instances
 
 import cats.data.WriterT
 
-trait TellingInstances extends TellingInstancesLowPriority {
-  implicit def tellInd[M[_], Inner[_], L](implicit
-                                          lift: monad.Layer[M, Inner],
-                                          under: monad.Telling[Inner, L]
-                                         ): monad.Telling[M, L] = {
+trait TellingInstances extends TellingInstancesLowPriority1 {
+  implicit final def tellIndT[Inner[_], Outer[_[_], _], L]
+  (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
+   under: monad.Telling[Inner, L]): monad.Telling[CurryT[Outer, Inner]#l, L] = {
+    tellInd[CurryT[Outer, Inner]#l, Inner, L](lift, under)
+  }
+}
+
+trait TellingInstancesLowPriority1 extends TellingInstancesLowPriority {
+  implicit final def tellInd[M[_], Inner[_], L](implicit
+                                                lift: monad.Layer[M, Inner],
+                                                under: monad.Telling[Inner, L]
+                                               ): monad.Telling[M, L] = {
     new monad.Telling[M, L] {
       val monad: Monad[M] = lift.outerMonad
       val monoid: Monoid[L] = under.monoid
@@ -21,22 +29,16 @@ trait TellingInstances extends TellingInstancesLowPriority {
 }
 
 trait TellingInstancesLowPriority {
-
-  implicit def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
+  implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val monoid: Monoid[L] = L
 
-      def tell(l: L): WriterT[M, L, Unit] = {
-        WriterT.tell(l)
-      }
+      def tell(l: L): WriterT[M, L, Unit] = WriterT.tell(l)
 
-      def writer[A](a: A, l: L): WriterT[M, L, A] = {
-        WriterT.put(a)(l)
-      }
+      def writer[A](a: A, l: L): WriterT[M, L, A] = WriterT.put(a)(l)
     }
   }
-
 }
 
 object telling extends TellingInstances

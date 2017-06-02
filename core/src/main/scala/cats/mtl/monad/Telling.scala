@@ -26,4 +26,25 @@ trait Telling[F[_], L] {
   def writer[A](a: A, l: L): F[A]
 }
 
+object Telling {
+  def tell[F[_], L](l: L)(implicit telling: Telling[F, L]): F[Unit] = telling.tell(l)
+
+  def tellF[F[_]] = new tellFPartiallyApplied[F]
+
+  def tellL[L] = new tellLPartiallyApplied[L]
+
+  final private[mtl] class tellLPartiallyApplied[L](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[F[_]](l: L)(implicit tell: Telling[F, L]): F[Unit] = {
+      tell.tell(l)
+    }
+  }
+
+  final private[mtl] class tellFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[L](l: L)(implicit tell: Telling[F, L]): F[Unit] = {
+      tell.tell(l)
+    }
+  }
+
+}
+
 abstract class TellingTemplate[F[_], L](implicit override val monad: Monad[F]) extends Telling[F, L]
