@@ -1,7 +1,6 @@
 package cats
 package mtl
 
-import cats.data._
 import instances.asking._
 import instances.readert._
 import cats.mtl.monad.Asking
@@ -9,12 +8,6 @@ import cats.mtl.monad.Asking
 final class AskingUsage extends BaseSuite {
 
   import shapeless.test._
-
-  type ReaderStr[M[_], A] = ReaderT[M, String, A]
-  type ReaderStrId[A] = ReaderT[Id, String, A]
-  type ReaderInt[M[_], A] = ReaderT[M, Int, A]
-  type ReaderIntId[A] = Reader[Int, A]
-  type ReaderStrInt[A] = ReaderStr[ReaderIntId, A]
 
   // ask
   test("ask") {
@@ -50,12 +43,6 @@ final class AskingUsage extends BaseSuite {
     val _1: ReaderIntId[String] =
       Asking.readerFE[ReaderIntId, Int](_ + "!")
 
-  }
-
-  test("summon") {
-    implicitly[monad.Asking[ReaderStrId, String]]
-    implicitly[monad.Asking[ReaderStrInt, Int]]
-    implicitly[monad.Asking[ReaderStrInt, String]]
   }
 
 }

@@ -39,3 +39,21 @@ trait Stateful[F[_], S] {
   def modify(f: S => S): F[Unit]
 }
 
+
+object Stateful {
+  def get[F[_], S](implicit ev: Stateful[F, S]): F[S] =
+    ev.get
+
+  def set[F[_], S](newState: S)(implicit ev: Stateful[F, S]): F[Unit] =
+    ev.set(newState)
+
+  def setF[F[_]] = new setFPartiallyApplied[F]
+
+  final private[mtl] class setFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
+    @inline def apply[E, A](e: E)(implicit stateful: Stateful[F, E]): F[Unit] =
+      stateful.set(e)
+  }
+
+  def modify[F[_], S](f: S => S)(implicit ev: Stateful[F, S]): F[Unit] =
+    ev.modify(f)
+}

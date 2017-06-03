@@ -5,15 +5,16 @@ package instances
 import cats.data.StateT
 
 trait StateTInstances extends StateTInstancesLowPriority {
-  implicit final def stateMonadLayer[M[_], S](implicit M: Monad[M]): monad.Layer[StateTC[M, S]#l, M] =
+  implicit final def stateMonadLayer[M[_], S]
+  (implicit M: Monad[M]): monad.LayerFunctor[StateTC[M, S]#l, M] = {
     stateMonadTransControl[M, S]
+  }
 }
 
 private[instances] trait StateTInstancesLowPriority {
   implicit final def stateMonadTransControl[M[_], S]
-  (implicit M: Monad[M]): monad.TransFunctor.Aux[CurryT[StateTCS[S]#l, M]#l, M, StateTCS[S]#l] =
+  (implicit M: Monad[M]): monad.TransFunctor.Aux[CurryT[StateTCS[S]#l, M]#l, M, StateTCS[S]#l] = {
     new monad.TransFunctor[StateTC[M, S]#l, M] {
-
       type Outer[F[_], A] = StateT[F, S, A]
 
       val outerMonad: Monad[StateTC[M, S]#l] =
@@ -35,6 +36,7 @@ private[instances] trait StateTInstancesLowPriority {
         mt.hideLayers[Id, A](ma.transformF(trans(_))(innerMonad, mt.innerMonad))
       }
     }
+  }
 
 }
 

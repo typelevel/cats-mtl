@@ -6,7 +6,7 @@ package monad
   * Bracketing has no laws.
   *
   * Informally: if `F[A]` contains `A` values, `bracket(action)(bind, cleanup)`,
-  * must include the effects of `cleanup` on all of those `A` values.
+  * must include the effects of `cleanup` on all of those `A` values *once* for each `A` value.
   *
   * This must be the case *even if* `bind` returns an `F[B]` with no `B` values inside.
   */

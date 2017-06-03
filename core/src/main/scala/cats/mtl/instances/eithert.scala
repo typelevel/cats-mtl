@@ -35,7 +35,6 @@ trait EitherTInstancesLowPriority {
       (implicit mt: monad.Trans.Aux[N, NInner, EitherTCE[E]#l]): N[A] = {
         mt.hideLayers[Id, A](EitherT(trans(ma.value)))
       }
-
     }
   }
 }

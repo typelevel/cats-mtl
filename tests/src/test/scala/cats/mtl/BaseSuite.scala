@@ -3,6 +3,7 @@ package mtl
 
 import catalysts.Platform
 import cats.syntax.{EqOps, EqSyntax}
+import cats.data._
 import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
 import org.scalatest.prop.Configuration
 import org.scalatest.{FunSuite, Matchers}
@@ -14,6 +15,30 @@ abstract class BaseSuite extends FunSuite
   with StrictCatsEquality
   with EqSyntax
   with Discipline {
+
+  protected type ReaderStr[M[_], A] = ReaderT[M, String, A]
+  protected type ReaderStrId[A] = ReaderT[Id, String, A]
+  protected type ReaderInt[M[_], A] = ReaderT[M, Int, A]
+  protected type ReaderIntId[A] = Reader[Int, A]
+  protected type ReaderStrInt[A] = ReaderStr[ReaderIntId, A]
+
+  protected type EitherTStr[M[_], A] = EitherT[M, String, A]
+  protected type EitherStrId[A] = EitherT[Id, String, A]
+  protected type EitherTInt[M[_], A] = EitherT[M, Int, A]
+  protected type EitherTIntId[A] = EitherT[Id, Int, A]
+  protected type EitherTStrEitherTInt[A] = EitherTStr[EitherTIntId, A]
+
+  protected type StateTStr[M[_], A] = StateT[M, String, A]
+  protected type StateStrId[A] = StateT[Id, String, A]
+  protected type StateTInt[M[_], A] = StateT[M, Int, A]
+  protected type StateTIntId[A] = StateT[Id, Int, A]
+  protected type StateTStrStateTInt[A] = StateTStr[StateTIntId, A]
+
+  protected type WriterTStr[M[_], A] = WriterT[M, String, A]
+  protected type WriterStrId[A] = WriterT[Id, String, A]
+  protected type WriterTInt[M[_], A] = WriterT[M, Vector[Int], A]
+  protected type WriterTIntId[A] = WriterT[Id, Vector[Int], A]
+  protected type WriterTStrWriterTInt[A] = WriterTStr[WriterTIntId, A]
 
   // disable Eq syntax (by making `catsSyntaxEq` not implicit), since it collides
   // with scalactic's equality

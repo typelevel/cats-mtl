@@ -9,12 +9,6 @@ import cats.syntax.either._
 
 class RaisingUsage extends BaseSuite {
 
-  type EitherTStr[M[_], A] = EitherT[M, String, A]
-  type EitherStrId[A] = EitherT[Id, String, A]
-  type EitherTInt[M[_], A] = EitherT[M, Int, A]
-  type EitherTIntId[A] = EitherT[Id, Int, A]
-  type EitherTStrEitherTInt[A] = EitherTStr[EitherTIntId, A]
-
   test("raise") {
     val _ =
       Raising.raise[EitherTStrEitherTInt, Int, Nothing](1)
