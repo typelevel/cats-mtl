@@ -4,10 +4,18 @@ package instances
 
 import cats.data.ReaderT
 
-trait ScopingInstances extends ScopingLowPriorityInstances {
-  implicit final def scopingNInd[M[_], Inner[_], E](implicit ml: monad.Layer[M, Inner],
-                                              under: monad.Scoping[Inner, E]
-                                             ): monad.Scoping[M, E] = {
+trait ScopingInstances extends ScopingLowPriorityInstances1 {
+  implicit final def scopingIndT[Inner[_], Outer[_[_], _], E]
+  (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
+   under: monad.Scoping[Inner, E]): monad.Scoping[CurryT[Outer, Inner]#l, E] = {
+    scopingInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
+  }
+}
+
+trait ScopingLowPriorityInstances1 extends ScopingLowPriorityInstances {
+  implicit final def scopingInd[M[_], Inner[_], E](implicit ml: monad.Layer[M, Inner],
+                                                   under: monad.Scoping[Inner, E]
+                                                   ): monad.Scoping[M, E] = {
     new monad.Scoping[M, E] {
       val ask: monad.Asking[M, E] =
         instances.asking.askInd[M, Inner, E](ml, under.ask)
@@ -35,10 +43,9 @@ trait ScopingInstances extends ScopingLowPriorityInstances {
 }
 
 trait ScopingLowPriorityInstances {
-
   implicit final def scopingNReader[M[_], E](implicit M: Monad[M]): monad.Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
-    new monad.Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] {
-      val ask: monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] =
+    new monad.Scoping[ReaderTC[M, E]#l, E] {
+      val ask: monad.Asking[ReaderTC[M, E]#l, E] =
         instances.asking.askReader[M, E]
 
       def local[A](fa: ReaderT[M, E, A])(f: E => E): ReaderT[M, E, A] = ReaderT.local(f)(fa)
@@ -46,7 +53,6 @@ trait ScopingLowPriorityInstances {
       def scope[A](fa: ReaderT[M, E, A])(e: E): ReaderT[M, E, A] = ReaderT(_ => fa.run(e))
     }
   }
-
 }
 
 object scoping extends ScopingInstances

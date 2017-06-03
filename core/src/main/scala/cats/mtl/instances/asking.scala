@@ -13,7 +13,6 @@ trait AskingInstances extends AskingInstancesLowPriority1 {
 }
 
 trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
-
   implicit final def askInd[M[_], Inner[_], E](implicit
                                          lift: monad.Layer[M, Inner],
                                          under: monad.Asking[Inner, E]

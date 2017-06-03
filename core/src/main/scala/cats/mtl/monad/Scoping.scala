@@ -26,3 +26,8 @@ trait Scoping[F[_], E] {
   def scope[A](fa: F[A])(e: E): F[A]
 }
 
+object Scoping {
+  def local[F[_], E, A](fa: F[A])(f: E => E)(implicit scoping: Scoping[F, E]): F[A] = scoping.local(fa)(f)
+
+  def scope[F[_], E, A](fa: F[A])(e: E)(implicit scoping: Scoping[F, E]): F[A] = scoping.scope(fa)(e)
+}

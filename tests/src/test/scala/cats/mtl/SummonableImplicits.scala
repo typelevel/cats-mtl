@@ -18,6 +18,12 @@ final class SummonableImplicits extends BaseSuite {
     def _3 = implicitly[monad.Raising[EitherTStrEitherTInt, String]]
   }
 
+  test("scoping") {
+    def _1 = implicitly[monad.Scoping[ReaderStrId, String]]
+    def _2 = implicitly[monad.Scoping[ReaderStrInt, Int]]
+    def _3 = implicitly[monad.Scoping[ReaderStrInt, String]]
+  }
+
   test("stateful") {
     def _1 = implicitly[monad.Stateful[StateStrId, String]]
     def _2 = implicitly[monad.Stateful[StateTStrStateTInt, String]]

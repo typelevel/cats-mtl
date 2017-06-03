@@ -9,6 +9,7 @@ object all extends AskingInstances
   with OptionTInstances
   with RaisingInstances
   with ReaderTInstances
+  with ScopingInstances
   with StatefulInstances
   with StateTInstances
   with TellingInstances
