@@ -2,6 +2,8 @@ package cats
 package mtl
 package monad
 
+import scala.util.control.NonFatal
+
 /**
   * Raising has no laws not guaranteed by parametricity.
   *
@@ -22,6 +24,14 @@ trait Raising[F[_], E] {
   val monad: Monad[F]
 
   def raise[A](e: E): F[A]
+
+  def catchNonFatal[A](a: => A)(f: Throwable => E): F[A] = {
+    try {
+      monad.pure(a)
+    } catch {
+      case NonFatal(ex) => raise(f(ex))
+    }
+  }
 }
 
 object Raising {

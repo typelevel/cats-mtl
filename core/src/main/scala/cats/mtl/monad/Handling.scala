@@ -2,6 +2,8 @@ package cats
 package mtl
 package monad
 
+import cats.data.EitherT
+
 /**
   * Handling has one external law:
   * {{{
@@ -12,10 +14,10 @@ package monad
   *
   * And one internal law:
   * {{{
-  * def handleErrorWithIsMaterializedMap[A](fa: F[A])(f: PartialFunction[E, A]): F[A] = {
+  * def recoverWithIsMaterializeAndFlatMap[A](fa: F[A])(f: PartialFunction[E, A]): F[A] = {
   *   materialize(fa).flatMap {
   *     case Right(r) => pure(r)
-  *     case Left(e) => f.lift(e).fold(raise(e))(pure(_))
+  *     case Left(e) => f.lift(e).getOrElse(raise(e))
   *   }
   * }
   * }}}
@@ -23,7 +25,11 @@ package monad
 trait Handling[F[_], E] {
   val raise: Raising[F, E]
 
-  def materialize[A](fa: F[A]): F[E Either A]
+  def attempt[A](fa: F[A]): F[E Either A]
 
-  def handleErrorWith[A](fa: F[A])(f: PartialFunction[E, A]): F[A]
+  final def attemptT[A](fa: F[A]): EitherT[F, E, A] = EitherT(attempt(fa))
+
+  def recover[A](fa: F[A])(f: PartialFunction[E, A]): F[A]
+
+  def recoverWith[A](fa: F[A])(f: PartialFunction[E, F[A]]): F[A]
 }

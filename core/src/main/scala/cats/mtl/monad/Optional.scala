@@ -18,7 +18,7 @@ package monad
   *   // QED.
   * }}}
   */
-trait Aborting[F[_]] {
+trait Optional[F[_]] {
   val monad: Monad[F]
 
   def abort[A]: F[A]

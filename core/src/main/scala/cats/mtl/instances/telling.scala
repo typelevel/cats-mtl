@@ -39,6 +39,17 @@ trait TellingInstancesLowPriority {
       def writer[A](a: A, l: L): WriterT[M, L, A] = WriterT.put(a)(l)
     }
   }
+
+  implicit final def tellTuple[L](implicit L: Monoid[L]): monad.Telling[TupleC[L]#l, L] = {
+    new monad.Telling[TupleC[L]#l, L] {
+      val monad = cats.instances.tuple.catsStdMonadForTuple2
+      val monoid: Monoid[L] = L
+
+      def tell(l: L): (L, Unit) = (l, ())
+
+      def writer[A](a: A, l: L): (L, A) = (l, a)
+    }
+  }
 }
 
 object telling extends TellingInstances

@@ -14,9 +14,9 @@ trait AskingInstances extends AskingInstancesLowPriority1 {
 
 trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
   implicit final def askInd[M[_], Inner[_], E](implicit
-                                         lift: monad.Layer[M, Inner],
-                                         under: monad.Asking[Inner, E]
-                                        ): monad.Asking[M, E] = {
+                                               lift: monad.Layer[M, Inner],
+                                               under: monad.Asking[Inner, E]
+                                              ): monad.Asking[M, E] = {
     new monad.Asking[M, E] {
       def ask: M[E] = lift.layer(under.ask)
 
@@ -26,7 +26,7 @@ trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
 
 }
 
-trait AskInstancesLowPriority2 extends AskInstancesLowPriority {
+trait AskInstancesLowPriority2 {
 
   implicit final def askReader[M[_], E](implicit M: Applicative[M]): monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new monad.Asking[ReaderTC[M, E]#l, E] {
@@ -36,15 +36,19 @@ trait AskInstancesLowPriority2 extends AskInstancesLowPriority {
     }
   }
 
-}
-
-trait AskInstancesLowPriority {
-
   implicit final def askState[M[_], S](implicit M: Applicative[M]): monad.Asking[CurryT[StateTCS[S]#l, M]#l, S] = {
     new monad.Asking[StateTC[M, S]#l, S] {
       def ask: StateT[M, S, S] = StateT.get[M, S]
 
       def reader[A](f: S => A): StateT[M, S, A] = StateT(s => M.pure((s, f(s))))
+    }
+  }
+
+  implicit final def askFunction[E]: monad.Asking[FunctionC[E]#l, E] = {
+    new monad.Asking[FunctionC[E]#l, E] {
+      def ask: (E) => E = identity[E]
+
+      def reader[A](f: (E) => A): (E) => A = f
     }
   }
 

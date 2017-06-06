@@ -53,6 +53,17 @@ trait ScopingLowPriorityInstances {
       def scope[A](fa: ReaderT[M, E, A])(e: E): ReaderT[M, E, A] = ReaderT(_ => fa.run(e))
     }
   }
+
+  implicit final def scopingFunction[E]: monad.Scoping[FunctionC[E]#l, E] = {
+    new monad.Scoping[FunctionC[E]#l, E] {
+      val ask: monad.Asking[FunctionC[E]#l, E] =
+        instances.asking.askFunction[E]
+
+      def local[A](fa: E => A)(f: E => E): E => A = fa.compose(f)
+
+      def scope[A](fa: E => A)(e: E): E => A = _ => fa(e)
+    }
+  }
 }
 
 object scoping extends ScopingInstances
