@@ -11,7 +11,7 @@ trait EitherTInstances extends EitherTInstancesLowPriority {
   }
 }
 
-trait EitherTInstancesLowPriority {
+private[instances] trait EitherTInstancesLowPriority {
   implicit final def eitherMonadTransFunctor[M[_], E]
   (implicit M: Monad[M]): monad.TransFunctor.Aux[EitherTC[M, E]#l, M, EitherTCE[E]#l] = {
     new monad.TransFunctor[EitherTC[M, E]#l, M] {

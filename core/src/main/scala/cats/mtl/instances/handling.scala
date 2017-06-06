@@ -26,7 +26,7 @@ trait HandlingInstances extends HandlingInstancesLowPriority {
   }
 }
 
-trait HandlingInstancesLowPriority {
+private[instances] trait HandlingInstancesLowPriority {
   implicit final def handleNIndEither[M[_], E, Err](implicit under: monad.Handling[M, E],
                                                     M: Monad[M]
                                                    ): monad.Handling[CurryT[EitherTCE[Err]#l, M]#l, E] = {

@@ -28,7 +28,7 @@ trait ListeningInstances extends ListenLowPriorityInstances {
   }
 }
 
-trait ListenLowPriorityInstances {
+private[instances] trait ListenLowPriorityInstances {
   implicit final def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): monad.Listening[WriterTC[M, L]#l, L] = {
     new monad.Listening[WriterTC[M, L]#l, L] {
       val tell = instances.telling.tellWriter[M, L]

@@ -12,7 +12,7 @@ trait AskingInstances extends AskingInstancesLowPriority1 {
   }
 }
 
-trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
+private[instances] trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
   implicit final def askInd[M[_], Inner[_], E](implicit
                                                lift: monad.Layer[M, Inner],
                                                under: monad.Asking[Inner, E]
@@ -26,7 +26,7 @@ trait AskingInstancesLowPriority1 extends AskInstancesLowPriority2 {
 
 }
 
-trait AskInstancesLowPriority2 {
+private[instances] trait AskInstancesLowPriority2 {
 
   implicit final def askReader[M[_], E](implicit M: Applicative[M]): monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new monad.Asking[ReaderTC[M, E]#l, E] {

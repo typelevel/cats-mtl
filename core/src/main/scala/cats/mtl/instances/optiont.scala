@@ -5,12 +5,13 @@ package instances
 import cats.data.OptionT
 
 trait OptionTInstances extends OptionTInstancesLowPriority {
-  implicit final def optionMonadLayer[M[_]](implicit M: Monad[M]): monad.Layer[OptionTC[M]#l, M] =
+  implicit final def optionMonadLayer[M[_]]
+  (implicit M: Monad[M]): monad.Layer[OptionTC[M]#l, M] = {
     optionMonadTransFunctor[M]
+  }
 }
 
-trait OptionTInstancesLowPriority {
-
+private[instances] trait OptionTInstancesLowPriority {
   implicit final def optionMonadTransFunctor[M[_]]
   (implicit M: Monad[M]): monad.TransFunctor.Aux[OptionTC[M]#l, M, OptionT] = {
     new monad.TransFunctor[OptionTC[M]#l, M] {
@@ -39,6 +40,4 @@ trait OptionTInstancesLowPriority {
   }
 }
 
-object optiont {
-
-}
+object optiont extends OptionTInstances

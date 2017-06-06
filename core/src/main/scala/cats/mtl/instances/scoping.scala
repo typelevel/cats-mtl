@@ -12,10 +12,10 @@ trait ScopingInstances extends ScopingLowPriorityInstances1 {
   }
 }
 
-trait ScopingLowPriorityInstances1 extends ScopingLowPriorityInstances {
+private[instances] trait ScopingLowPriorityInstances1 extends ScopingLowPriorityInstances {
   implicit final def scopingInd[M[_], Inner[_], E](implicit ml: monad.Layer[M, Inner],
                                                    under: monad.Scoping[Inner, E]
-                                                   ): monad.Scoping[M, E] = {
+                                                  ): monad.Scoping[M, E] = {
     new monad.Scoping[M, E] {
       val ask: monad.Asking[M, E] =
         instances.asking.askInd[M, Inner, E](ml, under.ask)
@@ -42,7 +42,7 @@ trait ScopingLowPriorityInstances1 extends ScopingLowPriorityInstances {
   }
 }
 
-trait ScopingLowPriorityInstances {
+private[instances] trait ScopingLowPriorityInstances {
   implicit final def scopingNReader[M[_], E](implicit M: Monad[M]): monad.Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new monad.Scoping[ReaderTC[M, E]#l, E] {
       val ask: monad.Asking[ReaderTC[M, E]#l, E] =

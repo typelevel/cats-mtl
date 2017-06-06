@@ -11,7 +11,7 @@ trait ReaderTInstances extends ReaderTInstancesLowPriority {
   }
 }
 
-trait ReaderTInstancesLowPriority {
+private[instances] trait ReaderTInstancesLowPriority {
   implicit final def readerMonadTransControl[M[_], E]
   (implicit M: Monad[M]): monad.TransFunctor.Aux[ReaderTC[M, E]#l, M, ReaderTCE[E]#l] = {
     new monad.TransFunctor[CurryT[ReaderTCE[E]#l, M]#l, M] {

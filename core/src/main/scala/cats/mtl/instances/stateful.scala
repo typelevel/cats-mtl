@@ -35,7 +35,6 @@ private[instances] trait StatefulInstancesLowPriority1 extends StatefulInstances
 }
 
 private[instances] trait StatefulInstancesLowPriority {
-
   implicit final def statefulState[M[_], S](implicit M: Monad[M]): monad.Stateful[CurryT[StateTCS[S]#l, M]#l, S] = {
     new monad.Stateful[StateTC[M, S]#l, S] {
       val fMonad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
@@ -49,7 +48,6 @@ private[instances] trait StatefulInstancesLowPriority {
       def modify(f: S => S): StateT[M, S, Unit] = StateT.modify(f)
     }
   }
-
 }
 
 object stateful extends StatefulInstances

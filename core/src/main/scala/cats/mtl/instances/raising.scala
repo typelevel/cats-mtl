@@ -11,7 +11,7 @@ trait RaisingInstances extends RaisingLowPriorityInstances {
     raiseNInd[CurryT[T, M]#l, M, E](lift, under)
 }
 
-trait RaisingLowPriorityInstances extends RaisingLowPriorityInstances1 {
+private[instances] trait RaisingLowPriorityInstances extends RaisingLowPriorityInstances1 {
   implicit final def raiseNInd[M[_], Inner[_], E](implicit
                                             lift: monad.Layer[M, Inner],
                                             under: monad.Raising[Inner, E]
@@ -23,7 +23,7 @@ trait RaisingLowPriorityInstances extends RaisingLowPriorityInstances1 {
     }
 }
 
-trait RaisingLowPriorityInstances1 {
+private[instances] trait RaisingLowPriorityInstances1 {
   implicit final def raiseNEither[M[_], E](implicit M: Monad[M]): monad.Raising[EitherTC[M, E]#l, E] =
     new monad.Raising[EitherTC[M, E]#l, E] {
       val monad = EitherT.catsDataMonadErrorForEitherT

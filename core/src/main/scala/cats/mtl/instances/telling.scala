@@ -12,7 +12,7 @@ trait TellingInstances extends TellingInstancesLowPriority1 {
   }
 }
 
-trait TellingInstancesLowPriority1 extends TellingInstancesLowPriority {
+private[instances] trait TellingInstancesLowPriority1 extends TellingInstancesLowPriority {
   implicit final def tellInd[M[_], Inner[_], L](implicit
                                                 lift: monad.Layer[M, Inner],
                                                 under: monad.Telling[Inner, L]
@@ -28,7 +28,7 @@ trait TellingInstancesLowPriority1 extends TellingInstancesLowPriority {
   }
 }
 
-trait TellingInstancesLowPriority {
+private[instances] trait TellingInstancesLowPriority {
   implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new monad.Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
