@@ -3,10 +3,16 @@ package mtl
 package monad
 
 /**
-  * Asking has one external law:
+  * Asking has two external laws:
   * {{{
-  * def askAndAskIsAsk = {
-  *   ask >> ask == ask
+  * def askAddsNoEffects[A](fa: F[A]) = {
+  *   (ask >> fa) == (fa << ask) == fa
+  * }
+  * def askIsNotAffectedByEffects[A](fa: F[A]) = {
+  *   for {
+  *     a1 <- ask
+  *     a2 <- (fa >> ask)
+  *   } yield (a1 == a2)
   * }
   * }}}
   *
@@ -19,6 +25,8 @@ package monad
   * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context.
   */
 trait Asking[F[_], E] {
+  val monad: Monad[F]
+
   def ask: F[E]
 
   def reader[A](f: E => A): F[A]

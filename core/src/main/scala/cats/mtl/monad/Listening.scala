@@ -3,11 +3,15 @@ package mtl
 package monad
 
 /**
-  * Listening has one external law:
+  * Listening has two external laws:
   * {{{
-  *   def listenRespectsTell(l: L) = {
-  *     listen(tell(l)) == tell(l).map(_ => ((), l))
-  *   }
+  * def listenRespectsTell(l: L) = {
+  *   listen(tell(l)) == tell(l).map(_ => ((), l))
+  * }
+  *
+  * def listenAddsNoEffects(fa: F[A]) = {
+  *   listen(fa).map(_._1) == fa
+  * }
   * }}}
   *
   * Listening has one internal law:

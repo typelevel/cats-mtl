@@ -3,11 +3,15 @@ package mtl
 package monad
 
 /**
-  * Telling has one external law:
+  * Telling has two external laws:
   * {{{
   * def tellTwiceIsTellCombined(l1: L, l2: L) = {
   *   tell(l1) >> tell(l2) == tell(l1 |+| l2)
-  * } // monoid homomorphism
+  * }
+  *
+  * def tellZeroIsPureUnit = {
+  *   tell(L.zero) == pure(())
+  * }
   * }}}
   *
   * Telling has one internal law:

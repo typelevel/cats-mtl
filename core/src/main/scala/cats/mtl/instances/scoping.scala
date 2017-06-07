@@ -4,7 +4,7 @@ package instances
 
 import cats.data.ReaderT
 
-trait ScopingInstances extends ScopingLowPriorityInstances1 {
+trait ScopingInstances extends ScopingLowPriorityInstances {
   implicit final def scopingIndT[Inner[_], Outer[_[_], _], E]
   (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
    under: monad.Scoping[Inner, E]): monad.Scoping[CurryT[Outer, Inner]#l, E] = {
@@ -12,7 +12,7 @@ trait ScopingInstances extends ScopingLowPriorityInstances1 {
   }
 }
 
-private[instances] trait ScopingLowPriorityInstances1 extends ScopingLowPriorityInstances {
+private[instances] trait ScopingLowPriorityInstances extends ScopingLowPriorityInstances1 {
   implicit final def scopingInd[M[_], Inner[_], E](implicit ml: monad.Layer[M, Inner],
                                                    under: monad.Scoping[Inner, E]
                                                   ): monad.Scoping[M, E] = {
@@ -42,7 +42,7 @@ private[instances] trait ScopingLowPriorityInstances1 extends ScopingLowPriority
   }
 }
 
-private[instances] trait ScopingLowPriorityInstances {
+private[instances] trait ScopingLowPriorityInstances1 {
   implicit final def scopingNReader[M[_], E](implicit M: Monad[M]): monad.Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new monad.Scoping[ReaderTC[M, E]#l, E] {
       val ask: monad.Asking[ReaderTC[M, E]#l, E] =

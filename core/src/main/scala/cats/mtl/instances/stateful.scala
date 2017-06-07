@@ -4,7 +4,7 @@ package instances
 
 import data.StateT
 
-trait StatefulInstances extends StatefulInstancesLowPriority1 {
+trait StatefulInstances extends StatefulInstancesLowPriority {
   implicit final def statefulNIndT[T[_[_], _], M[_], E]
   (implicit lift: monad.TransFunctor.Aux[CurryT[T, M]#l, M, T],
    under: monad.Stateful[M, E]): monad.Stateful[CurryT[T, M]#l, E] = {
@@ -13,7 +13,7 @@ trait StatefulInstances extends StatefulInstancesLowPriority1 {
 
 }
 
-private[instances] trait StatefulInstancesLowPriority1 extends StatefulInstancesLowPriority {
+private[instances] trait StatefulInstancesLowPriority extends StatefulInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
   // to lift Stateful into
   implicit final def statefulNInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],
@@ -21,9 +21,6 @@ private[instances] trait StatefulInstancesLowPriority1 extends StatefulInstances
                                                     ): monad.Stateful[M, E] = {
     new monad.Stateful[M, E] {
       val fMonad: Monad[M] = ml.outerMonad
-
-      val ask: monad.Asking[M, E] =
-        instances.asking.askInd[M, Inner, E](ml, under.ask)
 
       def get: M[E] = ml.layer(under.get)
 
@@ -34,12 +31,10 @@ private[instances] trait StatefulInstancesLowPriority1 extends StatefulInstances
   }
 }
 
-private[instances] trait StatefulInstancesLowPriority {
+private[instances] trait StatefulInstancesLowPriority1 {
   implicit final def statefulState[M[_], S](implicit M: Monad[M]): monad.Stateful[CurryT[StateTCS[S]#l, M]#l, S] = {
     new monad.Stateful[StateTC[M, S]#l, S] {
       val fMonad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
-
-      val ask: monad.Asking[StateTC[M, S]#l, S] = asking.askState[M, S]
 
       def get: StateT[M, S, S] = StateT.get
 

@@ -26,11 +26,13 @@ package monad
   * }
   * }}}
   *
+  * Note that if you have a Stateful instance,
+  * it cannot touch the same values as an Asking instance
+  * because the laws of Asking prohibit the value being changed by effects.
+  *
   */
 trait Stateful[F[_], S] {
   val fMonad: Monad[F]
-
-  val ask: Asking[F, S]
 
   def get: F[S]
 
