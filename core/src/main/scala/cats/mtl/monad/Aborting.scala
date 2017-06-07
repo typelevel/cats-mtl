@@ -12,13 +12,13 @@ package monad
   * }
   * guaranteed by:
   *   abort[X] <-> abort[F[Y]](ex) // parametricity
-  *   abort[X].map(f) <-> abort[F[Y]](ex)  // map must have no effect, because there's no value
+  *   abort[X].map(f) <-> abort[F[Y]](ex)  // map must have no effect, because there's no value inside
   *   abort[X].map(f).join <-> abort[F[Y]].join // add join to both sides
   *   abort[X].flatMap(f) <-> abort(ex) // join is equal, because there's no inner value to flatten effects from
   *   // QED.
   * }}}
   */
-trait Optional[F[_]] {
+trait Aborting[F[_]] {
   val monad: Monad[F]
 
   def abort[A]: F[A]
