@@ -43,9 +43,9 @@ private[instances] trait AskInstancesLowPriority1 {
     new monad.Asking[FunctionC[E]#l, E] {
       val monad = cats.instances.function.catsStdMonadReaderForFunction1
 
-      def ask: (E) => E = identity[E]
+      def ask: E => E = identity[E]
 
-      def reader[A](f: (E) => A): (E) => A = f
+      def reader[A](f: E => A): E => A = f
     }
   }
 }
