@@ -1,6 +1,6 @@
 package cats
 package mtl
-package monad
+package applicative
 
 /**
   * Scoping has one external law:

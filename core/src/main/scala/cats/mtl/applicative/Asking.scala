@@ -1,18 +1,15 @@
 package cats
 package mtl
-package monad
+package applicative
 
 /**
   * Asking has two external laws:
   * {{{
   * def askAddsNoEffects[A](fa: F[A]) = {
-  *   (ask >> fa) == (fa << ask) == fa
+  *   (ask *> fa) == fa
   * }
-  * def askIsNotAffectedByEffects[A](fa: F[A]) = {
-  *   for {
-  *     a1 <- ask
-  *     a2 <- (fa >> ask)
-  *   } yield (a1 == a2)
+  * def askIsNotAffected[A](fa: F[A]) = {
+      (fa *> ask) == (ask, fa).mapN((e, f) => e)
   * }
   * }}}
   *
@@ -22,10 +19,11 @@ package monad
   *   ask.map(f) == reader(f)
   * }
   * }}}
-  * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context.
+  * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context,
+  * which cannot be changed by previous `F[_]` effects.
   */
 trait Asking[F[_], E] {
-  val monad: Monad[F]
+  val applicative: Applicative[F]
 
   def ask: F[E]
 

@@ -36,13 +36,13 @@ final class SummonableImplicits extends BaseSuite {
   //noinspection ScalaUnusedSymbol
   {
     test("asking") {
-      def _1 = implicitly[monad.Asking[ReaderStrId, String]]
+      def _1 = implicitly[applicative.Asking[ReaderStrId, String]]
 
-      def _2 = implicitly[monad.Asking[ReaderStrInt, Int]]
+      def _2 = implicitly[applicative.Asking[ReaderStrInt, Int]]
 
-      def _3 = implicitly[monad.Asking[ReaderStrInt, String]]
+      def _3 = implicitly[applicative.Asking[ReaderStrInt, String]]
 
-      def _4 = implicitly[monad.Asking[ReaderStrFuncInt, Int]]
+      def _4 = implicitly[applicative.Asking[ReaderStrFuncInt, Int]]
     }
 
     test("listening") {
@@ -56,21 +56,21 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     test("raising") {
-      def _1 = implicitly[monad.Raising[EitherStrId, String]]
+      def _1 = implicitly[functor.Raising[EitherStrId, String]]
 
-      def _2 = implicitly[monad.Raising[EitherTStrEitherTInt, Int]]
+      def _2 = implicitly[functor.Raising[EitherTStrEitherTInt, Int]]
 
-      def _3 = implicitly[monad.Raising[EitherTStrEitherTInt, String]]
+      def _3 = implicitly[functor.Raising[EitherTStrEitherTInt, String]]
     }
 
     test("scoping") {
-      def _1 = implicitly[monad.Scoping[ReaderStrId, String]]
+      def _1 = implicitly[applicative.Scoping[ReaderStrId, String]]
 
-      def _2 = implicitly[monad.Scoping[ReaderStrInt, Int]]
+      def _2 = implicitly[applicative.Scoping[ReaderStrInt, Int]]
 
-      def _3 = implicitly[monad.Scoping[ReaderStrInt, String]]
+      def _3 = implicitly[applicative.Scoping[ReaderStrInt, String]]
 
-      def _4 = implicitly[monad.Scoping[ReaderStrFuncInt, Int]]
+      def _4 = implicitly[applicative.Scoping[ReaderStrFuncInt, Int]]
     }
 
     test("stateful") {
@@ -82,13 +82,13 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     test("telling") {
-      def _1 = implicitly[monad.Telling[WriterStrId, String]]
+      def _1 = implicitly[applicative.Telling[WriterStrId, String]]
 
-      def _2 = implicitly[monad.Telling[WriterTStrWriterTInt, String]]
+      def _2 = implicitly[applicative.Telling[WriterTStrWriterTInt, String]]
 
-      def _3 = implicitly[monad.Telling[WriterTStrWriterTInt, Vector[Int]]]
+      def _3 = implicitly[applicative.Telling[WriterTStrWriterTInt, Vector[Int]]]
 
-      def _4 = implicitly[monad.Telling[WriterTStrTupleInt, Vector[Int]]]
+      def _4 = implicitly[applicative.Telling[WriterTStrTupleInt, Vector[Int]]]
     }
   }
 

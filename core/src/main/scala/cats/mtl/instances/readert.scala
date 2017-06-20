@@ -17,10 +17,10 @@ private[instances] trait ReaderTInstancesLowPriority {
     new monad.TransFunctor[CurryT[ReaderTCE[E]#l, M]#l, M] {
       type Outer[F[_], A] = ReaderTCE[E]#l[F, A]
 
-      val outerMonad: Monad[CurryT[ReaderTCE[E]#l, M]#l] =
+      val outerInstance: Monad[CurryT[ReaderTCE[E]#l, M]#l] =
         ReaderT.catsDataMonadReaderForKleisli
 
-      val innerMonad: Monad[M] = M
+      val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
 

@@ -1,12 +1,12 @@
 package cats
 package mtl
-package monad
+package applicative
 
 /**
   * laws:
   * {{{
   * def layerMapRespectsLayer(in: Inner[A])(forward: Inner ~> Inner) = {
-  *   layer(forward(in)) == layerMap(layer(in))(forward, backward)
+  *   layer(forward(in)) == layerMap(layer(in))(forward)
   * }
   * }}}
   *
@@ -18,4 +18,4 @@ package monad
   * }
   * }}}
   */
-trait LayerFunctor[M[_], Inner[_]] extends Layer[M, Inner] with applicative.LayerFunctor[M, Inner]
+trait LayerFunctor[M[_], Inner[_]] extends Layer[M, Inner] with functor.LayerFunctor[M, Inner]

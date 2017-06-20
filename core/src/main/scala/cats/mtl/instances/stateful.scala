@@ -20,7 +20,7 @@ private[instances] trait StatefulInstancesLowPriority extends StatefulInstancesL
                                                      under: monad.Stateful[Inner, E]
                                                     ): monad.Stateful[M, E] = {
     new monad.Stateful[M, E] {
-      val fMonad: Monad[M] = ml.outerMonad
+      val fMonad: Monad[M] = ml.outerInstance
 
       def get: M[E] = ml.layer(under.get)
 

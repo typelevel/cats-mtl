@@ -3,6 +3,7 @@ package mtl
 package monad
 
 import cats.data.EitherT
+import cats.mtl.functor.Raising
 
 /**
   * Handling has one external law:
@@ -23,6 +24,8 @@ import cats.data.EitherT
   * }}}
   */
 trait Handling[F[_], E] {
+  val monad: Monad[F]
+
   val raise: Raising[F, E]
 
   def attempt[A](fa: F[A]): F[E Either A]

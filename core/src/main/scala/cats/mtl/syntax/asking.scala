@@ -7,7 +7,7 @@ trait AskingSyntax {
 }
 
 final class ReaderOps[E, A](val fun: E => A) extends AnyVal {
-  def reader[F[_]](implicit asking: monad.Asking[F, E]): F[A] =
+  def reader[F[_]](implicit asking: applicative.Asking[F, E]): F[A] =
     asking.reader(fun)
 }
 

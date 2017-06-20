@@ -1,6 +1,6 @@
 package cats
 package mtl
-package monad
+package functor
 
 import scala.util.control.NonFatal
 
@@ -14,20 +14,20 @@ import scala.util.control.NonFatal
   * }
   * guaranteed by:
   *   fail[X](ex) <-> fail[F[Y]](ex) // parametricity
-  *   fail[X](ex).map(f) <-> fail[F[Y]](ex)  // map must have no effect, because there's no value
+  *   fail[X](ex).map(f) <-> fail[F[Y]](ex)  // map must have no effect, because there's no X value
   *   fail[X](ex).map(f).join <-> fail[F[Y]].join // add join to both sides
   *   fail(ex).flatMap(f) <-> fail(ex) // join is equal, because there's no inner value to flatten effects from
   *   // QED.
   * }}}
   */
 trait Raising[F[_], E] {
-  val monad: Monad[F]
+  val functor: Functor[F]
 
   def raise[A](e: E): F[A]
 
-  def catchNonFatal[A](a: => A)(f: Throwable => E): F[A] = {
+  def catchNonFatal[A](a: => A)(f: Throwable => E)(implicit A: Applicative[F]): F[A] = {
     try {
-      monad.pure(a)
+      A.pure(a)
     } catch {
       case NonFatal(ex) => raise(f(ex))
     }

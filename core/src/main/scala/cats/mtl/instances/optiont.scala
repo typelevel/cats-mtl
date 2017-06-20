@@ -17,10 +17,10 @@ private[instances] trait OptionTInstancesLowPriority {
     new monad.TransFunctor[OptionTC[M]#l, M] {
       type Outer[F[_], A] = OptionT[F, A]
 
-      val outerMonad: Monad[OptionTC[M]#l] =
+      val outerInstance: Monad[OptionTC[M]#l] =
         OptionT.catsDataMonadForOptionT
 
-      val innerMonad: Monad[M] = M
+      val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: OptionT[M, A])(trans: M ~> M): OptionT[M, A] = OptionT(trans(ma.value))
 
