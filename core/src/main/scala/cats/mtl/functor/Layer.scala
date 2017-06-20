@@ -1,18 +1,15 @@
 package cats
 package mtl
-package monad
+package functor
 
 /**
-  * laws:
+  * `functor.Layer` has external laws:
   * {{{
   * def mapForwardRespectsLayer(in: Inner[A])(forward: Inner ~> Inner, backward: Inner ~> Inner) = {
   *   layer(forward(in)) == imapK(layer(in))(forward, backward)
   * }
   * def layerRespectsPure(a: A) = {
   *   layer(a.pure[Inner]) == a.pure[M]
-  * }
-  * def layerRespectsFlatMap(m: Inner[A])(f: A => Inner[B]) = {
-  *   layer(m).flatMap(f andThen layer) == layer(m.flatMap(f))
   * }
   * def mapIso(ma: M[A])(forward: Inner ~> Inner, backward: Inner ~> Inner) = {
   *   if (forward andThen backward == FunctionK.id[Inner]) {
@@ -22,8 +19,20 @@ package monad
   *   }
   * }
   * }}}
+  *
+  * `functor.Layer` has one free law, i.e. a law guaranteed by parametricity:
+  * {{{
+  * def layerRespectsMap(m: Inner[A])(f: A => B) = {
+  *   layer(m).map(f) == layer(m.map(f))
+  * }
+  * }}}
   */
-trait Layer[M[_], Inner[_]] extends applicative.Layer[M, Inner] {
-  val outerInstance: Monad[M]
-  val innerInstance: Monad[Inner]
+trait Layer[M[_], Inner[_]] {
+  val outerInstance: Functor[M]
+  val innerInstance: Functor[Inner]
+
+  def layer[A](inner: Inner[A]): M[A]
+
+  def layerImapK[A](ma: M[A])(forward: Inner ~> Inner,
+                              backward: Inner ~> Inner): M[A]
 }

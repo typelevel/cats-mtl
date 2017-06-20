@@ -17,10 +17,10 @@ private[instances] trait StateTInstancesLowPriority {
     new monad.TransFunctor[StateTC[M, S]#l, M] {
       type Outer[F[_], A] = StateT[F, S, A]
 
-      val outerMonad: Monad[StateTC[M, S]#l] =
+      val outerInstance: Monad[StateTC[M, S]#l] =
         StateT.catsDataMonadForStateT
 
-      val innerMonad: Monad[M] = M
+      val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: StateT[M, S, A])(trans: M ~> M): StateT[M, S, A] = ma.transformF(trans(_))
 
@@ -33,7 +33,7 @@ private[instances] trait StateTInstancesLowPriority {
       def transMap[A, N[_], NInner[_]]
       (ma: StateT[M, S, A])(trans: M ~> NInner)
       (implicit mt: monad.Trans.Aux[N, NInner, StateTCS[S]#l]): N[A] = {
-        mt.hideLayers[Id, A](ma.transformF(trans(_))(innerMonad, mt.innerMonad))
+        mt.hideLayers[Id, A](ma.transformF(trans(_))(innerInstance, mt.innerInstance))
       }
     }
   }

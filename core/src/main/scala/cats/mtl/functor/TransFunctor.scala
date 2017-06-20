@@ -1,6 +1,6 @@
 package cats
 package mtl
-package monad
+package functor
 
 /**
   * laws:
@@ -17,9 +17,9 @@ trait TransFunctor[M[_], Inner[_]] extends LayerFunctor[M, Inner] with Trans[M, 
                                       backward: NInner ~> Inner)(implicit other: Trans.Aux[N, NInner, Outer]): N[A] = {
     transMap(ma)(forward)
   }
+
 }
 
 object TransFunctor {
-  type Aux[M[_], Inner[_], Outer0[_[_], _]] =
-    TransFunctor[M, Inner] {type Outer[F[_], A] = Outer0[F, A]}
+
 }

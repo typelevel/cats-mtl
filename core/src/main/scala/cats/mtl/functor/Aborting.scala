@@ -1,6 +1,6 @@
 package cats
 package mtl
-package monad
+package functor
 
 /**
   * Aborting has no laws not guaranteed by parametricity.
@@ -19,7 +19,7 @@ package monad
   * }}}
   */
 trait Aborting[F[_]] {
-  val monad: Monad[F]
+  val functor: Functor[F]
 
   def abort[A]: F[A]
 }

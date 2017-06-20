@@ -17,10 +17,10 @@ private[instances] trait EitherTInstancesLowPriority {
     new monad.TransFunctor[EitherTC[M, E]#l, M] {
       type Outer[F[_], A] = EitherT[F, E, A]
 
-      val outerMonad: Monad[CurryT[EitherTCE[E]#l, M]#l] =
+      val outerInstance: Monad[CurryT[EitherTCE[E]#l, M]#l] =
         EitherT.catsDataMonadErrorForEitherT
 
-      val innerMonad: Monad[M] = M
+      val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: EitherT[M, E, A])(trans: M ~> M): EitherT[M, E, A] = EitherT(trans(ma.value))
 

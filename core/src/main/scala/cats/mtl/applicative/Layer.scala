@@ -1,6 +1,6 @@
 package cats
 package mtl
-package monad
+package applicative
 
 /**
   * laws:
@@ -11,8 +11,8 @@ package monad
   * def layerRespectsPure(a: A) = {
   *   layer(a.pure[Inner]) == a.pure[M]
   * }
-  * def layerRespectsFlatMap(m: Inner[A])(f: A => Inner[B]) = {
-  *   layer(m).flatMap(f andThen layer) == layer(m.flatMap(f))
+  * def layerRespectsAp(m: Inner[A])(f: Inner[A => B]) = {
+  *   layer(m).ap(layer(f)) == layer(m.ap(f))
   * }
   * def mapIso(ma: M[A])(forward: Inner ~> Inner, backward: Inner ~> Inner) = {
   *   if (forward andThen backward == FunctionK.id[Inner]) {
@@ -23,7 +23,7 @@ package monad
   * }
   * }}}
   */
-trait Layer[M[_], Inner[_]] extends applicative.Layer[M, Inner] {
-  val outerInstance: Monad[M]
-  val innerInstance: Monad[Inner]
+trait Layer[M[_], Inner[_]] extends functor.Layer[M, Inner] {
+  val outerInstance: Applicative[M]
+  val innerInstance: Applicative[Inner]
 }

@@ -3,22 +3,23 @@ package mtl
 package instances
 
 import cats.data.{Kleisli, ReaderT}
+import cats.mtl.applicative.Asking
 
 trait AskingInstances extends AskingInstancesLowPriority {
   implicit final def askIndT[Inner[_], Outer[_[_], _], E]
-  (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
-   under: monad.Asking[Inner, E]): monad.Asking[CurryT[Outer, Inner]#l, E] = {
+  (implicit lift: applicative.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
+   under: Asking[Inner, E]): Asking[CurryT[Outer, Inner]#l, E] = {
     askInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
   }
 }
 
 private[instances] trait AskingInstancesLowPriority extends AskInstancesLowPriority1 {
   implicit final def askInd[M[_], Inner[_], E](implicit
-                                               lift: monad.Layer[M, Inner],
-                                               under: monad.Asking[Inner, E]
-                                              ): monad.Asking[M, E] = {
-    new monad.Asking[M, E] {
-      val monad = lift.outerMonad
+                                               lift: applicative.Layer[M, Inner],
+                                               under: Asking[Inner, E]
+                                              ): Asking[M, E] = {
+    new Asking[M, E] {
+      val applicative = lift.outerInstance
 
       def ask: M[E] = lift.layer(under.ask)
 
@@ -29,9 +30,9 @@ private[instances] trait AskingInstancesLowPriority extends AskInstancesLowPrior
 }
 
 private[instances] trait AskInstancesLowPriority1 {
-  implicit final def askReader[M[_], E](implicit M: Monad[M]): monad.Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
-    new monad.Asking[ReaderTC[M, E]#l, E] {
-      val monad = ReaderT.catsDataMonadReaderForKleisli(M)
+  implicit final def askReader[M[_], E](implicit M: Applicative[M]): Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+    new Asking[ReaderTC[M, E]#l, E] {
+      val applicative = ReaderT.catsDataApplicativeForKleisli(M)
 
       def ask: ReaderT[M, E, E] = Kleisli.ask[M, E]
 
@@ -39,9 +40,9 @@ private[instances] trait AskInstancesLowPriority1 {
     }
   }
 
-  implicit final def askFunction[E]: monad.Asking[FunctionC[E]#l, E] = {
-    new monad.Asking[FunctionC[E]#l, E] {
-      val monad = cats.instances.function.catsStdMonadReaderForFunction1
+  implicit final def askFunction[E]: Asking[FunctionC[E]#l, E] = {
+    new Asking[FunctionC[E]#l, E] {
+      val applicative = cats.instances.function.catsStdMonadReaderForFunction1
 
       def ask: E => E = identity[E]
 

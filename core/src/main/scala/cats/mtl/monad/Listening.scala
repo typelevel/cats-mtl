@@ -2,6 +2,8 @@ package cats
 package mtl
 package monad
 
+import cats.mtl.applicative.Telling
+
 /**
   * Listening has two external laws:
   * {{{
@@ -22,6 +24,8 @@ package monad
   * }}}
   */
 trait Listening[F[_], L] {
+  val monad: Monad[F]
+
   val tell: Telling[F, L]
 
   def listen[A](fa: F[A]): F[(A, L)]

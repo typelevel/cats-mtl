@@ -17,10 +17,10 @@ private[instances] trait WriterTInstancesLowPriority {
     new monad.TransFunctor[CurryT[WriterTCL[L]#l, M]#l, M] {
       type Outer[F[_], A] = WriterT[F, L, A]
 
-      val outerMonad: Monad[CurryT[WriterTCL[L]#l, M]#l] =
+      val outerInstance: Monad[CurryT[WriterTCL[L]#l, M]#l] =
         WriterT.catsDataMonadWriterForWriterT
 
-      val innerMonad: Monad[M] = M
+      val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
 

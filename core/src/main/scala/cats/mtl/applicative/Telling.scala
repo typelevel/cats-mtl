@@ -1,12 +1,12 @@
 package cats
 package mtl
-package monad
+package applicative
 
 /**
   * Telling has two external laws:
   * {{{
   * def tellTwiceIsTellCombined(l1: L, l2: L) = {
-  *   tell(l1) >> tell(l2) == tell(l1 |+| l2)
+  *   tell(l1) *> tell(l2) == tell(l1 |+| l2)
   * }
   *
   * def tellZeroIsPureUnit = {
@@ -22,7 +22,7 @@ package monad
   * }}}
   */
 trait Telling[F[_], L] {
-  val monad: Monad[F]
+  val applicative: Applicative[F]
   val monoid: Monoid[L]
 
   def tell(l: L): F[Unit]
@@ -51,4 +51,4 @@ object Telling {
 
 }
 
-abstract class TellingTemplate[F[_], L](implicit override val monad: Monad[F]) extends Telling[F, L]
+abstract class TellingTemplate[F[_], L](implicit override val applicative: Applicative[F]) extends Telling[F, L]
