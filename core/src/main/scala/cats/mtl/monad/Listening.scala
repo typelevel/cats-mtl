@@ -13,13 +13,6 @@ package monad
   *   listen(fa).map(_._1) == fa
   * }
   * }}}
-  *
-  * Listening has one internal law:
-  * {{{
-  *   def passIsListenAndTell[A](fa: F[(A, L => L)]) = {
-  *     pass(fa) == listen(fa).flatMap { case ((a, lf), l) => tell(lf(l)).map(_ => a) }
-  *   }
-  * }}}
   */
 trait Listening[F[_], L] {
   val tell: Telling[F, L]
@@ -27,5 +20,8 @@ trait Listening[F[_], L] {
   def listen[A](fa: F[A]): F[(A, L)]
 
   def pass[A](fa: F[(A, L => L)]): F[A]
-}
 
+  def listens[A, B](fa: F[A])(f: L => B): F[(B, A)]
+
+  def censor[A](fa: F[A])(f: L => L): F[A]
+}

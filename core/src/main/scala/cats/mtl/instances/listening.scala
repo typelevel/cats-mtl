@@ -6,30 +6,12 @@ import cats.data.WriterT
 import cats.syntax.functor._
 
 trait ListeningInstances extends ListenLowPriorityInstances {
-  implicit final def localInd[M[_], Inner[_], L](implicit
-                                                 lift: monad.Layer[M, Inner],
-                                                 under: monad.Listening[Inner, L]
-                                                ): monad.Listening[M, L] = {
-    new monad.Listening[M, L] {
-      val tell = instances.telling.tellInd[M, Inner, L](lift, under.tell)
-
-      def listen[A](fa: M[A]): M[(A, L)] = {
-        lift.outerMonad.flatMap(fa) { a =>
-          lift.layer(under.listen(lift.innerMonad.pure(a)))
-        }
-      }
-
-      def pass[A](fa: M[(A, L => L)]): M[A] = {
-        lift.outerMonad.flatMap(fa) { a =>
-          lift.layer(under.pass(lift.innerMonad.pure(a)))
-        }
-      }
-    }
-  }
 }
 
 private[instances] trait ListenLowPriorityInstances {
-  implicit final def localWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): monad.Listening[WriterTC[M, L]#l, L] = {
+  implicit final def localWriter[M[_], L]
+  (implicit M: Monad[M], L: Monoid[L]
+  ): monad.Listening[WriterTC[M, L]#l, L] = {
     new monad.Listening[WriterTC[M, L]#l, L] {
       val tell = instances.telling.tellWriter[M, L]
 
@@ -39,6 +21,14 @@ private[instances] trait ListenLowPriorityInstances {
 
       def pass[A](fa: WriterT[M, L, (A, L => L)]): WriterT[M, L, A] = {
         WriterT[M, L, A](fa.run.map { case (l, (a, f)) => (f(l), a) })
+      }
+
+      def listens[A, B](fa: WriterT[M, L, A])(f: (L) => B): WriterT[M, L, (B, A)] = {
+        WriterT[M, L, (B, A)](fa.run.map { case (l, a) => (l, (f(l), a)) })
+      }
+
+      def censor[A](fa: WriterT[M, L, A])(f: (L) => L): WriterT[M, L, A] = {
+        WriterT[M, L, A](fa.run.map { case (l, a) => (f(l), a) })
       }
     }
   }
@@ -53,9 +43,16 @@ private[instances] trait ListenLowPriorityInstances {
       }
 
       def pass[A](fa: (L, (A, L => L))): (L, A) = {
-        val (l, (a, f)) = fa
-        (f(l), a)
+        val (l, t) = fa
+        (t._2(l), t._1)
       }
+
+      def listens[A, B](fa: (L, A))(f: (L) => B): (L, (B, A)) = {
+        val (l, a) = fa
+        (l, (f(l), a))
+      }
+
+      def censor[A](fa: (L, A))(f: (L) => L): (L, A) = (f(fa._1), fa._2)
     }
   }
 }

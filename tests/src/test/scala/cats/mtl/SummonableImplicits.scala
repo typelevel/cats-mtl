@@ -50,9 +50,9 @@ final class SummonableImplicits extends BaseSuite {
 
       def _2 = implicitly[monad.Listening[WriterTStrWriterTInt, String]]
 
-      def _3 = implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]
+      assertDoesNotCompile("implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]")
 
-      def _4 = implicitly[monad.Listening[WriterTStrTupleInt, Vector[Int]]]
+      assertDoesNotCompile("implicitly[monad.Listening[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("raising") {
