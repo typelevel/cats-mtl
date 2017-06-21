@@ -4,16 +4,7 @@ package instances
 
 import data.StateT
 
-trait StatefulInstances extends StatefulInstancesLowPriority {
-  implicit final def statefulNIndT[T[_[_], _], M[_], E]
-  (implicit lift: monad.TransFunctor.Aux[CurryT[T, M]#l, M, T],
-   under: monad.Stateful[M, E]): monad.Stateful[CurryT[T, M]#l, E] = {
-    statefulNInd[CurryT[T, M]#l, M, E](lift, under)
-  }
-
-}
-
-private[instances] trait StatefulInstancesLowPriority extends StatefulInstancesLowPriority1 {
+trait StatefulInstances extends StatefulInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
   // to lift Stateful into
   implicit final def statefulNInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],

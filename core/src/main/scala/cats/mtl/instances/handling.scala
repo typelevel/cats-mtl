@@ -7,11 +7,11 @@ import cats.implicits._
 import cats.mtl.functor.Raising
 
 trait HandlingInstances extends HandlingInstancesLowPriority {
-  implicit final def handleNEither[M[_], E](implicit M: Monad[M]): monad.Handling[EitherTC[M, E]#l, E] = {
+  implicit final def handlingEitherT[M[_], E](implicit M: Monad[M]): monad.Handling[EitherTC[M, E]#l, E] = {
     new monad.Handling[EitherTC[M, E]#l, E] {
       val monad = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: Raising[EitherTC[M, E]#l, E] =
-        instances.raising.raiseNEither(M)
+        instances.raising.raisingEitherT(M)
 
       def attempt[A](fa: EitherT[M, E, A]): EitherT[M, E, Either[E, A]] = {
         EitherT(fa.value.map(_.asRight))
@@ -29,14 +29,14 @@ trait HandlingInstances extends HandlingInstancesLowPriority {
 }
 
 private[instances] trait HandlingInstancesLowPriority {
-  implicit final def handleNIndEither[M[_], E, Err](implicit under: monad.Handling[M, E],
+  implicit final def handlingEitherTInd[M[_], E, Err](implicit under: monad.Handling[M, E],
                                                     M: Monad[M]
                                                    ): monad.Handling[CurryT[EitherTCE[Err]#l, M]#l, E] = {
     new monad.Handling[CurryT[EitherTCE[Err]#l, M]#l, E] {
       val monad = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: Raising[CurryT[EitherTCE[Err]#l, M]#l, E] =
-        instances.raising.raiseNInd[EitherTC[M, Err]#l, M, E](
-          instances.eithert.eitherMonadTransFunctor[M, Err],
+        instances.raising.raisingInd[EitherTC[M, Err]#l, M, E](
+          instances.eithert.eitherMonadLayerControl[M, Err],
           under.raise
         )
 
@@ -58,14 +58,14 @@ private[instances] trait HandlingInstancesLowPriority {
     }
   }
 
-  implicit final def handleNIndState[M[_], S, Err](implicit under: monad.Handling[M, Err],
+  implicit final def handlingStateTInd[M[_], S, Err](implicit under: monad.Handling[M, Err],
                                                    M: Monad[M]
                                                   ): monad.Handling[CurryT[StateTCS[S]#l, M]#l, Err] = {
     new monad.Handling[CurryT[StateTCS[S]#l, M]#l, Err] {
       val monad = StateT.catsDataMonadForStateT(M)
       val raise: Raising[CurryT[StateTCS[S]#l, M]#l, Err] =
-        instances.raising.raiseNInd[StateTC[M, S]#l, M, Err](
-          instances.statet.stateMonadLayer[M, S],
+        instances.raising.raisingInd[StateTC[M, S]#l, M, Err](
+          instances.statet.stateMonadLayerControl[M, S],
           under.raise
         )
 
@@ -89,13 +89,13 @@ private[instances] trait HandlingInstancesLowPriority {
     }
   }
 
-  implicit final def handleNIndReader[M[_], Env, Err](implicit under: monad.Handling[M, Err],
+  implicit final def handlingReaderTInd[M[_], Env, Err](implicit under: monad.Handling[M, Err],
                                                       M: Monad[M]
                                                      ): monad.Handling[CurryT[ReaderTCE[Env]#l, M]#l, Err] = {
     new monad.Handling[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
       val monad = ReaderT.catsDataMonadReaderForKleisli(M)
       val raise: Raising[CurryT[ReaderTCE[Env]#l, M]#l, Err] =
-        instances.raising.raiseNInd[ReaderTC[M, Env]#l, M, Err](
+        instances.raising.raisingInd[ReaderTC[M, Env]#l, M, Err](
           instances.readert.readerMonadLayer[M, Env],
           under.raise
         )
@@ -116,14 +116,14 @@ private[instances] trait HandlingInstancesLowPriority {
     }
   }
 
-  implicit final def handleNIndWriter[M[_], L, Err](implicit L: Monoid[L],
+  implicit final def handlingWriterTInd[M[_], L, Err](implicit L: Monoid[L],
                                                     under: monad.Handling[M, Err],
                                                     M: Monad[M]
                                                    ): monad.Handling[CurryT[WriterTCL[L]#l, M]#l, Err] = {
     new monad.Handling[CurryT[WriterTCL[L]#l, M]#l, Err] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val raise: Raising[CurryT[WriterTCL[L]#l, M]#l, Err] =
-        instances.raising.raiseNInd[WriterTC[M, L]#l, M, Err](
+        instances.raising.raisingInd[WriterTC[M, L]#l, M, Err](
           instances.writert.writerMonadLayer[M, L],
           under.raise
         )

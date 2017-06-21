@@ -5,15 +5,7 @@ package instances
 import cats.data.{Kleisli, ReaderT}
 import cats.mtl.applicative.Asking
 
-trait AskingInstances extends AskingInstancesLowPriority {
-  implicit final def askIndT[Inner[_], Outer[_[_], _], E]
-  (implicit lift: applicative.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
-   under: Asking[Inner, E]): Asking[CurryT[Outer, Inner]#l, E] = {
-    askInd[CurryT[Outer, Inner]#l, Inner, E](lift, under)
-  }
-}
-
-private[instances] trait AskingInstancesLowPriority extends AskInstancesLowPriority1 {
+trait AskingInstances extends AskInstancesLowPriority1 {
   implicit final def askInd[M[_], Inner[_], E](implicit
                                                lift: applicative.Layer[M, Inner],
                                                under: Asking[Inner, E]

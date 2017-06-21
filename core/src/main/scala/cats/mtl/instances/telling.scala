@@ -5,17 +5,9 @@ package instances
 import cats.data.WriterT
 import cats.mtl.applicative.Telling
 
-trait TellingInstances extends TellingInstancesLowPriority {
-  implicit final def tellIndT[Inner[_], Outer[_[_], _], L]
-  (implicit lift: monad.Trans.Aux[CurryT[Outer, Inner]#l, Inner, Outer],
-   under: Telling[Inner, L]): Telling[CurryT[Outer, Inner]#l, L] = {
-    tellInd[CurryT[Outer, Inner]#l, Inner, L](lift, under)
-  }
-}
-
-private[instances] trait TellingInstancesLowPriority extends TellingInstancesLowPriority1 {
+trait TellingInstances extends TellingInstancesLowPriority1 {
   implicit final def tellInd[M[_], Inner[_], L](implicit
-                                                lift: monad.Layer[M, Inner],
+                                                lift: applicative.Layer[M, Inner],
                                                 under: Telling[Inner, L]
                                                ): Telling[M, L] = {
     new Telling[M, L] {
@@ -32,9 +24,9 @@ private[instances] trait TellingInstancesLowPriority extends TellingInstancesLow
 }
 
 private[instances] trait TellingInstancesLowPriority1 {
-  implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Monad[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
+  implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
-      val applicative = WriterT.catsDataMonadWriterForWriterT(M, L)
+      val applicative = WriterT.catsDataApplicativeForWriterT(M, L)
       val monoid: Monoid[L] = L
 
       def tell(l: L): WriterT[M, L, Unit] = WriterT.tell(l)

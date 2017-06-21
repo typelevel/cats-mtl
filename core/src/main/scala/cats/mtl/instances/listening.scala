@@ -5,10 +5,7 @@ package instances
 import cats.data.WriterT
 import cats.syntax.functor._
 
-trait ListeningInstances extends ListenLowPriorityInstances {
-}
-
-private[instances] trait ListenLowPriorityInstances {
+trait ListeningInstances {
   implicit final def localWriter[M[_], L]
   (implicit M: Monad[M], L: Monoid[L]
   ): monad.Listening[WriterTC[M, L]#l, L] = {

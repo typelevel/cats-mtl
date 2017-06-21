@@ -3,19 +3,16 @@ package mtl
 package instances
 
 import cats.data.StateT
+import cats.syntax.functor._
 
 trait StateTInstances extends StateTInstancesLowPriority {
-  implicit final def stateMonadLayer[M[_], S]
-  (implicit M: Monad[M]): monad.LayerFunctor[StateTC[M, S]#l, M] = {
-    stateMonadTransControl[M, S]
-  }
 }
 
 private[instances] trait StateTInstancesLowPriority {
-  implicit final def stateMonadTransControl[M[_], S]
-  (implicit M: Monad[M]): monad.TransFunctor.Aux[CurryT[StateTCS[S]#l, M]#l, M, StateTCS[S]#l] = {
-    new monad.TransFunctor[StateTC[M, S]#l, M] {
-      type Outer[F[_], A] = StateT[F, S, A]
+  implicit final def stateMonadLayerControl[M[_], S]
+  (implicit M: Monad[M]): monad.LayerControl.Aux[CurryT[StateTCS[S]#l, M]#l, M, TupleC[S]#l] = {
+    new monad.LayerControl[StateTC[M, S]#l, M] {
+      type State[A] = (S, A)
 
       val outerInstance: Monad[StateTC[M, S]#l] =
         StateT.catsDataMonadForStateT
@@ -26,15 +23,15 @@ private[instances] trait StateTInstancesLowPriority {
 
       def layer[A](inner: M[A]): StateT[M, S, A] = StateT.lift(inner)
 
-      def showLayers[F[_], A](ma: F[StateT[M, S, A]]): F[StateT[M, S, A]] = ma
+      def restore[A](state: (S, A)): StateT[M, S, A] = StateT((_: S) => innerInstance.pure(state))
 
-      def hideLayers[F[_], A](foia: F[StateT[M, S, A]]): F[StateT[M, S, A]] = foia
-
-      def transMap[A, N[_], NInner[_]]
-      (ma: StateT[M, S, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.Aux[N, NInner, StateTCS[S]#l]): N[A] = {
-        mt.hideLayers[Id, A](ma.transformF(trans(_))(innerInstance, mt.innerInstance))
+      def layerControl[A](cps: (StateTC[M, S]#l ~> (M of TupleC[S]#l)#l) => M[A]): StateT[M, S, A] = {
+        StateT((s: S) => cps(new (StateTC[M, S]#l ~> (M of TupleC[S]#l)#l) {
+          def apply[X](fa: StateT[M, S, X]): M[(S, X)] = fa.run(s)
+        }).map(x => (s, x)))
       }
+
+      def zero[A](state: (S, A)): Boolean = false
     }
   }
 

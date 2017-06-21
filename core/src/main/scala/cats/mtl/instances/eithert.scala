@@ -7,15 +7,15 @@ import cats.data.EitherT
 trait EitherTInstances extends EitherTInstancesLowPriority {
   implicit final def eitherMonadLayer[M[_], E]
   (implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] = {
-    eitherMonadTransFunctor[M, E]
+    eitherMonadLayerControl[M, E]
   }
 }
 
 private[instances] trait EitherTInstancesLowPriority {
-  implicit final def eitherMonadTransFunctor[M[_], E]
-  (implicit M: Monad[M]): monad.TransFunctor.Aux[EitherTC[M, E]#l, M, EitherTCE[E]#l] = {
-    new monad.TransFunctor[EitherTC[M, E]#l, M] {
-      type Outer[F[_], A] = EitherT[F, E, A]
+  implicit final def eitherMonadLayerControl[M[_], E]
+  (implicit M: Monad[M]): monad.LayerControl.Aux[EitherTC[M, E]#l, M, EitherC[E]#l] = {
+    new monad.LayerControl[EitherTC[M, E]#l, M] {
+      type State[A] = E Either A
 
       val outerInstance: Monad[CurryT[EitherTCE[E]#l, M]#l] =
         EitherT.catsDataMonadErrorForEitherT
@@ -26,15 +26,15 @@ private[instances] trait EitherTInstancesLowPriority {
 
       def layer[A](inner: M[A]): EitherT[M, E, A] = EitherT.right(inner)
 
-      def showLayers[F[_], A](ma: F[EitherT[M, E, A]]): F[EitherT[M, E, A]] = ma
+      def restore[A](state: Either[E, A]): EitherT[M, E, A] = EitherT.fromEither[M](state)
 
-      def hideLayers[F[_], A](foia: F[EitherT[M, E, A]]): F[EitherT[M, E, A]] = foia
-
-      def transMap[A, N[_], NInner[_]]
-      (ma: EitherT[M, E, A])(trans: M ~> NInner)
-      (implicit mt: monad.Trans.Aux[N, NInner, EitherTCE[E]#l]): N[A] = {
-        mt.hideLayers[Id, A](EitherT(trans(ma.value)))
+      def layerControl[A](cps: (EitherTC[M, E]#l ~> (M of EitherC[E]#l)#l) => M[A]): EitherT[M, E, A] = {
+        EitherT.right(cps(new (EitherTC[M, E]#l ~> (M of EitherC[E]#l)#l) {
+          def apply[X](fa: EitherT[M, E, X]): M[Either[E, X]] = fa.value
+        }))
       }
+
+      def zero[A](state: Either[E, A]): Boolean = state.isLeft
     }
   }
 }
