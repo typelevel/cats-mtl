@@ -16,7 +16,8 @@ object CompilerOptions {
 //    "-Ywarn-dead-code",
     "-Ywarn-numeric-widen",
     "-Ywarn-value-discard",
-    "-Xfuture"
+    "-Xfuture",
+    "-P:acyclic:force"
   )
 
   val warnUnusedImport = Def.settings(
