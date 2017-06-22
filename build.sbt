@@ -19,7 +19,7 @@ addCommandAlias("validate", ";clean;validateJS;validateKernelJS;validateFreeJS;v
 // projects
 
 val core = crossProject.crossType(CrossType.Pure)
-  .settings(moduleName := "cats-mtl-core", name := "Cats core")
+  .settings(moduleName := "cats-mtl-core", name := "Cats MTL core")
   .settings(Settings.coreSettings:_*)
   .settings(Settings.includeGeneratedSrc)
   .settings(Dependencies.acyclic)
