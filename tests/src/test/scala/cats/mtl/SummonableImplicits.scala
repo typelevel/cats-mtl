@@ -101,19 +101,23 @@ final class SummonableImplicits extends BaseSuite {
 
       def _4 = implicitly[functor.TFunctor[WriterTCL[String]#l]]
 
-      def _6 = implicitly[applicative.TFunctor[OptionT]]
+      // you *need* to flatten one of the layers in StateT
+      // to access the applicative layers to `ap`
+      assertDoesNotCompile("implicitly[applicative.TFunctor[StateTCS[String]#l]]")
 
-      def _7 = implicitly[applicative.TFunctor[ReaderTCE[String]#l]]
+      def _5 = implicitly[applicative.TFunctor[OptionT]]
 
-      def _8 = implicitly[applicative.TFunctor[WriterTCL[String]#l]]
+      def _6 = implicitly[applicative.TFunctor[ReaderTCE[String]#l]]
 
-      def _9 = implicitly[monad.TFunctor[StateTCS[String]#l]]
+      def _7 = implicitly[applicative.TFunctor[WriterTCL[String]#l]]
 
-      def _10 = implicitly[monad.TFunctor[OptionT]]
+      def _8 = implicitly[monad.TFunctor[StateTCS[String]#l]]
 
-      def _11 = implicitly[monad.TFunctor[ReaderTCE[String]#l]]
+      def _9 = implicitly[monad.TFunctor[OptionT]]
 
-      def _12 = implicitly[monad.TFunctor[WriterTCL[String]#l]]
+      def _10 = implicitly[monad.TFunctor[ReaderTCE[String]#l]]
+
+      def _11 = implicitly[monad.TFunctor[WriterTCL[String]#l]]
     }
   }
 
