@@ -29,6 +29,7 @@ object CompilerOptions {
           Seq("-Ywarn-unused-import")
       }
     },
+    scalacOptions in Test -= "-P:acyclic:force",
     scalacOptions in(Compile, console) ~= {
       _.filterNot("-Ywarn-unused-import" == _)
     },

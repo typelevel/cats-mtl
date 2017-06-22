@@ -91,6 +91,30 @@ final class SummonableImplicits extends BaseSuite {
 
       def _4 = implicitly[applicative.Telling[WriterTStrTupleInt, Vector[Int]]]
     }
+
+    test("tfunctor") {
+      def _1 = implicitly[functor.TFunctor[StateTCS[String]#l]]
+
+      def _2 = implicitly[functor.TFunctor[OptionT]]
+
+      def _3 = implicitly[functor.TFunctor[ReaderTCE[String]#l]]
+
+      def _4 = implicitly[functor.TFunctor[WriterTCL[String]#l]]
+
+      def _6 = implicitly[applicative.TFunctor[OptionT]]
+
+      def _7 = implicitly[applicative.TFunctor[ReaderTCE[String]#l]]
+
+      def _8 = implicitly[applicative.TFunctor[WriterTCL[String]#l]]
+
+      def _9 = implicitly[monad.TFunctor[StateTCS[String]#l]]
+
+      def _10 = implicitly[monad.TFunctor[OptionT]]
+
+      def _11 = implicitly[monad.TFunctor[ReaderTCE[String]#l]]
+
+      def _12 = implicitly[monad.TFunctor[WriterTCL[String]#l]]
+    }
   }
 
 
