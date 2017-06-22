@@ -37,19 +37,19 @@ final class SummonableImplicits extends BaseSuite {
   {
     import cats.mtl.instances.all._
     test("asking") {
-      def _1 = implicitly[applicative.Asking[ReaderStrId, String]]
+      assertCompiles("implicitly[applicative.Asking[ReaderStrId, String]]")
 
-      def _2 = implicitly[applicative.Asking[ReaderStrInt, Int]]
+      assertCompiles("implicitly[applicative.Asking[ReaderStrInt, Int]]")
 
-      def _3 = implicitly[applicative.Asking[ReaderStrInt, String]]
+      assertCompiles("implicitly[applicative.Asking[ReaderStrInt, String]]")
 
-      def _4 = implicitly[applicative.Asking[ReaderStrFuncInt, Int]]
+      assertCompiles("implicitly[applicative.Asking[ReaderStrFuncInt, Int]]")
     }
 
     test("listening") {
-      def _1 = implicitly[monad.Listening[WriterStrId, String]]
+      assertCompiles("implicitly[monad.Listening[WriterStrId, String]]")
 
-      def _2 = implicitly[monad.Listening[WriterTStrWriterTInt, String]]
+      assertCompiles("implicitly[monad.Listening[WriterTStrWriterTInt, String]]")
 
       assertTypeError("implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]")
 
@@ -57,67 +57,67 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     test("raising") {
-      def _1 = implicitly[functor.Raising[EitherStrId, String]]
+      assertCompiles("implicitly[functor.Raising[EitherStrId, String]]")
 
-      def _2 = implicitly[functor.Raising[EitherTStrEitherTInt, Int]]
+      assertCompiles("implicitly[functor.Raising[EitherTStrEitherTInt, Int]]")
 
-      def _3 = implicitly[functor.Raising[EitherTStrEitherTInt, String]]
+      assertCompiles("implicitly[functor.Raising[EitherTStrEitherTInt, String]]")
     }
 
     test("scoping") {
-      def _1 = implicitly[applicative.Scoping[ReaderStrId, String]]
+      assertCompiles("implicitly[applicative.Scoping[ReaderStrId, String]]")
 
-      def _2 = implicitly[applicative.Scoping[ReaderStrInt, Int]]
+      assertCompiles("implicitly[applicative.Scoping[ReaderStrInt, Int]]")
 
-      def _3 = implicitly[applicative.Scoping[ReaderStrInt, String]]
+      assertCompiles("implicitly[applicative.Scoping[ReaderStrInt, String]]")
 
-      def _4 = implicitly[applicative.Scoping[ReaderStrFuncInt, Int]]
+      assertCompiles("implicitly[applicative.Scoping[ReaderStrFuncInt, Int]]")
     }
 
     test("stateful") {
-      def _1 = implicitly[monad.Stateful[StateStrId, String]]
+      assertCompiles("implicitly[monad.Stateful[StateStrId, String]]")
 
-      def _2 = implicitly[monad.Stateful[StateTStrStateTInt, String]]
+      assertCompiles("implicitly[monad.Stateful[StateTStrStateTInt, String]]")
 
-      def _3 = implicitly[monad.Stateful[StateTStrStateTInt, Int]]
+      assertCompiles("implicitly[monad.Stateful[StateTStrStateTInt, Int]]")
     }
 
     test("telling") {
-      def _1 = implicitly[applicative.Telling[WriterStrId, String]]
+      assertCompiles("implicitly[applicative.Telling[WriterStrId, String]]")
 
-      def _2 = implicitly[applicative.Telling[WriterTStrWriterTInt, String]]
+      assertCompiles("implicitly[applicative.Telling[WriterTStrWriterTInt, String]]")
 
-      def _3 = implicitly[applicative.Telling[WriterTStrWriterTInt, Vector[Int]]]
+      assertCompiles("implicitly[applicative.Telling[WriterTStrWriterTInt, Vector[Int]]]")
 
-      def _4 = implicitly[applicative.Telling[WriterTStrTupleInt, Vector[Int]]]
+      assertCompiles("implicitly[applicative.Telling[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("tfunctor") {
-      def _1 = implicitly[functor.TFunctor[StateTCS[String]#l]]
+      assertCompiles("implicitly[functor.TFunctor[StateTCS[String]#l]]")
 
-      def _2 = implicitly[functor.TFunctor[OptionT]]
+      assertCompiles("implicitly[functor.TFunctor[OptionT]]")
 
-      def _3 = implicitly[functor.TFunctor[ReaderTCE[String]#l]]
+      assertCompiles("implicitly[functor.TFunctor[ReaderTCE[String]#l]]")
 
-      def _4 = implicitly[functor.TFunctor[WriterTCL[String]#l]]
+      assertCompiles("implicitly[functor.TFunctor[WriterTCL[String]#l]]")
 
       // you *need* to flatten one of the layers in StateT
       // to access the applicative layers to `ap`
       assertTypeError("implicitly[applicative.TFunctor[StateTCS[String]#l]]")
 
-      def _5 = implicitly[applicative.TFunctor[OptionT]]
+      assertCompiles("implicitly[applicative.TFunctor[OptionT]]")
 
-      def _6 = implicitly[applicative.TFunctor[ReaderTCE[String]#l]]
+      assertCompiles("implicitly[applicative.TFunctor[ReaderTCE[String]#l]]")
 
-      def _7 = implicitly[applicative.TFunctor[WriterTCL[String]#l]]
+      assertCompiles("implicitly[applicative.TFunctor[WriterTCL[String]#l]]")
 
-      def _8 = implicitly[monad.TFunctor[StateTCS[String]#l]]
+      assertCompiles("implicitly[monad.TFunctor[StateTCS[String]#l]]")
 
-      def _9 = implicitly[monad.TFunctor[OptionT]]
+      assertCompiles("implicitly[monad.TFunctor[OptionT]]")
 
-      def _10 = implicitly[monad.TFunctor[ReaderTCE[String]#l]]
+      assertCompiles("implicitly[monad.TFunctor[ReaderTCE[String]#l]]")
 
-      def _11 = implicitly[monad.TFunctor[WriterTCL[String]#l]]
+      assertCompiles("implicitly[monad.TFunctor[WriterTCL[String]#l]]")
     }
   }
 
