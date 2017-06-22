@@ -2,6 +2,8 @@ package cats
 package mtl
 package syntax
 
+import cats.mtl.applicative.Listening
+
 trait ListeningSyntax {
   implicit def toListeningOps[F[_], A](fa: F[A]): ListeningOps[F, A] = new ListeningOps(fa)
 
@@ -9,13 +11,13 @@ trait ListeningSyntax {
 }
 
 final class ListeningOps[F[_], A](val fa: F[A]) extends AnyVal {
-  def listen[L](implicit listening: monad.Listening[F, L]): F[(A, L)] = {
+  def listen[L](implicit listening: Listening[F, L]): F[(A, L)] = {
     listening.listen(fa)
   }
 }
 
 final class PassingOps[F[_], L, A](val fa: F[(A, L => L)]) extends AnyVal {
-  def pass(implicit passing: monad.Listening[F, L]): F[A] = {
+  def pass(implicit passing: Listening[F, L]): F[A] = {
     passing.pass(fa)
   }
 }

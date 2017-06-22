@@ -47,13 +47,13 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     test("listening") {
-      assertCompiles("implicitly[monad.Listening[WriterStrId, String]]")
+      assertCompiles("implicitly[applicative.Listening[WriterStrId, String]]")
 
-      assertCompiles("implicitly[monad.Listening[WriterTStrWriterTInt, String]]")
+      assertCompiles("implicitly[applicative.Listening[WriterTStrWriterTInt, String]]")
 
-      assertTypeError("implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]")
+      assertTypeError("implicitly[applicative.Listening[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertTypeError("implicitly[monad.Listening[WriterTStrTupleInt, Vector[Int]]]")
+      assertTypeError("implicitly[applicative.Listening[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("raising") {

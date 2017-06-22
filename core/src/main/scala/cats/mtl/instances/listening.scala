@@ -3,13 +3,14 @@ package mtl
 package instances
 
 import cats.data.WriterT
+import cats.mtl.applicative.Listening
 import cats.syntax.functor._
 
 trait ListeningInstances {
   implicit final def listeningWriter[M[_], L]
   (implicit M: Monad[M], L: Monoid[L]
-  ): monad.Listening[WriterTC[M, L]#l, L] = {
-    new monad.Listening[WriterTC[M, L]#l, L] {
+  ): Listening[WriterTC[M, L]#l, L] = {
+    new Listening[WriterTC[M, L]#l, L] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val tell = instances.telling.tellingWriter[M, L]
 
@@ -33,8 +34,8 @@ trait ListeningInstances {
 
   implicit final def listeningTuple[L]
   (implicit L: Monoid[L]
-  ): monad.Listening[TupleC[L]#l, L] = {
-    new monad.Listening[TupleC[L]#l, L] {
+  ): Listening[TupleC[L]#l, L] = {
+    new Listening[TupleC[L]#l, L] {
       val monad = cats.instances.tuple.catsStdMonadForTuple2(L)
       val tell = instances.telling.tellingTuple[L]
 
