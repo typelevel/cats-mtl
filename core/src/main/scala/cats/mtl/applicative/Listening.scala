@@ -6,22 +6,22 @@ package applicative
   * Listening has two external laws:
   * {{{
   * def listenRespectsTell(l: L) = {
-  *   listen(tell(l)) == tell(l).map(_ => ((), l))
+  *   listen(tell(l)) <-> tell(l).map(_ => ((), l))
   * }
   *
   * def listenAddsNoEffects(fa: F[A]) = {
-  *   listen(fa).map(_._1) == fa
+  *   listen(fa).map(_._1) <-> fa
   * }
   * }}}
   *
   * Listening has internal laws:
   * {{{
   * def listensIsListenThenMap(fa: F[A], f: L => B) = {
-  *   listens(fa)(f) == listen(fa).map { case (a, l) => (f(l), a) }
+  *   listens(fa)(f) <-> listen(fa).map { case (a, l) => (f(l), a) }
   * }
   *
   * def censorIsPassTupled(fa: F[A])(f: L => L) = {
-  *   censor(fa)(f) == pass(fa.map(a => (a, f)))
+  *   censor(fa)(f) <-> pass(fa.map(a => (a, f)))
   * }
   * }}}
   */

@@ -10,7 +10,7 @@ import scala.util.control.NonFatal
   * Raising has one free law, i.e. a law guaranteed by parametricity:
   * {{{
   * def failThenFlatMapFails[A, B](ex: E, f: A => F[B]) = {
-  *   fail(ex).flatMap(f) == fail(ex)
+  *   fail(ex).flatMap(f) <-> fail(ex)
   * }
   * guaranteed by:
   *   fail[X](ex) <-> fail[F[Y]](ex) // parametricity

@@ -6,17 +6,17 @@ package applicative
   * Asking has two external laws:
   * {{{
   * def askAddsNoEffects[A](fa: F[A]) = {
-  *   (ask *> fa) == fa
+  *   (ask *> fa) <-> fa
   * }
   * def askIsNotAffected[A](fa: F[A]) = {
-      (fa *> ask) == (ask, fa).mapN((e, f) => e)
+      (fa *> ask) <-> (ask, fa).mapN((e, f) => e)
   * }
   * }}}
   *
   * Asking has one internal law:
   * {{{
   * def readerIsAskAndMap[A](f: E => A) = {
-  *   ask.map(f) == reader(f)
+  *   ask.map(f) <-> reader(f)
   * }
   * }}}
   * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context,

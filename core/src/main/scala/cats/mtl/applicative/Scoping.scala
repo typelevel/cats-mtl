@@ -6,14 +6,14 @@ package applicative
   * Scoping has one external law:
   * {{{
   * def askReflectsLocal(f: E => E) = {
-  *   local(ask)(f) == ask map f
+  *   local(ask)(f) <-> ask map f
   * }
   * }}}
   *
   * Scoping has one internal law:
   * {{{
   * def scopeIsLocalConst(fa: F[A], e: E) = {
-  *   local(fa)(_ => e) == scope(fa)(e)
+  *   local(fa)(_ => e) <-> scope(fa)(e)
   * }
   * }}}
   *

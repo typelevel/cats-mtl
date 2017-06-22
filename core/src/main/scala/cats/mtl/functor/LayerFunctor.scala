@@ -6,7 +6,7 @@ package functor
   * laws:
   * {{{
   * def layerMapRespectsLayer(in: Inner[A])(forward: Inner ~> Inner) = {
-  *   layer(forward(in)) == layerMap(layer(in))(forward, backward)
+  *   layer(forward(in)) <-> layerMap(layer(in))(forward, backward)
   * }
   * }}}
   *
@@ -14,7 +14,7 @@ package functor
   * {{{
   * def layerMapRespectsLayerImapK(ma: M[A])(forward: Inner ~> Inner,
   *                                          backward: Inner ~> Inner) = {
-  *   layerIMapK(ma)(forward, backward) == layerMap(layer(in))(forward)
+  *   layerIMapK(ma)(forward, backward) <-> layerMap(layer(in))(forward)
   * }
   * }}}
   */

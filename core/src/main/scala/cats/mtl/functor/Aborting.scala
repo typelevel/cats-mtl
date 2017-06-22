@@ -3,12 +3,21 @@ package mtl
 package functor
 
 /**
-  * Aborting has no laws not guaranteed by parametricity.
+  * Aborting has no external laws not guaranteed by parametricity.
+  *
+  * Aborting has one internal law:
+  * {{{
+  * def filterIsFlatMapOrAbort(fa: F[A])(f: A => Option[B]) = {
+  *   filter(fa)(f) <-> for {
+  *     a <- fa
+  *     b <- f(a).fold(abort[B])(pure)
+  *   } yield b
+  * }}}
   *
   * Aborting has one free law, i.e. a law guaranteed by parametricity:
   * {{{
   * def abortThenFlatMapAborts(f: A => F[B]) = {
-  *   abort[A].flatMap(f) == abort[B]
+  *   abort[A].flatMap(f) <-> abort[B]
   * }
   * guaranteed by:
   *   abort[X] <-> abort[F[Y]](ex) // parametricity
@@ -22,4 +31,6 @@ trait Aborting[F[_]] {
   val functor: Functor[F]
 
   def abort[A]: F[A]
+
+  def filter[A, B](fa: F[A])(f: A => Option[B])(implicit ev: Monad[F]): F[B]
 }

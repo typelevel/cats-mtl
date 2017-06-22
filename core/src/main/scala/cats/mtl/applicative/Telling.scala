@@ -6,22 +6,22 @@ package applicative
   * Telling has two external laws:
   * {{{
   * def tellTwiceIsTellCombined(l1: L, l2: L) = {
-  *   tell(l1) *> tell(l2) == tell(l1 |+| l2)
+  *   tell(l1) *> tell(l2) <-> tell(l1 |+| l2)
   * }
   *
   * def tellZeroIsPureUnit = {
-  *   tell(L.zero) == pure(())
+  *   tell(L.zero) <-> pure(())
   * }
   * }}}
   *
   * Telling has one internal law:
   * {{{
   * def writerIsTellAndMap(a: A, l: L) = {
-  *   tell(l).map(_ => a) == writer(a, l)
+  *   tell(l).map(_ => a) <-> writer(a, l)
   * }
   *
   * def tupleIsWriter(a: A, l: L) = {
-  *   writer(a, l) == tuple((l, a))
+  *   writer(a, l) <-> tuple((l, a))
   * }
   * }}}
   */

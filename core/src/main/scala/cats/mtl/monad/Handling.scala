@@ -9,7 +9,7 @@ import cats.mtl.functor.Raising
   * Handling has one external law:
   * {{{
   * def materializeRecoversRaise(e: E) = {
-  *   materialize(raise(e)) == pure(Left(e))
+  *   materialize(raise(e)) <-> pure(Left(e))
   * }
   * }}}
   *
