@@ -29,14 +29,14 @@ object CompilerOptions {
           Seq("-Ywarn-unused-import")
       }
     },
-    scalacOptions in Test ~= (_.filterNot(_ == "-P:acyclic:force")),
+    disableAcyclic(scalacOptions in Test),
     scalacOptions in(Compile, console) ~= {
       _.filterNot("-Ywarn-unused-import" == _)
     },
     scalacOptions in(Test, console) := (scalacOptions in(Compile, console)).value
   )
 
-  val disableAcyclic = Def.settings(scalacOptions ~= (_.filterNot(_ == "-P:acyclic:force")))
+  def disableAcyclic(key: TaskKey[Seq[String]]) = key ~= (_.filterNot(_ == "P:acyclic:force"))
 
   val update2_12 = Def.settings(
     scalacOptions -= {
