@@ -28,6 +28,8 @@ trait Telling[F[_], L] {
   def tell(l: L): F[Unit]
 
   def writer[A](a: A, l: L): F[A]
+
+  def tuple[A](ta: (L, A)): F[A]
 }
 
 object Telling {
