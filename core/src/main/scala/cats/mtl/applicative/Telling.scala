@@ -19,6 +19,10 @@ package applicative
   * def writerIsTellAndMap(a: A, l: L) = {
   *   tell(l).map(_ => a) == writer(a, l)
   * }
+  *
+  * def tupleIsWriter(a: A, l: L) = {
+  *   writer(a, l) == tuple((l, a))
+  * }
   * }}}
   */
 trait Telling[F[_], L] {

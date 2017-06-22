@@ -16,8 +16,7 @@ object CompilerOptions {
 //    "-Ywarn-dead-code",
     "-Ywarn-numeric-widen",
     "-Ywarn-value-discard",
-    "-Xfuture",
-    "-P:acyclic:force"
+    "-Xfuture"
   )
 
   val warnUnusedImport = Def.settings(
@@ -29,14 +28,11 @@ object CompilerOptions {
           Seq("-Ywarn-unused-import")
       }
     },
-    disableAcyclic(scalacOptions in Test),
     scalacOptions in(Compile, console) ~= {
       _.filterNot("-Ywarn-unused-import" == _)
     },
     scalacOptions in(Test, console) := (scalacOptions in(Compile, console)).value
   )
-
-  def disableAcyclic(key: TaskKey[Seq[String]]) = key ~= (_.filterNot(_ == "P:acyclic:force"))
 
   val update2_12 = Def.settings(
     scalacOptions -= {
