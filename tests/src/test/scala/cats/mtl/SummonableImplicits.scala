@@ -122,6 +122,7 @@ final class SummonableImplicits extends BaseSuite {
 
     test("lift") {
       assertCompiles("implicitly[monad.Lift[EitherTC[Eval, String]#l, WriterTC[EitherTC[Eval, String]#l, String]#l]]")
+      assertCompiles("implicitly[monad.Lift[WriterTC[EitherTC[Eval, String]#l, String]#l, OptionTC[WriterTC[EitherTC[Eval, String]#l, String]#l]#l]]")
     }
   }
 
