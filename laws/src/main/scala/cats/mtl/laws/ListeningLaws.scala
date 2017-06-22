@@ -25,6 +25,6 @@ trait ListeningLaws[F[_], L] {
   }
 
   def censorIsPassTupled[A](fa: F[A])(f: L => L) = {
-    Listening.censor(fa)(f) <-> Listening.pass[F, L, A](fa.map(a => (a, f)))
+    Listening.censor(fa)(f) <-> Listening.pass(fa.map(a => (a, f)))
   }
 }

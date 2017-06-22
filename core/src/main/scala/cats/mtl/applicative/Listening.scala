@@ -17,7 +17,7 @@ package applicative
   * Listening has internal laws:
   * {{{
   * def listensIsListenThenMap(fa: F[A], f: L => B) = {
-  *   listens(fa)(f) == listen(fa).map { case (a, l) => (a, f(l)) }
+  *   listens(fa)(f) == listen(fa).map { case (a, l) => (f(l), a) }
   * }
   *
   * def censorIsPassTupled(fa: F[A])(f: L => L) = {
