@@ -7,7 +7,7 @@ import data.StateT
 trait StatefulInstances extends StatefulInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
   // to lift Stateful into
-  implicit final def statefulNInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],
+  implicit final def statefulInd[M[_], Inner[_], E](implicit ml: monad.LayerFunctor[M, Inner],
                                                      under: monad.Stateful[Inner, E]
                                                     ): monad.Stateful[M, E] = {
     new monad.Stateful[M, E] {

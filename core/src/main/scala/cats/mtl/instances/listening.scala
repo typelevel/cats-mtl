@@ -6,12 +6,12 @@ import cats.data.WriterT
 import cats.syntax.functor._
 
 trait ListeningInstances {
-  implicit final def localWriter[M[_], L]
+  implicit final def listeningWriter[M[_], L]
   (implicit M: Monad[M], L: Monoid[L]
   ): monad.Listening[WriterTC[M, L]#l, L] = {
     new monad.Listening[WriterTC[M, L]#l, L] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
-      val tell = instances.telling.tellWriter[M, L]
+      val tell = instances.telling.tellingWriter[M, L]
 
       def listen[A](fa: WriterT[M, L, A]): WriterT[M, L, (A, L)] = {
         WriterT[M, L, (A, L)](fa.run.map { case (l, a) => (l, (a, l)) })
@@ -31,10 +31,12 @@ trait ListeningInstances {
     }
   }
 
-  implicit final def localTuple[L](implicit L: Monoid[L]): monad.Listening[TupleC[L]#l, L] = {
+  implicit final def listeningTuple[L]
+  (implicit L: Monoid[L]
+  ): monad.Listening[TupleC[L]#l, L] = {
     new monad.Listening[TupleC[L]#l, L] {
       val monad = cats.instances.tuple.catsStdMonadForTuple2(L)
-      val tell = instances.telling.tellTuple[L]
+      val tell = instances.telling.tellingTuple[L]
 
       def listen[A](fa: (L, A)): (L, (A, L)) = {
         val (l, a) = fa
@@ -56,6 +58,4 @@ trait ListeningInstances {
   }
 }
 
-object listening {
-
-}
+object listening extends ListeningInstances

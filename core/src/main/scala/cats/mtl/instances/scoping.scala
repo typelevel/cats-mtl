@@ -11,7 +11,7 @@ trait ScopingInstances extends ScopingLowPriorityInstances1 {
                                                   ): Scoping[M, E] = {
     new Scoping[M, E] {
       val ask: Asking[M, E] =
-        instances.asking.askInd[M, Inner, E](ml, under.ask)
+        instances.asking.askingInd[M, Inner, E](ml, under.ask)
 
       def local[A](fa: M[A])(f: E => E): M[A] = {
         ml.outerInstance.flatMap(ask.ask)(r =>
@@ -36,10 +36,10 @@ trait ScopingInstances extends ScopingLowPriorityInstances1 {
 }
 
 private[instances] trait ScopingLowPriorityInstances1 {
-  implicit final def scopingNReader[M[_], E](implicit M: Applicative[M]): Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+  implicit final def scopingReader[M[_], E](implicit M: Applicative[M]): Scoping[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new Scoping[ReaderTC[M, E]#l, E] {
       val ask: Asking[ReaderTC[M, E]#l, E] =
-        instances.asking.askReader[M, E]
+        instances.asking.askingReader[M, E]
 
       def local[A](fa: ReaderT[M, E, A])(f: E => E): ReaderT[M, E, A] = ReaderT.local(f)(fa)
 
@@ -50,7 +50,7 @@ private[instances] trait ScopingLowPriorityInstances1 {
   implicit final def scopingFunction[E]: Scoping[FunctionC[E]#l, E] = {
     new Scoping[FunctionC[E]#l, E] {
       val ask: Asking[FunctionC[E]#l, E] =
-        instances.asking.askFunction[E]
+        instances.asking.askingFunction[E]
 
       def local[A](fa: E => A)(f: E => E): E => A = fa.compose(f)
 

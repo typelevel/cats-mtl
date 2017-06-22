@@ -6,7 +6,7 @@ import cats.data.{Kleisli, ReaderT}
 import cats.mtl.applicative.Asking
 
 trait AskingInstances extends AskInstancesLowPriority1 {
-  implicit final def askInd[M[_], Inner[_], E](implicit
+  implicit final def askingInd[M[_], Inner[_], E](implicit
                                                lift: applicative.Layer[M, Inner],
                                                under: Asking[Inner, E]
                                               ): Asking[M, E] = {
@@ -22,7 +22,7 @@ trait AskingInstances extends AskInstancesLowPriority1 {
 }
 
 private[instances] trait AskInstancesLowPriority1 {
-  implicit final def askReader[M[_], E](implicit M: Applicative[M]): Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+  implicit final def askingReader[M[_], E](implicit M: Applicative[M]): Asking[CurryT[ReaderTCE[E]#l, M]#l, E] = {
     new Asking[ReaderTC[M, E]#l, E] {
       val applicative = ReaderT.catsDataApplicativeForKleisli(M)
 
@@ -32,7 +32,7 @@ private[instances] trait AskInstancesLowPriority1 {
     }
   }
 
-  implicit final def askFunction[E]: Asking[FunctionC[E]#l, E] = {
+  implicit final def askingFunction[E]: Asking[FunctionC[E]#l, E] = {
     new Asking[FunctionC[E]#l, E] {
       val applicative = cats.instances.function.catsStdMonadReaderForFunction1
 

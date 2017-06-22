@@ -1,7 +1,6 @@
 package cats
 package mtl
 
-import instances.all._
 import cats.instances.all._
 import cats.data._
 
@@ -34,7 +33,9 @@ final class SummonableImplicits extends BaseSuite {
   private type WriterTStrTupleInt[A] = WriterTStr[TupleC[Vector[Int]]#l, A]
 
   //noinspection ScalaUnusedSymbol
+  // test instances.all._
   {
+    import cats.mtl.instances.all._
     test("asking") {
       def _1 = implicitly[applicative.Asking[ReaderStrId, String]]
 

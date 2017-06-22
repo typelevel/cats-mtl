@@ -6,7 +6,7 @@ import cats.data.WriterT
 import cats.mtl.applicative.Telling
 
 trait TellingInstances extends TellingInstancesLowPriority1 {
-  implicit final def tellInd[M[_], Inner[_], L](implicit
+  implicit final def tellingInd[M[_], Inner[_], L](implicit
                                                 lift: applicative.Layer[M, Inner],
                                                 under: Telling[Inner, L]
                                                ): Telling[M, L] = {
@@ -24,7 +24,7 @@ trait TellingInstances extends TellingInstancesLowPriority1 {
 }
 
 private[instances] trait TellingInstancesLowPriority1 {
-  implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
+  implicit final def tellingWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): Telling[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new Telling[CurryT[WriterTCL[L]#l, M]#l, L] {
       val applicative = WriterT.catsDataApplicativeForWriterT(M, L)
       val monoid: Monoid[L] = L
@@ -37,7 +37,7 @@ private[instances] trait TellingInstancesLowPriority1 {
     }
   }
 
-  implicit final def tellTuple[L](implicit L: Monoid[L]): Telling[TupleC[L]#l, L] = {
+  implicit final def tellingTuple[L](implicit L: Monoid[L]): Telling[TupleC[L]#l, L] = {
     new Telling[TupleC[L]#l, L] {
       val applicative = cats.instances.tuple.catsStdMonadForTuple2
       val monoid: Monoid[L] = L
