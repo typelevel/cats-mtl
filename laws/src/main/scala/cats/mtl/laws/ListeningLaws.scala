@@ -10,6 +10,7 @@ trait ListeningLaws[F[_], L] {
   implicit val listening: Listening[F, L]
   implicit val telling: Telling[F, L] = listening.tell
   implicit val applicative: Applicative[F] = telling.applicative
+
   // external laws
   def listenRespectsTell(l: L) = {
     Listening.listen(Telling.tell(l)) <-> Telling.tell(l).map(_ => ((), l))
