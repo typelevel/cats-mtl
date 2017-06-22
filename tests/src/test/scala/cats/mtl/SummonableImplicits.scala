@@ -51,9 +51,9 @@ final class SummonableImplicits extends BaseSuite {
 
       def _2 = implicitly[monad.Listening[WriterTStrWriterTInt, String]]
 
-      assertDoesNotCompile("implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]")
+      assertTypeError("implicitly[monad.Listening[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertDoesNotCompile("implicitly[monad.Listening[WriterTStrTupleInt, Vector[Int]]]")
+      assertTypeError("implicitly[monad.Listening[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("raising") {
@@ -103,7 +103,7 @@ final class SummonableImplicits extends BaseSuite {
 
       // you *need* to flatten one of the layers in StateT
       // to access the applicative layers to `ap`
-      assertDoesNotCompile("implicitly[applicative.TFunctor[StateTCS[String]#l]]")
+      assertTypeError("implicitly[applicative.TFunctor[StateTCS[String]#l]]")
 
       def _5 = implicitly[applicative.TFunctor[OptionT]]
 
