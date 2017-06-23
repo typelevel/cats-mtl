@@ -9,8 +9,8 @@ trait OptionTInstances extends OptionTInstancesLowPriority {
 
 private[instances] trait OptionTInstancesLowPriority {
   implicit final def optionMonadLayerControl[M[_]]
-  (implicit M: Monad[M]): monad.LayerControl.Aux[OptionTC[M]#l, M, Option] = {
-    new monad.LayerControl[OptionTC[M]#l, M] {
+  (implicit M: Monad[M]): MonadLayerControl.Aux[OptionTC[M]#l, M, Option] = {
+    new MonadLayerControl[OptionTC[M]#l, M] {
       type State[A] = Option[A]
 
       val outerInstance: Monad[OptionTC[M]#l] =

@@ -2,16 +2,16 @@ package cats
 package mtl
 package instances
 
-object all extends AskingInstances
+object all extends AskInstances
   with EitherTInstances
-  with HandlingInstances
-  with ListeningInstances
+  with HandleInstances
+  with ListenInstances
   with OptionTInstances
-  with RaisingInstances
+  with RaiseInstances
   with ReaderTInstances
-  with ScopingInstances
-  with StatefulInstances
+  with LocalInstances
+  with StateInstances
   with StateTInstances
-  with TellingInstances
+  with TellInstances
   with WriterTInstances
 

@@ -6,15 +6,15 @@ import cats.data.EitherT
 
 trait EitherTInstances extends EitherTInstancesLowPriority {
   implicit final def eitherMonadLayer[M[_], E]
-  (implicit M: Monad[M]): monad.Layer[EitherTC[M, E]#l, M] = {
+  (implicit M: Monad[M]): MonadLayer[EitherTC[M, E]#l, M] = {
     eitherMonadLayerControl[M, E]
   }
 }
 
 private[instances] trait EitherTInstancesLowPriority {
   implicit final def eitherMonadLayerControl[M[_], E]
-  (implicit M: Monad[M]): monad.LayerControl.Aux[EitherTC[M, E]#l, M, EitherC[E]#l] = {
-    new monad.LayerControl[EitherTC[M, E]#l, M] {
+  (implicit M: Monad[M]): MonadLayerControl.Aux[EitherTC[M, E]#l, M, EitherC[E]#l] = {
+    new MonadLayerControl[EitherTC[M, E]#l, M] {
       type State[A] = E Either A
 
       val outerInstance: Monad[CurryT[EitherTCE[E]#l, M]#l] =

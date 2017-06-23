@@ -2,12 +2,11 @@ package cats
 package mtl
 package laws
 
-import applicative.Telling
 import cats.syntax.all._
 
 trait TellingLaws[F[_], L] {
   implicit val monoid: Monoid[L]
-  implicit val telling: Telling[F, L]
+  implicit val telling: ApplicativeTell[F, L]
   implicit val applicative: Applicative[F] = telling.applicative
 
   // external laws

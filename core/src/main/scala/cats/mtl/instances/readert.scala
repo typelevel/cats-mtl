@@ -6,15 +6,15 @@ import cats.data.ReaderT
 
 trait ReaderTInstances extends ReaderTInstancesLowPriority {
   implicit final def readerMonadLayer[M[_], E]
-  (implicit M: Monad[M]): monad.Layer[ReaderTC[M, E]#l, M] = {
+  (implicit M: Monad[M]): MonadLayer[ReaderTC[M, E]#l, M] = {
     readerMonadTransControl[M, E]
   }
 }
 
 private[instances] trait ReaderTInstancesLowPriority {
   implicit final def readerMonadTransControl[M[_], E]
-  (implicit M: Monad[M]): monad.LayerControl.Aux[ReaderTC[M, E]#l, M, Id] = {
-    new monad.LayerControl[ReaderTC[M, E]#l, M] {
+  (implicit M: Monad[M]): MonadLayerControl.Aux[ReaderTC[M, E]#l, M, Id] = {
+    new MonadLayerControl[ReaderTC[M, E]#l, M] {
       type State[A] = Id[A]
 
       val outerInstance: Monad[ReaderTC[M, E]#l] =

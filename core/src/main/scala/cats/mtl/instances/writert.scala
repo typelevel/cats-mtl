@@ -7,15 +7,15 @@ import cats.syntax.functor._
 
 trait WriterTInstances extends WriterTInstancesLowPriority {
   implicit final def writerMonadLayer[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): monad.Layer[WriterTC[M, L]#l, M] = {
+  (implicit L: Monoid[L], M: Monad[M]): MonadLayer[WriterTC[M, L]#l, M] = {
     writerMonadLayerControl[M, L]
   }
 }
 
 private[instances] trait WriterTInstancesLowPriority {
   implicit final def writerMonadLayerControl[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): monad.LayerControl.Aux[WriterTC[M, L]#l, M, TupleC[L]#l] = {
-    new monad.LayerControl[WriterTC[M, L]#l, M] {
+  (implicit L: Monoid[L], M: Monad[M]): MonadLayerControl.Aux[WriterTC[M, L]#l, M, TupleC[L]#l] = {
+    new MonadLayerControl[WriterTC[M, L]#l, M] {
       type State[A] = (L, A)
 
       val outerInstance: Monad[CurryT[WriterTCL[L]#l, M]#l] =

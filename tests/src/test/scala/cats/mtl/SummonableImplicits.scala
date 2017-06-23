@@ -1,7 +1,6 @@
 package cats
 package mtl
 
-import cats.instances.all._
 import cats.data._
 
 final class SummonableImplicits extends BaseSuite {
@@ -32,97 +31,98 @@ final class SummonableImplicits extends BaseSuite {
   private type WriterTStrWriterTInt[A] = WriterTStr[WriterTIntId, A]
   private type WriterTStrTupleInt[A] = WriterTStr[TupleC[Vector[Int]]#l, A]
 
-  //noinspection ScalaUnusedSymbol
   // test instances.all._
+  //noinspection ScalaUnusedSymbol
   {
+    import cats.instances.all._
     import cats.mtl.instances.all._
-    test("asking") {
-      assertCompiles("implicitly[applicative.Asking[ReaderStrId, String]]")
+    test("ApplicativeAsk") {
+      assertCompiles("implicitly[ApplicativeAsk[ReaderStrId, String]]")
 
-      assertCompiles("implicitly[applicative.Asking[ReaderStrInt, Int]]")
+      assertCompiles("implicitly[ApplicativeAsk[ReaderStrInt, Int]]")
 
-      assertCompiles("implicitly[applicative.Asking[ReaderStrInt, String]]")
+      assertCompiles("implicitly[ApplicativeAsk[ReaderStrInt, String]]")
 
-      assertCompiles("implicitly[applicative.Asking[ReaderStrFuncInt, Int]]")
+      assertCompiles("implicitly[ApplicativeAsk[ReaderStrFuncInt, Int]]")
     }
 
-    test("listening") {
-      assertCompiles("implicitly[applicative.Listening[WriterStrId, String]]")
+    test("ApplicativeListen") {
+      assertCompiles("implicitly[ApplicativeListen[WriterStrId, String]]")
 
-      assertCompiles("implicitly[applicative.Listening[WriterTStrWriterTInt, String]]")
+      assertCompiles("implicitly[ApplicativeListen[WriterTStrWriterTInt, String]]")
 
-      assertTypeError("implicitly[applicative.Listening[WriterTStrWriterTInt, Vector[Int]]]")
+      assertTypeError("implicitly[ApplicativeListen[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertTypeError("implicitly[applicative.Listening[WriterTStrTupleInt, Vector[Int]]]")
+      assertTypeError("implicitly[ApplicativeListen[WriterTStrTupleInt, Vector[Int]]]")
     }
 
-    test("raising") {
-      assertCompiles("implicitly[functor.Raising[EitherStrId, String]]")
+    test("FunctorRaise") {
+      assertCompiles("implicitly[FunctorRaise[EitherStrId, String]]")
 
-      assertCompiles("implicitly[functor.Raising[EitherTStrEitherTInt, Int]]")
+      assertCompiles("implicitly[FunctorRaise[EitherTStrEitherTInt, Int]]")
 
-      assertCompiles("implicitly[functor.Raising[EitherTStrEitherTInt, String]]")
+      assertCompiles("implicitly[FunctorRaise[EitherTStrEitherTInt, String]]")
     }
 
-    test("scoping") {
-      assertCompiles("implicitly[applicative.Scoping[ReaderStrId, String]]")
+    test("ApplicativeLocal") {
+      assertCompiles("implicitly[ApplicativeLocal[ReaderStrId, String]]")
 
-      assertCompiles("implicitly[applicative.Scoping[ReaderStrInt, Int]]")
+      assertCompiles("implicitly[ApplicativeLocal[ReaderStrInt, Int]]")
 
-      assertCompiles("implicitly[applicative.Scoping[ReaderStrInt, String]]")
+      assertCompiles("implicitly[ApplicativeLocal[ReaderStrInt, String]]")
 
-      assertCompiles("implicitly[applicative.Scoping[ReaderStrFuncInt, Int]]")
+      assertCompiles("implicitly[ApplicativeLocal[ReaderStrFuncInt, Int]]")
     }
 
-    test("stateful") {
-      assertCompiles("implicitly[monad.Stateful[StateStrId, String]]")
+    test("MonadState") {
+      assertCompiles("implicitly[MonadState[StateStrId, String]]")
 
-      assertCompiles("implicitly[monad.Stateful[StateTStrStateTInt, String]]")
+      assertCompiles("implicitly[MonadState[StateTStrStateTInt, String]]")
 
-      assertCompiles("implicitly[monad.Stateful[StateTStrStateTInt, Int]]")
+      assertCompiles("implicitly[MonadState[StateTStrStateTInt, Int]]")
     }
 
-    test("telling") {
-      assertCompiles("implicitly[applicative.Telling[WriterStrId, String]]")
+    test("ApplicativeTell") {
+      assertCompiles("implicitly[ApplicativeTell[WriterStrId, String]]")
 
-      assertCompiles("implicitly[applicative.Telling[WriterTStrWriterTInt, String]]")
+      assertCompiles("implicitly[ApplicativeTell[WriterTStrWriterTInt, String]]")
 
-      assertCompiles("implicitly[applicative.Telling[WriterTStrWriterTInt, Vector[Int]]]")
+      assertCompiles("implicitly[ApplicativeTell[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertCompiles("implicitly[applicative.Telling[WriterTStrTupleInt, Vector[Int]]]")
+      assertCompiles("implicitly[ApplicativeTell[WriterTStrTupleInt, Vector[Int]]]")
     }
 
-    test("tfunctor") {
-      assertCompiles("implicitly[functor.TFunctor[StateTCS[String]#l]]")
+    test("XFunctor") {
+      assertCompiles("implicitly[FunctorFunctor[StateTCS[String]#l]]")
 
-      assertCompiles("implicitly[functor.TFunctor[OptionT]]")
+      assertCompiles("implicitly[FunctorFunctor[OptionT]]")
 
-      assertCompiles("implicitly[functor.TFunctor[ReaderTCE[String]#l]]")
+      assertCompiles("implicitly[FunctorFunctor[ReaderTCE[String]#l]]")
 
-      assertCompiles("implicitly[functor.TFunctor[WriterTCL[String]#l]]")
+      assertCompiles("implicitly[FunctorFunctor[WriterTCL[String]#l]]")
 
       // you *need* to flatten one of the layers in StateT
       // to access the applicative layers to `ap`
-      assertTypeError("implicitly[applicative.TFunctor[StateTCS[String]#l]]")
+      assertTypeError("implicitly[ApplicativeFunctor[StateTCS[String]#l]]")
 
-      assertCompiles("implicitly[applicative.TFunctor[OptionT]]")
+      assertCompiles("implicitly[ApplicativeFunctor[OptionT]]")
 
-      assertCompiles("implicitly[applicative.TFunctor[ReaderTCE[String]#l]]")
+      assertCompiles("implicitly[ApplicativeFunctor[ReaderTCE[String]#l]]")
 
-      assertCompiles("implicitly[applicative.TFunctor[WriterTCL[String]#l]]")
+      assertCompiles("implicitly[ApplicativeFunctor[WriterTCL[String]#l]]")
 
-      assertCompiles("implicitly[monad.TFunctor[StateTCS[String]#l]]")
+      assertCompiles("implicitly[MonadFunctor[StateTCS[String]#l]]")
 
-      assertCompiles("implicitly[monad.TFunctor[OptionT]]")
+      assertCompiles("implicitly[MonadFunctor[OptionT]]")
 
-      assertCompiles("implicitly[monad.TFunctor[ReaderTCE[String]#l]]")
+      assertCompiles("implicitly[MonadFunctor[ReaderTCE[String]#l]]")
 
-      assertCompiles("implicitly[monad.TFunctor[WriterTCL[String]#l]]")
+      assertCompiles("implicitly[MonadFunctor[WriterTCL[String]#l]]")
     }
 
     test("lift") {
-      assertCompiles("implicitly[monad.Lift[EitherTC[Eval, String]#l, WriterTC[EitherTC[Eval, String]#l, String]#l]]")
-      assertCompiles("implicitly[monad.Lift[WriterTC[EitherTC[Eval, String]#l, String]#l, OptionTC[WriterTC[EitherTC[Eval, String]#l, String]#l]#l]]")
+      assertCompiles("implicitly[MonadLift[EitherTC[Eval, String]#l, WriterTC[EitherTC[Eval, String]#l, String]#l]]")
+      assertCompiles("implicitly[MonadLift[WriterTC[EitherTC[Eval, String]#l, String]#l, OptionTC[WriterTC[EitherTC[Eval, String]#l, String]#l]#l]]")
     }
   }
 

@@ -31,7 +31,9 @@ object CompilerOptions {
     scalacOptions in(Compile, console) ~= {
       _.filterNot("-Ywarn-unused-import" == _)
     },
-    scalacOptions in(Test, console) := (scalacOptions in(Compile, console)).value
+    scalacOptions in Test ~= {
+      _.filterNot("-Ywarn-unused-import" == _)
+    }
   )
 
   val update2_12 = Def.settings(

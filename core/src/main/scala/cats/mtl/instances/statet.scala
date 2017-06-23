@@ -3,15 +3,12 @@ package mtl
 package instances
 
 import cats.data.StateT
-import cats.syntax.functor._
+import cats.syntax.all._
 
-trait StateTInstances extends StateTInstancesLowPriority {
-}
-
-private[instances] trait StateTInstancesLowPriority {
+trait StateTInstances {
   implicit final def stateMonadLayerControl[M[_], S]
-  (implicit M: Monad[M]): monad.LayerControl.Aux[CurryT[StateTCS[S]#l, M]#l, M, TupleC[S]#l] = {
-    new monad.LayerControl[StateTC[M, S]#l, M] {
+  (implicit M: Monad[M]): MonadLayerControl.Aux[CurryT[StateTCS[S]#l, M]#l, M, TupleC[S]#l] = {
+    new MonadLayerControl[StateTC[M, S]#l, M] {
       type State[A] = (S, A)
 
       val outerInstance: Monad[StateTC[M, S]#l] =
@@ -34,7 +31,6 @@ private[instances] trait StateTInstancesLowPriority {
       def zero[A](state: (S, A)): Boolean = false
     }
   }
-
 }
 
 object statet extends StateTInstances
