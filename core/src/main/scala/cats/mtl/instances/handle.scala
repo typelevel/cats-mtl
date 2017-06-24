@@ -9,7 +9,7 @@ import cats.mtl.FunctorRaise
 trait HandleInstances extends HandleInstancesLowPriority {
   implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): MonadHandle[EitherTC[M, E]#l, E] = {
     new MonadHandle[EitherTC[M, E]#l, E] {
-      val monad = EitherT.catsDataMonadErrorForEitherT(M)
+      val monad: Monad[EitherTC[M, E]#l] = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: FunctorRaise[EitherTC[M, E]#l, E] =
         instances.raise.raiseEitherT(M)
 
@@ -32,8 +32,8 @@ private[instances] trait HandleInstancesLowPriority {
   implicit final def handleEitherTInd[M[_], E, Err](implicit under: MonadHandle[M, E],
                                                     M: Monad[M]
                                                    ): MonadHandle[CurryT[EitherTCE[Err]#l, M]#l, E] = {
-    new MonadHandle[CurryT[EitherTCE[Err]#l, M]#l, E] {
-      val monad = EitherT.catsDataMonadErrorForEitherT(M)
+    new MonadHandle[EitherTC[M, Err]#l, E] {
+      val monad: Monad[EitherTC[M, Err]#l] = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: FunctorRaise[CurryT[EitherTCE[Err]#l, M]#l, E] =
         instances.raise.raiseInd[EitherTC[M, Err]#l, M, E](
           instances.eithert.eitherMonadLayerControl[M, Err],
@@ -61,8 +61,8 @@ private[instances] trait HandleInstancesLowPriority {
   implicit final def handleStateTInd[M[_], S, Err](implicit under: MonadHandle[M, Err],
                                                    M: Monad[M]
                                                   ): MonadHandle[CurryT[StateTCS[S]#l, M]#l, Err] = {
-    new MonadHandle[CurryT[StateTCS[S]#l, M]#l, Err] {
-      val monad = StateT.catsDataMonadForStateT(M)
+    new MonadHandle[StateTC[M, S]#l, Err] {
+      val monad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT(M)
       val raise: FunctorRaise[CurryT[StateTCS[S]#l, M]#l, Err] =
         instances.raise.raiseInd[StateTC[M, S]#l, M, Err](
           instances.statet.stateMonadLayerControl[M, S],
@@ -92,8 +92,8 @@ private[instances] trait HandleInstancesLowPriority {
   implicit final def handleReaderTInd[M[_], Env, Err](implicit under: MonadHandle[M, Err],
                                                       M: Monad[M]
                                                      ): MonadHandle[CurryT[ReaderTCE[Env]#l, M]#l, Err] = {
-    new MonadHandle[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
-      val monad = ReaderT.catsDataMonadReaderForKleisli(M)
+    new MonadHandle[ReaderTC[M, Env]#l, Err] {
+      val monad: Monad[ReaderTC[M, Env]#l] = ReaderT.catsDataMonadReaderForKleisli(M)
       val raise: FunctorRaise[CurryT[ReaderTCE[Env]#l, M]#l, Err] =
         instances.raise.raiseInd[ReaderTC[M, Env]#l, M, Err](
           instances.readert.readerMonadLayer[M, Env],
@@ -120,8 +120,8 @@ private[instances] trait HandleInstancesLowPriority {
                                                     under: MonadHandle[M, Err],
                                                     M: Monad[M]
                                                    ): MonadHandle[CurryT[WriterTCL[L]#l, M]#l, Err] = {
-    new MonadHandle[CurryT[WriterTCL[L]#l, M]#l, Err] {
-      val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
+    new MonadHandle[WriterTC[M, L]#l, Err] {
+      val monad: Monad[WriterTC[M, L]#l] = WriterT.catsDataMonadWriterForWriterT(M, L)
       val raise: FunctorRaise[CurryT[WriterTCL[L]#l, M]#l, Err] =
         instances.raise.raiseInd[WriterTC[M, L]#l, M, Err](
           instances.writert.writerMonadLayer[M, L],

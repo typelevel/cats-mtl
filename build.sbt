@@ -4,17 +4,13 @@ organization in ThisBuild := "org.typelevel"
 
 // aliases
 
-addCommandAlias("buildJVM", "catsJVM/test")
+addCommandAlias("buildJVM", "catsMtlJVM/test")
 
 addCommandAlias("validateJVM", ";scalastyle;buildJVM;mimaReportBinaryIssues;makeMicrosite")
 
-addCommandAlias("validateJS", ";catsJS/compile;testsJS/test;js/test")
+addCommandAlias("validateJS", ";catsMtlJS/compile;testsJS/test;js/test")
 
-addCommandAlias("validateKernelJS", "kernelLawsJS/test")
-
-addCommandAlias("validateFreeJS", "freeJS/test") //separated due to memory constraint on travis
-
-addCommandAlias("validate", ";clean;validateJS;validateKernelJS;validateFreeJS;validateJVM")
+addCommandAlias("validate", ";clean;validateJS;validateJVM")
 
 // projects
 

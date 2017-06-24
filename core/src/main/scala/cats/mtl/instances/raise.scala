@@ -21,7 +21,7 @@ trait RaiseInstances extends RaiseLowPriorityInstances1 {
 private[instances] trait RaiseLowPriorityInstances1 {
   implicit final def raiseEitherT[M[_], E](implicit M: Applicative[M]): FunctorRaise[EitherTC[M, E]#l, E] = {
     new FunctorRaise[EitherTC[M, E]#l, E] {
-      val functor = EitherT.catsDataFunctorForEitherT
+      val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(M)
 
       def raise[A](e: E): EitherT[M, E, A] = EitherT(M.pure(Left(e)))
     }
