@@ -28,9 +28,8 @@ fi
 sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
 
 core_js="$sbt_cmd validateJS"
-kernel_js="$sbt_cmd validateKernelJS"
 
-js="$core_js && $kernel_js"
+js="$core_js"
 jvm="$sbt_cmd coverage validateJVM coverageReport && codecov"
 
 if [[ $JS_BUILD == "true" ]]; then
