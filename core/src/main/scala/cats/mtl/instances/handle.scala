@@ -6,9 +6,9 @@ import cats.data._
 import cats.implicits._
 import cats.mtl.FunctorRaise
 
-trait HandleInstances extends HandlingInstancesLowPriority {
-  implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): MonadHandling[EitherTC[M, E]#l, E] = {
-    new MonadHandling[EitherTC[M, E]#l, E] {
+trait HandleInstances extends HandleInstancesLowPriority {
+  implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): MonadHandle[EitherTC[M, E]#l, E] = {
+    new MonadHandle[EitherTC[M, E]#l, E] {
       val monad = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: FunctorRaise[EitherTC[M, E]#l, E] =
         instances.raise.raiseEitherT(M)
@@ -28,11 +28,11 @@ trait HandleInstances extends HandlingInstancesLowPriority {
   }
 }
 
-private[instances] trait HandlingInstancesLowPriority {
-  implicit final def handleEitherTInd[M[_], E, Err](implicit under: MonadHandling[M, E],
-                                                      M: Monad[M]
-                                                   ): MonadHandling[CurryT[EitherTCE[Err]#l, M]#l, E] = {
-    new MonadHandling[CurryT[EitherTCE[Err]#l, M]#l, E] {
+private[instances] trait HandleInstancesLowPriority {
+  implicit final def handleEitherTInd[M[_], E, Err](implicit under: MonadHandle[M, E],
+                                                    M: Monad[M]
+                                                   ): MonadHandle[CurryT[EitherTCE[Err]#l, M]#l, E] = {
+    new MonadHandle[CurryT[EitherTCE[Err]#l, M]#l, E] {
       val monad = EitherT.catsDataMonadErrorForEitherT(M)
       val raise: FunctorRaise[CurryT[EitherTCE[Err]#l, M]#l, E] =
         instances.raise.raiseInd[EitherTC[M, Err]#l, M, E](
@@ -58,10 +58,10 @@ private[instances] trait HandlingInstancesLowPriority {
     }
   }
 
-  implicit final def handleStateTInd[M[_], S, Err](implicit under: MonadHandling[M, Err],
-                                                     M: Monad[M]
-                                                  ): MonadHandling[CurryT[StateTCS[S]#l, M]#l, Err] = {
-    new MonadHandling[CurryT[StateTCS[S]#l, M]#l, Err] {
+  implicit final def handleStateTInd[M[_], S, Err](implicit under: MonadHandle[M, Err],
+                                                   M: Monad[M]
+                                                  ): MonadHandle[CurryT[StateTCS[S]#l, M]#l, Err] = {
+    new MonadHandle[CurryT[StateTCS[S]#l, M]#l, Err] {
       val monad = StateT.catsDataMonadForStateT(M)
       val raise: FunctorRaise[CurryT[StateTCS[S]#l, M]#l, Err] =
         instances.raise.raiseInd[StateTC[M, S]#l, M, Err](
@@ -89,10 +89,10 @@ private[instances] trait HandlingInstancesLowPriority {
     }
   }
 
-  implicit final def handleReaderTInd[M[_], Env, Err](implicit under: MonadHandling[M, Err],
-                                                        M: Monad[M]
-                                                     ): MonadHandling[CurryT[ReaderTCE[Env]#l, M]#l, Err] = {
-    new MonadHandling[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
+  implicit final def handleReaderTInd[M[_], Env, Err](implicit under: MonadHandle[M, Err],
+                                                      M: Monad[M]
+                                                     ): MonadHandle[CurryT[ReaderTCE[Env]#l, M]#l, Err] = {
+    new MonadHandle[CurryT[ReaderTCE[Env]#l, M]#l, Err] {
       val monad = ReaderT.catsDataMonadReaderForKleisli(M)
       val raise: FunctorRaise[CurryT[ReaderTCE[Env]#l, M]#l, Err] =
         instances.raise.raiseInd[ReaderTC[M, Env]#l, M, Err](
@@ -117,10 +117,10 @@ private[instances] trait HandlingInstancesLowPriority {
   }
 
   implicit final def handleWriterTInd[M[_], L, Err](implicit L: Monoid[L],
-                                                      under: MonadHandling[M, Err],
-                                                      M: Monad[M]
-                                                   ): MonadHandling[CurryT[WriterTCL[L]#l, M]#l, Err] = {
-    new MonadHandling[CurryT[WriterTCL[L]#l, M]#l, Err] {
+                                                    under: MonadHandle[M, Err],
+                                                    M: Monad[M]
+                                                   ): MonadHandle[CurryT[WriterTCL[L]#l, M]#l, Err] = {
+    new MonadHandle[CurryT[WriterTCL[L]#l, M]#l, Err] {
       val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val raise: FunctorRaise[CurryT[WriterTCL[L]#l, M]#l, Err] =
         instances.raise.raiseInd[WriterTC[M, L]#l, M, Err](

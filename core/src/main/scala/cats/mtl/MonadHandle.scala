@@ -4,14 +4,14 @@ package mtl
 import cats.data.EitherT
 
 /**
-  * Handling has one external law:
+  * `MonadHandle` has one external law:
   * {{{
   * def materializeRecoversRaise(e: E) = {
   *   attempt(raise(e)) <-> pure(Left(e))
   * }
   * }}}
   *
-  * And one internal law:
+  * `MonadHandle` has one internal law:
   * {{{
   * def recoverWithIsMaterializeAndFlatMap[A](fa: F[A])(f: PartialFunction[E, A]): F[A] = {
   *   attempt(fa).flatMap {
@@ -21,7 +21,7 @@ import cats.data.EitherT
   * }
   * }}}
   */
-trait MonadHandling[F[_], E] {
+trait MonadHandle[F[_], E] {
   val monad: Monad[F]
 
   val raise: FunctorRaise[F, E]

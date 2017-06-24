@@ -4,9 +4,9 @@ package mtl
 import scala.util.control.NonFatal
 
 /**
-  * Raising has no laws not guaranteed by parametricity.
+  * `FunctorRaise` has no laws not guaranteed by parametricity.
   *
-  * Raising has one free law, i.e. a law guaranteed by parametricity:
+  * `FunctorRaise` has one free law, i.e. a law guaranteed by parametricity:
   * {{{
   * def failThenFlatMapFails[A, B](ex: E, f: A => F[B]) = {
   *   fail(ex).flatMap(f) <-> fail(ex)
@@ -34,8 +34,8 @@ trait FunctorRaise[F[_], E] {
 }
 
 object FunctorRaise {
-  def raise[F[_], E, A](e: E)(implicit raising: FunctorRaise[F, E]): F[A] =
-    raising.raise(e)
+  def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
+    raise.raise(e)
 
   def raiseF[F[_]] =
     new raiseFPartiallyApplied[F]()

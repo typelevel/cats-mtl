@@ -3,9 +3,9 @@ package mtl
 package syntax
 
 trait ListenSyntax {
-  implicit def toListeningOps[F[_], A](fa: F[A]): ListenOps[F, A] = new ListenOps(fa)
+  implicit def toListenOps[F[_], A](fa: F[A]): ListenOps[F, A] = new ListenOps(fa)
 
-  implicit def toPassingOps[F[_], L, A](fa: F[(A, L => L)]): PassOps[F, L, A] = new PassOps(fa)
+  implicit def toPassOps[F[_], L, A](fa: F[(A, L => L)]): PassOps[F, L, A] = new PassOps(fa)
 }
 
 final class ListenOps[F[_], A](val fa: F[A]) extends AnyVal {

@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * Asking has two external laws:
+  * `ApplicativeAsk[F, E]` has two external laws:
   * {{{
   * def askAddsNoEffects[A](fa: F[A]) = {
   *   (ask *> fa) <-> fa
@@ -15,14 +15,14 @@ package mtl
   *   // or Writer monad.
   * }}}
   *
-  * Asking has one internal law:
+  * `ApplicativeAsk[F, E]` has one internal law:
   * {{{
   * def readerIsAskAndMap[A](f: E => A) = {
   *   ask.map(f) <-> reader(f)
   * }
   * }}}
-  * Otherwise `Asking[F, E]` only denotes the availability of `E` values in the `F[_]` context,
-  * which cannot be changed by previous `F[_]` effects.
+  * Otherwise `ApplicativeAsk[F, E]` only denotes the availability of "immutable"
+  * `E` values in the `F[_]` context, which cannot be altered by previous `F[_]` effects.
   */
 trait ApplicativeAsk[F[_], E] {
   val applicative: Applicative[F]
@@ -49,7 +49,7 @@ object ApplicativeAsk {
   }
 
   @inline final private[mtl] class askFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[E]()(implicit ask: ApplicativeAsk[F, E]): F[E] = {
+    @inline def apply[E]()(implicit ask: `ApplicativeAsk`[F, E]): F[E] = {
       ask.ask
     }
   }

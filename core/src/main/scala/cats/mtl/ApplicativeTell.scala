@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * Telling has two external laws:
+  * `ApplicativeTell` has two external laws:
   * {{{
   * def tellTwiceIsTellCombined(l1: L, l2: L) = {
   *   tell(l1) *> tell(l2) <-> tell(l1 |+| l2)
@@ -13,7 +13,7 @@ package mtl
   * }
   * }}}
   *
-  * Telling has one internal law:
+  * `ApplicativeTell` has one internal law:
   * {{{
   * def writerIsTellAndMap(a: A, l: L) = {
   *   tell(l).map(_ => a) <-> writer(a, l)
@@ -36,7 +36,7 @@ trait ApplicativeTell[F[_], L] {
 }
 
 object ApplicativeTell {
-  def tell[F[_], L](l: L)(implicit telling: ApplicativeTell[F, L]): F[Unit] = telling.tell(l)
+  def tell[F[_], L](l: L)(implicit tell: ApplicativeTell[F, L]): F[Unit] = tell.tell(l)
 
   def tellF[F[_]] = new tellFPartiallyApplied[F]
 

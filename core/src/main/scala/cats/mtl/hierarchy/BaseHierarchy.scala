@@ -9,7 +9,7 @@ object BaseHierarchy {
 
     implicit final def tellFromListen[F[_], L](listen: ApplicativeListen[F, L]): ApplicativeTell[F, L] = listen.tell
 
-    implicit final def raiseFromHandle[F[_], E](handle: MonadHandling[F, E]): FunctorRaise[F, E] = handle.raise
+    implicit final def raiseFromHandle[F[_], E](handle: MonadHandle[F, E]): FunctorRaise[F, E] = handle.raise
 
     implicit final def raiseFromEmpty[F[_]](empty: FunctorEmpty[F]): FunctorRaise[F, Unit] = {
       new FunctorRaise[F, Unit] {

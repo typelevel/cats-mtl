@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * Stateful has four external laws:
+  * `MonadState` has four external laws:
   * {{{
   * def getThenSetDoesNothing = {
   *   get >>= set <-> pure(())
@@ -18,16 +18,16 @@ package mtl
   * }
   * }}}
   *
-  * Stateful has one internal law:
+  * `MonadState` has one internal law:
   * {{{
   * def modifyIsGetThenSet(f: S => S) = {
   *   modify(f) <-> (get map f) flatMap set
   * }
   * }}}
   *
-  * Note that if you have a Stateful instance,
-  * it cannot touch the same values as an Asking instance
-  * because the laws of Asking prohibit the value being changed by effects.
+  * Note that if you have a MonadState instance,
+  * it cannot touch the same values as an ApplicativeAsk instance
+  * because the laws of ApplicativeAsk prohibit the value being changed by effects.
   *
   */
 trait MonadState[F[_], S] {
@@ -51,10 +51,10 @@ object MonadState {
   def setF[F[_]] = new setFPartiallyApplied[F]
 
   final private[mtl] class setFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[E, A](e: E)(implicit stateful: MonadState[F, E]): F[Unit] =
-      stateful.set(e)
+    @inline def apply[E, A](e: E)(implicit state: MonadState[F, E]): F[Unit] =
+      state.set(e)
   }
 
-  def modify[F[_], S](f: S => S)(implicit ev: MonadState[F, S]): F[Unit] =
-    ev.modify(f)
+  def modify[F[_], S](f: S => S)(implicit state: MonadState[F, S]): F[Unit] =
+    state.modify(f)
 }

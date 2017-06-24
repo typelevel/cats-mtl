@@ -8,25 +8,25 @@ import cats.syntax.cartesian._
 
 trait ApplicativeTellLaws[F[_], L] {
   implicit val monoid: Monoid[L]
-  implicit val telling: ApplicativeTell[F, L]
-  implicit val applicative: Applicative[F] = telling.applicative
+  implicit val tell: ApplicativeTell[F, L]
+  implicit val applicative: Applicative[F] = tell.applicative
 
   // external laws
   def tellTwiceIsTellCombined(l1: L, l2: L): IsEq[F[Unit]] = {
-    (telling.tell(l1) |@| telling.tell(l2)).tupled.void <-> telling.tell(monoid.combine(l1, l2))
+    (tell.tell(l1) |@| tell.tell(l2)).tupled.void <-> tell.tell(monoid.combine(l1, l2))
   }
 
   def tellEmptyIsPureUnit: IsEq[F[Unit]] = {
-    telling.tell(monoid.empty) <-> ().pure[F]
+    tell.tell(monoid.empty) <-> ().pure[F]
   }
 
   // internal laws
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
-    telling.tell(l).map(_ => a) <-> telling.writer(a, l)
+    tell.tell(l).map(_ => a) <-> tell.writer(a, l)
   }
 
   def tupleIsWriter[A](a: A, l: L): IsEq[F[A]] = {
-    telling.writer(a, l) <-> telling.tuple((l, a))
+    tell.writer(a, l) <-> tell.tuple((l, a))
   }
 
 }

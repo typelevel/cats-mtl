@@ -7,9 +7,9 @@ import cats.syntax.functor._
 
 trait ApplicativeListenLaws[F[_], L] {
   implicit val monoid: Monoid[L]
-  implicit val listening: ApplicativeListen[F, L]
-  implicit val telling: ApplicativeTell[F, L] = listening.tell
-  implicit val applicative: Applicative[F] = telling.applicative
+  implicit val listen: ApplicativeListen[F, L]
+  implicit val tell: ApplicativeTell[F, L] = listen.tell
+  implicit val applicative: Applicative[F] = tell.applicative
 
   // external laws
   def listenRespectsTell(l: L) = {

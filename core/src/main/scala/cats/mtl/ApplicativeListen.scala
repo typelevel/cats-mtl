@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * Listening has two external laws:
+  * `ApplicativeListen` has two external laws:
   * {{{
   * def listenRespectsTell(l: L) = {
   *   listen(tell(l)) <-> tell(l).map(_ => ((), l))
@@ -13,7 +13,7 @@ package mtl
   * }
   * }}}
   *
-  * Listening has internal laws:
+  * `ApplicativeListen` has internal laws:
   * {{{
   * def listensIsListenThenMap(fa: F[A], f: L => B) = {
   *   listens(fa)(f) <-> listen(fa).map { case (a, l) => (f(l), a) }

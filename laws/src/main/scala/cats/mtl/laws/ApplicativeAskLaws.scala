@@ -6,8 +6,8 @@ import cats.syntax.cartesian._
 import cats.syntax.functor._
 
 trait ApplicativeAskLaws[F[_], E] {
-  implicit val asking: ApplicativeAsk[F, E]
-  implicit val applicative: Applicative[F] = asking.applicative
+  implicit val ask: ApplicativeAsk[F, E]
+  implicit val applicative: Applicative[F] = ask.applicative
 
   // external laws
   def askAddsNoEffectsAndIsNotAffected[A](fa: F[A]): IsEq[F[A]] = {

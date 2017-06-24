@@ -6,7 +6,7 @@ import data.StateT
 
 trait StateInstances extends StateInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
-  // to lift Stateful into
+  // to lift MonadState into
   implicit final def stateInd[M[_], Inner[_], E](implicit ml: MonadLayerFunctor[M, Inner],
                                                  under: MonadState[Inner, E]
                                                     ): MonadState[M, E] = {
