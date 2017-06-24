@@ -3,7 +3,6 @@ package mtl
 
 import cats.data._
 import cats.syntax.cartesian._
-import cats.syntax.either._
 
 trait ApplicativeFunctor[T[_[_], _]] {
   def instanceA[F[_]: Applicative]: Applicative[CurryT[T, F]#l]
@@ -25,8 +24,8 @@ object ApplicativeFunctor {
           def ap[A, B](ff: EitherT[F, E, (A) => B])(fa: EitherT[F, E, A]): EitherT[F, E, B] = {
             EitherT((ff.value |@| fa.value).map { (f, a) =>
               for {
-                fr <- f
-                ar <- a
+                fr <- f.right
+                ar <- a.right
               } yield fr(ar)
             })
           }
