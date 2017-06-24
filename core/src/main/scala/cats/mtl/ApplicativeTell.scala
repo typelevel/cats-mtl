@@ -38,9 +38,9 @@ trait ApplicativeTell[F[_], L] {
 object ApplicativeTell {
   def tell[F[_], L](l: L)(implicit tell: ApplicativeTell[F, L]): F[Unit] = tell.tell(l)
 
-  def tellF[F[_]] = new tellFPartiallyApplied[F]
+  def tellF[F[_]]: tellFPartiallyApplied[F] = new tellFPartiallyApplied[F]
 
-  def tellL[L] = new tellLPartiallyApplied[L]
+  def tellL[L]: tellLPartiallyApplied[L] = new tellLPartiallyApplied[L]
 
   final private[mtl] class tellLPartiallyApplied[L](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[F[_]](l: L)(implicit tell: ApplicativeTell[F, L]): F[Unit] = {

@@ -38,9 +38,9 @@ object ApplicativeAsk {
     ask.ask
   }
 
-  def askE[E] = new askEPartiallyApplied[E]
+  def askE[E]: askEPartiallyApplied[E] = new askEPartiallyApplied[E]
 
-  def askF[F[_]] = new askFPartiallyApplied[F]
+  def askF[F[_]]: askFPartiallyApplied[F] = new askFPartiallyApplied[F]
 
   @inline final private[mtl] class askEPartiallyApplied[E](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[F[_]]()(implicit ask: ApplicativeAsk[F, E]): F[E] = {
@@ -60,7 +60,7 @@ object ApplicativeAsk {
     }
   }
 
-  def readerFE[F[_], E] = new readerFEPartiallyApplied[F, E]
+  def readerFE[F[_], E]: readerFEPartiallyApplied[F, E] = new readerFEPartiallyApplied[F, E]
 
   def reader[F[_], E, A](fun: E => A)(implicit ask: ApplicativeAsk[F, E]): F[A] = {
     ask.reader(fun)

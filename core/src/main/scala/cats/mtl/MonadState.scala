@@ -48,7 +48,7 @@ object MonadState {
   def set[F[_], S](newState: S)(implicit ev: MonadState[F, S]): F[Unit] =
     ev.set(newState)
 
-  def setF[F[_]] = new setFPartiallyApplied[F]
+  def setF[F[_]]: setFPartiallyApplied[F] = new setFPartiallyApplied[F]
 
   final private[mtl] class setFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[E, A](e: E)(implicit state: MonadState[F, E]): F[Unit] =

@@ -37,11 +37,9 @@ object FunctorRaise {
   def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
     raise.raise(e)
 
-  def raiseF[F[_]] =
-    new raiseFPartiallyApplied[F]()
+  def raiseF[F[_]]: raiseFPartiallyApplied[F] = new raiseFPartiallyApplied[F]()
 
-  def raiseE[E] =
-    new raiseEPartiallyApplied[E]()
+  def raiseE[E]: raiseEPartiallyApplied[E] = new raiseEPartiallyApplied[E]()
 
   final private[mtl] class raiseFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
