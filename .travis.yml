@@ -7,25 +7,25 @@ dist: trusty
 git:
   depth: 9999
 
-scala:
-  - 2.10.6
-  - 2.11.11
-  - 2.12.2
+  # scala:
+  # - 2.10.6
+  # - 2.11.11
+  # - 2.12.2
 
-jdk:
-  - oraclejdk7
-  - oraclejdk8
+  # jdk:
+    # - oraclejdk7
+    # - oraclejdk8
 
 matrix:
-  exclude:
+  include:
   - scala: 2.12.2
-    jdk: oraclejdk7
-  exclude:
+    jdk: oraclejdk8
+  include:
   - scala: 2.10.6
-    jdk: oraclejdk8
-  exclude:
+    jdk: oraclejdk7
+  include:
   - scala: 2.11.11
-    jdk: oraclejdk8
+    jdk: oraclejdk7
 
 before_install:
  - export PATH=${PATH}:./vendor/bundle
