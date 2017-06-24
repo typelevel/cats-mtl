@@ -16,7 +16,7 @@
 # Example setting to use at command line for testing:
 # export TRAVIS_SCALA_VERSION=2.10.5;export TRAVIS_PULL_REQUEST="false";export TRAVIS_BRANCH="master"
 
-echo "addSbtPlugin(\"io.get-coursier\" % \"sbt-coursier\" % \"1.0.0-RC5\")" >> ~/.sbt/0.13/plugins.build.sbt
+echo "addSbtPlugin(\"io.get-coursier\" % \"sbt-coursier_2.10.0\" % \"1.0.0-RC5\")" >> ~/.sbt/0.13/plugins.build.sbt
 
 export publish_cmd="publishLocal"
 
