@@ -6,7 +6,7 @@ import cats.syntax.functor._
 import cats.syntax.applicative._
 import cats.syntax.cartesian._
 
-trait TellingLaws[F[_], L] {
+trait ApplicativeTellLaws[F[_], L] {
   implicit val monoid: Monoid[L]
   implicit val telling: ApplicativeTell[F, L]
   implicit val applicative: Applicative[F] = telling.applicative

@@ -5,7 +5,7 @@ package laws
 import cats.syntax.cartesian._
 import cats.syntax.functor._
 
-trait AskingLaws[F[_], E] {
+trait ApplicativeAskLaws[F[_], E] {
   implicit val asking: ApplicativeAsk[F, E]
   implicit val applicative: Applicative[F] = asking.applicative
 

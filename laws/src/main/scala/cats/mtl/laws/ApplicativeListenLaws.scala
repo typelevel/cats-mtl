@@ -5,7 +5,7 @@ package laws
 import cats.mtl.{ApplicativeListen, ApplicativeTell}
 import cats.syntax.functor._
 
-trait ListeningLaws[F[_], L] {
+trait ApplicativeListenLaws[F[_], L] {
   implicit val monoid: Monoid[L]
   implicit val listening: ApplicativeListen[F, L]
   implicit val telling: ApplicativeTell[F, L] = listening.tell
