@@ -2,7 +2,7 @@ package cats
 package mtl
 
 import cats.data._
-import cats.syntax.all._
+import cats.syntax.functor._
 
 trait MonadFunctor[T[_[_], _]] {
   def instanceM[F[_] : Monad]: Monad[CurryT[T, F]#l]

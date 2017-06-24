@@ -3,7 +3,7 @@ package mtl
 package laws
 
 import cats.mtl.{ApplicativeListen, ApplicativeTell}
-import cats.syntax.all._
+import cats.syntax.functor._
 
 trait ListeningLaws[F[_], L] {
   implicit val monoid: Monoid[L]

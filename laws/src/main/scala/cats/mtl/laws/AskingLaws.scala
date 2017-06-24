@@ -2,8 +2,8 @@ package cats
 package mtl
 package laws
 
-import cats.mtl.ApplicativeAsk
-import cats.syntax.all._
+import cats.syntax.cartesian._
+import cats.syntax.functor._
 
 trait AskingLaws[F[_], E] {
   implicit val asking: ApplicativeAsk[F, E]

@@ -2,7 +2,7 @@ package cats
 package mtl
 
 import cats.data._
-import cats.syntax.all._
+import cats.syntax.cartesian._
 
 trait ApplicativeFunctor[T[_[_], _]] {
   def instanceA[F[_]: Applicative]: Applicative[CurryT[T, F]#l]

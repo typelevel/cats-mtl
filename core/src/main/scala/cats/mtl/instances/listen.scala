@@ -3,14 +3,13 @@ package mtl
 package instances
 
 import cats.data.WriterT
-import cats.syntax.all._
+import cats.syntax.functor._
 
 trait ListenInstances {
   implicit final def listenWriter[M[_], L]
   (implicit M: Monad[M], L: Monoid[L]
   ): ApplicativeListen[WriterTC[M, L]#l, L] = {
     new ApplicativeListen[WriterTC[M, L]#l, L] {
-      val monad = WriterT.catsDataMonadWriterForWriterT(M, L)
       val tell = instances.tell.tellWriter[M, L]
 
       def listen[A](fa: WriterT[M, L, A]): WriterT[M, L, (A, L)] = {
@@ -35,7 +34,6 @@ trait ListenInstances {
   (implicit L: Monoid[L]
   ): ApplicativeListen[TupleC[L]#l, L] = {
     new ApplicativeListen[TupleC[L]#l, L] {
-      val monad = cats.instances.tuple.catsStdMonadForTuple2(L)
       val tell = instances.tell.tellTuple[L]
 
       def listen[A](fa: (L, A)): (L, (A, L)) = {

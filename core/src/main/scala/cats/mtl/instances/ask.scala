@@ -3,7 +3,6 @@ package mtl
 package instances
 
 import cats.data.{Kleisli, ReaderT}
-import cats.mtl.ApplicativeAsk
 
 trait AskInstances extends AskInstancesLowPriority1 {
   implicit final def askLayerInd[M[_], Inner[_], E](implicit

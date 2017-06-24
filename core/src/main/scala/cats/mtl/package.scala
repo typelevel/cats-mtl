@@ -6,6 +6,7 @@ package object mtl {
 
   private[mtl] type CurryT[T[_[_], _], M[_]] = {type l[A] = T[M, A]}
 
+  // Curried type operators
   private[mtl] type ReaderTCE[E] = {type l[M[_], A] = ReaderT[M, E, A]}
   private[mtl] type ReaderTC[M[_], E] = {type l[A] = ReaderT[M, E, A]}
   private[mtl] type ReaderC[E] = {type l[A] = Reader[E, A]}

@@ -2,7 +2,9 @@ package cats
 package mtl
 package laws
 
-import cats.syntax.all._
+import cats.syntax.functor._
+import cats.syntax.applicative._
+import cats.syntax.cartesian._
 
 trait TellingLaws[F[_], L] {
   implicit val monoid: Monoid[L]
@@ -15,7 +17,7 @@ trait TellingLaws[F[_], L] {
   }
 
   def tellEmptyIsPureUnit: IsEq[F[Unit]] = {
-    telling.tell(monoid.empty) <-> applicative.pure(())
+    telling.tell(monoid.empty) <-> ().pure[F]
   }
 
   // internal laws

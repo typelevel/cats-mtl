@@ -3,7 +3,7 @@ package mtl
 package instances
 
 import cats.data.StateT
-import cats.syntax.all._
+import cats.syntax.functor._
 
 trait StateTInstances {
   implicit final def stateMonadLayerControl[M[_], S]
