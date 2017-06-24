@@ -6,16 +6,16 @@ import cats.syntax.all._
 
 trait ApplicativeFunctor[T[_[_], _]] {
   def instanceA[F[_]: Applicative]: Applicative[CurryT[T, F]#l]
-  def mapTS[F[_]: Functor, G[_], A](tfa: T[F, A])(trans: F ~> G): T[G, A]
-  def mapTT[F[_], G[_]: Functor, A](tfa: T[F, A])(trans: F ~> G): T[G, A]
+  def mapTS[F[_]: Applicative, G[_], A](tfa: T[F, A])(trans: F ~> G): T[G, A]
+  def mapTT[F[_], G[_]: Applicative, A](tfa: T[F, A])(trans: F ~> G): T[G, A]
 }
 
 object ApplicativeFunctor {
 
   implicit def eithertTFunctor[E]: ApplicativeFunctor[EitherTCE[E]#l] = {
     new ApplicativeFunctor[EitherTCE[E]#l] {
-      def mapTS[F[_]: Functor, G[_], A](tfa: EitherT[F, E, A])(trans: F ~> G): EitherT[G, E, A] = EitherT(trans(tfa.value))
-      def mapTT[F[_], G[_]: Functor, A](tfa: EitherT[F, E, A])(trans: F ~> G): EitherT[G, E, A] = EitherT(trans(tfa.value))
+      def mapTS[F[_]: Applicative, G[_], A](tfa: EitherT[F, E, A])(trans: F ~> G): EitherT[G, E, A] = EitherT(trans(tfa.value))
+      def mapTT[F[_], G[_]: Applicative, A](tfa: EitherT[F, E, A])(trans: F ~> G): EitherT[G, E, A] = EitherT(trans(tfa.value))
 
       def instanceA[F[_] : Applicative]: Applicative[EitherTC[F, E]#l] = {
         new Applicative[EitherTC[F, E]#l] {
@@ -36,8 +36,8 @@ object ApplicativeFunctor {
 
   implicit def readertTFunctor[E]: ApplicativeFunctor[ReaderTCE[E]#l] = {
     new ApplicativeFunctor[ReaderTCE[E]#l] {
-      def mapTS[F[_]: Functor, G[_], A](tfa: ReaderT[F, E, A])(trans: F ~> G): ReaderT[G, E, A] = tfa.transform(trans)
-      def mapTT[F[_], G[_]: Functor, A](tfa: ReaderT[F, E, A])(trans: F ~> G): ReaderT[G, E, A] = tfa.transform(trans)
+      def mapTS[F[_]: Applicative, G[_], A](tfa: ReaderT[F, E, A])(trans: F ~> G): ReaderT[G, E, A] = tfa.transform(trans)
+      def mapTT[F[_], G[_]: Applicative, A](tfa: ReaderT[F, E, A])(trans: F ~> G): ReaderT[G, E, A] = tfa.transform(trans)
 
       def instanceA[F[_] : Applicative]: Applicative[ReaderTC[F, E]#l] = ReaderT.catsDataApplicativeForKleisli
     }
@@ -45,8 +45,8 @@ object ApplicativeFunctor {
 
   implicit def writertTFunctor[L: Monoid]: ApplicativeFunctor[WriterTCL[L]#l] = {
     new ApplicativeFunctor[WriterTCL[L]#l] {
-      def mapTS[F[_]: Functor, G[_], A](tfa: WriterT[F, L, A])(trans: F ~> G): WriterT[G, L, A] = WriterT(trans(tfa.run))
-      def mapTT[F[_], G[_]: Functor, A](tfa: WriterT[F, L, A])(trans: F ~> G): WriterT[G, L, A] = WriterT(trans(tfa.run))
+      def mapTS[F[_]: Applicative, G[_], A](tfa: WriterT[F, L, A])(trans: F ~> G): WriterT[G, L, A] = WriterT(trans(tfa.run))
+      def mapTT[F[_], G[_]: Applicative, A](tfa: WriterT[F, L, A])(trans: F ~> G): WriterT[G, L, A] = WriterT(trans(tfa.run))
 
       def instanceA[F[_] : Applicative]: Applicative[WriterTC[F, L]#l] = WriterT.catsDataApplicativeForWriterT[F, L]
     }
@@ -54,8 +54,8 @@ object ApplicativeFunctor {
 
   implicit def optiontTFunctor[E]: ApplicativeFunctor[OptionT] = {
     new ApplicativeFunctor[OptionT] {
-      def mapTS[F[_]: Functor, G[_], A](tfa: OptionT[F, A])(trans: F ~> G): OptionT[G, A] = OptionT(trans(tfa.value))
-      def mapTT[F[_], G[_]: Functor, A](tfa: OptionT[F, A])(trans: F ~> G): OptionT[G, A] = OptionT(trans(tfa.value))
+      def mapTS[F[_]: Applicative, G[_], A](tfa: OptionT[F, A])(trans: F ~> G): OptionT[G, A] = OptionT(trans(tfa.value))
+      def mapTT[F[_], G[_]: Applicative, A](tfa: OptionT[F, A])(trans: F ~> G): OptionT[G, A] = OptionT(trans(tfa.value))
 
       def instanceA[F[_] : Applicative]: Applicative[OptionTC[F]#l] = {
         new Applicative[OptionTC[F]#l] {
