@@ -2,7 +2,6 @@ package cats
 package mtl
 package laws
 
-import cats.mtl.{ApplicativeListen, ApplicativeTell}
 import cats.syntax.functor._
 
 trait ApplicativeListenLaws[F[_], L] {
