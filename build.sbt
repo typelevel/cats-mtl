@@ -6,7 +6,7 @@ organization in ThisBuild := "org.typelevel"
 
 addCommandAlias("buildJVM", "catsMtlJVM/test")
 
-addCommandAlias("validateJVM", ";scalastyle;buildJVM;mimaReportBinaryIssues;makeMicrosite")
+addCommandAlias("validateJVM", ";scalastyle;scalafmt::test;test:scalafmt::test;buildJVM;mimaReportBinaryIssues;makeMicrosite")
 
 addCommandAlias("validateJS", ";catsMtlJS/compile;testsJS/test;js/test")
 
