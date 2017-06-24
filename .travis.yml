@@ -20,10 +20,8 @@ matrix:
   exclude:
   - scala: 2.12.2
     jdk: oraclejdk7
-  exclude:
   - scala: 2.10.6
     jdk: oraclejdk8
-  exclude:
   - scala: 2.11.11
     jdk: oraclejdk7
 
@@ -46,6 +44,7 @@ notifications:
     on_success: change
     on_failure: always
     on_start: false
+
 env:
   matrix:
     - JS_BUILD=false
