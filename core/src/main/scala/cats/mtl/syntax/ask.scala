@@ -12,4 +12,3 @@ final class ReaderOps[E, A](val fun: E => A) extends AnyVal {
 }
 
 object ask extends AskSyntax
-
