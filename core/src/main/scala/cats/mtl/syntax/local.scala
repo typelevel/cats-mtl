@@ -11,5 +11,5 @@ final class LocalOps[F[_], A](val fa: F[A]) extends AnyVal {
   def scope[E](e: E)(implicit applicativeLocal: ApplicativeLocal[F, E]): F[A] = applicativeLocal.scope(fa)(e)
 }
 
-object local
+object local extends LocalSyntax
 
