@@ -1,10 +1,10 @@
 package cats
 package mtl
-package tests
+package laws
+package discipline
 
-import cats.mtl.laws.ApplicativeTellLaws
+import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen, Prop}
-import Prop.{forAll => ∀}
 import org.typelevel.discipline.Laws
 
 abstract class ApplicativeTellTests[F[_], L] extends Laws {
