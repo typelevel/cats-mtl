@@ -26,7 +26,7 @@ final class Syntax extends BaseSuite {
       val z = fa.scope[String]("state")
     }
     test("FunctorRaise") {
-      val fa: Either[String, Int] = "ha".raise
+      val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
     }
     test("MonadState") {
