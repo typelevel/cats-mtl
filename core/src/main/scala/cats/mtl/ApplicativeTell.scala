@@ -24,7 +24,7 @@ package mtl
   * }
   * }}}
   */
-trait ApplicativeTell[F[_], L] {
+trait ApplicativeTell[F[_], L] extends Serializable {
   val applicative: Applicative[F]
   val monoid: Monoid[L]
 
@@ -36,6 +36,7 @@ trait ApplicativeTell[F[_], L] {
 }
 
 object ApplicativeTell {
+  def apply[F[_], L](implicit tell: ApplicativeTell[F, L]): ApplicativeTell[F, L] = tell
   def tell[F[_], L](l: L)(implicit tell: ApplicativeTell[F, L]): F[Unit] = tell.tell(l)
 
   def tellF[F[_]]: tellFPartiallyApplied[F] = new tellFPartiallyApplied[F]
