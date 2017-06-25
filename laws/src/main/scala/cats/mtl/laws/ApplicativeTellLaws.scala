@@ -3,30 +3,34 @@ package mtl
 package laws
 
 import cats.syntax.functor._
-import cats.syntax.applicative._
+import cats.syntax.semigroup._
 import cats.syntax.cartesian._
 
 trait ApplicativeTellLaws[F[_], L] {
   implicit val monoid: Monoid[L]
-  implicit val tell: ApplicativeTell[F, L]
-  implicit val applicative: Applicative[F] = tell.applicative
+  implicit val tellInstance: ApplicativeTell[F, L]
+  implicit val applicative: Applicative[F] = tellInstance.applicative
+
+  import tellInstance._
+  import monoid._
+  import applicative._
 
   // external laws
   def tellTwiceIsTellCombined(l1: L, l2: L): IsEq[F[Unit]] = {
-    (tell.tell(l1) |@| tell.tell(l2)).tupled.void <-> tell.tell(monoid.combine(l1, l2))
+    (tell(l1) *> tell(l2)) <-> tell(l1 |+| l2)
   }
 
   def tellEmptyIsPureUnit: IsEq[F[Unit]] = {
-    tell.tell(monoid.empty) <-> ().pure[F]
+    tell(empty) <-> pure(())
   }
 
   // internal laws
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
-    tell.tell(l).map(_ => a) <-> tell.writer(a, l)
+    (tell(l) as a) <-> writer(a, l)
   }
 
-  def tupleIsWriter[A](a: A, l: L): IsEq[F[A]] = {
-    tell.writer(a, l) <-> tell.tuple((l, a))
+  def tupleIsWriterFlipped[A](a: A, l: L): IsEq[F[A]] = {
+    writer(a, l) <-> tuple((l, a))
   }
 
 }

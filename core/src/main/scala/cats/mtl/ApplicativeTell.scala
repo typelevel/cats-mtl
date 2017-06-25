@@ -9,17 +9,17 @@ package mtl
   * }
   *
   * def tellZeroIsPureUnit = {
-  *   tell(L.zero) <-> pure(())
+  *   tell(empty) <-> pure(())
   * }
   * }}}
   *
   * `ApplicativeTell` has one internal law:
   * {{{
   * def writerIsTellAndMap(a: A, l: L) = {
-  *   tell(l).map(_ => a) <-> writer(a, l)
+  *   (tell(l) as a) <-> writer(a, l)
   * }
   *
-  * def tupleIsWriter(a: A, l: L) = {
+  * def tupleIsWriterFlipped(a: A, l: L) = {
   *   writer(a, l) <-> tuple((l, a))
   * }
   * }}}
