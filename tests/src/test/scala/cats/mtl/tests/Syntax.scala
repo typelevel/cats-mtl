@@ -17,6 +17,8 @@ final class Syntax extends BaseSuite {
     test("ApplicativeListen") {
       val x = WriterT.lift[Option, String, Int](Option.empty[Int])
       val y: WriterT[Option, String, (Int, String)] = x.listen()
+      val z: WriterT[Option, String, Int] =
+        WriterT.lift[Option, String, (Int, String => String)](Option.empty[(Int, String => String)]).pass()
     }
     test("ApplicativeLocal") {
       val fa: OptionT[FunctionC[String]#l, Int] = OptionT.pure(1)
