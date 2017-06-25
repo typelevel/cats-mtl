@@ -4,9 +4,9 @@ package laws
 
 import cats.syntax.functor._
 
-class ApplicativeListenLaws[F[_], L](implicit val listenInstance: ApplicativeListen[F, L]) {
-  implicit val monoid: Monoid[L] = listenInstance.tell.monoid
-  implicit val applicative: Applicative[F] = listenInstance.tell.applicative
+class ApplicativeListenLaws[F[_], L]()(implicit val listenInstance: ApplicativeListen[F, L]) extends ApplicativeTellLaws[F, L]()(listenInstance.tell) {
+  implicit override val monoid: Monoid[L] = listenInstance.tell.monoid
+  implicit override val applicative: Applicative[F] = listenInstance.tell.applicative
 
   import listenInstance.{listen, listens, censor, pass}
   import listenInstance.tell._
@@ -25,7 +25,7 @@ class ApplicativeListenLaws[F[_], L](implicit val listenInstance: ApplicativeLis
     listens(fa)(f) <-> listen(fa).map { case (a, l) => (f(l), a) }
   }
 
-  def censorIsPassTupled[A](fa: F[A])(f: L => L): IsEq[F[A]] = {
+  def censorIsPassTupled[A](fa: F[A], f: L => L): IsEq[F[A]] = {
     censor(fa)(f) <-> pass(fa.map(a => (a, f)))
   }
 }

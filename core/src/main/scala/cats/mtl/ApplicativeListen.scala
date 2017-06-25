@@ -19,12 +19,12 @@ package mtl
   *   listens(fa)(f) <-> listen(fa).map { case (a, l) => (f(l), a) }
   * }
   *
-  * def censorIsPassTupled(fa: F[A])(f: L => L) = {
+  * def censorIsPassTupled(fa: F[A], f: L => L) = {
   *   censor(fa)(f) <-> pass(fa.map(a => (a, f)))
   * }
   * }}}
   */
-trait ApplicativeListen[F[_], L] {
+trait ApplicativeListen[F[_], L] extends Serializable {
   val tell: ApplicativeTell[F, L]
 
   def listen[A](fa: F[A]): F[(A, L)]
@@ -37,6 +37,7 @@ trait ApplicativeListen[F[_], L] {
 }
 
 object ApplicativeListen {
+  def apply[F[_], L](implicit listen: ApplicativeListen[F, L]): ApplicativeListen[F, L] = listen
   def listen[F[_], L, A](fa: F[A])(implicit ev: ApplicativeListen[F, L]): F[(A, L)] = ev.listen(fa)
   def pass[F[_], L, A](fa: F[(A, L => L)])(implicit ev: ApplicativeListen[F, L]): F[A] = ev.pass(fa)
   def listens[F[_], L, A, B](fa: F[A])(f: L => B)(implicit ev: ApplicativeListen[F, L]): F[(B, A)] = ev.listens(fa)(f)
