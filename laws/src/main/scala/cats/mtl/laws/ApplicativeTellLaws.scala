@@ -6,9 +6,8 @@ import cats.syntax.functor._
 import cats.syntax.semigroup._
 import cats.syntax.cartesian._
 
-trait ApplicativeTellLaws[F[_], L] {
-  implicit val monoid: Monoid[L]
-  implicit val tellInstance: ApplicativeTell[F, L]
+class ApplicativeTellLaws[F[_], L]()(implicit val tellInstance: ApplicativeTell[F, L]) {
+  implicit val monoid: Monoid[L] = tellInstance.monoid
   implicit val applicative: Applicative[F] = tellInstance.applicative
 
   import tellInstance._
@@ -33,4 +32,10 @@ trait ApplicativeTellLaws[F[_], L] {
     writer(a, l) <-> tuple((l, a))
   }
 
+}
+
+object ApplicativeTellLaws {
+  def apply[F[_], L](implicit tell: ApplicativeTell[F, L]): ApplicativeTellLaws[F, L] = {
+    new ApplicativeTellLaws[F, L]()(tell)
+  }
 }

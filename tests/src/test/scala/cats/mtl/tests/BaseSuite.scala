@@ -1,5 +1,6 @@
 package cats
 package mtl
+package tests
 
 import catalysts.Platform
 import cats.data._

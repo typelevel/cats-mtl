@@ -1,5 +1,6 @@
 package cats
 package mtl
+package tests
 
 import org.scalactic._
 import TripleEqualsSupport.AToBEquivalenceConstraint

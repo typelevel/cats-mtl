@@ -1,8 +1,8 @@
 package cats
 package mtl
+package tests
 
 final class Syntax extends BaseSuite {
-
 
   // test instances.all._
   //noinspection ScalaUnusedSymbol

@@ -1,5 +1,6 @@
 package cats
 package mtl
+package tests
 
 
 final class SummonableImplicits extends BaseSuite {
