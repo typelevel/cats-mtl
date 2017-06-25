@@ -27,6 +27,14 @@ private[instances] trait RaiseLowPriorityInstances1 {
     }
   }
 
+  implicit final def raiseEither[E]: FunctorRaise[EitherC[E]#l, E] = {
+    new FunctorRaise[EitherC[E]#l, E] {
+      val functor: Functor[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither
+
+      def raise[A](e: E): Either[E, A] = Left(e)
+    }
+  }
+
 }
 
 object raise extends RaiseInstances

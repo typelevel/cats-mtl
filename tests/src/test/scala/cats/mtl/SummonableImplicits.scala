@@ -1,39 +1,13 @@
 package cats
 package mtl
 
-import cats.data._
 
 final class SummonableImplicits extends BaseSuite {
-
-  private type ReaderStr[M[_], A] = ReaderT[M, String, A]
-  private type ReaderStrId[A] = ReaderT[Id, String, A]
-  private type ReaderInt[M[_], A] = ReaderT[M, Int, A]
-  private type ReaderIntId[A] = Reader[Int, A]
-  private type ReaderStrInt[A] = ReaderStr[ReaderIntId, A]
-  private type ReaderStrFuncInt[A] = ReaderStr[FunctionC[Int]#l, A]
-
-  private type EitherTStr[M[_], A] = EitherT[M, String, A]
-  private type EitherStrId[A] = EitherT[Id, String, A]
-  private type EitherTInt[M[_], A] = EitherT[M, Int, A]
-  private type EitherTIntId[A] = EitherT[Id, Int, A]
-  private type EitherTStrEitherTInt[A] = EitherTStr[EitherTIntId, A]
-
-  private type StateTStr[M[_], A] = StateT[M, String, A]
-  private type StateStrId[A] = StateT[Id, String, A]
-  private type StateTInt[M[_], A] = StateT[M, Int, A]
-  private type StateTIntId[A] = StateT[Id, Int, A]
-  private type StateTStrStateTInt[A] = StateTStr[StateTIntId, A]
-
-  private type WriterTStr[M[_], A] = WriterT[M, String, A]
-  private type WriterStrId[A] = WriterT[Id, String, A]
-  private type WriterTInt[M[_], A] = WriterT[M, Vector[Int], A]
-  private type WriterTIntId[A] = WriterT[Id, Vector[Int], A]
-  private type WriterTStrWriterTInt[A] = WriterTStr[WriterTIntId, A]
-  private type WriterTStrTupleInt[A] = WriterTStr[TupleC[Vector[Int]]#l, A]
 
   // test instances.all._
   //noinspection ScalaUnusedSymbol
   {
+    import cats.data._
     import cats.instances.all._
     import cats.mtl.instances.all._
     test("ApplicativeAsk") {

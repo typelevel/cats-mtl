@@ -124,7 +124,7 @@ private[instances] trait HandleInstancesLowPriority {
       val monad: Monad[WriterTC[M, L]#l] = WriterT.catsDataMonadWriterForWriterT(M, L)
       val raise: FunctorRaise[CurryT[WriterTCL[L]#l, M]#l, Err] =
         instances.raise.raiseInd[WriterTC[M, L]#l, M, Err](
-          instances.writert.writerMonadLayer[M, L],
+          instances.writert.writerMonadLayerControl[M, L],
           under.raise
         )
 

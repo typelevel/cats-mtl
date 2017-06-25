@@ -5,14 +5,7 @@ package instances
 import cats.data.WriterT
 import cats.syntax.functor._
 
-trait WriterTInstances extends WriterTInstancesLowPriority {
-  implicit final def writerMonadLayer[M[_], L]
-  (implicit L: Monoid[L], M: Monad[M]): MonadLayer[WriterTC[M, L]#l, M] = {
-    writerMonadLayerControl[M, L]
-  }
-}
-
-private[instances] trait WriterTInstancesLowPriority {
+trait WriterTInstances {
   implicit final def writerMonadLayerControl[M[_], L]
   (implicit L: Monoid[L], M: Monad[M]): MonadLayerControl.Aux[WriterTC[M, L]#l, M, TupleC[L]#l] = {
     new MonadLayerControl[WriterTC[M, L]#l, M] {

@@ -19,6 +19,7 @@ package object mtl {
   private[mtl] type TupleC[L] = {type l[A] = (L, A)}
   private[mtl] type FunctionC[E] = {type l[A] = E => A}
   private[mtl] type StateC[S] = {type l[A] = State[S, A]}
+  private[mtl] type WriterC[L] = {type l[A] = Writer[L, A]}
   private[mtl] type WriterTC[M[_], L] = {type l[A] = WriterT[M, L, A]}
   private[mtl] type WriterTCL[L] = {type l[M[_], A] = WriterT[M, L, A]}
   private[mtl] type of[F[_], G[_]] = {type l[A] = F[G[A]]}
