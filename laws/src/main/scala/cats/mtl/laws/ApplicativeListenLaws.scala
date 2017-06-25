@@ -7,7 +7,7 @@ import cats.syntax.functor._
 class ApplicativeListenLaws[F[_], L](implicit val listenInstance: ApplicativeListen[F, L]) {
   implicit val monoid: Monoid[L] = listenInstance.tell.monoid
   implicit val applicative: Applicative[F] = listenInstance.tell.applicative
-  
+
   import listenInstance.{listen, listens, censor, pass}
   import listenInstance.tell._
 
