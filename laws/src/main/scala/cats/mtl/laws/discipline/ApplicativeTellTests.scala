@@ -23,7 +23,7 @@ abstract class ApplicativeTellTests[F[_], L] extends Laws {
       "tell forms semigroup action" -> ∀(laws.tellTwiceIsTellCombined _),
       "tell forms monoid action" -> (laws.tellEmptyIsPureUnit: Prop),
       "tuple is (flip writer)" -> ∀(laws.tupleIsWriterFlipped[A] _),
-      "writer is tell ann map" -> ∀(laws.writerIsTellAndMap[A] _)
+      "writer is tell and map" -> ∀(laws.writerIsTellAndMap[A] _)
     )
   }
 
