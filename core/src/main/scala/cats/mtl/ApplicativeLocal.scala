@@ -26,6 +26,8 @@ trait ApplicativeLocal[F[_], E] extends Serializable {
 }
 
 object ApplicativeLocal {
+  def apply[F[_], A](implicit local: ApplicativeLocal[F, A]): ApplicativeLocal[F, A] = local
+
   def local[F[_], E, A](fa: F[A])(f: E => E)(implicit local: ApplicativeLocal[F, E]): F[A] = local.local(fa)(f)
 
   def scope[F[_], E, A](fa: F[A])(e: E)(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(fa)(e)
