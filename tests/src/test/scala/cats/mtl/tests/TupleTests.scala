@@ -13,7 +13,7 @@ import cats.mtl.laws.discipline.ApplicativeListenTests
 class TupleTests extends BaseSuite {
   checkAll("ApplicativeListen[(List[Int], ?), List[Int]]",
     ApplicativeListenTests[TupleC[List[Int]]#l, List[Int]].applicativeListen[String, String])
-  checkAll("ApplicativeListen[(List[Int], ?)]",
+  checkAll("ApplicativeListen[(List[Int], ?), List[Int]]",
     SerializableTests.serializable(ApplicativeListen[TupleC[List[Int]]#l, List[Int]]))
 }
 
