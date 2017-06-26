@@ -6,8 +6,8 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 
-abstract class ApplicativeListenTests[F[_], L] extends ApplicativeTellTests[F, L] {
-  def laws: ApplicativeListenLaws[F, L]
+abstract class ApplicativeListenTests[F[_], L]()(implicit listen: ApplicativeListen[F, L]) extends ApplicativeTellTests[F, L]()(listen.tell) {
+  override def laws: ApplicativeListenLaws[F, L] = new ApplicativeListenLaws[F, L]
 
   def applicativeListen[A: Arbitrary, B: Arbitrary](implicit
                                                     ArbFA: Arbitrary[F[A]],
@@ -34,7 +34,7 @@ abstract class ApplicativeListenTests[F[_], L] extends ApplicativeTellTests[F, L
 object ApplicativeListenTests {
   def apply[F[_], L](implicit tell: ApplicativeListen[F, L]): ApplicativeListenTests[F, L] = {
     new ApplicativeListenTests[F, L] {
-      def laws: ApplicativeListenLaws[F, L] = ApplicativeListenLaws[F, L]
+      override def laws: ApplicativeListenLaws[F, L] = ApplicativeListenLaws[F, L]
     }
   }
 }
