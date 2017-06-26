@@ -7,8 +7,8 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen, Prop}
 import org.typelevel.discipline.Laws
 
-abstract class ApplicativeTellTests[F[_], L] extends Laws {
-  def laws: ApplicativeTellLaws[F, L]
+abstract class ApplicativeTellTests[F[_], L]()(implicit tell: ApplicativeTell[F, L]) extends Laws {
+  def laws: ApplicativeTellLaws[F, L] = new ApplicativeTellLaws[F, L]()
 
   def applicativeTell[A: Arbitrary](implicit
                                     ArbFA: Arbitrary[F[A]],
@@ -27,13 +27,5 @@ abstract class ApplicativeTellTests[F[_], L] extends Laws {
     )
   }
 
-}
-
-object ApplicativeTellTests {
-  def apply[F[_], L](implicit tell: ApplicativeTell[F, L]): ApplicativeTellTests[F, L] = {
-    new ApplicativeTellTests[F, L] {
-      def laws: ApplicativeTellLaws[F, L] = ApplicativeTellLaws[F, L]
-    }
-  }
 }
 
