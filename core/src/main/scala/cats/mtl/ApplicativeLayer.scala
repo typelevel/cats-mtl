@@ -22,7 +22,7 @@ package mtl
   * }
   * }}}
   */
-trait ApplicativeLayer[M[_], Inner[_]] extends FunctorLayer[M, Inner] {
+trait ApplicativeLayer[M[_], Inner[_]] extends FunctorLayer[M, Inner] with Serializable {
   val outerInstance: Applicative[M]
   val innerInstance: Applicative[Inner]
 }

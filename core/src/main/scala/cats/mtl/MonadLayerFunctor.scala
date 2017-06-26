@@ -17,4 +17,4 @@ package mtl
   * }
   * }}}
   */
-trait MonadLayerFunctor[M[_], Inner[_]] extends MonadLayer[M, Inner] with ApplicativeLayerFunctor[M, Inner]
+trait MonadLayerFunctor[M[_], Inner[_]] extends MonadLayer[M, Inner] with ApplicativeLayerFunctor[M, Inner] with Serializable

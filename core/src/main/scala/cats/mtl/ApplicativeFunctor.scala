@@ -4,7 +4,7 @@ package mtl
 import cats.data._
 import cats.syntax.cartesian._
 
-trait ApplicativeFunctor[T[_[_], _]] {
+trait ApplicativeFunctor[T[_[_], _]] extends Serializable {
   def instanceA[F[_]: Applicative]: Applicative[CurryT[T, F]#l]
   def mapTS[F[_]: Applicative, G[_], A](tfa: T[F, A])(trans: F ~> G): T[G, A]
   def mapTT[F[_], G[_]: Applicative, A](tfa: T[F, A])(trans: F ~> G): T[G, A]

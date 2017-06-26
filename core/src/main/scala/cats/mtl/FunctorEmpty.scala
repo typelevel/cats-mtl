@@ -26,7 +26,7 @@ package mtl
   *   // QED.
   * }}}
   */
-trait FunctorEmpty[F[_]] {
+trait FunctorEmpty[F[_]] extends Serializable {
   val functor: Functor[F]
 
   def empty[A]: F[A]

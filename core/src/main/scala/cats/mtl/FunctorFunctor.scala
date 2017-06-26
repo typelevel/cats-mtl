@@ -4,7 +4,7 @@ package mtl
 import cats.data._
 import cats.syntax.functor._
 
-trait FunctorFunctor[T[_[_], _]] {
+trait FunctorFunctor[T[_[_], _]] extends Serializable {
   def mapTS[F[_] : Functor, G[_], A](tfa: T[F, A])(trans: F ~> G): T[G, A]
 
   def mapTT[F[_], G[_] : Functor, A](tfa: T[F, A])(trans: F ~> G): T[G, A]

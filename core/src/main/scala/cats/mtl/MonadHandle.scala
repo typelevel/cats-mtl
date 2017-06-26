@@ -21,7 +21,7 @@ import cats.data.EitherT
   * }
   * }}}
   */
-trait MonadHandle[F[_], E] {
+trait MonadHandle[F[_], E] extends Serializable {
   val monad: Monad[F]
 
   val raise: FunctorRaise[F, E]

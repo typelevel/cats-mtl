@@ -17,7 +17,7 @@ package mtl
   * }
   * }}}
   */
-trait FunctorLayerFunctor[M[_], Inner[_]] extends FunctorLayer[M, Inner] {
+trait FunctorLayerFunctor[M[_], Inner[_]] extends FunctorLayer[M, Inner] with Serializable {
   def layerMapK[A](ma: M[A])
                   (trans: Inner ~> Inner): M[A]
 

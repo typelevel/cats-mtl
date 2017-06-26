@@ -1,7 +1,7 @@
 package cats
 package mtl
 
-trait MonadLift[B[_], M[_]] {
+trait MonadLift[B[_], M[_]] extends Serializable {
   def lift[A](ba: B[A]): M[A]
 }
 

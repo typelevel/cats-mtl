@@ -17,7 +17,7 @@ package mtl
   * }}}
   *
   */
-trait ApplicativeLocal[F[_], E] {
+trait ApplicativeLocal[F[_], E] extends Serializable {
   val ask: ApplicativeAsk[F, E]
 
   def local[A](fa: F[A])(f: E => E): F[A]

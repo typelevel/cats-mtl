@@ -24,7 +24,7 @@ package mtl
   * Otherwise `ApplicativeAsk[F, E]` only denotes the availability of "immutable"
   * `E` values in the `F[_]` context, which cannot be altered by previous `F[_]` effects.
   */
-trait ApplicativeAsk[F[_], E] {
+trait ApplicativeAsk[F[_], E] extends Serializable {
   val applicative: Applicative[F]
 
   def ask: F[E]

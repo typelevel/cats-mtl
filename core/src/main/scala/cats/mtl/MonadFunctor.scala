@@ -4,7 +4,7 @@ package mtl
 import cats.data._
 import cats.syntax.functor._
 
-trait MonadFunctor[T[_[_], _]] {
+trait MonadFunctor[T[_[_], _]] extends Serializable {
   def instanceM[F[_] : Monad]: Monad[CurryT[T, F]#l]
   def mapTF[F[_]: Monad, G[_], A](tfa: T[F, A])(trans: F ~> G): T[G, A]
   def mapTG[F[_], G[_]: Monad, A](tfa: T[F, A])(trans: F ~> G): T[G, A]

@@ -30,7 +30,7 @@ package mtl
   * because the laws of ApplicativeAsk prohibit the value being changed by effects.
   *
   */
-trait MonadState[F[_], S] {
+trait MonadState[F[_], S] extends Serializable {
   val fMonad: Monad[F]
 
   def get: F[S]

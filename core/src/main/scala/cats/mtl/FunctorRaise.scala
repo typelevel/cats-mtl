@@ -19,7 +19,7 @@ import scala.util.control.NonFatal
   *   // QED.
   * }}}
   */
-trait FunctorRaise[F[_], E] {
+trait FunctorRaise[F[_], E] extends Serializable {
   val functor: Functor[F]
 
   def raise[A](e: E): F[A]
