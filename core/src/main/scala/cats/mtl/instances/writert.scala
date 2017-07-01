@@ -5,7 +5,7 @@ package instances
 import cats.data.WriterT
 import cats.syntax.functor._
 
-trait WriterTInstances {
+trait WriterTInstances extends WriterTInstances1 {
   implicit final def writerMonadLayerControl[M[_], L]
   (implicit L: Monoid[L], M: Monad[M]): MonadLayerControl.Aux[WriterTC[M, L]#l, M, TupleC[L]#l] = {
     new MonadLayerControl[WriterTC[M, L]#l, M] {
@@ -29,6 +29,38 @@ trait WriterTInstances {
       }
 
       def zero[A](state: (L, A)): Boolean = false
+    }
+  }
+}
+
+private[instances] trait WriterTInstances1 extends WriterTInstances2 {
+  implicit def writerApplicativeLayerFunctor[M[_], L]
+  (implicit L: Monoid[L], M: Applicative[M]): ApplicativeLayerFunctor[WriterTC[M, L]#l, M] = {
+    new ApplicativeLayerFunctor[WriterTC[M, L]#l, M] {
+      def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
+
+      val outerInstance: Applicative[WriterTC[M, L]#l] = WriterT.catsDataApplicativeForWriterT(M, L)
+      val innerInstance: Applicative[M] = M
+
+      def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.lift(inner)
+    }
+  }
+}
+
+private[instances] trait WriterTInstances2 {
+  implicit def writerFunctorLayerFunctor[M[_], L]
+  (implicit L: Monoid[L], M: Functor[M]): FunctorLayerFunctor[WriterTC[M, L]#l, M] = {
+    new FunctorLayerFunctor[WriterTC[M, L]#l, M] {
+      def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
+
+      val outerInstance: Functor[WriterTC[M, L]#l] = new Functor[WriterTC[M, L]#l] {
+        def map[A, B](fa: WriterT[M, L, A])(f: (A) => B): WriterT[M, L, B] = fa.map(f)
+      }
+      val innerInstance: Functor[M] = M
+
+      def layer[A](inner: M[A]): WriterT[M, L, A] = {
+        WriterT(M.map(inner)(v => (L.empty, v)))
+      }
     }
   }
 }

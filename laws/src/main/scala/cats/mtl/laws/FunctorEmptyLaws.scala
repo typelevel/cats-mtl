@@ -2,6 +2,11 @@ package cats
 package mtl
 package laws
 
-class FunctorEmptyLaws
+class FunctorEmptyLaws {
 
-object FunctorEmptyLaws
+}
+
+object FunctorEmptyLaws {
+
+}
+

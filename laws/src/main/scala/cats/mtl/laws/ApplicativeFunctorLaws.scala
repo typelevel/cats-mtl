@@ -2,6 +2,11 @@ package cats
 package mtl
 package laws
 
-class ApplicativeFunctorLaws
+class ApplicativeFunctorLaws {
 
-object ApplicativeFunctorLaws
+}
+
+
+object ApplicativeFunctorLaws {
+
+}
