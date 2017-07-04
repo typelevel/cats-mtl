@@ -6,7 +6,7 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 
-abstract class ApplicativeListenTests[F[_], L]()(implicit listen: ApplicativeListen[F, L]) extends ApplicativeTellTests[F, L]()(listen.tell) {
+abstract class ApplicativeListenTests[F[_], L]()(implicit listen: ApplicativeListen[F, L]) extends FunctorTellTests[F, L]()(listen.tell) {
   override def laws: FunctorListenLaws[F, L] = new FunctorListenLaws[F, L]
 
   def applicativeListen[A: Arbitrary, B: Arbitrary](implicit

@@ -7,7 +7,7 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen, Prop}
 import org.typelevel.discipline.Laws
 
-abstract class ApplicativeTellTests[F[_], L]()(implicit tell: FunctorTell[F, L]) extends Laws {
+abstract class FunctorTellTests[F[_], L]()(implicit tell: FunctorTell[F, L]) extends Laws {
   def laws: FunctorTellLaws[F, L] = new FunctorTellLaws[F, L]()
 
   def applicativeTell[A: Arbitrary](implicit
@@ -20,8 +20,6 @@ abstract class ApplicativeTellTests[F[_], L]()(implicit tell: FunctorTell[F, L])
     new DefaultRuleSet(
       name = "applicativeTell",
       parent = None,
-      "tell forms semigroup action" -> ∀(laws.tellTwiceIsTellCombined _),
-      "tell forms monoid action" -> Prop.lzy(laws.tellEmptyIsPureUnit),
       "tuple is (flip writer)" -> ∀(laws.tupleIsWriterFlipped[A] _),
       "writer is tell and map" -> ∀(laws.writerIsTellAndMap[A] _)
     )

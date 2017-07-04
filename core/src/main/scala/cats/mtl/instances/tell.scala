@@ -11,7 +11,6 @@ trait TellInstances extends TellInstancesLowPriority1 {
                                                ): FunctorTell[M, L] = {
     new FunctorTell[M, L] {
       val functor: Functor[M] = lift.outerInstance
-      val monoid: Monoid[L] = under.monoid
 
       def tell(l: L): M[Unit] = lift.layer(under.tell(l))
 
@@ -26,7 +25,6 @@ private[instances] trait TellInstancesLowPriority1 {
   implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] {
       val functor = WriterT.catsDataApplicativeForWriterT(M, L)
-      val monoid: Monoid[L] = L
 
       def tell(l: L): WriterT[M, L, Unit] = WriterT.tell(l)
 
@@ -39,7 +37,6 @@ private[instances] trait TellInstancesLowPriority1 {
   implicit final def tellTuple[L](implicit L: Monoid[L]): FunctorTell[TupleC[L]#l, L] = {
     new FunctorTell[TupleC[L]#l, L] {
       val functor = cats.instances.tuple.catsStdMonadForTuple2
-      val monoid: Monoid[L] = L
 
       def tell(l: L): (L, Unit) = (l, ())
 
