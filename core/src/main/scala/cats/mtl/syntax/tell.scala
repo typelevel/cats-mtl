@@ -7,7 +7,7 @@ trait TellSyntax {
 }
 
 final class TellOps[L](val e: L) extends AnyVal {
-  def tell[F[_]](implicit applicativeTell: ApplicativeTell[F, L]): F[Unit] = applicativeTell.tell(e)
+  def tell[F[_]](implicit applicativeTell: FunctorTell[F, L]): F[Unit] = applicativeTell.tell(e)
 }
 
 object tell extends TellSyntax

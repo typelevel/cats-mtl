@@ -25,7 +25,7 @@ package mtl
   * }}}
   */
 trait ApplicativeListen[F[_], L] extends Serializable {
-  val tell: ApplicativeTell[F, L]
+  val tell: FunctorTell[F, L]
 
   def listen[A](fa: F[A]): F[(A, L)]
 

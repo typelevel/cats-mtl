@@ -4,9 +4,9 @@ package laws
 
 import cats.syntax.functor._
 
-class ApplicativeListenLaws[F[_], L]()(implicit val listenInstance: ApplicativeListen[F, L]) extends ApplicativeTellLaws[F, L]()(listenInstance.tell) {
+class FunctorListenLaws[F[_], L]()(implicit val listenInstance: ApplicativeListen[F, L]) extends FunctorTellLaws[F, L]()(listenInstance.tell) {
   implicit override val monoid: Monoid[L] = listenInstance.tell.monoid
-  implicit override val applicative: Applicative[F] = listenInstance.tell.applicative
+  implicit override val applicative: Applicative[F] = listenInstance.tell.functor
 
   import listenInstance.{listen, listens, censor, pass}
   import listenInstance.tell._
@@ -30,8 +30,8 @@ class ApplicativeListenLaws[F[_], L]()(implicit val listenInstance: ApplicativeL
   }
 }
 
-object ApplicativeListenLaws {
-  def apply[F[_], E](implicit listenInstance: ApplicativeListen[F, E]): ApplicativeListenLaws[F, E] = {
-    new ApplicativeListenLaws()
+object FunctorListenLaws {
+  def apply[F[_], E](implicit listenInstance: ApplicativeListen[F, E]): FunctorListenLaws[F, E] = {
+    new FunctorListenLaws()
   }
 }
