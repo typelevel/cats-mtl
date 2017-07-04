@@ -14,7 +14,7 @@ final class Syntax extends BaseSuite {
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
     }
-    test("ApplicativeListen") {
+    test("FunctorListen") {
       val x = WriterT.lift[Option, String, Int](Option.empty[Int])
       val y: WriterT[Option, String, (Int, String)] = x.listen()
       val z: WriterT[Option, String, Int] =
@@ -33,7 +33,7 @@ final class Syntax extends BaseSuite {
       val mod: State[String, Unit] = ((s: String) => s + "!").modify[StateC[String]#l]
       val set: State[String, Unit] = "ha".set[StateC[String]#l]
     }
-    test("ApplicativeTell") {
+    test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
     }
   }

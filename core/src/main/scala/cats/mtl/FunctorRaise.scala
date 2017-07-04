@@ -4,7 +4,25 @@ package mtl
 import scala.util.control.NonFatal
 
 /**
-  * `FunctorRaise` has no laws not guaranteed by parametricity.
+  * `FunctorRaise` has no external laws.
+  *
+  * `FunctorRaise` has two internal laws:
+  * {{{
+  * def catchNonFatalDefault[A](a: => A)(f: Throwable => E)(implicit A: Applicative[F]) = {
+  *   catchNonFatal(a)(f) <-> try {
+  *     A.pure(a)
+  *   } catch {
+  *     case NonFatal(ex) => raise(f(ex))
+  *   }
+  * }
+  *
+  * def ensureDefault[A](fa: F[A])(error: => E)(predicate: A => Boolean)(implicit A: Monad[F]) = {
+  *   ensure(fa)(error)(predicate) <-> for {
+  *     a <- fa
+  *     _ <- if (predicate(a)) pure(()) else raise(error)
+  *   } yield a
+  * }
+  * }}}
   *
   * `FunctorRaise` has one free law, i.e. a law guaranteed by parametricity:
   * {{{
@@ -31,6 +49,9 @@ trait FunctorRaise[F[_], E] extends Serializable {
       case NonFatal(ex) => raise(f(ex))
     }
   }
+
+  def ensure[A](fa: F[A])(error: => E)(predicate: A => Boolean)(implicit A: Monad[F]): F[A] =
+    A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
 object FunctorRaise {

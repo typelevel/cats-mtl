@@ -6,7 +6,7 @@ package mtl
   *
   * `FunctorEmpty` has one internal law:
   * {{{
-  * def filterIsFlatMapOrAbort(fa: F[A])(f: A => Option[B]) = {
+  * def filterIsFlatMapOrAbort(fa: F[A])(f: A => Option[B])(implicit ev: Monad[F]) = {
   *   filter(fa)(f) <-> for {
   *     a <- fa
   *     b <- f(a).fold(empty[B])(pure)

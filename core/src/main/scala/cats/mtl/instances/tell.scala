@@ -24,7 +24,9 @@ trait TellInstances extends TellInstancesLowPriority1 {
 private[instances] trait TellInstancesLowPriority1 {
   implicit final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] = {
     new FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] {
-      val functor = WriterT.catsDataApplicativeForWriterT(M, L)
+      val functor = new Functor[WriterTC[M, L]#l] {
+        def map[A, B](fa: WriterT[M, L, A])(f: (A) => B): WriterT[M, L, B] = fa.map(f)
+      }
 
       def tell(l: L): WriterT[M, L, Unit] = WriterT.tell(l)
 

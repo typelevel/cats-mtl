@@ -9,12 +9,12 @@ import scala.util.control.NonFatal
 /**
   * `ApplicativeHandle` has one external law:
   * {{{
-  * def materializeRecoversRaise(e: E) = {
+  * def attemptRecoversRaise(e: E) = {
   *   attempt(raise(e)) <-> pure(Left(e))
   * }
   * }}}
   *
-  * `ApplicativeHandle` has one internal law:
+  * `ApplicativeHandle` has ten internal laws:
   * {{{
   * def handleErrorWithActsOnRaisedError[A](e: E, f: E => F[A]): IsEq[F[A]] = {
   *   F.handleErrorWith(F.raiseError[A](e))(f) <-> f(e)

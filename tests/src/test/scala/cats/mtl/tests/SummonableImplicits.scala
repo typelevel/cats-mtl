@@ -21,14 +21,14 @@ final class SummonableImplicits extends BaseSuite {
       assertCompiles("implicitly[ApplicativeAsk[ReaderStrFuncInt, Int]]")
     }
 
-    test("ApplicativeListen") {
-      assertCompiles("implicitly[ApplicativeListen[WriterStrId, String]]")
+    test("FunctorListen") {
+      assertCompiles("implicitly[FunctorListen[WriterStrId, String]]")
 
-      assertCompiles("implicitly[ApplicativeListen[WriterTStrWriterTInt, String]]")
+      assertCompiles("implicitly[FunctorListen[WriterTStrWriterTInt, String]]")
 
-      assertTypeError("implicitly[ApplicativeListen[WriterTStrWriterTInt, Vector[Int]]]")
+      assertTypeError("implicitly[FunctorListen[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertTypeError("implicitly[ApplicativeListen[WriterTStrTupleInt, Vector[Int]]]")
+      assertTypeError("implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("FunctorRaise") {
@@ -57,42 +57,24 @@ final class SummonableImplicits extends BaseSuite {
       assertCompiles("implicitly[MonadState[StateTStrStateTInt, Int]]")
     }
 
-    test("ApplicativeTell") {
-      assertCompiles("implicitly[ApplicativeTell[WriterStrId, String]]")
+    test("FunctorTell") {
+      assertCompiles("implicitly[FunctorTell[WriterStrId, String]]")
 
-      assertCompiles("implicitly[ApplicativeTell[WriterTStrWriterTInt, String]]")
+      assertCompiles("implicitly[FunctorTell[WriterTStrWriterTInt, String]]")
 
-      assertCompiles("implicitly[ApplicativeTell[WriterTStrWriterTInt, Vector[Int]]]")
+      assertCompiles("implicitly[FunctorTell[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertCompiles("implicitly[ApplicativeTell[WriterTStrTupleInt, Vector[Int]]]")
+      assertCompiles("implicitly[FunctorTell[WriterTStrTupleInt, Vector[Int]]]")
     }
 
-    test("XFunctor") {
-      assertCompiles("implicitly[FunctorFunctor[StateTCS[String]#l]]")
+    test("TFunctor") {
+      assertCompiles("implicitly[TFunctor[StateTCS[String]#l]]")
 
-      assertCompiles("implicitly[FunctorFunctor[OptionT]]")
+      assertCompiles("implicitly[TFunctor[OptionT]]")
 
-      assertCompiles("implicitly[FunctorFunctor[ReaderTCE[String]#l]]")
+      assertCompiles("implicitly[TFunctor[ReaderTCE[String]#l]]")
 
-      assertCompiles("implicitly[FunctorFunctor[WriterTCL[String]#l]]")
-
-      // you *need* to flatten one of the layers in StateT
-      // to access the applicative layers to `ap`
-      assertTypeError("implicitly[ApplicativeFunctor[StateTCS[String]#l]]")
-
-      assertCompiles("implicitly[ApplicativeFunctor[OptionT]]")
-
-      assertCompiles("implicitly[ApplicativeFunctor[ReaderTCE[String]#l]]")
-
-      assertCompiles("implicitly[ApplicativeFunctor[WriterTCL[String]#l]]")
-
-      assertCompiles("implicitly[MonadFunctor[StateTCS[String]#l]]")
-
-      assertCompiles("implicitly[MonadFunctor[OptionT]]")
-
-      assertCompiles("implicitly[MonadFunctor[ReaderTCE[String]#l]]")
-
-      assertCompiles("implicitly[MonadFunctor[WriterTCL[String]#l]]")
+      assertCompiles("implicitly[TFunctor[WriterTCL[String]#l]]")
     }
 
     test("lift") {

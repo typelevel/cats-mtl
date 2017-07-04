@@ -4,7 +4,7 @@ package laws
 package discipline
 
 import org.scalacheck.Prop.{forAll => ∀}
-import org.scalacheck.{Arbitrary, Cogen, Prop}
+import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 
 abstract class FunctorTellTests[F[_], L]()(implicit tell: FunctorTell[F, L]) extends Laws {

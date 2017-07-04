@@ -2,9 +2,9 @@ package cats
 package mtl
 
 /**
-  * `ApplicativeTell` has no external laws.
+  * `FunctorTell` has no external laws.
   *
-  * `ApplicativeTell` has one internal law:
+  * `FunctorTell` has one internal law:
   * {{{
   * def writerIsTellAndMap(a: A, l: L) = {
   *   (tell(l) as a) <-> writer(a, l)

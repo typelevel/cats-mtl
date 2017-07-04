@@ -3,14 +3,11 @@ package mtl
 package laws
 
 import cats.syntax.functor._
-import cats.syntax.semigroup._
-import cats.syntax.cartesian._
 
 class FunctorTellLaws[F[_], L]()(implicit val tellInstance: FunctorTell[F, L]) {
   implicit val functor: Functor[F] = tellInstance.functor
 
   import tellInstance._
-  import functor._
 
   // internal laws
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
