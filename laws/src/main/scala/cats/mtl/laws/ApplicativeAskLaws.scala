@@ -10,7 +10,7 @@ class ApplicativeAskLaws[F[_], E](implicit val askInstance: ApplicativeAsk[F, E]
   import askInstance._
 
   // external laws
-  def askAddsNoEffectsAndIsNotAffected[A](fa: F[A]): IsEq[F[A]] = {
+  def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] = {
     (ask *> fa) <-> fa
   }
 
