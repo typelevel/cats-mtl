@@ -1,6 +1,5 @@
 cats-mtl Design
 ===============
-
 Overall, cats-mtl has similar design to cats: 
 instances package, syntax package, implicits package.
 
@@ -34,10 +33,32 @@ multiple instances in scope at once.
 
 MonadLayer, ApplicativeLayer, FunctorLayer
 ------------------------------------------
-
 Given a type class `X[F[_]]`, `XLayer[Inner, M]` is the least constrained type class
 that is used to lift `X`-based transformer type class instances from `Inner` to `M`; it contains instances of
 `X[Inner]`, `X[M]`, and a higher-kinded homomorphism `Inner ~> M` which respects the operations of `X`.
-As well, it is a higher-kinded invariant functor with the operation 
-`layerImapK(forward: Inner ~> Inner, backward: Inner ~> Inner)` which can be used to translate isomorphisms in `Inner`
-into morphisms in `M`. `X` is so far instantiated to `Monad`, `Applicative`, and `Functor`.
+As well, it is similar to a higher-kinded invariant functor with the operation 
+`layerImapK[A](ma: M[A])(forward: Inner ~> Inner, backward: Inner ~> Inner): M[A]` 
+which can be used to translate isomorphisms in `Inner` into endomorphisms in `M`. 
+`X` is so far instantiated to `Monad`, `Applicative`, and `Functor`.
+
+MonadLayerFunctor, ApplicativeLayerFunctor, FunctorLayerFunctor
+---------------------------------------------------------------
+Given a type class `X[F[_]]`, `XLayerFunctor[Inner, M]` is an `XLayer[Inner, M]`, and also like a higher-kinded
+functor with the operation  `layerMapK[A](ma: M[A])(forward: Inner ~> Inner): M[A]` for lifting endomorphisms 
+in `Inner` into endomorphisms in `M`.
+
+MonadLayerControl
+---------------------------------------------------------------
+To be completed.
+
+ApplicativeAsk / ApplicativeLocal
+---------------------------------------------------------------
+To be completed.
+
+FunctorTell / FunctorListen
+---------------------------------------------------------------
+To be completed.
+
+MonadLift
+---------------------------------------------------------------
+To be completed.
