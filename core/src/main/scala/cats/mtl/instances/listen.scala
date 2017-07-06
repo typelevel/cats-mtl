@@ -20,8 +20,8 @@ trait ListenInstances {
         WriterT[M, L, A](fa.run.map { case (l, (a, f)) => (f(l), a) })
       }
 
-      def listens[A, B](fa: WriterT[M, L, A])(f: (L) => B): WriterT[M, L, (B, A)] = {
-        WriterT[M, L, (B, A)](fa.run.map { case (l, a) => (l, (f(l), a)) })
+      def listens[A, B](fa: WriterT[M, L, A])(f: (L) => B): WriterT[M, L, (A, B)] = {
+        WriterT[M, L, (A, B)](fa.run.map { case (l, a) => (l, (a, f(l))) })
       }
 
       def censor[A](fa: WriterT[M, L, A])(f: (L) => L): WriterT[M, L, A] = {
@@ -46,9 +46,9 @@ trait ListenInstances {
         (t._2(l), t._1)
       }
 
-      def listens[A, B](fa: (L, A))(f: (L) => B): (L, (B, A)) = {
+      def listens[A, B](fa: (L, A))(f: (L) => B): (L, (A, B)) = {
         val (l, a) = fa
-        (l, (f(l), a))
+        (l, (a, f(l)))
       }
 
       def censor[A](fa: (L, A))(f: (L) => L): (L, A) = (f(fa._1), fa._2)

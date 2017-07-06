@@ -18,8 +18,8 @@ class FunctorListenLaws[F[_], L]()(implicit val listenInstance: FunctorListen[F,
   }
 
   // internal laws:
-  def listensIsListenThenMap[A, B](fa: F[A], f: L => B): IsEq[F[(B, A)]] = {
-    listens(fa)(f) <-> listen(fa).map { case (a, l) => (f(l), a) }
+  def listensIsListenThenMap[A, B](fa: F[A], f: L => B): IsEq[F[(A, B)]] = {
+    listens(fa)(f) <-> listen(fa).map { case (a, l) => (a, f(l)) }
   }
 
   def censorIsPassTupled[A](fa: F[A], f: L => L): IsEq[F[A]] = {
