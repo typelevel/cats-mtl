@@ -4,7 +4,6 @@ package instances
 
 object all extends AskInstances
   with EitherTInstances
-  with HandleInstances
   with ListenInstances
   with OptionTInstances
   with RaiseInstances

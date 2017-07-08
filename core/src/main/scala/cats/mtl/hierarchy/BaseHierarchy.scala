@@ -9,8 +9,6 @@ object BaseHierarchy {
 
     implicit final def tellFromListen[F[_], L](listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell
 
-    implicit final def raiseFromHandle[F[_], E](handle: ApplicativeHandle[F, E]): FunctorRaise[F, E] = handle.raise
-
     implicit final def raiseFromEmpty[F[_]](empty: FunctorEmpty[F]): FunctorRaise[F, Unit] = {
       new FunctorRaise[F, Unit] {
         val functor: Functor[F] = empty.functor
