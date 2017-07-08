@@ -1,6 +1,17 @@
 package cats
 package mtl
 
+/**
+  * `MonadLift[B, M]` has two external laws:
+  * {{{
+  * def liftRespectsPure(a: A) = {
+  *   lift(a.pure[Inner]) <-> a.pure[M]
+  * }
+  * def liftRespectsFlatMap(m: Inner[A])(f: A => Inner[B]) = {
+  *   lift(m).flatMap(f andThen layer) <-> lift(m.flatMap(f))
+  * }
+  * }}}
+  */
 trait MonadLift[B[_], M[_]] extends Serializable {
   def lift[A](ba: B[A]): M[A]
 }

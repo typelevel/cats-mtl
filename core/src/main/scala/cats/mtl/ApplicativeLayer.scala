@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * laws:
+  * `ApplicativeLayer[M, Inner]` has four external laws:
   * {{{
   * def mapForwardRespectsLayer(in: Inner[A])(forward: Inner ~> Inner, backward: Inner ~> Inner) = {
   *   layer(forward(in)) <-> imapK(layer(in))(forward, backward)

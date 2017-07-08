@@ -11,9 +11,9 @@ import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline.FunctorListenTests
 
 class TupleTests extends BaseSuite {
-  checkAll("FunctorListen[(List[Int], ?), List[Int]]",
-    FunctorListenTests[TupleC[List[Int]]#l, List[Int]].functorListen[String, String])
-  checkAll("FunctorListen[(List[Int], ?), List[Int]]",
-    SerializableTests.serializable(FunctorListen[TupleC[List[Int]]#l, List[Int]]))
+  checkAll("FunctorListen[(String, ?), String]",
+    FunctorListenTests[TupleC[String]#l, String].functorListen[String, String])
+  checkAll("FunctorListen[(String, ?), String]",
+    SerializableTests.serializable(FunctorListen[TupleC[String]#l, String]))
 }
 

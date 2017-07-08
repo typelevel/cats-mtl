@@ -2,15 +2,11 @@ package cats
 package mtl
 
 /**
-  * laws:
+  * `MonadLayerFunctor[M, Inner]` has two external laws:
   * {{{
   * def layerMapRespectsLayer(in: Inner[A])(forward: Inner ~> Inner) = {
   *   layer(forward(in)) <-> layerMap(layer(in))(forward, backward)
   * }
-  * }}}
-  *
-  * internal laws:
-  * {{{
   * def layerMapRespectsLayerImapK(ma: M[A])(forward: Inner ~> Inner,
   *                                          backward: Inner ~> Inner) = {
   *   layerIMapK(ma)(forward, backward) <-> layerMap(layer(in))(forward)

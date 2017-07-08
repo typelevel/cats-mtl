@@ -11,8 +11,8 @@ import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline.FunctorListenTests
 
 class WriterTTests extends BaseSuite {
-  checkAll("WriterT[Option, List[Int], List[Int]]",
-    FunctorListenTests[WriterTC[Option, List[Int]]#l, List[Int]].functorListen[String, String])
-  checkAll("FunctorListen[WriterT[Option, List[Int], ?]]",
-    SerializableTests.serializable(FunctorListen[WriterTC[Option, List[Int]]#l, List[Int]]))
+  checkAll("WriterT[Option, String, String]",
+    FunctorListenTests[WriterTC[Option, String]#l, String].functorListen[String, String])
+  checkAll("FunctorListen[WriterT[Option, String, ?]]",
+    SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
 }
