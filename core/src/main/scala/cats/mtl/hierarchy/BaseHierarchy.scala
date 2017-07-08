@@ -4,7 +4,7 @@ package hierarchy
 
 object BaseHierarchy {
 
-  trait BH0 extends BH1 {
+  trait BH0 {
     implicit final def askFromLocal[F[_], E](local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = local.ask
 
     implicit final def tellFromListen[F[_], L](listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell
@@ -16,10 +16,6 @@ object BaseHierarchy {
         def raise[A](e: Unit): F[A] = empty.empty[A]
       }
     }
-
-  }
-
-  trait BH1 {
 
   }
 
