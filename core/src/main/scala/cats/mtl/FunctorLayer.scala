@@ -2,10 +2,10 @@ package cats
 package mtl
 
 /**
-  * `FunctorLayer[M, Inner]` has external one law:
+  * `FunctorLayer[M, Inner]` has one external law:
   * {{{
   * def mapForwardRespectsLayer[A](in: Inner[A])(forward: Inner ~> Inner, backward: Inner ~> Inner) = {
-  *   layer(forward(in)) <-> imapK(layer(in))(forward, backward)
+  *   layer(forward(in)) <-> layerImapK(layer(in))(forward, backward)
   * }
   * }}}
   *

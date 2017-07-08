@@ -4,7 +4,9 @@ package laws
 
 import cats.syntax.functor._
 
-class FunctorListenLaws[F[_], L]()(implicit val listenInstance: FunctorListen[F, L]) extends FunctorTellLaws[F, L]()(listenInstance.tell) {
+trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
+  implicit val listenInstance: FunctorListen[F, L]
+  override lazy val tellInstance = listenInstance.tell
   import listenInstance.{listen, listens, censor, pass}
   import listenInstance.tell._
 
@@ -28,7 +30,9 @@ class FunctorListenLaws[F[_], L]()(implicit val listenInstance: FunctorListen[F,
 }
 
 object FunctorListenLaws {
-  def apply[F[_], E](implicit listenInstance: FunctorListen[F, E]): FunctorListenLaws[F, E] = {
-    new FunctorListenLaws()
+  def apply[F[_], E](implicit instance0: FunctorListen[F, E]): FunctorListenLaws[F, E] = {
+    new FunctorListenLaws[F, E] {
+      implicit lazy val listenInstance: FunctorListen[F, E] = instance0
+    }
   }
 }

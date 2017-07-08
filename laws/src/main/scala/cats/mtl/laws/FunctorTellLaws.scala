@@ -4,7 +4,8 @@ package laws
 
 import cats.syntax.functor._
 
-class FunctorTellLaws[F[_], L]()(implicit val tellInstance: FunctorTell[F, L]) {
+trait FunctorTellLaws[F[_], L] {
+  implicit val tellInstance: FunctorTell[F, L]
   implicit val functor: Functor[F] = tellInstance.functor
 
   import tellInstance._
@@ -21,7 +22,9 @@ class FunctorTellLaws[F[_], L]()(implicit val tellInstance: FunctorTell[F, L]) {
 }
 
 object FunctorTellLaws {
-  def apply[F[_], L](implicit tell: FunctorTell[F, L]): FunctorTellLaws[F, L] = {
-    new FunctorTellLaws[F, L]()(tell)
+  def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellLaws[F, L] = {
+    new FunctorTellLaws[F, L] {
+      override val tellInstance: FunctorTell[F, L] = instance0
+    }
   }
 }

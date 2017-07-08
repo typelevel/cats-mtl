@@ -2,7 +2,8 @@ package cats
 package mtl
 package laws
 
-class FunctorLayerLaws[M[_], Inner[_]](implicit val functorLayerInstance: FunctorLayer[M, Inner]) {
+trait FunctorLayerLaws[M[_], Inner[_]] {
+  implicit val functorLayerInstance: FunctorLayer[M, Inner]
   implicit val functor: Functor[M] = functorLayerInstance.outerInstance
   implicit val functorInner: Functor[Inner] = functorLayerInstance.innerInstance
 
@@ -14,4 +15,10 @@ class FunctorLayerLaws[M[_], Inner[_]](implicit val functorLayerInstance: Functo
 
 }
 
-object FunctorLayerLaws
+object FunctorLayerLaws {
+  def apply[M[_], Inner[_]](implicit instance0: FunctorLayer[M, Inner]): FunctorLayerLaws[M, Inner] = {
+    new FunctorLayerLaws[M, Inner] {
+      val functorLayerInstance: FunctorLayer[M, Inner] = instance0
+    }
+  }
+}

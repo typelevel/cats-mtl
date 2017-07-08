@@ -2,6 +2,6 @@ package cats
 package mtl
 package laws
 
-class MonadLayerLaws
+trait MonadLayerLaws
 
 object MonadLayerLaws

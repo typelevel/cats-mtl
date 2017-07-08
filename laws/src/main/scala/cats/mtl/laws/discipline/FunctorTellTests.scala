@@ -7,8 +7,9 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 
-abstract class FunctorTellTests[F[_], L]()(implicit tell: FunctorTell[F, L]) extends Laws {
-  def laws: FunctorTellLaws[F, L] = new FunctorTellLaws[F, L]()
+trait FunctorTellTests[F[_], L] extends Laws {
+  implicit val tellInstance: FunctorTell[F, L]
+  def laws: FunctorTellLaws[F, L] = FunctorTellLaws[F, L]
 
   def functorTell[A: Arbitrary](implicit
                                     ArbFA: Arbitrary[F[A]],
@@ -27,3 +28,10 @@ abstract class FunctorTellTests[F[_], L]()(implicit tell: FunctorTell[F, L]) ext
 
 }
 
+object FunctorTellTests {
+  def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellTests[F, L] = {
+    new FunctorTellTests[F, L] with Laws {
+      override implicit val tellInstance: FunctorTell[F, L] = instance0
+    }
+  }
+}

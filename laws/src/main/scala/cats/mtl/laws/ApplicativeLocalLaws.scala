@@ -2,8 +2,8 @@ package cats
 package mtl
 package laws
 
-class ApplicativeLocalLaws[F[_], E]()(implicit val localInstance: ApplicativeLocal[F, E]) {
-
+trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
+  implicit val localInstance: ApplicativeLocal[F, E]
   import localInstance.{local, scope}
   import localInstance.ask._
   import localInstance.ask.applicative._
@@ -21,7 +21,10 @@ class ApplicativeLocalLaws[F[_], E]()(implicit val localInstance: ApplicativeLoc
 }
 
 object ApplicativeLocalLaws {
-  def apply[F[_], E](implicit localInstance: ApplicativeLocal[F, E]): ApplicativeLocalLaws[F, E] = {
-    new ApplicativeLocalLaws()
+  def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalLaws[F, E] = {
+    new ApplicativeLocalLaws[F, E] {
+      implicit val localInstance: ApplicativeLocal[F, E] = instance0
+      override implicit val askInstance: ApplicativeAsk[F, E] = instance0.ask
+    }
   }
 }

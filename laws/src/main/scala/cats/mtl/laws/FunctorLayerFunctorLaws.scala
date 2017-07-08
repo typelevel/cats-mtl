@@ -2,6 +2,21 @@ package cats
 package mtl
 package laws
 
-class FunctorLayerFunctorLaws
+trait FunctorLayerFunctorLaws[M[_], Inner[_]] extends FunctorLayerLaws[M, Inner] {
+  implicit val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]
+  import functorLayerFunctorInstance._
 
-object FunctorLayerFunctorLaws
+  def layerMapRespectsLayerImapK[A](ma: M[A])(forward: Inner ~> Inner,
+                                              backward: Inner ~> Inner): IsEq[M[A]] = {
+    layerImapK(ma)(forward, backward) <-> layerMapK(ma)(forward)
+  }
+}
+
+object FunctorLayerFunctorLaws {
+  def apply[M[_], Inner[_]](implicit instance0: FunctorLayerFunctor[M, Inner]): FunctorLayerFunctorLaws[M, Inner] = {
+    new FunctorLayerFunctorLaws[M, Inner] {
+      implicit val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner] = instance0
+      override implicit val functorLayerInstance: FunctorLayer[M, Inner] = instance0
+    }
+  }
+}

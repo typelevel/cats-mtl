@@ -4,12 +4,18 @@ package mtl
 /**
   * `FunctorLayerFunctor[M, Inner]` has two external laws:
   * {{{
-  * def layerMapRespectsLayer(in: Inner[A])(forward: Inner ~> Inner) = {
-  *   layer(forward(in)) <-> layerMap(layer(in))(forward)
-  * }
-  * def layerMapRespectsLayerImapK(ma: M[A])(forward: Inner ~> Inner,
+  *
+  * def layerMapRespectsLayerImapK[A](ma: M[A])(forward: Inner ~> Inner,
   *                                          backward: Inner ~> Inner) = {
-  *   layerIMapK(ma)(forward, backward) <-> layerMap(ma)(forward)
+  *   layerImapK(ma)(forward, backward) <-> layerMapK(ma)(forward)
+  * }
+  * }}}
+  *
+  * `FunctorLayerFunctor[M, Inner]` has one free law, that is,
+  * one law guaranteed by other laws and parametricity:
+  * {{{
+  * def layerMapRespectsLayer[A](in: Inner[A])(forward: Inner ~> Inner) = {
+  *   layer(forward(in)) <-> layerMapK(layer(in))(forward)
   * }
   * }}}
   */

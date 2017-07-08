@@ -5,9 +5,10 @@ package laws
 import cats.syntax.cartesian._
 import cats.syntax.functor._
 
-class ApplicativeAskLaws[F[_], E](implicit val askInstance: ApplicativeAsk[F, E]) {
-  implicit val applicative: Applicative[F] = askInstance.applicative
+trait ApplicativeAskLaws[F[_], E] {
+  implicit val askInstance: ApplicativeAsk[F, E]
   import askInstance._
+  implicit val applicative: Applicative[F] = askInstance.applicative
 
   // external laws
   def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] = {
@@ -25,7 +26,9 @@ class ApplicativeAskLaws[F[_], E](implicit val askInstance: ApplicativeAsk[F, E]
 }
 
 object ApplicativeAskLaws {
-  def apply[F[_], E](implicit askInstance: ApplicativeAsk[F, E]): ApplicativeAskLaws[F, E] = {
-    new ApplicativeAskLaws()
+  def apply[F[_], E](implicit instance0: ApplicativeAsk[F, E]): ApplicativeAskLaws[F, E] = {
+    new ApplicativeAskLaws[F, E] {
+      override val askInstance = instance0
+    }
   }
 }

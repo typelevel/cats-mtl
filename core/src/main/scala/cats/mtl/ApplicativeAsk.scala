@@ -11,8 +11,7 @@ package mtl
   *   (fa *> ask) <-> (ask <* fa)
   * } // ask "commutes" with all F[A].
   *   // this implies that Ask is purely for immutable environments,
-  *   // as in the Reader monad, and in particular not the State monad
-  *   // or Writer monad.
+  *   // as in the Reader monad and similar, and in particular not the State monad.
   * }}}
   *
   * `ApplicativeAsk[F, E]` has one internal law:
@@ -21,8 +20,9 @@ package mtl
   *   ask.map(f) <-> reader(f)
   * }
   * }}}
-  * Otherwise `ApplicativeAsk[F, E]` only denotes the availability of "immutable"
-  * `E` values in the `F[_]` context, which cannot be altered by previous `F[_]` effects.
+  *
+  * `ApplicativeAsk[F, E]` only denotes the availability of "immutable"
+  * `E` values in the `F[_]` context, which cannot be altered by `F[_]` effects.
   */
 trait ApplicativeAsk[F[_], E] extends Serializable {
   val applicative: Applicative[F]

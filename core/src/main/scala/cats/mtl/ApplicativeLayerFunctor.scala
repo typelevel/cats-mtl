@@ -2,15 +2,7 @@ package cats
 package mtl
 
 /**
-  * `ApplicativeLayerFunctor[M, Inner]` has two external laws:
-  * {{{
-  * def layerMapRespectsLayer(in: Inner[A])(forward: Inner ~> Inner) = {
-  *   layer(forward(in)) <-> layerMap(layer(in))(forward)
-  * }
-  * def layerMapRespectsLayerImapK(ma: M[A])(forward: Inner ~> Inner,
-  *                                          backward: Inner ~> Inner) = {
-  *   layerIMapK(ma)(forward, backward) <-> layerMap(layer(in))(forward)
-  * }
-  * }}}
+  * `ApplicativeLayerFunctor[M, Inner]` has no additional laws.
   */
-trait ApplicativeLayerFunctor[M[_], Inner[_]] extends ApplicativeLayer[M, Inner] with FunctorLayerFunctor[M, Inner] with Serializable
+trait ApplicativeLayerFunctor[M[_], Inner[_]] extends ApplicativeLayer[M, Inner]
+  with FunctorLayerFunctor[M, Inner] with Serializable
