@@ -16,3 +16,7 @@ trait MonadLayer[M[_], Inner[_]] extends ApplicativeLayer[M, Inner] with Seriali
   val outerInstance: Monad[M]
   val innerInstance: Monad[Inner]
 }
+
+object MonadLayer {
+  def apply[M[_], Inner[_]](implicit monadLayer: MonadLayer[M, Inner]): MonadLayer[M, Inner] = monadLayer
+}

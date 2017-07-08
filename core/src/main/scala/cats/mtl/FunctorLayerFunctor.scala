@@ -26,3 +26,7 @@ trait FunctorLayerFunctor[M[_], Inner[_]] extends FunctorLayer[M, Inner] with Se
   def layerImapK[A](ma: M[A])(forward: Inner ~> Inner, backward: Inner ~> Inner): M[A] =
     layerMapK(ma)(forward)
 }
+
+object FunctorLayerFunctor {
+  def apply[M[_], Inner[_]](implicit functorLayerFunctor: FunctorLayerFunctor[M, Inner]): FunctorLayerFunctor[M, Inner] = functorLayerFunctor
+}

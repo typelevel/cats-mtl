@@ -16,3 +16,7 @@ trait ApplicativeLayer[M[_], Inner[_]] extends FunctorLayer[M, Inner] with Seria
   val outerInstance: Applicative[M]
   val innerInstance: Applicative[Inner]
 }
+
+object ApplicativeLayer {
+  def apply[M[_], Inner[_]](implicit applicativeLayer: ApplicativeLayer[M, Inner]): ApplicativeLayer[M, Inner] = applicativeLayer
+}

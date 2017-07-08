@@ -28,7 +28,7 @@ trait ApplicativeAskLaws[F[_], E] {
 object ApplicativeAskLaws {
   def apply[F[_], E](implicit instance0: ApplicativeAsk[F, E]): ApplicativeAskLaws[F, E] = {
     new ApplicativeAskLaws[F, E] {
-      override val askInstance = instance0
+      override lazy val askInstance = instance0
     }
   }
 }

@@ -26,5 +26,6 @@ object MonadLayerControl {
   type Aux[M[_], Inner0[_], State0[_]] = MonadLayerControl[M, Inner0] {
     type State[A] = State0[A]
   }
+  def apply[M[_], Inner[_]](implicit monadLayerControl: MonadLayerControl[M, Inner]): MonadLayerControl[M, Inner] = monadLayerControl
 }
 

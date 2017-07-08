@@ -23,8 +23,8 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
 object ApplicativeLocalLaws {
   def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalLaws[F, E] = {
     new ApplicativeLocalLaws[F, E] {
-      implicit val localInstance: ApplicativeLocal[F, E] = instance0
-      override implicit val askInstance: ApplicativeAsk[F, E] = instance0.ask
+      lazy val localInstance: ApplicativeLocal[F, E] = instance0
+      override lazy val askInstance: ApplicativeAsk[F, E] = instance0.ask
     }
   }
 }

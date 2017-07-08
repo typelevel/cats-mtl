@@ -25,3 +25,7 @@ trait FunctorLayer[M[_], Inner[_]] extends Serializable {
   def layerImapK[A](ma: M[A])(forward: Inner ~> Inner,
                               backward: Inner ~> Inner): M[A]
 }
+
+object FunctorLayer {
+  def apply[M[_], Inner[_]](implicit functorLayer: FunctorLayer[M, Inner]): FunctorLayer[M, Inner] = functorLayer
+}

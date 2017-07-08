@@ -18,7 +18,7 @@ trait FunctorLayerLaws[M[_], Inner[_]] {
 object FunctorLayerLaws {
   def apply[M[_], Inner[_]](implicit instance0: FunctorLayer[M, Inner]): FunctorLayerLaws[M, Inner] = {
     new FunctorLayerLaws[M, Inner] {
-      val functorLayerInstance: FunctorLayer[M, Inner] = instance0
+      lazy val functorLayerInstance: FunctorLayer[M, Inner] = instance0
     }
   }
 }

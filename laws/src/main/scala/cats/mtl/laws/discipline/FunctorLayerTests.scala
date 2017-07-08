@@ -8,7 +8,8 @@ import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
 trait FunctorLayerTests[M[_], Inner[_]] extends Laws {
-  def laws: FunctorLayerLaws[M, Inner]
+  implicit val functorLayer: FunctorLayer[M, Inner]
+  def laws: FunctorLayerLaws[M, Inner] = FunctorLayerLaws[M, Inner]
 
   def functorLayer[A](implicit
                                  ArbFA: Arbitrary[Inner[A]],
@@ -27,7 +28,7 @@ trait FunctorLayerTests[M[_], Inner[_]] extends Laws {
 object FunctorLayerTests {
   def apply[M[_], Inner[_]](implicit instance0: FunctorLayer[M, Inner]): FunctorLayerTests[M, Inner] = {
     new FunctorLayerTests[M, Inner] with Laws {
-      override def laws: FunctorLayerLaws[M, Inner] = FunctorLayerLaws[M, Inner]
+      override lazy val functorLayer: FunctorLayer[M, Inner] = instance0
     }
   }
 }

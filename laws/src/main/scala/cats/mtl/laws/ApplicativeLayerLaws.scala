@@ -23,8 +23,8 @@ trait ApplicativeLayerLaws[M[_], Inner[_]] extends FunctorLayerLaws[M, Inner] {
 object ApplicativeLayerLaws {
   def apply[M[_], Inner[_]](implicit instance0: ApplicativeLayer[M, Inner]): ApplicativeLayerLaws[M, Inner] = {
     new ApplicativeLayerLaws[M, Inner] {
-      val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance0
-      override implicit val functorLayerInstance: FunctorLayer[M, Inner] = instance0
+      lazy val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance0
+      override implicit lazy val functorLayerInstance: FunctorLayer[M, Inner] = instance0
     }
   }
 }

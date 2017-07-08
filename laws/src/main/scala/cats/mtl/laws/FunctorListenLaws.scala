@@ -32,7 +32,7 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
 object FunctorListenLaws {
   def apply[F[_], E](implicit instance0: FunctorListen[F, E]): FunctorListenLaws[F, E] = {
     new FunctorListenLaws[F, E] {
-      implicit lazy val listenInstance: FunctorListen[F, E] = instance0
+      lazy val listenInstance: FunctorListen[F, E] = instance0
     }
   }
 }
