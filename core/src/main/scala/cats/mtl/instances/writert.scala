@@ -11,9 +11,7 @@ trait WriterTInstances extends WriterTInstances1 {
     new FunctorLayerFunctor[WriterTC[M, L]#l, M] {
       def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
 
-      val outerInstance: Functor[WriterTC[M, L]#l] = new Functor[WriterTC[M, L]#l] {
-        def map[A, B](fa: WriterT[M, L, A])(f: (A) => B): WriterT[M, L, B] = fa.map(f)
-      }
+      val outerInstance: Functor[WriterTC[M, L]#l] = WriterT.catsDataCoflatMapForWriterT[M, L]
       val innerInstance: Functor[M] = M
 
       def layer[A](inner: M[A]): WriterT[M, L, A] = {
