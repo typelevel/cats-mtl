@@ -6,8 +6,9 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 
-class ApplicativeLocalTests[F[_], E]()(implicit local: ApplicativeLocal[F, E]) extends ApplicativeAskTests()(local.ask) {
-  override def laws: ApplicativeLocalLaws[F, E] = new ApplicativeLocalLaws[F, E]()
+trait ApplicativeLocalTests[F[_], E] extends ApplicativeAskTests[F, E] {
+  implicit val localInstance: ApplicativeLocal[F, E]
+  override def laws: ApplicativeLocalLaws[F, E] = ApplicativeLocalLaws[F, E]
 
   def applicativeLocal[A: Arbitrary](implicit
                                      ArbFA: Arbitrary[F[A]],
@@ -28,5 +29,9 @@ class ApplicativeLocalTests[F[_], E]()(implicit local: ApplicativeLocal[F, E]) e
 }
 
 object ApplicativeLocalTests {
-  def apply[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeLocalTests[F, E] = new ApplicativeLocalTests[F, E]()(local)
+  def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalTests[F, E] =
+    new ApplicativeLocalTests[F, E] {
+      override lazy val localInstance: ApplicativeLocal[F, E] = instance0
+      override lazy val askInstance: ApplicativeAsk[F, E] = localInstance.ask
+    }
 }

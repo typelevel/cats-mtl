@@ -7,8 +7,9 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 
-abstract class ApplicativeAskTests[F[_], E]()(implicit ask: ApplicativeAsk[F, E]) extends Laws {
-  def laws: ApplicativeAskLaws[F, E] = new ApplicativeAskLaws[F, E]()
+trait ApplicativeAskTests[F[_], E] extends Laws {
+  implicit val askInstance: ApplicativeAsk[F, E]
+  def laws: ApplicativeAskLaws[F, E] = ApplicativeAskLaws[F, E]
 
   def applicativeAsk[A: Arbitrary](implicit
                                    ArbFA: Arbitrary[F[A]],
