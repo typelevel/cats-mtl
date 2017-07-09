@@ -1,5 +1,7 @@
-cats-mtl
-==========
+## cats-mtl
+
+[![Build Status](https://api.travis-ci.org/typelevel/cats.svg)](https://travis-ci.org/typelevel/cats)
+
 Transformer type classes for cats.
 
 Provides transformer type classes for cats' Monads, Applicatives and Functors.
