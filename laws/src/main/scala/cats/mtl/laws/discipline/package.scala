@@ -3,10 +3,10 @@ package mtl
 package laws
 
 import org.scalacheck.Prop
-import Prop._
+import cats.kernel.laws._
 
 package object discipline {
   implicit def catsLawsIsEqToProp[A: Eq](isEq: IsEq[A]): Prop = {
-    isEq.lhs ?= isEq.rhs
+    isEq.lhs ?== isEq.rhs
   }
 }

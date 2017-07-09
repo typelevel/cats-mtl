@@ -24,7 +24,7 @@ object ApplicativeLayerLaws {
   def apply[M[_], Inner[_]](implicit instance0: ApplicativeLayer[M, Inner]): ApplicativeLayerLaws[M, Inner] = {
     new ApplicativeLayerLaws[M, Inner] {
       lazy val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance0
-      override implicit lazy val functorLayerInstance: FunctorLayer[M, Inner] = instance0
+      override lazy val functorLayerInstance: FunctorLayer[M, Inner] = instance0
     }
   }
 }
