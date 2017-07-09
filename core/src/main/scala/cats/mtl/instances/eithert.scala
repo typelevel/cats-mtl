@@ -55,7 +55,7 @@ trait EitherTInstances0 extends EitherTInstances1 {
 
 trait EitherTInstances1 {
   implicit def eitherFunctorLayerFunctor[M[_], E]
-  (implicit M: Functor[M]): FunctorLayer[EitherTC[M, E]#l, M] = {
+  (implicit M: Functor[M]): FunctorLayerFunctor[EitherTC[M, E]#l, M] = {
     new FunctorLayerFunctor[EitherTC[M, E]#l, M] {
       def layerMapK[A](ma: EitherT[M, E, A])(trans: M ~> M): EitherT[M, E, A] = EitherT(trans(ma.value))
 

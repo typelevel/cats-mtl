@@ -4,10 +4,45 @@ package instances
 
 import cats.data.OptionT
 
-trait OptionTInstances extends OptionTInstancesLowPriority {
+trait OptionTInstances extends OptionTInstances1 {
+  implicit def optionFunctorLayerFunctor[M[_]]
+  (implicit M: Functor[M]): FunctorLayerFunctor[OptionTC[M]#l, M] = {
+    new FunctorLayerFunctor[OptionTC[M]#l, M] {
+      def layerMapK[A](ma: OptionT[M, A])(trans: M ~> M): OptionT[M, A] = OptionT(trans(ma.value))
+
+      val outerInstance: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorFilterForOptionT(M)
+      val innerInstance: Functor[M] = M
+
+      def layer[A](inner: M[A]): OptionT[M, A] = OptionT.liftF(inner)
+    }
+  }
+
 }
 
-private[instances] trait OptionTInstancesLowPriority {
+trait OptionTInstances1 extends OptionTInstances2 {
+  implicit def optionApplicativeLayerFunctor[M[_]]
+  (implicit M: Applicative[M]): ApplicativeLayerFunctor[OptionTC[M]#l, M] = {
+    new ApplicativeLayerFunctor[OptionTC[M]#l, M] {
+      def layerMapK[A](ma: OptionT[M, A])(trans: M ~> M): OptionT[M, A] = OptionT(trans(ma.value))
+
+      val outerInstance: Applicative[OptionTC[M]#l] = new Applicative[OptionTC[M]#l] {
+        def pure[A](x: A): OptionT[M, A] = OptionT.pure(x)
+
+        def ap[A, B](ff: OptionT[M, (A) => B])(fa: OptionT[M, A]): OptionT[M, B] = OptionT[M, B] {
+          M.map2(ff.value, fa.value){
+            case (Some(f), Some(a)) => Some(f(a))
+            case _ => None
+          }
+        }
+      }
+      val innerInstance: Applicative[M] = M
+
+      def layer[A](inner: M[A]): OptionT[M, A] = OptionT.liftF(inner)
+    }
+  }
+}
+
+private[instances] trait OptionTInstances2 {
   implicit final def optionMonadLayerControl[M[_]]
   (implicit M: Monad[M]): MonadLayerControl.Aux[OptionTC[M]#l, M, Option] = {
     new MonadLayerControl[OptionTC[M]#l, M] {
