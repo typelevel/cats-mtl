@@ -18,6 +18,8 @@ trait MonadLift[B[_], M[_]] extends Serializable {
 
 object MonadLift {
 
+  def apply[B[_], M[_]](implicit monadLift: MonadLift[B, M]): MonadLift[B, M] = monadLift
+
   implicit def liftId[M[_]]: MonadLift[M, M] = {
     new MonadLift[M, M] {
       def lift[A](ba: M[A]): M[A] = ba

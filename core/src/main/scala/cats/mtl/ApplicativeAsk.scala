@@ -34,6 +34,8 @@ trait ApplicativeAsk[F[_], E] extends Serializable {
 
 object ApplicativeAsk {
 
+  def apply[F[_], E](implicit applicativeAsk: ApplicativeAsk[F, E]): ApplicativeAsk[F, E] = applicativeAsk
+
   def ask[F[_], E](implicit ask: ApplicativeAsk[F, E]): F[E] = {
     ask.ask
   }

@@ -55,6 +55,8 @@ trait FunctorRaise[F[_], E] extends Serializable {
 }
 
 object FunctorRaise {
+  def apply[F[_], E](implicit functorRaise: FunctorRaise[F, E]): FunctorRaise[F, E] = functorRaise
+
   def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
     raise.raise(e)
 

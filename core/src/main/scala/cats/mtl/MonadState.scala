@@ -31,7 +31,7 @@ package mtl
   *
   */
 trait MonadState[F[_], S] extends Serializable {
-  val fMonad: Monad[F]
+  val monadInstance: Monad[F]
 
   def get: F[S]
 
@@ -57,4 +57,6 @@ object MonadState {
 
   def modify[F[_], S](f: S => S)(implicit state: MonadState[F, S]): F[Unit] =
     state.modify(f)
+
+  def apply[F[_], S](implicit monadState: MonadState[F, S]): MonadState[F, S] = monadState
 }
