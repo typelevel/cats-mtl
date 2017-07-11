@@ -16,12 +16,11 @@ trait MonadLayerFunctorTests[M[_], Inner[_]] extends MonadLayerTests[M, Inner] w
                                          ArbFAB: Arbitrary[A => Inner[B]],
                                          ArbFun: Arbitrary[Inner ~> Inner],
                                          EqMA: Eq[M[A]],
-                                         EqMB: Eq[M[B]]
-                                 ): RuleSet = {
+                                         EqMB: Eq[M[B]]): RuleSet = {
     new DefaultRuleSet(
       name = "monadLayerFunctor",
       parent = Some(applicativeLayer[A, B]),
-      "layer respects flatMap" -> ∀(laws.layerRespectsFlatMap[A, B](_: Inner[A])(_: A => Inner[B])),
+      "layer respects flatMap" -> ∀(laws.layerRespectsFlatMap[A, B](_: Inner[A])(_: A => Inner[B]))
     )
   }
 }
