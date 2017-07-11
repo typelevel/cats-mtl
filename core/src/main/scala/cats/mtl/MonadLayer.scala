@@ -2,12 +2,9 @@ package cats
 package mtl
 
 /**
-  * `MonadLayer` has two external laws:
+  * `MonadLayer` has one external law:
   * {{{
-  * def layerRespectsPure(a: A) = {
-  *   layer(a.pure[Inner]) <-> a.pure[M]
-  * }
-  * def layerRespectsFlatMap(m: Inner[A])(f: A => Inner[B]) = {
+  * def layerRespectsFlatMap[A, B](m: Inner[A])(f: A => Inner[B]) = {
   *   layer(m).flatMap(f andThen layer) <-> layer(m.flatMap(f))
   * }
   * }}}

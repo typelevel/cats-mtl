@@ -28,12 +28,12 @@ trait ApplicativeLayerFunctorTests[M[_], Inner[_]] extends ApplicativeLayerTests
 }
 
 object ApplicativeLayerFunctorTests {
-  def apply[M[_], Inner[_]](implicit instance0: ApplicativeLayerFunctor[M, Inner], functorLayerFunctorInstance0: FunctorLayerFunctor[M, Inner]): ApplicativeLayerFunctorTests[M, Inner] = {
+  def apply[M[_], Inner[_]](implicit instance0: ApplicativeLayerFunctor[M, Inner]): ApplicativeLayerFunctorTests[M, Inner] = {
     new ApplicativeLayerFunctorTests[M, Inner] with Laws {
-      override lazy val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner] = instance0
-      override lazy val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner] = instance0
-      override lazy val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance0
-      override lazy val functorLayer: FunctorLayer[M, Inner] = instance0
+      override val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner] = instance0
+      override val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner] = instance0
+      override val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance0
+      override val functorLayer: FunctorLayer[M, Inner] = instance0
     }
   }
 }

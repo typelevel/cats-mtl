@@ -24,7 +24,7 @@ trait FunctorTellLaws[F[_], L] {
 object FunctorTellLaws {
   def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellLaws[F, L] = {
     new FunctorTellLaws[F, L] {
-      override lazy val tellInstance: FunctorTell[F, L] = instance0
+      override val tellInstance: FunctorTell[F, L] = instance0
     }
   }
 }

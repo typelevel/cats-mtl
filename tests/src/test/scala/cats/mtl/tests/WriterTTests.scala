@@ -24,12 +24,21 @@ class WriterTTests extends BaseSuite {
     SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
 
   {
+    implicit val monadLayerFunctor: MonadLayerFunctor[WriterTC[Option, String]#l, Option] =
+      cats.mtl.instances.writert.writerMonadLayerControl[Option, String]
+    checkAll("WriterT[Option, String, ?]",
+      MonadLayerFunctorTests[WriterTC[Option, String]#l, Option].monadLayerFunctor[Boolean, Boolean])
+    checkAll("MonadLayerFunctor[WriterT[Option, String, ?], Option]",
+      SerializableTests.serializable(monadLayerFunctor))
+  }
+
+  {
     implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[WriterTC[Option, String]#l, Option] =
       cats.mtl.instances.writert.writerApplicativeLayerFunctor[Option, String]
     checkAll("WriterT[Option, String, ?]",
       ApplicativeLayerFunctorTests[WriterTC[Option, String]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
     checkAll("ApplicativeLayerFunctor[WriterT[Option, String, ?], Option]",
-    SerializableTests.serializable(applicativeLayerFunctor))
+      SerializableTests.serializable(applicativeLayerFunctor))
   }
 
   {

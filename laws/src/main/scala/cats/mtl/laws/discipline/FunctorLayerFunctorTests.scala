@@ -20,7 +20,7 @@ trait FunctorLayerFunctorTests[M[_], Inner[_]] extends FunctorLayerTests[M, Inne
     new DefaultRuleSet(
       name = "functorLayerFunctor",
       parent = Some(functorLayer[A]),
-      "map respects layer" -> ∀(laws.layerMapRespectsLayerImapK[A](_: M[A])(_: Inner ~> Inner, _: Inner ~> Inner))
+      "layerMapK respects layerImapK" -> ∀(laws.layerMapRespectsLayerImapK[A](_: M[A])(_: Inner ~> Inner, _: Inner ~> Inner))
     )
   }
 

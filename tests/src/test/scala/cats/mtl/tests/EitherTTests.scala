@@ -19,12 +19,21 @@ class EitherTTests extends BaseSuite {
     }, FunctionK.id[Option]))
 
   {
+    implicit val monadLayerFunctor: MonadLayerFunctor[EitherTC[Option, String]#l, Option] =
+      cats.mtl.instances.eithert.eitherMonadLayerControl[Option, String]
+    checkAll("EitherT[Option, String, ?]",
+      MonadLayerFunctorTests[EitherTC[Option, String]#l, Option].monadLayerFunctor[Boolean, Boolean])
+    checkAll("MonadLayerFunctor[EitherT[Option, String, ?], Option]",
+      SerializableTests.serializable(monadLayerFunctor))
+  }
+
+  {
     implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[EitherTC[Option, String]#l, Option] =
       cats.mtl.instances.eithert.eitherApplicativeLayerFunctor[Option, String]
     checkAll("EitherT[Option, String, ?]",
       ApplicativeLayerFunctorTests[EitherTC[Option, String]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
     checkAll("ApplicativeLayerFunctor[EitherT[Option, String, ?], Option]",
-    SerializableTests.serializable(applicativeLayerFunctor))
+      SerializableTests.serializable(applicativeLayerFunctor))
   }
 
   {

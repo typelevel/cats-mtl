@@ -23,6 +23,15 @@ class ReaderTTests extends BaseSuite {
     Eq.by((x: (Kleisli[F, A, B])) => x.run)
 
   {
+    implicit val monadLayerFunctor: MonadLayerFunctor[ReaderTC[Option, String]#l, Option] =
+      cats.mtl.instances.readert.readerMonadLayerControl[Option, String]
+    checkAll("ReaderT[Option, String, ?]",
+      MonadLayerFunctorTests[ReaderTC[Option, String]#l, Option].monadLayerFunctor[Boolean, Boolean])
+    checkAll("MonadLayerFunctor[ReaderT[Option, String, ?], Option]",
+      SerializableTests.serializable(monadLayerFunctor))
+  }
+
+  {
     implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[ReaderTC[Option, String]#l, Option] =
       cats.mtl.instances.readert.readerApplicativeLayerFunctor[Option, String]
     checkAll("ReaderT[Option, String, ?]",

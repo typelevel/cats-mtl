@@ -19,12 +19,21 @@ class OptionTTests extends BaseSuite {
     }, FunctionK.id[Option]))
 
   {
+    implicit val monadLayerFunctor: MonadLayerFunctor[OptionTC[Option]#l, Option] =
+      cats.mtl.instances.optiont.optionMonadLayerControl[Option]
+    checkAll("OptionT[Option, String, ?]",
+      MonadLayerFunctorTests[OptionTC[Option]#l, Option].monadLayerFunctor[Boolean, Boolean])
+    checkAll("MonadLayerFunctor[OptionT[Option, String, ?], Option]",
+      SerializableTests.serializable(monadLayerFunctor))
+  }
+
+  {
     implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[OptionTC[Option]#l, Option] =
       cats.mtl.instances.optiont.optionApplicativeLayerFunctor[Option]
     checkAll("OptionT[Option, String, ?]",
       ApplicativeLayerFunctorTests[OptionTC[Option]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
     checkAll("ApplicativeLayerFunctor[OptionT[Option, String, ?], Option]",
-    SerializableTests.serializable(applicativeLayerFunctor))
+      SerializableTests.serializable(applicativeLayerFunctor))
   }
 
   {

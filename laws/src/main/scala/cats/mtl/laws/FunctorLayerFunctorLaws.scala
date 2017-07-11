@@ -3,7 +3,7 @@ package mtl
 package laws
 
 trait FunctorLayerFunctorLaws[M[_], Inner[_]] extends FunctorLayerLaws[M, Inner] {
-  implicit val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]
+  val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]
   import functorLayerFunctorInstance._
 
   def layerMapRespectsLayerImapK[A](ma: M[A])(forward: Inner ~> Inner,

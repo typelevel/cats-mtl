@@ -6,7 +6,6 @@ import cats.syntax.functor._
 
 trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
   implicit val listenInstance: FunctorListen[F, L]
-  override lazy val tellInstance = listenInstance.tell
   import listenInstance.{listen, listens, censor, pass}
   import listenInstance.tell._
 
@@ -32,7 +31,8 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
 object FunctorListenLaws {
   def apply[F[_], E](implicit instance0: FunctorListen[F, E]): FunctorListenLaws[F, E] = {
     new FunctorListenLaws[F, E] {
-      lazy val listenInstance: FunctorListen[F, E] = instance0
+      override lazy val listenInstance: FunctorListen[F, E] = instance0
+      override lazy val tellInstance: FunctorTell[F, E] = instance0.tell
     }
   }
 }

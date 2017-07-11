@@ -4,8 +4,6 @@ package laws
 
 trait FunctorLayerLaws[M[_], Inner[_]] {
   implicit val functorLayerInstance: FunctorLayer[M, Inner]
-  implicit val functor: Functor[M] = functorLayerInstance.outerInstance
-  implicit val functorInner: Functor[Inner] = functorLayerInstance.innerInstance
 
   import functorLayerInstance._
 
