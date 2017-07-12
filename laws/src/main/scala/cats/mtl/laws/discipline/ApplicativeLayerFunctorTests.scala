@@ -8,19 +8,22 @@ import org.typelevel.discipline.Laws
 
 trait ApplicativeLayerFunctorTests[M[_], Inner[_]] extends ApplicativeLayerTests[M, Inner] with FunctorLayerFunctorTests[M, Inner] {
   implicit val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner]
+
   override def laws: ApplicativeLayerFunctorLaws[M, Inner] = ApplicativeLayerFunctorLaws[M, Inner]
+
   def applicativeLayerFunctor[A: Arbitrary, B](implicit
-                                    ArbMA: Arbitrary[M[A]],
-                                    ArbFA: Arbitrary[Inner[A]],
-                                    ArbFAB: Arbitrary[Inner[A => B]],
-                                    ArbFun: Arbitrary[Inner ~> Inner],
-                                    EqMA: Eq[M[A]],
-                                    EqMB: Eq[M[B]]
-                                   ): RuleSet = {
+                                               ArbMA: Arbitrary[M[A]],
+                                               ArbFA: Arbitrary[Inner[A]],
+                                               ArbFAB: Arbitrary[Inner[A => B]],
+                                               ArbFun: Arbitrary[Inner ~> Inner],
+                                               EqMA: Eq[M[A]],
+                                               EqMB: Eq[M[B]]
+                                              ): RuleSet = {
     new RuleSet {
       val name = "applicativeLayerFunctor"
       val parents = Seq(applicativeLayer[A, B], functorLayerFunctor[A])
       val props = Seq.empty
+
       def bases: Seq[(String, Laws#RuleSet)] = Seq.empty
     }
   }
