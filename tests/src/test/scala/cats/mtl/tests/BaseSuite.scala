@@ -42,6 +42,8 @@ abstract class BaseSuite extends FunSuite
   protected type WriterTIntId[A] = WriterT[Id, Vector[Int], A]
   protected type WriterTStrWriterTInt[A] = WriterTStr[WriterTIntId, A]
   protected type WriterTStrTupleInt[A] = WriterTStr[TupleC[Vector[Int]]#l, A]
+  protected type ReaderTStringOverWriterTStringOverOption[A] = ReaderT[WriterTC[Option, String]#l, List[Int], A]
+  protected type StateTStringOverWriterTStringOverOption[A] = StateT[WriterTC[Option, String]#l, List[Int], A]
 
   // disable Eq syntax (by making `catsSyntaxEq` not implicit), since it collides
   // with scalactic's equality
