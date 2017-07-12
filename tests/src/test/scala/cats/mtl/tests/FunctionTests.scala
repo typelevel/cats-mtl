@@ -15,6 +15,6 @@ import cats.mtl.laws.discipline.ApplicativeLocalTests
 class FunctionTests extends BaseSuite {
   checkAll("String => ?",
     ApplicativeLocalTests[FunctionC[String]#l, String](mtl.instances.local.localFunction[String]).applicativeLocal[String])
-  checkAll("ApplicativeListen[String => ?, String]",
+  checkAll("FunctorLocal[String => ?, String]",
     SerializableTests.serializable(mtl.instances.local.localFunction[String]))
 }

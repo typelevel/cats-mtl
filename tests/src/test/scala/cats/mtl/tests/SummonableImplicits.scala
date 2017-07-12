@@ -26,9 +26,9 @@ final class SummonableImplicits extends BaseSuite {
 
       assertCompiles("implicitly[FunctorListen[WriterTStrWriterTInt, String]]")
 
-      assertTypeError("implicitly[FunctorListen[WriterTStrWriterTInt, Vector[Int]]]")
+      assertCompiles("implicitly[FunctorListen[WriterTStrWriterTInt, Vector[Int]]]")
 
-      assertTypeError("implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]")
+      assertCompiles("implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]")
     }
 
     test("FunctorRaise") {

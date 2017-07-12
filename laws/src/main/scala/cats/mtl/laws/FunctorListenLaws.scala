@@ -6,7 +6,7 @@ import cats.syntax.functor._
 
 trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
   implicit val listenInstance: FunctorListen[F, L]
-  import listenInstance.{listen, listens, censor, pass}
+  import listenInstance.{listen, listens}
   import listenInstance.tell._
 
   // external laws
@@ -21,10 +21,6 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
   // internal laws:
   def listensIsListenThenMap[A, B](fa: F[A], f: L => B): IsEq[F[(A, B)]] = {
     listens(fa)(f) <-> listen(fa).map { case (a, l) => (a, f(l)) }
-  }
-
-  def censorIsPassTupled[A](fa: F[A], f: L => L): IsEq[F[A]] = {
-    censor(fa)(f) <-> pass(fa.map(a => (a, f)))
   }
 }
 

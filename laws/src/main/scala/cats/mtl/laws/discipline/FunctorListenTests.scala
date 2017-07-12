@@ -26,8 +26,7 @@ trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
       parent = Some(functorTell[A]),
       "listen respects tell" -> ∀(laws.listenRespectsTell _),
       "listen adds no effects" -> ∀(laws.listenAddsNoEffects[A] _),
-      "listens is listen then map" -> ∀(laws.listensIsListenThenMap[A, B] _),
-      "censor is pass tupled" -> ∀(laws.censorIsPassTupled[A] _)
+      "listens is listen then map" -> ∀(laws.listensIsListenThenMap[A, B] _)
     )
   }
 

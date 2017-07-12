@@ -52,7 +52,7 @@ class ReaderTTests extends BaseSuite {
   {
     checkAll("ReaderT[Option, String, ?]",
       ApplicativeLocalTests[ReaderTC[Option, String]#l, String](mtl.instances.local.localReader[Option, String]).applicativeLocal[String])
-    checkAll("ApplicativeListen[ReaderT[Option, String, ?], String]",
+    checkAll("FunctorLocal[ReaderT[Option, String, ?], String]",
       SerializableTests.serializable(mtl.instances.local.localFunction[String]))
   }
 }
