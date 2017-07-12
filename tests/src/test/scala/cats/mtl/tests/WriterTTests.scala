@@ -8,7 +8,6 @@ import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
 import cats.mtl.instances.listen._
-import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline._
 import org.scalacheck._
@@ -31,21 +30,23 @@ class WriterTTests extends BaseSuite {
       s => state.run(s))
   }
 
-  checkAll("WriterT[Option, String, String]",
-    FunctorListenTests[WriterTC[Option, String]#l, String].functorListen[String, String])
-  checkAll("FunctorListen[WriterT[Option, String, ?]]",
-    SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
-
   locally {
     import cats.mtl.instances.all._
 
     type WriterTStringOverWriterTStringOverOption[A] = WriterT[WriterTC[Option, String]#l, List[Int], A]
 
+    implicit val listen = FunctorListen[WriterTStringOverWriterTStringOverOption, String]
+    implicit val arb = cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[WriterTC[Option, String]#l, List[Int], String](
+      cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[Option, String, (List[Int], String)]
+    )
+    implicit val eq = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], String](
+      WriterT.catsDataEqForWriterT[Option, String, (List[Int], String)]
+    )
 // this diverges in 2.10. Maybe just don't promise it?
-//    checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
-//      FunctorListenTests[WriterTStringOverWriterTStringOverOption, String].functorListen[String, String])
+    checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
+      FunctorListenTests[WriterTStringOverWriterTStringOverOption, String](listen).functorListen[String, String])
     checkAll("FunctorListen[WriterT[WriterTC[Option, String]#l, List[Int], String]",
-      SerializableTests.serializable(FunctorListen[WriterTStringOverWriterTStringOverOption, String]))
+      SerializableTests.serializable(listen))
 
     checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
       FunctorListenTests[ReaderTStringOverWriterTStringOverOption, String].functorListen[String, String])
@@ -58,30 +59,39 @@ class WriterTTests extends BaseSuite {
       SerializableTests.serializable(FunctorListen[StateTStringOverWriterTStringOverOption, String]))
   }
 
-  {
-    implicit val monadLayerControl: MonadLayerControl[WriterTC[Option, String]#l, Option] =
-      cats.mtl.instances.writert.writerMonadLayerControl[Option, String]
-    checkAll("WriterT[Option, String, ?]",
-      MonadLayerControlTests[WriterTC[Option, String]#l, Option].monadLayerControl[Boolean, Boolean])
-    checkAll("MonadLayerControl[WriterT[Option, String, ?], Option]",
-      SerializableTests.serializable(monadLayerControl))
-  }
+  locally {
+    import cats.laws.discipline.arbitrary._
 
-  {
-    implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[WriterTC[Option, String]#l, Option] =
-      cats.mtl.instances.writert.writerApplicativeLayerFunctor[Option, String]
-    checkAll("WriterT[Option, String, ?]",
-      ApplicativeLayerFunctorTests[WriterTC[Option, String]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
-    checkAll("ApplicativeLayerFunctor[WriterT[Option, String, ?], Option]",
-      SerializableTests.serializable(applicativeLayerFunctor))
-  }
+    checkAll("WriterT[Option, String, String]",
+      FunctorListenTests[WriterTC[Option, String]#l, String].functorListen[String, String])
+    checkAll("FunctorListen[WriterT[Option, String, ?]]",
+      SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
 
-  {
-    implicit val functorLayerFunctor: FunctorLayerFunctor[WriterTC[Option, String]#l, Option] =
-      cats.mtl.instances.writert.writerFunctorLayerFunctor[Option, String]
-    checkAll("WriterT[Option, String, ?]",
-      FunctorLayerFunctorTests[WriterTC[Option, String]#l, Option].functorLayerFunctor[Boolean])
-    checkAll("FunctorLayerFunctor[WriterT[Option, String, ?], Option]",
-      SerializableTests.serializable(functorLayerFunctor))
+    {
+      implicit val monadLayerControl: MonadLayerControl[WriterTC[Option, String]#l, Option] =
+        cats.mtl.instances.writert.writerMonadLayerControl[Option, String]
+      checkAll("WriterT[Option, String, ?]",
+        MonadLayerControlTests[WriterTC[Option, String]#l, Option].monadLayerControl[Boolean, Boolean])
+      checkAll("MonadLayerControl[WriterT[Option, String, ?], Option]",
+        SerializableTests.serializable(monadLayerControl))
+    }
+
+    {
+      implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[WriterTC[Option, String]#l, Option] =
+        cats.mtl.instances.writert.writerApplicativeLayerFunctor[Option, String]
+      checkAll("WriterT[Option, String, ?]",
+        ApplicativeLayerFunctorTests[WriterTC[Option, String]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
+      checkAll("ApplicativeLayerFunctor[WriterT[Option, String, ?], Option]",
+        SerializableTests.serializable(applicativeLayerFunctor))
+    }
+
+    {
+      implicit val functorLayerFunctor: FunctorLayerFunctor[WriterTC[Option, String]#l, Option] =
+        cats.mtl.instances.writert.writerFunctorLayerFunctor[Option, String]
+      checkAll("WriterT[Option, String, ?]",
+        FunctorLayerFunctorTests[WriterTC[Option, String]#l, Option].functorLayerFunctor[Boolean])
+      checkAll("FunctorLayerFunctor[WriterT[Option, String, ?], Option]",
+        SerializableTests.serializable(functorLayerFunctor))
+    }
   }
 }
