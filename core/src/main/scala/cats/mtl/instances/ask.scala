@@ -19,6 +19,10 @@ trait AskInstances extends AskInstancesLowPriority1 {
     }
   }
 
+  implicit final def askReaderId[E]: ApplicativeAsk[ReaderTC[Id, E]#l, E] = {
+    askReader[Id, E]
+  }
+
 }
 
 private[instances] trait AskInstancesLowPriority1 {

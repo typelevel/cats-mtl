@@ -3,12 +3,11 @@ package mtl
 package instances
 
 import cats.data.ReaderT
-import cats.mtl.{ApplicativeAsk, ApplicativeLocal}
 
 trait LocalInstances extends LocalLowPriorityInstances {
   implicit final def localInd[M[_], Inner[_], E](implicit ml: MonadLayer[M, Inner],
-                                                   under: ApplicativeLocal[Inner, E]
-                                                  ): ApplicativeLocal[M, E] = {
+                                                 under: ApplicativeLocal[Inner, E]
+                                                ): ApplicativeLocal[M, E] = {
     new ApplicativeLocal[M, E] {
       val ask: ApplicativeAsk[M, E] =
         instances.ask.askLayerInd[M, Inner, E](ml, under.ask)
@@ -33,6 +32,11 @@ trait LocalInstances extends LocalLowPriorityInstances {
 
     }
   }
+
+  implicit final def localReaderId[E]: ApplicativeLocal[ReaderTC[Id, E]#l, E] = {
+    localReader[Id, E]
+  }
+
 }
 
 private[instances] trait LocalLowPriorityInstances {

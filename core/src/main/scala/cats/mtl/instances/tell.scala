@@ -19,6 +19,12 @@ trait TellInstances extends TellInstancesLowPriority1 {
       def tuple[A](ta: (L, A)): M[A] = lift.layer(under.tuple(ta))
     }
   }
+
+  implicit final def tellWriterId[L]
+  (implicit L: Monoid[L]
+  ): FunctorTell[WriterTC[Id, L]#l, L] = {
+    tellWriter[Id, L]
+  }
 }
 
 private[instances] trait TellInstancesLowPriority1 {

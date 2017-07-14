@@ -2,12 +2,11 @@ package cats
 package mtl
 package tests
 
-import cats._
 import cats.arrow.FunctionK
 import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
-import cats.mtl.instances.listen._
+import cats.mtl.instances.local._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline._
@@ -21,6 +20,12 @@ class ReaderTTests extends BaseSuite {
 
   implicit def eqKleisli[F[_], A, B](implicit arb: Arbitrary[A], ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] =
     Eq.by((x: (Kleisli[F, A, B])) => x.run)
+
+  implicit def eqKleisliId[A, B](implicit arb: Arbitrary[A], ev: Eq[B]): Eq[Kleisli[Id, A, B]] =
+    eqKleisli[Id, A, B]
+
+  implicit def catsLawsArbitraryForKleisliId[A, B](implicit F: Arbitrary[A => B]): Arbitrary[Kleisli[Id, A, B]] =
+    Arbitrary(F.arbitrary.map(Kleisli[Id, A, B]))
 
   {
     implicit val monadLayerControl: MonadLayerControl[ReaderTC[Option, String]#l, Option] =
@@ -49,10 +54,20 @@ class ReaderTTests extends BaseSuite {
       SerializableTests.serializable(functorLayerFunctor))
   }
 
+  type ReaderTStringOverReaderTStringOverOption[A] = ReaderT[ReaderTC[Option, String]#l, Int, A]
+
+  {
+    checkAll("Reader[String, ?]",
+      ApplicativeLocalTests[ReaderTC[Id, String]#l, String].applicativeLocal[String])
+    checkAll("FunctorLocal[Reader[String, ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[ReaderTC[Id, String]#l, String]))
+  }
+
   {
     checkAll("ReaderT[Option, String, ?]",
-      ApplicativeLocalTests[ReaderTC[Option, String]#l, String](mtl.instances.local.localReader[Option, String]).applicativeLocal[String])
+      ApplicativeLocalTests[ReaderTC[Option, String]#l, String].applicativeLocal[String])
     checkAll("FunctorLocal[ReaderT[Option, String, ?], String]",
-      SerializableTests.serializable(mtl.instances.local.localFunction[String]))
+      SerializableTests.serializable(ApplicativeLocal[ReaderTC[Option, String]#l, String]))
   }
+
 }

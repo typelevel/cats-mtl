@@ -20,6 +20,10 @@ trait StateInstances extends StateInstancesLowPriority1 {
       def modify(f: E => E): M[Unit] = ml.layer(under.modify(f))
     }
   }
+
+  implicit final def stateIdState[S]: MonadState[StateTC[Id, S]#l, S] = {
+    stateState[Id, S]
+  }
 }
 
 private[instances] trait StateInstancesLowPriority1 {
