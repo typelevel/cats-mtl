@@ -30,33 +30,56 @@ class WriterTTests extends BaseSuite {
       s => state.run(s))
   }
 
+  type WriterTStringOverWriterTStringOverOption[A] = WriterT[WriterTC[Option, String]#l, List[Int], A]
+
   locally {
-    import cats.mtl.instances.all._
+    // I know, this is unbelievably odd.
+    // The reason this is in its own scope is that the Arbitrary and Eq instance induction for WriterT
+    // is detected as "divergent" by 2.10, so I have to isolate the *rest* of the imports in the file,
+    locally {
+      import cats.mtl.instances.listen._, cats.mtl.instances.writert._
+//      implicit val listen = FunctorListen[WriterTStringOverWriterTStringOverOption, String]
+      implicit val arb = cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[WriterTC[Option, String]#l, List[Int], String](
+        cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[Option, String, (List[Int], String)]
+      )
+      implicit val eqS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], String](
+        WriterT.catsDataEqForWriterT[Option, String, (List[Int], String)]
+      )
+      implicit val eqSS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], (String, String)](
+        WriterT.catsDataEqForWriterT[Option, String, (List[Int], (String, String))]
+      )
+      implicit val eqUS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], (Unit, String)](
+        WriterT.catsDataEqForWriterT[Option, String, (List[Int], (Unit, String))]
+      )
+      implicit val eqU = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], Unit](
+        WriterT.catsDataEqForWriterT[Option, String, (List[Int], Unit)]
+      )
+      // this diverges in 2.10. Maybe just don't promise it?
+      checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
+        FunctorListenTests[WriterTStringOverWriterTStringOverOption, String].functorListen[String, String](
+          implicitly, implicitly,
+          implicitly, implicitly, implicitly, implicitly,
+          implicitly, implicitly, implicitly, implicitly
+        )
+      )
+      checkAll("FunctorListen[WriterT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(FunctorListen[WriterTStringOverWriterTStringOverOption, String]))
+    }
 
-    type WriterTStringOverWriterTStringOverOption[A] = WriterT[WriterTC[Option, String]#l, List[Int], A]
+    locally {
+      import cats.laws.discipline.arbitrary._
+      import cats.mtl.instances.all._
 
-    implicit val listen = FunctorListen[WriterTStringOverWriterTStringOverOption, String]
-    implicit val arb = cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[WriterTC[Option, String]#l, List[Int], String](
-      cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[Option, String, (List[Int], String)]
-    )
-    implicit val eq = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], String](
-      WriterT.catsDataEqForWriterT[Option, String, (List[Int], String)]
-    )
-// this diverges in 2.10. Maybe just don't promise it?
-    checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
-      FunctorListenTests[WriterTStringOverWriterTStringOverOption, String](listen).functorListen[String, String])
-    checkAll("FunctorListen[WriterT[WriterTC[Option, String]#l, List[Int], String]",
-      SerializableTests.serializable(listen))
+      checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
+        FunctorListenTests[ReaderTStringOverWriterTStringOverOption, String].functorListen[String, String])
+      checkAll("FunctorListen[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(FunctorListen[ReaderTStringOverWriterTStringOverOption, String]))
 
-    checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-      FunctorListenTests[ReaderTStringOverWriterTStringOverOption, String].functorListen[String, String])
-    checkAll("FunctorListen[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-      SerializableTests.serializable(FunctorListen[ReaderTStringOverWriterTStringOverOption, String]))
-
-    checkAll("StateT[WriterTC[Option, String]#l, List[Int], String]",
-      FunctorListenTests[StateTStringOverWriterTStringOverOption, String].functorListen[String, String])
-    checkAll("FunctorListen[StateT[WriterTC[Option, String]#l, List[Int], String]",
-      SerializableTests.serializable(FunctorListen[StateTStringOverWriterTStringOverOption, String]))
+      checkAll("StateT[WriterTC[Option, String]#l, List[Int], String]",
+        FunctorListenTests[StateTStringOverWriterTStringOverOption, String].functorListen[String, String])
+      checkAll("FunctorListen[StateT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(FunctorListen[StateTStringOverWriterTStringOverOption, String]))
+    }
   }
 
   locally {
