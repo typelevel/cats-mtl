@@ -6,9 +6,9 @@ import cats.arrow.FunctionK
 import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
-import cats.mtl.instances.local._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
+import cats.mtl.instances.local._
 import cats.mtl.laws.discipline._
 import org.scalacheck._
 
@@ -26,6 +26,15 @@ class ReaderTTests extends BaseSuite {
 
   implicit def catsLawsArbitraryForKleisliId[A, B](implicit F: Arbitrary[A => B]): Arbitrary[Kleisli[Id, A, B]] =
     Arbitrary(F.arbitrary.map(Kleisli[Id, A, B]))
+
+  implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
+    Arbitrary(F.arbitrary.map(StateT.applyF))
+  }
+
+  implicit def stateTEq[F[_], S, A](implicit S: Arbitrary[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {
+    Eq.by[StateT[F, S, A], S => F[(S, A)]](state =>
+      s => state.run(s))
+  }
 
   {
     implicit val monadLayerControl: MonadLayerControl[ReaderTC[Option, String]#l, Option] =
@@ -54,8 +63,6 @@ class ReaderTTests extends BaseSuite {
       SerializableTests.serializable(functorLayerFunctor))
   }
 
-  type ReaderTStringOverReaderTStringOverOption[A] = ReaderT[ReaderTC[Option, String]#l, Int, A]
-
   {
     checkAll("Reader[String, ?]",
       ApplicativeLocalTests[ReaderTC[Id, String]#l, String].applicativeLocal[String])
@@ -68,6 +75,40 @@ class ReaderTTests extends BaseSuite {
       ApplicativeLocalTests[ReaderTC[Option, String]#l, String].applicativeLocal[String])
     checkAll("FunctorLocal[ReaderT[Option, String, ?], String]",
       SerializableTests.serializable(ApplicativeLocal[ReaderTC[Option, String]#l, String]))
+  }
+
+  {
+    import mtl.instances.readert.readerMonadLayerControl
+    import mtl.instances.eithert.eitherMonadLayerControl
+    import mtl.instances.statet.stateMonadLayerControl
+    import mtl.instances.optiont.optionMonadLayerControl
+    import mtl.instances.writert.writerMonadLayerControl
+
+    checkAll("ReaderT[ReaderT[Option, String, ?], Int, ?]",
+      ApplicativeLocalTests[ReaderTIntOverReaderTStringOverOption, String].applicativeLocal[String])
+    checkAll("FunctorLocal[ReaderT[ReaderT[Option, String, ?], Int, ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[ReaderTIntOverReaderTStringOverOption, String]))
+
+    checkAll("WriterT[ReaderT[Option, String, ?], Int, ?]",
+      ApplicativeLocalTests[WriterTIntOverReaderTStringOverOption, String].applicativeLocal[String])
+    checkAll("FunctorLocal[WriterT[ReaderT[Option, String, ?], Int, ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[WriterTIntOverReaderTStringOverOption, String]))
+
+    checkAll("OptionT[ReaderT[Option, String, ?], ?]",
+      ApplicativeLocalTests[OptionTOverReaderTStringOverOption, String].applicativeLocal[String])
+    checkAll("FunctorLocal[OptionT[ReaderT[Option, String, ?], ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[OptionTOverReaderTStringOverOption, String]))
+
+    checkAll("EitherT[ReaderT[Option, String, ?], String, ?]",
+      ApplicativeLocalTests[EitherTIntOverReaderTStringOverOption, String].applicativeLocal[String])
+    checkAll("FunctorLocal[EitherT[ReaderT[Option, String, ?], Int, ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[EitherTIntOverReaderTStringOverOption, String]))
+
+    checkAll("StateT[ReaderT[Option, String, ?], Int, ?]",
+      ApplicativeLocalTests[StateTIntOverReaderTStringOverOption, String].applicativeLocal[String])
+    checkAll("FunctorLocal[StateT[ReaderT[Option, String, ?], Int, ?], String]",
+      SerializableTests.serializable(ApplicativeLocal[StateTIntOverReaderTStringOverOption, String]))
+
   }
 
 }
