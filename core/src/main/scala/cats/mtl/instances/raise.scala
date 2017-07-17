@@ -35,6 +35,7 @@ private[instances] trait RaiseLowPriorityInstances1 {
     }
   }
 
+  // TODO: an instance derived from another FunctorRaise instance and an Inject instance ("subtyping")
 }
 
 object raise extends RaiseInstances

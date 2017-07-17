@@ -2,6 +2,9 @@ package cats
 package mtl
 
 /**
+  * `FunctorListen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
+  * that is contained in all `F[A]` values, and can be modified using `tell`.
+  *
   * `FunctorListen` has two external laws:
   * {{{
   * def listenRespectsTell(l: L) = {

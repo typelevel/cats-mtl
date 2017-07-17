@@ -7,6 +7,14 @@ package mtl
   * def askReflectsLocal(f: E => E) = {
   *   local(ask)(f) <-> ask map f
   * }
+  *
+  * def localPureIsPure[A](a: A, f: R => R) = {
+  *   local(f)(pure(a)) <-> pure(a)
+  * }
+  *
+  * def localDistributesOverAp[A](fa: F[A], fb: F[B], f: R => R) = {
+  *   local(f)(fa) <-> pure(a)
+  * }
   * }}}
   *
   * `ApplicativeLocal` has one internal law:

@@ -2,16 +2,18 @@ package cats
 package mtl
 
 /**
+  *
+  * `ApplicativeAsk[F, E]` denotes the availability of a single
+  * `E` value in the `F[_]` context.
+  *
+  * Intuitively, this means that the `E` value is an input to the entire `F[_]`
+  * computation.
+  *
   * `ApplicativeAsk[F, E]` has two external laws:
   * {{{
   * def askAddsNoEffects[A](fa: F[A]) = {
   *   (ask *> fa) <-> fa
   * }
-  * def askIsNotAffected[A](fa: F[A]) = {
-  *   (fa *> ask) <-> (ask <* fa)
-  * } // ask "commutes" with all F[A].
-  *   // this implies that Ask is purely for immutable environments,
-  *   // as in the Reader monad and similar, and in particular not the State monad.
   * }}}
   *
   * `ApplicativeAsk[F, E]` has one internal law:
@@ -21,8 +23,6 @@ package mtl
   * }
   * }}}
   *
-  * `ApplicativeAsk[F, E]` only denotes the availability of "immutable"
-  * `E` values in the `F[_]` context, which cannot be altered by `F[_]` effects.
   */
 trait ApplicativeAsk[F[_], E] extends Serializable {
   val applicative: Applicative[F]

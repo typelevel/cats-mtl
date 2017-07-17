@@ -2,6 +2,12 @@ package cats
 package mtl
 
 /**
+  *
+  *
+  * Note that if you have a MonadState instance,
+  * it cannot touch the same values as an ApplicativeAsk instance
+  * because the laws of ApplicativeAsk prohibit the value being changed by effects.
+  *
   * `MonadState` has four external laws:
   * {{{
   * def getThenSetDoesNothing = {
@@ -24,10 +30,6 @@ package mtl
   *   modify(f) <-> (get map f) flatMap set
   * }
   * }}}
-  *
-  * Note that if you have a MonadState instance,
-  * it cannot touch the same values as an ApplicativeAsk instance
-  * because the laws of ApplicativeAsk prohibit the value being changed by effects.
   *
   */
 trait MonadState[F[_], S] extends Serializable {

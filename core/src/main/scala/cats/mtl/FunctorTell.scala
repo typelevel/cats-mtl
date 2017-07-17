@@ -2,6 +2,8 @@ package cats
 package mtl
 
 /**
+  * `FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
+  *
   * `FunctorTell` has no external laws.
   *
   * `FunctorTell` has one internal law:
