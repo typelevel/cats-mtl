@@ -3,7 +3,7 @@ package mtl
 package tests
 
 import cats.arrow.FunctionK
-import cats.data.StateT
+import cats.data.{State, StateT}
 import cats.laws.discipline.SerializableTests
 import cats.mtl.laws.discipline.{MonadLayerControlTests, MonadStateTests, FunctorTellTests}
 import cats.laws.discipline.arbitrary._
@@ -42,6 +42,11 @@ class StateTTests extends BaseSuite {
     MonadStateTests[StateTC[Option, String]#l, String].monadState[String])
   checkAll("MonadState[StateT[Option, String, ?]]",
     SerializableTests.serializable(MonadState[StateTC[Option, String]#l, String]))
+
+  checkAll("State[String, String]",
+    MonadStateTests[StateTC[Eval, String]#l, String].monadState[String])
+  checkAll("MonadState[State[String, ?]]",
+    SerializableTests.serializable(MonadState[StateTC[Eval, String]#l, String]))
 
   checkAll("StateT[Option, String, String]",
     FunctorTellTests[StateTC[Option, String]#l, String].functorTell[String])
