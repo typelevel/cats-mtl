@@ -2,6 +2,9 @@ package cats
 package mtl
 
 /**
+  * `ApplicativeLayerFunctor` is the capability to lift `Applicative` homomorphisms
+  * in `Inner` (`Inner ~> Inner`) into homomorphisms in `M` (`Inner ~> Inner`).
+  *
   * `ApplicativeLayerFunctor[M, Inner]` has no additional laws.
   */
 trait ApplicativeLayerFunctor[M[_], Inner[_]] extends ApplicativeLayer[M, Inner]

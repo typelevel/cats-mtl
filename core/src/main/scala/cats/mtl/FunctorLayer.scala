@@ -4,9 +4,10 @@ package mtl
 /**
   * `FunctorLayer[M, Inner]` has the following functionality:
   * - lifts values from the `Functor` `Inner` to the `Functor` `M`.
-  * - lifts isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`)
-  *   into homomorphisms in `M` (`M ~> M`). This allows you to "map" a natural transformation over the
-  *   `Inner` inside `M`, but only if you can provide an inverse of that natural transformation.
+  * - lifts `Functor` isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`)
+  *   into `Functor` homomorphisms in `M` (`M ~> M`).
+  *   This allows you to "map" a natural transformation over the `Inner` inside `M`,
+  *   but only if you can provide an inverse of that natural transformation.
   *
   * `FunctorLayer[M, Inner]` has two external laws:
   * {{{

@@ -2,12 +2,9 @@ package cats
 package mtl
 
 /**
+  * `ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
   *
-  * `ApplicativeAsk[F, E]` denotes the availability of a single
-  * `E` value in the `F[_]` context.
-  *
-  * Intuitively, this means that the `E` value is an input to the entire `F[_]`
-  * computation.
+  * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
   *
   * `ApplicativeAsk[F, E]` has two external laws:
   * {{{

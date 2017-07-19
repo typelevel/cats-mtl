@@ -66,16 +66,6 @@ final class SummonableImplicits extends BaseSuite {
 
       assertCompiles("implicitly[FunctorTell[WriterTStrTupleInt, Vector[Int]]]")
     }
-
-    test("TFunctor") {
-      assertCompiles("implicitly[TFunctor[StateTCS[String]#l]]")
-
-      assertCompiles("implicitly[TFunctor[OptionT]]")
-
-      assertCompiles("implicitly[TFunctor[ReaderTCE[String]#l]]")
-
-      assertCompiles("implicitly[TFunctor[WriterTCL[String]#l]]")
-    }
   }
 
 

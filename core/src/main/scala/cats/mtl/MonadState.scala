@@ -2,13 +2,14 @@ package cats
 package mtl
 
 /**
-  *
+  * `MonadState[F, S]` is the capability to access and modify a state value
+  * from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
   *
   * Note that if you have a MonadState instance,
   * it cannot touch the same values as an ApplicativeAsk instance
   * because the laws of ApplicativeAsk prohibit the value being changed by effects.
   *
-  * `MonadState` has four external laws:
+  * MonadState has four external laws:
   * {{{
   * def getThenSetDoesNothing = {
   *   get >>= set <-> pure(())

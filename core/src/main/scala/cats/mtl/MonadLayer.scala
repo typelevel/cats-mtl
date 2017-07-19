@@ -2,6 +2,13 @@ package cats
 package mtl
 
 /**
+  * `MonadLayer[M, Inner]` has the following functionality:
+  * - lifts values from the `Monad` `Inner` to the `Monad` `M`.
+  * - lifts `Monad` isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`)
+  *   into `Monad` homomorphisms in `M` (`M ~> M`).
+  *   This allows you to "map" a natural transformation over the `Inner` inside `M`,
+  *   but only if you can provide an inverse of that natural transformation.
+  *
   * `MonadLayer` has one external law:
   * {{{
   * def layerRespectsFlatMap[A, B](m: Inner[A])(f: A => Inner[B]) = {

@@ -2,9 +2,13 @@ package cats
 package mtl
 
 /**
-  * `ApplicativeLayer[M, Inner]` is:
-  * - the capability to lift values from the `Applicative` `Inner` to the `Applicative` `M`.
-  * - an invariant higher-kinded functor in the category of
+  * `ApplicativeLayer[M, Inner]` has the following functionality:
+  * - the capability to lift values from the `Applicative` `Inner`
+  *   to the `Applicative` `M`, preserving the `Applicative` structure
+  * - lifts `Applicative` isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`)
+  *   into `Applicative` homomorphisms in `M` (`M ~> M`).
+  *   This allows you to "map" a natural transformation over the `Inner` inside `M`,
+  *   but only if you can provide an inverse of that natural transformation.
   *
   * `ApplicativeLayer[M, Inner]` has two external laws:
   * {{{

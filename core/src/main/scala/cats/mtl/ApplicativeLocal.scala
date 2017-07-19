@@ -2,7 +2,10 @@ package cats
 package mtl
 
 /**
-  * `ApplicativeLocal` has one external law:
+  * `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
+  * using `ask`; the modification can only be observed from within that `F[A]` value.
+  *
+  * `ApplicativeLocal[F, E]` has one external law:
   * {{{
   * def askReflectsLocal(f: E => E) = {
   *   local(ask)(f) <-> ask map f
