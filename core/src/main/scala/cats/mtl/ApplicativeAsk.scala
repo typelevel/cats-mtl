@@ -6,7 +6,7 @@ package mtl
   *
   * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
   *
-  * `ApplicativeAsk[F, E]` has two external laws:
+  * `ApplicativeAsk[F, E]` has one external law:
   * {{{
   * def askAddsNoEffects[A](fa: F[A]) = {
   *   (ask *> fa) <-> fa

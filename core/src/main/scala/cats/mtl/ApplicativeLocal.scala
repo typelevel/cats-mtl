@@ -15,8 +15,8 @@ package mtl
   *   local(f)(pure(a)) <-> pure(a)
   * }
   *
-  * def localDistributesOverAp[A](fa: F[A], fb: F[B], f: R => R) = {
-  *   local(f)(fa) <-> pure(a)
+  * def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: R => R) = {
+  *   local(f)(fa ap ff) <-> local(f)(fa) ap local(f)(ff)
   * }
   * }}}
   *
