@@ -28,15 +28,6 @@ class EitherTTests extends BaseSuite {
   }
 
   {
-    implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[EitherTC[Option, String]#l, Option] =
-      cats.mtl.instances.eithert.eitherApplicativeLayerFunctor[Option, String]
-    checkAll("EitherT[Option, String, ?]",
-      ApplicativeLayerFunctorTests[EitherTC[Option, String]#l, Option].applicativeLayerFunctor[Boolean, Boolean])
-    checkAll("ApplicativeLayerFunctor[EitherT[Option, String, ?], Option]",
-      SerializableTests.serializable(applicativeLayerFunctor))
-  }
-
-  {
     implicit val functorLayerFunctor: FunctorLayerFunctor[EitherTC[Option, String]#l, Option] =
       cats.mtl.instances.eithert.eitherFunctorLayerFunctor[Option, String]
     checkAll("EitherT[Option, String, ?]",
