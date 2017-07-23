@@ -31,7 +31,7 @@ trait FunctorEmpty[F[_]] extends Serializable {
 
   def empty[A]: F[A]
 
-  def filter[A, B](fa: F[A])(f: A => Option[B])(implicit ev: Monad[F]): F[B]
+  def mapFilter[A, B](fa: F[A])(f: A => Option[B])(implicit ev: Monad[F]): F[B]
 }
 
 object FunctorEmpty {
