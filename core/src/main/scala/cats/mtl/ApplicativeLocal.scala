@@ -11,19 +11,19 @@ package mtl
   *   local(ask)(f) <-> ask map f
   * }
   *
-  * def localPureIsPure[A](a: A, f: R => R) = {
+  * def localPureIsPure[A](a: A, f: E => E) = {
   *   local(f)(pure(a)) <-> pure(a)
   * }
   *
-  * def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: R => R) = {
-  *   local(f)(fa ap ff) <-> local(f)(fa) ap local(f)(ff)
+  * def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E) = {
+  *   local(f)(ff ap fa) <-> local(f)(ff) ap local(f)(fa)
   * }
   * }}}
   *
   * `ApplicativeLocal` has one internal law:
   * {{{
   * def scopeIsLocalConst(fa: F[A], e: E) = {
-  *   local(fa)(_ => e) <-> scope(fa)(e)
+  *   local(_ => e)(fa) <-> scope(e)(fa)
   * }
   * }}}
   *
@@ -31,15 +31,15 @@ package mtl
 trait ApplicativeLocal[F[_], E] extends Serializable {
   val ask: ApplicativeAsk[F, E]
 
-  def local[A](fa: F[A])(f: E => E): F[A]
+  def local[A](f: E => E)(fa: F[A]): F[A]
 
-  def scope[A](fa: F[A])(e: E): F[A]
+  def scope[A](e: E)(fa: F[A]): F[A]
 }
 
 object ApplicativeLocal {
   def apply[F[_], A](implicit local: ApplicativeLocal[F, A]): ApplicativeLocal[F, A] = local
 
-  def local[F[_], E, A](fa: F[A])(f: E => E)(implicit local: ApplicativeLocal[F, E]): F[A] = local.local(fa)(f)
+  def local[F[_], E, A](f: E => E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.local(f)(fa)
 
-  def scope[F[_], E, A](fa: F[A])(e: E)(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(fa)(e)
+  def scope[F[_], E, A](e: E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(e)(fa)
 }

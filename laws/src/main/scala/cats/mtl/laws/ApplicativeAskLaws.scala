@@ -15,10 +15,6 @@ trait ApplicativeAskLaws[F[_], E] {
     (ask *> fa) <-> fa
   }
 
-  def askIsNotAffected[A](fa: F[A]): IsEq[F[E]] = {
-    (fa *> ask) <-> (ask <* fa)
-  }
-
   // internal laws
   def readerIsAskAndMap[A](f: E => A): IsEq[F[A]] = {
     ask.map(f) <-> reader(f)

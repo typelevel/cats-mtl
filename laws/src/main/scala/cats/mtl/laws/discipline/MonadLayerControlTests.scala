@@ -7,17 +7,19 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 
-trait MonadLayerControlTests[M[_], Inner[_]] extends MonadLayerFunctorTests[M, Inner] {
-  implicit val monadLayerControlInstance: MonadLayerControl[M, Inner]
+trait MonadLayerControlTests[M[_], Inner[_], State[_]] extends MonadLayerFunctorTests[M, Inner] {
+  implicit val monadLayerControlInstance: MonadLayerControl.Aux[M, Inner, State]
 
-  override def laws: MonadLayerControlLaws[M, Inner] = MonadLayerControlLaws[M, Inner]
+  override def laws: MonadLayerControlLaws[M, Inner, State] = MonadLayerControlLaws[M, Inner, State]
 
   def monadLayerControl[A: Arbitrary, B](implicit
                                          ArbMA: Arbitrary[M[A]],
                                          ArbFA: Arbitrary[Inner[A]],
+                                         ArbSt: Arbitrary[State[A]],
                                          ArbFABS: Arbitrary[Inner[A => B]],
                                          ArbFAB: Arbitrary[A => Inner[B]],
-                                         ArbFun: Arbitrary[Inner ~> Inner],
+                                         ArbInT: Arbitrary[Inner ~> Inner],
+                                         ArbStT: Arbitrary[State ~> State],
                                          EqMA: Eq[M[A]],
                                          EqMB: Eq[M[B]]
                                         ): RuleSet = {
@@ -25,7 +27,9 @@ trait MonadLayerControlTests[M[_], Inner[_]] extends MonadLayerFunctorTests[M, I
       val name = "monadLayerControl"
       val parents = Seq(monadLayerFunctor[A, B])
       val props = Seq(
-        "layerMapK respects layerControl" -> ∀(laws.layerMapRespectsLayerControl[A] _)
+        "layerMapK respects layerControl" -> ∀(laws.layerMapRespectsLayerControl[A] _),
+        "distribution law" -> ∀(laws.distributionLaw[A] _),
+        "layerControl identity" -> ∀(laws.layerControlIdentity[A] _)
       )
 
       def bases: Seq[(String, Laws#RuleSet)] = Seq.empty
@@ -35,9 +39,9 @@ trait MonadLayerControlTests[M[_], Inner[_]] extends MonadLayerFunctorTests[M, I
 }
 
 object MonadLayerControlTests {
-  def apply[M[_], Inner[_]](implicit instance0: MonadLayerControl[M, Inner]): MonadLayerControlTests[M, Inner] = {
-    new MonadLayerControlTests[M, Inner] with Laws {
-      lazy val monadLayerControlInstance: MonadLayerControl[M, Inner] = instance0
+  def apply[M[_], Inner[_], State[_]](implicit instance0: MonadLayerControl.Aux[M, Inner, State]): MonadLayerControlTests[M, Inner, State] = {
+    new MonadLayerControlTests[M, Inner, State] {
+      lazy val monadLayerControlInstance: MonadLayerControl.Aux[M, Inner, State] = instance0
       lazy val monadLayerFunctorInstance: MonadLayerFunctor[M, Inner] = instance0
       lazy val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner] = instance0
       lazy val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner] = instance0

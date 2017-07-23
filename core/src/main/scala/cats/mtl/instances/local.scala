@@ -12,21 +12,21 @@ trait LocalInstances extends LocalLowPriorityInstances {
       val ask: ApplicativeAsk[M, E] =
         instances.ask.askLayerInd[M, Inner, E](ml, under.ask)
 
-      def local[A](fa: M[A])(f: E => E): M[A] = {
+      def local[A](f: E => E)(fa: M[A]): M[A] = {
         ml.outerInstance.flatMap(ask.ask)(r =>
           ml.layerImapK(fa)(new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.local(fa)(f)
+            def apply[X](fa: Inner[X]): Inner[X] = under.local(f)(fa)
           }, new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(r)
+            def apply[X](fa: Inner[X]): Inner[X] = under.scope(r)(fa)
           }))
       }
 
-      def scope[A](fa: M[A])(e: E): M[A] = {
+      def scope[A](e: E)(fa: M[A]): M[A] = {
         ml.outerInstance.flatMap(ask.ask)(r =>
           ml.layerImapK(fa)(new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(e)
+            def apply[X](fa: Inner[X]): Inner[X] = under.scope(e)(fa)
           }, new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(fa)(r)
+            def apply[X](fa: Inner[X]): Inner[X] = under.scope(r)(fa)
           }))
       }
 
@@ -45,9 +45,9 @@ private[instances] trait LocalLowPriorityInstances {
       val ask: ApplicativeAsk[ReaderTC[M, E]#l, E] =
         instances.ask.askReader[M, E]
 
-      def local[A](fa: ReaderT[M, E, A])(f: E => E): ReaderT[M, E, A] = ReaderT.local(f)(fa)
+      def local[A](f: E => E)(fa: ReaderT[M, E, A]): ReaderT[M, E, A] = ReaderT.local(f)(fa)
 
-      def scope[A](fa: ReaderT[M, E, A])(e: E): ReaderT[M, E, A] = ReaderT(_ => fa.run(e))
+      def scope[A](e: E)(fa: ReaderT[M, E, A]): ReaderT[M, E, A] = ReaderT(_ => fa.run(e))
     }
   }
 
@@ -56,9 +56,9 @@ private[instances] trait LocalLowPriorityInstances {
       val ask: ApplicativeAsk[FunctionC[E]#l, E] =
         instances.ask.askFunction[E]
 
-      def local[A](fa: E => A)(f: E => E): E => A = fa.compose(f)
+      def local[A](f: E => E)(fa: E => A): E => A = fa.compose(f)
 
-      def scope[A](fa: E => A)(e: E): E => A = _ => fa(e)
+      def scope[A](e: E)(fa: E => A): E => A = _ => fa(e)
     }
   }
 }

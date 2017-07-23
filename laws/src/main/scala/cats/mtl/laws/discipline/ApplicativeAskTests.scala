@@ -23,7 +23,6 @@ trait ApplicativeAskTests[F[_], E] extends Laws {
       name = "applicativeAsk",
       parent = None,
       "ask adds no effects" -> ∀(laws.askAddsNoEffects[A] _),
-      "ask is not affected" -> ∀(laws.askIsNotAffected[A] _),
       "reader is ask and map" -> ∀(laws.readerIsAskAndMap[A] _)
     )
   }

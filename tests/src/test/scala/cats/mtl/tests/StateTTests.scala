@@ -30,26 +30,30 @@ class StateTTests extends BaseSuite {
   }
 
   {
-    implicit val monadLayerControl: MonadLayerControl[StateTC[Option, String]#l, Option] =
+    implicit val monadLayerControl: MonadLayerControl.Aux[StateTC[Option, String]#l, Option, TupleC[String]#l] =
       cats.mtl.instances.statet.stateMonadLayerControl[Option, String]
     checkAll("StateT[Option, String, ?]",
-      MonadLayerControlTests[StateTC[Option, String]#l, Option].monadLayerControl[Boolean, Boolean])
+      MonadLayerControlTests[StateTC[Option, String]#l, Option, TupleC[String]#l]
+        .monadLayerControl[Boolean, Boolean])
     checkAll("MonadLayerControl[StateT[Option, String, ?], Option]",
       SerializableTests.serializable(monadLayerControl))
   }
 
   checkAll("StateT[Option, String, String]",
-    MonadStateTests[StateTC[Option, String]#l, String].monadState[String])
+    MonadStateTests[StateTC[Option, String]#l, String]
+      .monadState[String])
   checkAll("MonadState[StateT[Option, String, ?]]",
     SerializableTests.serializable(MonadState[StateTC[Option, String]#l, String]))
 
   checkAll("State[String, String]",
-    MonadStateTests[StateTC[Eval, String]#l, String].monadState[String])
+    MonadStateTests[StateTC[Eval, String]#l, String]
+      .monadState[String])
   checkAll("MonadState[State[String, ?]]",
     SerializableTests.serializable(MonadState[StateTC[Eval, String]#l, String]))
 
   checkAll("StateT[Option, String, String]",
-    FunctorTellTests[StateTC[Option, String]#l, String].functorTell[String])
+    FunctorTellTests[StateTC[Option, String]#l, String]
+      .functorTell[String])
   checkAll("FunctorTell[StateT[Option, String, ?]]",
     SerializableTests.serializable(FunctorTell[StateTC[Option, String]#l, String]))
 

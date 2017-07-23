@@ -4,18 +4,28 @@ package laws
 
 trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
   implicit val localInstance: ApplicativeLocal[F, E]
+
   import localInstance.{local, scope}
   import localInstance.ask._
   import localInstance.ask.applicative._
+  import cats.syntax.apply._
 
-  // external law:
+  // external laws:
   def askReflectsLocal(f: E => E): IsEq[F[E]] = {
-    local(ask)(f) <-> map(ask)(f)
+    local(f)(ask) <-> map(ask)(f)
+  }
+
+  def localPureIsPure[A](a: A, f: E => E): IsEq[F[A]] = {
+    local(f)(pure(a)) <-> pure(a)
+  }
+
+  def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E): IsEq[F[B]] = {
+    local(f)(ff ap fa) <-> (local(f)(ff) ap local(f)(fa))
   }
 
   // internal law:
   def scopeIsLocalConst[A](fa: F[A], e: E): IsEq[F[A]] = {
-    local(fa)(_ => e) <-> scope(fa)(e)
+    local(_ => e)(fa) <-> scope(e)(fa)
   }
 
 }

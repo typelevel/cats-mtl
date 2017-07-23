@@ -3,8 +3,10 @@ package mtl
 package tests
 
 import catalysts.Platform
+import cats.arrow.FunctionK
 import cats.data._
 import cats.syntax.{EqOps, EqSyntax}
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
 import org.scalatest.prop.Configuration
 import org.scalatest.{FunSuite, Matchers}
@@ -52,14 +54,61 @@ abstract class BaseSuite extends FunSuite
 
   // disable Eq syntax (by making `catsSyntaxEq` not implicit), since it collides
   // with scalactic's equality
-  override def catsSyntaxEq[A: Eq](a: A): EqOps[A] = new EqOps[A](a)
+  override def catsSyntaxEq[A: Eq](a: A): EqOps[A] = {
+    new EqOps[A](a)
+  }
+
+  implicit def tupleCTransArb[L](implicit arb: Arbitrary[L => L]): Arbitrary[TupleC[L]#l ~> TupleC[L]#l] = {
+    Arbitrary(arb.arbitrary.map { f =>
+      new (TupleC[L]#l ~> TupleC[L]#l) {
+        def apply[A](fa: (L, A)): (L, A) = (f(fa._1), fa._2)
+      }
+    })
+  }
+
+  implicit def idTransArb: Arbitrary[Id ~> Id] = Arbitrary(Gen.const(FunctionK.id[Id]))
+
+  def tweakableCatsLawsEqForFn1[A, B](cnt: Int)(implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] = new Eq[A => B] {
+    def eqv(f: A => B, g: A => B): Boolean = {
+      val samples = List.fill(cnt)(A.arbitrary.sample).collect{
+        case Some(a) => a
+        case None => sys.error("Could not generate arbitrary values to compare two functions")
+      }
+      samples.forall(s => B.eqv(f(s), g(s)) )
+    }
+  }
+
+  implicit def eitherTransArb[E](implicit arbF: Arbitrary[E => E], arbE: Arbitrary[E]): Arbitrary[EitherC[E]#l ~> EitherC[E]#l] = {
+    Arbitrary(for {
+      num <- Gen.chooseNum(1, 3)
+      res <-
+      if (num == 1) Gen.const(FunctionK.id[EitherC[E]#l])
+      else if (num == 2) arbF.arbitrary.map(f => new (EitherC[E]#l ~> EitherC[E]#l) {
+        def apply[A](e: E Either A) = e.left.map(f)
+      })
+      else arbE.arbitrary.map(e => new (EitherC[E]#l ~> EitherC[E]#l) {
+        def apply[A](unused: E Either A) = Left(e)
+      })
+    } yield res)
+  }
+
+  implicit def optionTransArb: Arbitrary[Option ~> Option] = {
+    Arbitrary {
+      Arbitrary.arbBool.arbitrary.map { no =>
+        if (no) new (Option ~> Option) {
+          def apply[A](o: Option[A]) = None
+        }
+        else FunctionK.id[Option]
+      }
+    }
+  }
 
   implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
     checkConfiguration
 
   lazy val checkConfiguration: PropertyCheckConfiguration =
     PropertyCheckConfiguration(
-      minSuccessful = if (Platform.isJvm) PosInt(50) else PosInt(5),
+      minSuccessful = if (Platform.isJvm) PosInt(35) else PosInt(5),
       maxDiscardedFactor = if (Platform.isJvm) PosZDouble(5.0) else PosZDouble(50.0),
       minSize = PosZInt(0),
       sizeRange = if (Platform.isJvm) PosZInt(10) else PosZInt(5),

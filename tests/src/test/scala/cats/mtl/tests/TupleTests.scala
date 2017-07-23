@@ -12,7 +12,8 @@ import cats.mtl.laws.discipline.FunctorListenTests
 
 class TupleTests extends BaseSuite {
   checkAll("FunctorListen[(String, ?), String]",
-    FunctorListenTests[TupleC[String]#l, String].functorListen[String, String])
+    FunctorListenTests[TupleC[String]#l, String]
+      .functorListen[String, String])
   checkAll("FunctorListen[(String, ?), String]",
     SerializableTests.serializable(FunctorListen[TupleC[String]#l, String]))
 }
