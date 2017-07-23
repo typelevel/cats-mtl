@@ -18,6 +18,8 @@ trait StateInstances extends StateInstancesLowPriority1 {
       def set(s: E): M[Unit] = ml.layer(under.set(s))
 
       def modify(f: E => E): M[Unit] = ml.layer(under.modify(f))
+
+      def inspect[A](f: (E) => A): M[A] = ml.layer(under.inspect(f))
     }
   }
 
@@ -36,6 +38,8 @@ private[instances] trait StateInstancesLowPriority1 {
       def set(s: S): StateT[M, S, Unit] = StateT.set(s)
 
       def modify(f: S => S): StateT[M, S, Unit] = StateT.modify(f)
+
+      def inspect[A](f: (S) => A): StateT[M, S, A] = StateT.inspect(f)
     }
   }
 }

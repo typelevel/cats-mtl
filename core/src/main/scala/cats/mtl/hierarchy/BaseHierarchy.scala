@@ -30,5 +30,15 @@ private[hierarchy] trait BH0 {
       override def tuple[A](ta: (L, A)): F[A] = writer(ta._2, ta._1)
     }
   }
+
+  implicit final def askFromState[F[_], L](implicit state: MonadState[F, L]): ApplicativeAsk[F, L] = {
+    new ApplicativeAsk[F, L] {
+      override val applicative: Applicative[F] = state.monadInstance
+
+      override def ask: F[L] = state.get
+
+      override def reader[A](f: (L) => A): F[A] = state.inspect(f)
+    }
+  }
 }
 

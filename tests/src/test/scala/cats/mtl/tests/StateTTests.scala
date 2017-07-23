@@ -5,12 +5,13 @@ package tests
 import cats.arrow.FunctionK
 import cats.data.{State, StateT}
 import cats.laws.discipline.SerializableTests
-import cats.mtl.laws.discipline.{MonadLayerControlTests, MonadStateTests, FunctorTellTests}
+import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadLayerControlTests, MonadStateTests}
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline._
 import cats.laws.discipline.eq._
 import org.scalacheck.{Arbitrary, Gen}
 import cats.mtl.instances.state._
+import cats.mtl.instances.local._
 import cats.mtl.hierarchy.BaseHierarchy._
 import cats.instances.all._
 
@@ -56,5 +57,11 @@ class StateTTests extends BaseSuite {
       .functorTell[String])
   checkAll("FunctorTell[StateT[Option, String, ?]]",
     SerializableTests.serializable(FunctorTell[StateTC[Option, String]#l, String]))
+
+  checkAll("StateT[Option, String, String]",
+    ApplicativeAskTests[StateTC[Option, String]#l, String]
+      .applicativeAsk[String])
+  checkAll("ApplicativeAsk[StateT[Option, String, ?]]",
+    SerializableTests.serializable(ApplicativeAsk[StateTC[Option, String]#l, String]))
 
 }

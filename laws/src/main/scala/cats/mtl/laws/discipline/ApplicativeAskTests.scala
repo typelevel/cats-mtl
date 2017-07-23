@@ -9,6 +9,7 @@ import org.typelevel.discipline.Laws
 
 trait ApplicativeAskTests[F[_], E] extends Laws {
   implicit val askInstance: ApplicativeAsk[F, E]
+
   def laws: ApplicativeAskLaws[F, E] = ApplicativeAskLaws[F, E]
 
   def applicativeAsk[A: Arbitrary](implicit
@@ -27,5 +28,13 @@ trait ApplicativeAskTests[F[_], E] extends Laws {
     )
   }
 
+}
+
+object ApplicativeAskTests {
+  def apply[F[_], E](implicit instance: ApplicativeAsk[F, E]): ApplicativeAskTests[F, E] = {
+    new ApplicativeAskTests[F, E] {
+      val askInstance = instance
+    }
+  }
 }
 

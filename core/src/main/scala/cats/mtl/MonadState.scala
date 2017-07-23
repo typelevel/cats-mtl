@@ -25,10 +25,14 @@ package mtl
   * }
   * }}}
   *
-  * `MonadState` has one internal law:
+  * `MonadState` has two internal law:
   * {{{
   * def modifyIsGetThenSet(f: S => S) = {
-  *   modify(f) <-> (get map f) flatMap set
+  *   modify(f) <-> (inspect(f) flatMap set)
+  * }
+  *
+  * def inspectLaw[A](f: S => A) = {
+  *   inspect(f) <-> (get map f)
   * }
   * }}}
   *
@@ -39,6 +43,8 @@ trait MonadState[F[_], S] extends Serializable {
   def get: F[S]
 
   def set(s: S): F[Unit]
+
+  def inspect[A](f: S => A): F[A]
 
   def modify(f: S => S): F[Unit]
 }
@@ -60,6 +66,9 @@ object MonadState {
 
   def modify[F[_], S](f: S => S)(implicit state: MonadState[F, S]): F[Unit] =
     state.modify(f)
+
+  def inspect[F[_], S, A](f: S => A)(implicit state: MonadState[F, S]): F[A] =
+    state.inspect(f)
 
   def apply[F[_], S](implicit monadState: MonadState[F, S]): MonadState[F, S] = monadState
 }
