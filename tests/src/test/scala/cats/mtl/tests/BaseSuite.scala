@@ -51,6 +51,11 @@ abstract class BaseSuite extends FunSuite
   protected type OptionTOverReaderTStringOverOption[A] = OptionT[ReaderTC[Option, String]#l, A]
   protected type EitherTIntOverReaderTStringOverOption[A] = EitherT[ReaderTC[Option, String]#l, Int, A]
   protected type StateTIntOverReaderTStringOverOption[A] = StateT[ReaderTC[Option, String]#l, Int, A]
+  protected type ReaderTIntOverStateTStringOverOption[A] = ReaderT[StateTC[Option, String]#l, Int, A]
+  protected type WriterTIntOverStateTStringOverOption[A] = WriterT[StateTC[Option, String]#l, Int, A]
+  protected type OptionTOverStateTStringOverOption[A] = OptionT[StateTC[Option, String]#l, A]
+  protected type EitherTIntOverStateTStringOverOption[A] = EitherT[StateTC[Option, String]#l, Int, A]
+  protected type StateTIntOverStateTStringOverOption[A] = StateT[StateTC[Option, String]#l, Int, A]
 
   // disable Eq syntax (by making `catsSyntaxEq` not implicit), since it collides
   // with scalactic's equality

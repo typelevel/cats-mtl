@@ -3,7 +3,7 @@ package mtl
 package tests
 
 import cats.arrow.FunctionK
-import cats.data.{State, StateT}
+import cats.data.{Kleisli, State, StateT}
 import cats.laws.discipline.SerializableTests
 import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadLayerControlTests, MonadStateTests}
 import cats.laws.discipline.arbitrary._
@@ -12,6 +12,7 @@ import cats.laws.discipline.eq._
 import org.scalacheck.{Arbitrary, Gen}
 import cats.mtl.instances.state._
 import cats.mtl.instances.local._
+import cats.mtl.instances.readert._
 import cats.mtl.hierarchy.BaseHierarchy._
 import cats.instances.all._
 
@@ -23,6 +24,10 @@ class StateTTests extends BaseSuite {
 
   implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
     Arbitrary(F.arbitrary.map(StateT.applyF))
+  }
+
+  implicit def eqKleisli[F[_], A, B](implicit arb: Arbitrary[A], ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] = {
+    Eq.by((x: (Kleisli[F, A, B])) => x.run)
   }
 
   implicit def stateTEq[F[_], S, A](implicit S: Arbitrary[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {
@@ -40,17 +45,17 @@ class StateTTests extends BaseSuite {
       SerializableTests.serializable(monadLayerControl))
   }
 
+  checkAll("State[String, String]",
+    MonadStateTests[StateC[String]#l, String]
+      .monadState[String])
+  checkAll("MonadState[State[String, ?]]",
+    SerializableTests.serializable(MonadState[StateC[String]#l, String]))
+
   checkAll("StateT[Option, String, String]",
     MonadStateTests[StateTC[Option, String]#l, String]
       .monadState[String])
   checkAll("MonadState[StateT[Option, String, ?]]",
     SerializableTests.serializable(MonadState[StateTC[Option, String]#l, String]))
-
-  checkAll("State[String, String]",
-    MonadStateTests[StateTC[Eval, String]#l, String]
-      .monadState[String])
-  checkAll("MonadState[State[String, ?]]",
-    SerializableTests.serializable(MonadState[StateTC[Eval, String]#l, String]))
 
   checkAll("StateT[Option, String, String]",
     FunctorTellTests[StateTC[Option, String]#l, String]
@@ -63,5 +68,23 @@ class StateTTests extends BaseSuite {
       .applicativeAsk[String])
   checkAll("ApplicativeAsk[StateT[Option, String, ?]]",
     SerializableTests.serializable(ApplicativeAsk[StateTC[Option, String]#l, String]))
+
+  checkAll("ReaderT[StateT[Option, String, ?], Int, String]",
+    MonadStateTests[ReaderTIntOverStateTStringOverOption, String]
+      .monadState[String])
+  checkAll("MonadState[ReaderT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(MonadState[StateTC[Option, String]#l, String]))
+
+  checkAll("ReaderT[StateT[Option, String, ?], Int, String]",
+    FunctorTellTests[ReaderTIntOverStateTStringOverOption, String]
+      .functorTell[String])
+  checkAll("FunctorTell[ReaderT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(FunctorTell[ReaderTIntOverStateTStringOverOption, String]))
+
+  checkAll("ReaderT[StateT[Option, String, ?], Int, String]",
+    ApplicativeAskTests[ReaderTIntOverStateTStringOverOption, String]
+      .applicativeAsk[String])
+  checkAll("ApplicativeAsk[ReaderT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(ApplicativeAsk[ReaderTIntOverStateTStringOverOption, String]))
 
 }

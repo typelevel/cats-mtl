@@ -11,6 +11,7 @@ package object mtl {
   private[mtl] type ReaderTC[M[_], E] = {type l[A] = ReaderT[M, E, A]}
   private[mtl] type ReaderC[E] = {type l[A] = Reader[E, A]}
   private[mtl] type OptionTC[M[_]] = {type l[A] = OptionT[M, A]}
+  private[mtl] type StateC[S] = {type l[A] = State[S, A]}
   private[mtl] type StateTC[M[_], S] = {type l[A] = StateT[M, S, A]}
   private[mtl] type StateTCS[S] = {type l[M[_], A] = StateT[M, S, A]}
   private[mtl] type EitherC[E] = {type l[A] = E Either A}
@@ -18,7 +19,6 @@ package object mtl {
   private[mtl] type EitherTCE[E] = {type l[M[_], A] = EitherT[M, E, A]}
   private[mtl] type TupleC[L] = {type l[A] = (L, A)}
   private[mtl] type FunctionC[E] = {type l[A] = E => A}
-  private[mtl] type StateC[S] = {type l[A] = State[S, A]}
   private[mtl] type WriterC[L] = {type l[A] = Writer[L, A]}
   private[mtl] type WriterTC[M[_], L] = {type l[A] = WriterT[M, L, A]}
   private[mtl] type WriterTCL[L] = {type l[M[_], A] = WriterT[M, L, A]}
