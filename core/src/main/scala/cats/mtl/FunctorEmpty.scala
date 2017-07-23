@@ -2,6 +2,8 @@ package cats
 package mtl
 
 /**
+  * `FunctorEmpty[F]` denotes the unique empty value of type `F[A]`.
+  *
   * `FunctorEmpty` has no external laws not guaranteed by parametricity.
   *
   * `FunctorEmpty` has one internal law:
