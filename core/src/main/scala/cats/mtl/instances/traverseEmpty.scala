@@ -28,8 +28,6 @@ trait TraverseEmptyInstances {
       }
     }
 
-    override def mapFilter[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = fa.flatMap(f)
-
     override def filterA[G[_] : Applicative, A](fa: Option[A])(f: (A) => G[Boolean]): G[Option[A]] = {
       fa match {
         case _: None.type => Option.empty[A].pure[G]
@@ -69,8 +67,6 @@ trait TraverseEmptyInstances {
       )
     }
 
-    override def mapFilter[A, B](fa: List[A])(f: (A) => Option[B]): List[B] = fa.collect(Function.unlift(f))
-
     override def filterA[G[_], A](fa: List[A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[List[A]] = {
       fa.foldLeft(G.pure(List.empty[A]))(
         (xs, x) => G.product(f(x), xs).map(z => if (z._1) x :: z._2 else z._2)
@@ -109,8 +105,6 @@ trait TraverseEmptyInstances {
       )
     }
 
-    override def mapFilter[A, B](fa: Vector[A])(f: (A) => Option[B]): Vector[B] = fa.collect(Function.unlift(f))
-
     override def filterA[G[_], A](fa: Vector[A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[Vector[A]] = {
       fa.foldLeft(G.pure(Vector.empty[A]))(
         (xs, x) => G.product(f(x), xs).map(z => if (z._1) x +: z._2 else z._2)
@@ -148,8 +142,6 @@ trait TraverseEmptyInstances {
         (xs, x) => Applicative[G].product(f(x), xs).map { case (i, o) => i.fold(o)(_ +: o) }
       )
     }
-
-    override def mapFilter[A, B](fa: Stream[A])(f: (A) => Option[B]): Stream[B] = fa.collect(Function.unlift(f))
 
     override def filterA[G[_], A](fa: Stream[A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[Stream[A]] = {
       fa.foldLeft(G.pure(Stream.empty[A]))(
