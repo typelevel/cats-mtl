@@ -17,13 +17,20 @@ package mtl
   * }
   * }}}
   *
-  * `FunctorEmpty` has one internal law:
+  * `FunctorEmpty` has three internal laws:
   * {{{
-  * def filterIsFlatMapOrAbort(fa: F[A])(f: A => Option[B])(implicit ev: Monad[F]) = {
-  *   filter(fa)(f) <-> for {
-  *     a <- fa
-  *     b <- f(a).fold(empty[B])(pure)
-  *   } yield b
+  * def collectConsistentWithMapFilter[A, B](fa: F[A], f: PartialFunction[A, B]) = {
+  *   collect(fa)(f) <-> mapFilter(fa)(f.lift)
+  * }
+  *
+  * def flattenOptionConsistentWithMapFilter[A](fa: F[Option[A]]) = {
+  *   flattenOption(fa) <-> mapFilter(fa)(identity)
+  * }
+  *
+  * def filterConsistentWithMapFilter[A](fa: F[A], f: A => Boolean) = {
+  *   filter(fa)(f) <->
+  *     mapFilter(fa)(a => if (f(a)) Some(a) else None)
+  * }
   * }}}
   *
   * `FunctorEmpty` has one free law, i.e. a law guaranteed by parametricity:

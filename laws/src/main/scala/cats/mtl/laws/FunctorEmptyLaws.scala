@@ -20,6 +20,19 @@ trait FunctorEmptyLaws[F[_]] {
     mapFilter(fa)(f andThen (x => Some(x): Option[B])) <-> functor.map(fa)(f)
   }
 
+  // internal laws
+  def collectConsistentWithMapFilter[A, B](fa: F[A], f: PartialFunction[A, B]): IsEq[F[B]] = {
+    collect(fa)(f) <-> mapFilter(fa)(f.lift)
+  }
+
+  def flattenOptionConsistentWithMapFilter[A](fa: F[Option[A]]): IsEq[F[A]] = {
+    flattenOption(fa) <-> mapFilter(fa)(identity)
+  }
+
+  def filterConsistentWithMapFilter[A](fa: F[A], f: A => Boolean): IsEq[F[A]] = {
+    filter(fa)(f) <->
+      mapFilter(fa)(a => if (f(a)) Some(a) else None)
+  }
 }
 
 object FunctorEmptyLaws {

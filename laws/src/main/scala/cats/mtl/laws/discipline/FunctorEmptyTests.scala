@@ -13,9 +13,13 @@ trait FunctorEmptyTests[F[_]] extends Laws {
 
   def functorEmpty[A, B, C](implicit
                             ArbFA: Arbitrary[F[A]],
+                            ArbFABoo: Arbitrary[PartialFunction[A, B]],
+                            ArbFOA: Arbitrary[F[Option[A]]],
                             ArbAOB: Arbitrary[A => Option[B]],
                             ArbBOC: Arbitrary[B => Option[C]],
                             ArbAB: Arbitrary[A => B],
+                            ArbABoo: Arbitrary[A => Boolean],
+                            EqFA: Eq[F[A]],
                             EqFB: Eq[F[B]],
                             EqFC: Eq[F[C]]
                            ): RuleSet = {
@@ -23,7 +27,10 @@ trait FunctorEmptyTests[F[_]] extends Laws {
       name = "functorEmpty",
       parent = None,
       "mapFilter composition" -> ∀(laws.mapFilterComposition[A, B, C] _),
-      "mapFilter map consistency" -> ∀(laws.mapFilterMapConsistency[A, B] _)
+      "mapFilter map consistency" -> ∀(laws.mapFilterMapConsistency[A, B] _),
+      "collect mapFilter consistency" -> ∀(laws.collectConsistentWithMapFilter[A, B] _),
+      "flattenOption mapFilter consistency" -> ∀(laws.flattenOptionConsistentWithMapFilter[A] _),
+      "filter mapFilter consistency" -> ∀(laws.filterConsistentWithMapFilter[A] _)
     )
   }
 }
