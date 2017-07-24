@@ -28,6 +28,10 @@ trait TraverseEmptyLaws[F[_]] extends FunctorEmptyLaws[F] {
       Nested(f(a).map(_.traverseFilter(g))))
     lhs <-> rhs
   }
+
+  def filterAConsistentWithTraverseFilter[G[_] : Applicative, A](fa: F[A], f: A => G[Boolean]): IsEq[G[F[A]]] = {
+    traverseEmptyInstance.filterA(fa)(f) <-> fa.traverseFilter(a => f(a).map(if (_) Some(a) else None))
+  }
 }
 
 object TraverseEmptyLaws {

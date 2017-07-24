@@ -21,6 +21,14 @@ package mtl
   *   lhs <-> rhs
   * }
   * }}}
+  *
+  *
+  * `TraverseEmpty` has one internal law:
+  * {{{
+  *   def filterAConsistentWithTraverseFilter[G[_]: Applicative, A](fa: F[A], f: A => G[Boolean]) = {
+  *     filterA(fa)(f) <-> fa.traverseFilter(a => G.map(f(a))(if (_) Some(a) else None))
+  *   }
+  * }}}
   * Based on Haskell's [[https://hackage.haskell.org/package/witherable-0.1.3.3/docs/Data-Witherable.html Data.Witherable]]
   */
 
