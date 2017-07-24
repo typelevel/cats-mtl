@@ -32,19 +32,6 @@ package mtl
   *     mapFilter(fa)(a => if (f(a)) Some(a) else None)
   * }
   * }}}
-  *
-  * `FunctorEmpty` has one free law, i.e. a law guaranteed by parametricity:
-  * {{{
-  * def emptyThenFlatMapAborts(f: A => F[B]) = {
-  *   empty[A].flatMap(f) <-> empty[B]
-  * }
-  * }}}
-  * guaranteed by:
-  * empty[X] <-> empty[F[Y]](ex) // parametricity
-  * empty[X].map(f) <-> empty[F[Y]](ex)  // map must have no effect by parametricity, because there's no value inside
-  * empty[X].map(f).join <-> empty[F[Y]].join // add join to both sides
-  * empty[X].flatMap(f) <-> empty(ex) // join is equal, because there's no inner value to flatten effects from
-  * // QED.
   */
 trait FunctorEmpty[F[_]] extends Serializable {
   val functor: Functor[F]
