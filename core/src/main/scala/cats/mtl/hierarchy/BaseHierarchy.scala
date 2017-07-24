@@ -4,14 +4,6 @@ package hierarchy
 
 object BaseHierarchy extends BH0 {
 
-  implicit final def raiseFromEmpty[F[_]](implicit empty: FunctorEmpty[F]): FunctorRaise[F, Unit] = {
-    new FunctorRaise[F, Unit] {
-      val functor: Functor[F] = empty.functor
-
-      def raise[A](e: Unit): F[A] = empty.empty[A]
-    }
-  }
-
 }
 
 private[hierarchy] trait BH0 {

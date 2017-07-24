@@ -9,13 +9,14 @@ import org.typelevel.discipline.Laws
 
 trait FunctorLayerTests[M[_], Inner[_]] extends Laws {
   implicit val functorLayer: FunctorLayer[M, Inner]
+
   def laws: FunctorLayerLaws[M, Inner] = FunctorLayerLaws[M, Inner]
 
   def functorLayer[A](implicit
-                                 ArbFA: Arbitrary[Inner[A]],
-                                 ArbFun: Arbitrary[Inner ~> Inner],
-                                 EqFU: Eq[M[A]]
-                                ): RuleSet = {
+                      ArbFA: Arbitrary[Inner[A]],
+                      ArbFun: Arbitrary[Inner ~> Inner],
+                      EqFU: Eq[M[A]]
+                     ): RuleSet = {
     new DefaultRuleSet(
       name = "functorLayer",
       parent = None,
