@@ -15,6 +15,13 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 
 ## Type classes
 
+#### Migration guide
+
+Here's a map from cats type classes to cats-mtl type classes:
+ - `MonadReader --> ApplicativeLocal`
+ - `MonadWriter --> FunctorListen`
+ - `MonadState --> MonadState`
+
 #### MTL classes
 
 cats-mtl provides the following "MTL classes":
@@ -30,6 +37,9 @@ All of these are type classes built on top of other "base" type classes to provi
 Because they are commonly combined, the base type classes are ambiguous in implicit scope using
 the typical cats subclass encoding via subtyping. Thus in cats-mtl, the ambiguity is avoided by using
 an implicit scope with a different priority to house each conversion `Subclass => Base`.
+
+Compared to cats and Haskell's mtl library, cats-mtl's type classes have the smallest superclass dependencies
+practically possible and in some cases smaller sets of operations so that they can be lifted over more transformers.
 
 #### Lifting classes
 
@@ -65,8 +75,8 @@ MonadLayerControl
    `<X>`-isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`) to
    `<X>`-homomorphisms in `M` (`M ~> M`)
 
-It lets you lift monads into other monads which contain them, for example monads that are being used
-inside monad transformers.
+It lets you lift monadic values into other monads which are "larger" than them,
+for example monads that are being used inside monad transformers.
 For example, `ApplicativeLocal` requires `MonadLayer` to lift through a transformer, because
 all of its operations are invertible.
 
@@ -94,7 +104,7 @@ Intuitively, this means that an `E` value is required as an input to get "out" o
 `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
 using `ask`; the modification can only be observed from within that `F[A]` value.
 
-`FunctorEmpty[F]` denotes the unique empty value of type `F[A]`.
+`FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
 
 `FunctorListen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
 that is contained in all `F[A]` values, and can be modified using `tell`.
@@ -113,7 +123,8 @@ from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
 Laws come in a few loosely defined flavors in cats-mtl: internal, external, and free.
 
 Internal laws dictate how multiple operations inter-relate, 
-if either has a default implementation using the inherited operations of superclasses and the other operations.
+one side of the equation can always be reduced to a single function application of an operation.
+These express "default" implementations that should be indistinguishable in result from the actual implementation.
 
 External laws dictate how (potentially) multiple operations relate to each other and inherited operations,
 but do not dictate a default implementation.

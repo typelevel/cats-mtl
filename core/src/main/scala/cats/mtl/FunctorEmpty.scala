@@ -2,7 +2,7 @@ package cats
 package mtl
 
 /**
-  * `FunctorEmpty[F]` denotes the unique empty value of type `F[A]`.
+  * `FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
   *
   * `FunctorEmpty` has two external laws:
   * {{{
