@@ -13,3 +13,7 @@ Come up with a rough sketch of the laws in Scala as methods but assuming no type
 and all of the operations needed are in scope; use `<->` for the equality assertion.
 
 To be continued.
+
+### Adding a new MTL type class instance
+
+To be filled in.
