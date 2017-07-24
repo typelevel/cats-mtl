@@ -4,12 +4,12 @@ package laws
 
 import cats.data.Nested
 import cats.syntax.all._
-import cats.mtl.syntax.traverseEmpty._
+import cats.mtl.syntax.empty._
 
 trait TraverseEmptyLaws[F[_]] extends FunctorEmptyLaws[F] {
   implicit val traverseEmptyInstance: TraverseEmpty[F]
 
-  import cats.mtl.instances.traverseEmpty.optionTraverseEmpty
+  import cats.mtl.instances.empty.optionTraverseEmpty
 
   def traverseFilterIdentity[G[_] : Applicative, A](fa: F[A]): IsEq[G[F[A]]] = {
     fa.traverseFilter(_.some.pure[G]) <-> fa.pure[G]
