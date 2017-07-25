@@ -72,7 +72,7 @@ class ReaderTTests extends BaseSuite {
   {
     checkAll("Reader[String, ?]",
       ApplicativeLocalTests[ReaderTC[Id, String]#l, String]
-        .applicativeLocal[String])
+        .applicativeLocal[String, String])
     checkAll("FunctorLocal[Reader[String, ?], String]",
       SerializableTests.serializable(ApplicativeLocal[ReaderTC[Id, String]#l, String]))
   }
@@ -80,7 +80,7 @@ class ReaderTTests extends BaseSuite {
   {
     checkAll("ReaderT[Option, String, ?]",
       ApplicativeLocalTests[ReaderTC[Option, String]#l, String]
-        .applicativeLocal[String])
+        .applicativeLocal[String, String])
     checkAll("FunctorLocal[ReaderT[Option, String, ?], String]",
       SerializableTests.serializable(ApplicativeLocal[ReaderTC[Option, String]#l, String]))
   }
@@ -98,32 +98,32 @@ class ReaderTTests extends BaseSuite {
 
       checkAll("ReaderT[ReaderT[Option, String, ?], Int, ?]",
         ApplicativeLocalTests[ReaderTIntOverReaderTStringOverOption, String]
-          .applicativeLocal[String])
+          .applicativeLocal[String, String])
       checkAll("FunctorLocal[ReaderT[ReaderT[Option, String, ?], Int, ?], String]",
         SerializableTests.serializable(ApplicativeLocal[ReaderTIntOverReaderTStringOverOption, String]))
 
       checkAll("StateT[ReaderT[Option, String, ?], Int, ?]",
         ApplicativeLocalTests[StateTIntOverReaderTStringOverOption, String]
-          .applicativeLocal[String])
+          .applicativeLocal[String, String])
       checkAll("FunctorLocal[StateT[ReaderT[Option, String, ?], Int, ?], String]",
         SerializableTests.serializable(ApplicativeLocal[StateTIntOverReaderTStringOverOption, String]))
     }
 
     checkAll("WriterT[ReaderT[Option, String, ?], Int, ?]",
       ApplicativeLocalTests[WriterTIntOverReaderTStringOverOption, String]
-        .applicativeLocal[String])
+        .applicativeLocal[String, String])
     checkAll("FunctorLocal[WriterT[ReaderT[Option, String, ?], Int, ?], String]",
       SerializableTests.serializable(ApplicativeLocal[WriterTIntOverReaderTStringOverOption, String]))
 
     checkAll("OptionT[ReaderT[Option, String, ?], ?]",
       ApplicativeLocalTests[OptionTOverReaderTStringOverOption, String]
-        .applicativeLocal[String])
+        .applicativeLocal[String, String])
     checkAll("FunctorLocal[OptionT[ReaderT[Option, String, ?], ?], String]",
       SerializableTests.serializable(ApplicativeLocal[OptionTOverReaderTStringOverOption, String]))
 
     checkAll("EitherT[ReaderT[Option, String, ?], String, ?]",
       ApplicativeLocalTests[EitherTIntOverReaderTStringOverOption, String]
-        .applicativeLocal[String])
+        .applicativeLocal[String, String])
     checkAll("FunctorLocal[EitherT[ReaderT[Option, String, ?], Int, ?], String]",
       SerializableTests.serializable(ApplicativeLocal[EitherTIntOverReaderTStringOverOption, String]))
 

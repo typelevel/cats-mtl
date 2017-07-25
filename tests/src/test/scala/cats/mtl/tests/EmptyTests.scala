@@ -43,6 +43,12 @@ class EmptyTests extends BaseSuite {
   checkAll("TraverseEmpty[Stream]",
     SerializableTests.serializable(mtl.instances.empty.streamTraverseEmpty))
 
+  checkAll("EitherT[List, Int, ?]",
+    TraverseEmptyTests[EitherTC[List, Int]#l](mtl.instances.empty.traverseEmptyLiftEitherT(mtl.instances.empty.listTraverseEmpty))
+      .traverseEmpty[String, String, String])
+  checkAll("FunctorEmpty[OptionT[List, ?]]",
+    SerializableTests.serializable(mtl.instances.empty.traverseEmptyLiftEitherT(mtl.instances.empty.listTraverseEmpty)))
+
   checkAll("OptionT[List, ?]",
     FunctorEmptyTests[OptionTC[List]#l](mtl.instances.empty.optionTFunctorEmpty[List])
       .functorEmpty[String, String, String])

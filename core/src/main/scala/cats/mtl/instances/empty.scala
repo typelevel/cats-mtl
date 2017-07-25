@@ -2,24 +2,31 @@ package cats
 package mtl
 package instances
 
-import cats.data.{Const, Nested, OptionT}
+import cats.data.{Const, EitherT, Nested, OptionT}
 
 object empty extends EmptyInstances
 
-trait EmptyInstances {
+import cats.syntax.functor._
+import cats.syntax.traverse._
+import cats.syntax.applicative._
+import cats.syntax.either._
+import cats.instances.option._
+import cats.instances.either._
 
-  import cats.syntax.all._
+trait EmptyInstances extends EmptyInstances1 {
 
-  implicit def optionTFunctorEmpty[F[_]: Functor]: FunctorEmpty[OptionTC[F]#l] = new FunctorEmpty[OptionTC[F]#l] {
-    override val functor: Functor[OptionTC[F]#l] = OptionT.catsDataFunctorFilterForOptionT[F]
+  implicit def optionTFunctorEmpty[F[_] : Functor]: FunctorEmpty[OptionTC[F]#l] = {
+    new FunctorEmpty[OptionTC[F]#l] {
+      override val functor: Functor[OptionTC[F]#l] = OptionT.catsDataFunctorFilterForOptionT[F]
 
-    override def mapFilter[A, B](fa: OptionT[F, A])(f: (A) => Option[B]): OptionT[F, B] = fa.subflatMap(f)
+      override def mapFilter[A, B](fa: OptionT[F, A])(f: (A) => Option[B]): OptionT[F, B] = fa.subflatMap(f)
 
-    override def collect[A, B](fa: OptionT[F, A])(f: PartialFunction[A, B]): OptionT[F, B] = fa.subflatMap(f.lift)
+      override def collect[A, B](fa: OptionT[F, A])(f: PartialFunction[A, B]): OptionT[F, B] = fa.subflatMap(f.lift)
 
-    override def flattenOption[A](fa: OptionT[F, Option[A]]): OptionT[F, A] = fa.subflatMap(identity)
+      override def flattenOption[A](fa: OptionT[F, Option[A]]): OptionT[F, A] = fa.subflatMap(identity)
 
-    override def filter[A](fa: OptionT[F, A])(f: (A) => Boolean): OptionT[F, A] = fa.filter(f)
+      override def filter[A](fa: OptionT[F, A])(f: (A) => Boolean): OptionT[F, A] = fa.filter(f)
+    }
   }
 
   implicit val optionTraverseEmpty: TraverseEmpty[Option] = new TraverseEmpty[Option] {
@@ -229,4 +236,50 @@ trait EmptyInstances {
     }
   }
 
+}
+
+trait EmptyInstances1 {
+  implicit def functorEmptyLiftEitherT[M[_], E](implicit under: FunctorEmpty[M]): FunctorEmpty[EitherTC[M, E]#l] = {
+    new FunctorEmpty[EitherTC[M, E]#l] {
+      override val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(under.functor)
+      implicit val func: Functor[M] = under.functor
+
+      override def mapFilter[A, B](fa: EitherT[M, E, A])(f: (A) => Option[B]): EitherT[M, E, B] = {
+        EitherT[M, E, B](under.mapFilter(fa.value)(_.traverse(f)))
+      }
+
+      override def collect[A, B](fa: EitherT[M, E, A])(f: PartialFunction[A, B]): EitherT[M, E, B] = {
+        EitherT[M, E, B](under.mapFilter(fa.value)(_.traverse(f.lift)))
+      }
+
+      override def flattenOption[A](fa: EitherT[M, E, Option[A]]): EitherT[M, E, A] = {
+        EitherT[M, E, A](under.flattenOption[E Either A](fa.value.map(_.sequence)))
+      }
+
+      override def filter[A](fa: EitherT[M, E, A])(f: (A) => Boolean): EitherT[M, E, A] = {
+        EitherT[M, E, A](under.filter(fa.value)(_.forall(f)))
+      }
+    }
+  }
+
+  implicit def traverseEmptyLiftEitherT[M[_], E](implicit under: TraverseEmpty[M]): TraverseEmpty[EitherTC[M, E]#l] = {
+    new TraverseEmpty[EitherTC[M, E]#l] {
+      override val functorEmpty: FunctorEmpty[EitherTC[M, E]#l] = functorEmptyLiftEitherT(under.functorEmpty)
+      override val traverse: Traverse[EitherTC[M, E]#l] = EitherT.catsDataTraverseForEitherT[M, E](under.traverse)
+
+      override def traverseFilter[G[_], A, B](fa: EitherT[M, E, A])
+                                             (f: (A) => G[Option[B]])
+                                             (implicit G: Applicative[G]): G[EitherT[M, E, B]] = {
+        G.map(
+          under.traverseFilter[G, E Either A, E Either B](fa.value)(e =>
+            e.fold[G[Option[E Either B]]](_ => Option(e.asInstanceOf[E Either B]).pure[G], f(_).map(_.map(Either.right(_))))
+          )
+        )(EitherT(_))
+      }
+
+      override def filterA[G[_], A](fa: EitherT[M, E, A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[EitherT[M, E, A]] = {
+        G.map(under.filterA(fa.value)(_.fold(_ => G.pure(true), f)))(EitherT[M, E, A])
+      }
+    }
+    }
 }
