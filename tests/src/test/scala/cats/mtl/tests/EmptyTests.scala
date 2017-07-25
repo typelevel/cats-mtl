@@ -49,6 +49,20 @@ class EmptyTests extends BaseSuite {
   checkAll("FunctorEmpty[OptionT[List, ?]]",
     SerializableTests.serializable(mtl.instances.empty.traverseEmptyLiftEitherT(mtl.instances.empty.listTraverseEmpty)))
 
+  checkAll("Nested[List, List, ?]",
+    TraverseEmptyTests[NestedC[List, List]#l](
+      mtl.instances.empty.catsDataTraverseEmptyForNested[List, List](
+        mtl.instances.empty.listTraverseEmpty.traverse,
+        mtl.instances.empty.listTraverseEmpty)
+    )
+      .traverseEmpty[String, String, String])
+  checkAll("TraverseEmpty[Nested[List, List, ?]]",
+    SerializableTests.serializable(mtl.instances.empty.catsDataTraverseEmptyForNested[List, List](
+      mtl.instances.empty.listTraverseEmpty.traverse,
+      mtl.instances.empty.listTraverseEmpty)
+    )
+  )
+
   checkAll("OptionT[List, ?]",
     FunctorEmptyTests[OptionTC[List]#l](mtl.instances.empty.optionTFunctorEmpty[List])
       .functorEmpty[String, String, String])

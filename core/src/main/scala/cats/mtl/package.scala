@@ -23,5 +23,6 @@ package object mtl {
   private[mtl] type WriterTC[M[_], L] = {type l[A] = WriterT[M, L, A]}
   private[mtl] type WriterTCL[L] = {type l[M[_], A] = WriterT[M, L, A]}
   private[mtl] type of[F[_], G[_]] = {type l[A] = F[G[A]]}
+  private[mtl] type NestedC[F[_], G[_]] = {type l[A] = Nested[F, G, A]}
 
 }

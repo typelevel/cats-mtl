@@ -191,58 +191,58 @@ trait EmptyInstances extends EmptyInstances1 {
     constTraverseEmptyAny.asInstanceOf[TraverseEmpty[ConstC[C]#l]]
   }
 
-  implicit def catsDataTraverseEmptyForNested[F[_] : Traverse, G[_] : TraverseEmpty]: TraverseEmpty[NestedC[F, G]#l] = {
-    new NestedTraverseEmpty[F, G] {
-      val F: Traverse[F] = Traverse[F]
-      val G: TraverseEmpty[G] = TraverseEmpty[G]
-    }
-  }
-
-  type NestedC[F[_], G[_]] = {type l[A] = Nested[F, G, A]}
-
-  private[cats] trait NestedTraverseEmpty[F[_], G[_]] extends TraverseEmpty[NestedC[F, G]#l] {
-    implicit def F: Traverse[F]
-
-    implicit def G: TraverseEmpty[G]
-
-    override val traverse: Traverse[NestedC[F, G]#l] = Nested.catsDataTraverseForNested(F, G.traverse)
-
-    override val functorEmpty: FunctorEmpty[NestedC[F, G]#l] = new FunctorEmpty[NestedC[F, G]#l] {
-      override val functor: Functor[NestedC[F, G]#l] = Nested.catsDataFunctorForNested[F, G](F, G.traverse)
-
-      override def mapFilter[A, B](fa: Nested[F, G, A])(f: (A) => Option[B]): Nested[F, G, B] = {
-        Nested[F, G, B](F.map(fa.value)(G.functorEmpty.mapFilter(_)(f)))
-      }
-
-      override def collect[A, B](fa: Nested[F, G, A])(f: PartialFunction[A, B]): Nested[F, G, B] = {
-        Nested[F, G, B](F.map(fa.value)(G.functorEmpty.collect(_)(f)))
-      }
-
-      override def flattenOption[A](fa: Nested[F, G, Option[A]]): Nested[F, G, A] = {
-        Nested[F, G, A](F.map(fa.value)(G.functorEmpty.flattenOption(_)))
-      }
-
-      override def filter[A](fa: Nested[F, G, A])(f: (A) => Boolean): Nested[F, G, A] = {
-        Nested[F, G, A](F.map(fa.value)(G.functorEmpty.filter(_)(f)))
-      }
-    }
-
-    override def filterA[H[_] : Applicative, A](fa: Nested[F, G, A])(f: A => H[Boolean]): H[Nested[F, G, A]] = {
-      F.traverse(fa.value)(G.filterA[H, A](_)(f)).map(Nested[F, G, A])
-    }
-
-    override def traverseFilter[H[_] : Applicative, A, B](fga: Nested[F, G, A])(f: A => H[Option[B]]): H[Nested[F, G, B]] = {
-      F.traverse[H, G[A], G[B]](fga.value)(ga => G.traverseFilter(ga)(f)).map(Nested[F, G, B])
-    }
+  implicit def catsDataTraverseEmptyForNested[F[_], G[_]](implicit F0: Traverse[F], G0: TraverseEmpty[G]): TraverseEmpty[NestedC[F, G]#l] = {
+    new {
+      val F: Traverse[F] = F0
+      val G: TraverseEmpty[G] = G0
+    } with NestedTraverseEmpty[F, G]
   }
 
 }
 
+private[cats] abstract class NestedTraverseEmpty[F[_], G[_]] extends TraverseEmpty[NestedC[F, G]#l] {
+  implicit val F: Traverse[F]
+
+  implicit val G: TraverseEmpty[G]
+
+  override val traverse: Traverse[NestedC[F, G]#l] = Nested.catsDataTraverseForNested(F, G.traverse)
+
+  override val functorEmpty: FunctorEmpty[NestedC[F, G]#l] = new FunctorEmpty[NestedC[F, G]#l] {
+    override val functor: Functor[NestedC[F, G]#l] = Nested.catsDataFunctorForNested[F, G](F, G.traverse)
+
+    override def mapFilter[A, B](fa: Nested[F, G, A])(f: (A) => Option[B]): Nested[F, G, B] = {
+      Nested[F, G, B](F.map(fa.value)(G.functorEmpty.mapFilter(_)(f)))
+    }
+
+    override def collect[A, B](fa: Nested[F, G, A])(f: PartialFunction[A, B]): Nested[F, G, B] = {
+      Nested[F, G, B](F.map(fa.value)(G.functorEmpty.collect(_)(f)))
+    }
+
+    override def flattenOption[A](fa: Nested[F, G, Option[A]]): Nested[F, G, A] = {
+      Nested[F, G, A](F.map(fa.value)(G.functorEmpty.flattenOption))
+    }
+
+    override def filter[A](fa: Nested[F, G, A])(f: (A) => Boolean): Nested[F, G, A] = {
+      Nested[F, G, A](F.map(fa.value)(G.functorEmpty.filter(_)(f)))
+    }
+  }
+
+  override def filterA[H[_] : Applicative, A](fa: Nested[F, G, A])(f: A => H[Boolean]): H[Nested[F, G, A]] = {
+    F.traverse(fa.value)(G.filterA[H, A](_)(f)).map(Nested[F, G, A])
+  }
+
+  override def traverseFilter[H[_] : Applicative, A, B](fga: Nested[F, G, A]
+                                                       )(f: A => H[Option[B]]): H[Nested[F, G, B]] = {
+    F.traverse[H, G[A], G[B]](fga.value)(ga => G.traverseFilter(ga)(f)).map(Nested[F, G, B])
+  }
+}
+
+
 trait EmptyInstances1 {
   implicit def functorEmptyLiftEitherT[M[_], E](implicit under: FunctorEmpty[M]): FunctorEmpty[EitherTC[M, E]#l] = {
     new FunctorEmpty[EitherTC[M, E]#l] {
-      override val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(under.functor)
-      implicit val func: Functor[M] = under.functor
+      override lazy val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(under.functor)
+      implicit lazy val func: Functor[M] = under.functor
 
       override def mapFilter[A, B](fa: EitherT[M, E, A])(f: (A) => Option[B]): EitherT[M, E, B] = {
         EitherT[M, E, B](under.mapFilter(fa.value)(_.traverse(f)))
@@ -281,5 +281,5 @@ trait EmptyInstances1 {
         G.map(under.filterA(fa.value)(_.fold(_ => G.pure(true), f)))(EitherT[M, E, A])
       }
     }
-    }
+  }
 }

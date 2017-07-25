@@ -16,7 +16,7 @@ package mtl
   * }
   * }}}
   */
-trait MonadLayer[M[_], Inner[_]] extends ApplicativeLayer[M, Inner] with Serializable {
+trait MonadLayer[M[_], Inner[_]] extends ApplicativeLayer[M, Inner] {
   val outerInstance: Monad[M]
   val innerInstance: Monad[Inner]
 }

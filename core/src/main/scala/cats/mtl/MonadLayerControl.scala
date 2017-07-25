@@ -23,7 +23,7 @@ package mtl
   * }
   * }}}
   */
-trait MonadLayerControl[M[_], Inner[_]] extends MonadLayerFunctor[M, Inner] with Serializable {
+trait MonadLayerControl[M[_], Inner[_]] extends MonadLayerFunctor[M, Inner] {
 
   type State[A]
 
