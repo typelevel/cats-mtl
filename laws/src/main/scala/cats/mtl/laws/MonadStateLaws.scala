@@ -13,8 +13,7 @@ trait MonadStateLaws[F[_], S] {
   import stateInstance._
   import monad.pure
 
-  // external laws
-
+  // external laws:
   def getThenSetDoesNothing: IsEq[F[Unit]] = {
     (get >>= set) <-> pure(())
   }
@@ -31,8 +30,7 @@ trait MonadStateLaws[F[_], S] {
     get *> get <-> get
   }
 
-  // internal laws
-
+  // internal law:
   def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] = {
     modify(f) <-> ((get map f) flatMap set)
   }

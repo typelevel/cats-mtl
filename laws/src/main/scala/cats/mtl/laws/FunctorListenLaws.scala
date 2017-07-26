@@ -9,7 +9,7 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
   import listenInstance.{listen, listens}
   import listenInstance.tell._
 
-  // external laws
+  // external laws:
   def listenRespectsTell(l: L): IsEq[F[(Unit, L)]] = {
     listen(tell(l)) <-> tell(l).as(((), l))
   }
@@ -18,7 +18,7 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
     listen(fa).map(_._1) <-> fa
   }
 
-  // internal laws:
+  // internal law:
   def listensIsListenThenMap[A, B](fa: F[A], f: L => B): IsEq[F[(A, B)]] = {
     listens(fa)(f) <-> listen(fa).map { case (a, l) => (a, f(l)) }
   }

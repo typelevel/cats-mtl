@@ -4,6 +4,7 @@ package laws
 
 trait ApplicativeLayerFunctorLaws[M[_], Inner[_]] extends ApplicativeLayerLaws[M, Inner] with FunctorLayerFunctorLaws[M, Inner] {
   implicit val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner]
+  // no extra laws
 }
 
 object ApplicativeLayerFunctorLaws {

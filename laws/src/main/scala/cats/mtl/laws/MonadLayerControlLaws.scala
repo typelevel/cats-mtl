@@ -15,6 +15,7 @@ trait MonadLayerControlLaws[M[_], Inner[_], State0[_]] extends MonadLayerFunctor
   import cats.syntax.applicative._
   import cats.syntax.functor._
 
+  // external laws:
   def distributionLaw[A](nt: State0 ~> State0, st: State0[A]): IsEq[M[A]] = {
     restore(nt(st)) <-> layerControl[State0[A]](_ (restore(st)).map(nt(_))).flatMap(restore)
   }

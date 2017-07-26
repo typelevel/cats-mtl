@@ -6,6 +6,7 @@ trait FunctorLayerFunctorLaws[M[_], Inner[_]] extends FunctorLayerLaws[M, Inner]
   val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]
   import functorLayerFunctorInstance._
 
+  // external law:
   def layerMapRespectsLayerImapK[A](ma: M[A])(forward: Inner ~> Inner,
                                               backward: Inner ~> Inner): IsEq[M[A]] = {
     layerImapK(ma)(forward, backward) <-> layerMapK(ma)(forward)

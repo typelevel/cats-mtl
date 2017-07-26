@@ -6,8 +6,8 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
   implicit val localInstance: ApplicativeLocal[F, E]
 
   import localInstance.{local, scope}
-  import localInstance.ask._
-  import localInstance.ask.applicative._
+  import askInstance.ask
+  import askInstance.applicative._
   import cats.syntax.apply._
 
   // external laws:
@@ -25,7 +25,7 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
 
   // internal law:
   def scopeIsLocalConst[A](fa: F[A], e: E): IsEq[F[A]] = {
-    local(_ => e)(fa) <-> scope(e)(fa)
+    scope(e)(fa) <-> local(_ => e)(fa)
   }
 
 }

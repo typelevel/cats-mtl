@@ -9,7 +9,7 @@ trait FunctorEmptyLaws[F[_]] {
 
   implicit val functor: Functor[F] = functorEmptyInstance.functor
 
-  // external laws
+  // external laws:
   def mapFilterComposition[A, B, C](fa: F[A], f: A => Option[B], g: B => Option[C]): IsEq[F[C]] = {
     val lhs: F[C] = mapFilter(mapFilter(fa)(f))(g)
     val rhs: F[C] = mapFilter(fa)(a => f(a).flatMap(g))
@@ -20,7 +20,7 @@ trait FunctorEmptyLaws[F[_]] {
     mapFilter(fa)(f andThen (x => Some(x): Option[B])) <-> functor.map(fa)(f)
   }
 
-  // internal laws
+  // internal laws:
   def collectConsistentWithMapFilter[A, B](fa: F[A], f: PartialFunction[A, B]): IsEq[F[B]] = {
     collect(fa)(f) <-> mapFilter(fa)(f.lift)
   }

@@ -4,6 +4,7 @@ package laws
 
 trait MonadLayerFunctorLaws[M[_], Inner[_]] extends MonadLayerLaws[M, Inner] with ApplicativeLayerFunctorLaws[M, Inner] {
   val monadLayerFunctorInstance: MonadLayerFunctor[M, Inner]
+  // no extra laws
 }
 
 object MonadLayerFunctorLaws {

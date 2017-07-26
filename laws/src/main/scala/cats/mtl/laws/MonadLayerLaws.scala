@@ -10,6 +10,7 @@ trait MonadLayerLaws[M[_], Inner[_]] extends ApplicativeLayerLaws[M, Inner] {
   implicit val innerMonad: Monad[Inner] = monadLayerInstance.innerInstance
   implicit val outerMonad: Monad[M] = monadLayerInstance.outerInstance
 
+  // external law:
   def layerRespectsFlatMap[A, B](m: Inner[A])(f: A => Inner[B]): IsEq[M[B]] = {
     layer(m).flatMap(f andThen layer[B]) <-> layer(m.flatMap(f))
   }

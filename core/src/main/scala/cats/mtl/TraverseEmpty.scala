@@ -12,12 +12,17 @@ package mtl
   *   fa.traverseFilter(_.some.pure[G]) <-> fa.pure[G]
   * }
   *
-  * def traverseFilterComposition[A, B, C, M[_], N[_]]
-  * (fa: F[A], f: A => M[Option[B]], g: B => N[Option[C]]
-  * )(implicit M: Applicative[M], N: Applicative[N]) = {
-  *   val lhs: Nested[M, N, F[C]] = Nested(fa.traverseFilter(f).map(_.traverseFilter(g)))
-  *   val rhs: Nested[M, N, F[C]] = fa.traverseFilter[Nested[M, N, ?], C](a =>
-  *     Nested(f(a).map(_.traverseFilter(g))))
+  * def traverseFilterComposition[A, B, C, M[_], N[_]](fa: F[A],
+  *                                                    f: A => M[Option[B]],
+  *                                                    g: B => N[Option[C]]
+  *                                                   )(implicit
+  *                                                     M: Applicative[M],
+  *                                                     N: Applicative[N]
+  *                                                   ) = {
+  *   val lhs = Nested[M, N, F[C]](fa.traverseFilter(f).map(_.traverseFilter(g)))
+  *   val rhs: Nested[M, N, F[C]] = fa.traverseFilter[NestedC[M, N]#l, C](a =>
+  *     Nested[M, N, Option[C]](f(a).map(_.traverseFilter(g)))
+  *   )
   *   lhs <-> rhs
   * }
   * }}}
@@ -38,7 +43,7 @@ trait TraverseEmpty[F[_]] extends Serializable {
 
   val functorEmpty: FunctorEmpty[F]
 
-  def traverseFilter[G[_]: Applicative, A, B](fa: F[A])(f: A => G[Option[B]]): G[F[B]]
+  def traverseFilter[G[_] : Applicative, A, B](fa: F[A])(f: A => G[Option[B]]): G[F[B]]
 
   def filterA[G[_], A](fa: F[A])(f: A => G[Boolean])(implicit G: Applicative[G]): G[F[A]]
 }

@@ -10,7 +10,7 @@ trait FunctorTellLaws[F[_], L] {
 
   import tellInstance._
 
-  // internal laws
+  // internal laws:
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
     (tell(l) as a) <-> writer(a, l)
   }

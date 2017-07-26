@@ -23,7 +23,7 @@ package mtl
   * `ApplicativeLocal` has one internal law:
   * {{{
   * def scopeIsLocalConst(fa: F[A], e: E) = {
-  *   local(_ => e)(fa) <-> scope(e)(fa)
+  *   scope(e)(fa) <-> local(_ => e)(fa)
   * }
   * }}}
   *
