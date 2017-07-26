@@ -11,7 +11,7 @@ final class SummonableImplicits extends BaseSuite {
     import cats.data._
     import cats.instances.all._
     import cats.mtl.implicits._
-    def ApplicativeAsk: Unit = {
+    val ApplicativeAsk: Unit = {
       val _1 = implicitly[ApplicativeAsk[ReaderStrId, String]]
 
       val _2 = implicitly[ApplicativeAsk[ReaderStrInt, Int]]
@@ -21,7 +21,7 @@ final class SummonableImplicits extends BaseSuite {
       val _4 = implicitly[ApplicativeAsk[ReaderStrFuncInt, Int]]
     }
 
-    def FunctorListen: Unit = {
+    val FunctorListen: Unit = {
       val _1 = implicitly[FunctorListen[WriterStrId, String]]
 
       val _2 = implicitly[FunctorListen[WriterTStrWriterTInt, String]]
@@ -31,7 +31,7 @@ final class SummonableImplicits extends BaseSuite {
       val _4 = implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]
     }
 
-    def FunctorRaise: Unit = {
+    val FunctorRaise: Unit = {
       val _1 = implicitly[FunctorRaise[EitherStrId, String]]
 
       val _2 = implicitly[FunctorRaise[EitherTStrEitherTInt, Int]]
@@ -39,7 +39,7 @@ final class SummonableImplicits extends BaseSuite {
       val _3 = implicitly[FunctorRaise[EitherTStrEitherTInt, String]]
     }
 
-    def ApplicativeLocal: Unit = {
+    val ApplicativeLocal: Unit = {
       val _1 = implicitly[ApplicativeLocal[ReaderStrId, String]]
 
       val _2 = implicitly[ApplicativeLocal[ReaderStrInt, Int]]
@@ -49,7 +49,7 @@ final class SummonableImplicits extends BaseSuite {
       val _4 = implicitly[ApplicativeLocal[ReaderStrFuncInt, Int]]
     }
 
-    def MonadState: Unit = {
+    val MonadState: Unit = {
       val _1 = implicitly[MonadState[StateStrId, String]]
 
       val _2 = implicitly[MonadState[StateTStrStateTInt, String]]
@@ -57,7 +57,7 @@ final class SummonableImplicits extends BaseSuite {
       val _3 = implicitly[MonadState[StateTStrStateTInt, Int]]
     }
 
-    def FunctorTell: Unit = {
+    val FunctorTell: Unit = {
       val _1 = implicitly[FunctorTell[WriterStrId, String]]
 
       val _2 = implicitly[FunctorTell[WriterTStrWriterTInt, String]]

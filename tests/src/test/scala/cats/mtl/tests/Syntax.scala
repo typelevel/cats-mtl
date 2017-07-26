@@ -12,29 +12,30 @@ final class Syntax extends BaseSuite {
     import cats.data._
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
-      val askedC = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
-      val askedFC = ApplicativeAsk.askF[ReaderIntId]().run(1)
-      val readerFEC = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
-      val readerC = ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
+      val askedC: Id[Int] = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
+      val askedFC: Id[Int] = ApplicativeAsk.askF[ReaderIntId]().run(1)
+      val readerFEC: Id[String] = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
+      val readerC: Id[String] = ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
     }
     test("FunctorListen") {
-      val lift = WriterT.lift[Option, String, Int](Option.empty[Int])
+      val lift: WriterT[Option, String, Int] = WriterT.lift[Option, String, Int](Option.empty[Int])
       val listen: WriterT[Option, String, (Int, String)] = lift.listen
       val listens: WriterT[Option, String, (Int, String)] = lift.listens((_: String) + "suffix")
-      val listenC = FunctorListen.listen(lift)
-      val listensC = FunctorListen.listens(lift)((_: String) + "suffix")
+      val listenC: WriterT[Option, String, (Int, String)] = FunctorListen.listen(lift)
+      val listensC: WriterT[Option, String, (Int, String)] = FunctorListen.listens(lift)((_: String) + "suffix")
     }
     test("ApplicativeLocal") {
-      val fa: OptionT[FunctionC[String]#l, Int] = OptionT.pure(1)
-      val y = fa.local[String](s => s + "!").value("ha")
-      val z = fa.scope[String]("state").value("ha")
-      ApplicativeLocal.local((s: String) => s + "!")(ApplicativeAsk.askF[FunctionC[String]#l]()).apply("ha")
+      val fa: OptionT[FunctionC[String]#l, Int] = OptionT.liftF[FunctionC[String]#l, Int](_.length)
+      val local = fa.local[String](s => s + "!").value("ha")
+      val scope = fa.scope[String]("state").value("ha")
+      val localC: String = ApplicativeLocal.local((s: String) => s + "!")(ApplicativeAsk.askF[FunctionC[String]#l]()).apply("ha")
+      val scopeC: Option[Int] = ApplicativeLocal.scope("state")(fa).value.apply("ha")
     }
     test("FunctorRaise") {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
-      val faC = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
-      val faeC = FunctorRaise.raiseF[EitherC[String]#l]("ha")
+      val faC: Either[String, Int] = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
+      val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
     test("FunctorEmpty") {
       def operateFunctorEmpty[F[_]: FunctorEmpty](fi: F[Int]): Unit = {
@@ -56,13 +57,13 @@ final class Syntax extends BaseSuite {
       operateTraverseEmpty(fa)
     }
     test("MonadState") {
-      val mod = ((s: String) => s + "!").modify[StateC[String]#l].run("")
-      val set = "ha".set[StateC[String]#l].run("")
-      val getC = MonadState.get[StateC[String]#l, String].run("")
-      val setFC = MonadState.setF[StateC[String]#l]("ha").run("")
-      val setC = MonadState.set[StateC[String]#l, String]("ha").run("")
-      val modC = MonadState.modify[StateC[String]#l, String]((s: String) => s + "!")
-      val inspectC = MonadState.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
+      val mod: Eval[(String, Unit)] = ((s: String) => s + "!").modify[StateC[String]#l].run("")
+      val set: Eval[(String, Unit)] = "ha".set[StateC[String]#l].run("")
+      val getC: Eval[(String, String)] = MonadState.get[StateC[String]#l, String].run("")
+      val setFC: Eval[(String, Unit)] = MonadState.setF[StateC[String]#l]("ha").run("")
+      val setC: Eval[(String, Unit)] = MonadState.set[StateC[String]#l, String]("ha").run("")
+      val modC: State[String, Unit] = MonadState.modify[StateC[String]#l, String]((s: String) => s + "!")
+      val inspectC: State[String, String] = MonadState.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
     }
     test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
