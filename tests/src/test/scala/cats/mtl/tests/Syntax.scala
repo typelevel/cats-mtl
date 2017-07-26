@@ -13,7 +13,6 @@ final class Syntax extends BaseSuite {
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
       val asked = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
-      val askedE = ApplicativeAsk.askE[Int]().run(1)
       val askedF = ApplicativeAsk.askF[ReaderIntId]().run(1)
       val readerFE = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
     }
@@ -34,7 +33,6 @@ final class Syntax extends BaseSuite {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
       val faC = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
-      val fatC = FunctorRaise.raiseE[String]("ha")
       val faeC = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
     test("FunctorEmpty") {
