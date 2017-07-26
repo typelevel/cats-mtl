@@ -7,27 +7,12 @@ import cats.syntax.functor._
 
 trait ListenInstances extends ListenInstancesLowPriority {
 
-  final def tellInd[M[_], Inner[_], L](implicit
-                                                lift: ApplicativeLayer[M, Inner],
-                                                under: FunctorTell[Inner, L]
-                                               ): FunctorTell[M, L] = {
-    new FunctorTell[M, L] {
-      val functor: Functor[M] = lift.outerInstance
-
-      def tell(l: L): M[Unit] = lift.layer(under.tell(l))
-
-      def writer[A](a: A, l: L): M[A] = lift.layer(under.writer(a, l))
-
-      def tuple[A](ta: (L, A)): M[A] = lift.layer(under.tuple(ta))
-    }
-  }
-
   implicit final def listenInd[M[_], L, Inner[_], State[_]](implicit
                                                             layer: MonadLayerControl.Aux[M, Inner, State],
                                                             under: FunctorListen[Inner, L]
                                                            ): FunctorListen[M, L] = {
     new FunctorListen[M, L] {
-      val tell: FunctorTell[M, L] = tellInd(layer, under.tell)
+      val tell: FunctorTell[M, L] = instances.tell.tellInd(layer, under.tell)
 
       def listen[A](fa: M[A]): M[(A, L)] = {
         layer.outerInstance.flatMap(layer.layerControl { cps =>
