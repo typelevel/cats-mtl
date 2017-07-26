@@ -17,22 +17,12 @@ trait MonadLayerFunctorTests[M[_], Inner[_]] extends MonadLayerTests[M, Inner] w
                                          ArbFun: Arbitrary[Inner ~> Inner],
                                          EqMA: Eq[M[A]],
                                          EqMB: Eq[M[B]]): RuleSet = {
-    new DefaultRuleSet(
-      name = "monadLayerFunctor",
-      parent = Some(applicativeLayer[A, B]),
-      "layer respects flatMap" -> ∀(laws.layerRespectsFlatMap[A, B](_: Inner[A])(_: A => Inner[B]))
-    )
+    new RuleSet {
+      val name = "monadLayerFunctor"
+      val parents = Seq(applicativeLayer[A, B], monadLayer[A, B])
+      val bases = Seq.empty
+      val props = Seq("layer respects flatMap" -> ∀(laws.layerRespectsFlatMap[A, B](_: Inner[A])(_: A => Inner[B])))
+    }
   }
 }
 
-object MonadLayerFunctorTests {
-  def apply[M[_], Inner[_]](implicit instance: MonadLayerFunctor[M, Inner]): MonadLayerFunctorTests[M, Inner] =
-    new MonadLayerFunctorTests[M, Inner] {
-      override val monadLayerInstance: MonadLayer[M, Inner] = instance
-      override val monadLayerFunctorInstance: MonadLayerFunctor[M, Inner] = instance
-      override val applicativeLayerInstance: ApplicativeLayer[M, Inner] = instance
-      override val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner] = instance
-      override val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner] = instance
-      override val functorLayer: FunctorLayer[M, Inner] = instance
-    }
-}
