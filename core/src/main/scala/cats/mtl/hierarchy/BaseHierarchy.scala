@@ -2,11 +2,13 @@ package cats
 package mtl
 package hierarchy
 
-object BaseHierarchy extends BH0 {
+trait BaseHierarchy extends BH0
 
-}
+object BaseHierarchy extends BaseHierarchy
 
 private[hierarchy] trait BH0 {
+  implicit final def functorEmptyFromTraverseEmpty[F[_]](implicit F: TraverseEmpty[F]): FunctorEmpty[F] = F.functorEmpty
+
   implicit final def askFromLocal[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = local.ask
 
   implicit final def tellFromListen[F[_], L](implicit listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell

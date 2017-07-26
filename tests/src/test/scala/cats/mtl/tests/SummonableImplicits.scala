@@ -7,64 +7,64 @@ final class SummonableImplicits extends BaseSuite {
 
   // test instances.all._
   //noinspection ScalaUnusedSymbol
-  {
+  locally {
     import cats.data._
     import cats.instances.all._
-    import cats.mtl.instances.all._
-    test("ApplicativeAsk") {
-      assertCompiles("implicitly[ApplicativeAsk[ReaderStrId, String]]")
+    import cats.mtl.implicits._
+    def ApplicativeAsk: Unit = {
+      val _1 = implicitly[ApplicativeAsk[ReaderStrId, String]]
 
-      assertCompiles("implicitly[ApplicativeAsk[ReaderStrInt, Int]]")
+      val _2 = implicitly[ApplicativeAsk[ReaderStrInt, Int]]
 
-      assertCompiles("implicitly[ApplicativeAsk[ReaderStrInt, String]]")
+      val _3 = implicitly[ApplicativeAsk[ReaderStrInt, String]]
 
-      assertCompiles("implicitly[ApplicativeAsk[ReaderStrFuncInt, Int]]")
+      val _4 = implicitly[ApplicativeAsk[ReaderStrFuncInt, Int]]
     }
 
-    test("FunctorListen") {
-      assertCompiles("implicitly[FunctorListen[WriterStrId, String]]")
+    def FunctorListen: Unit = {
+      val _1 = implicitly[FunctorListen[WriterStrId, String]]
 
-      assertCompiles("implicitly[FunctorListen[WriterTStrWriterTInt, String]]")
+      val _2 = implicitly[FunctorListen[WriterTStrWriterTInt, String]]
 
-      assertCompiles("implicitly[FunctorListen[WriterTStrWriterTInt, Vector[Int]]]")
+      val _3 = implicitly[FunctorListen[WriterTStrWriterTInt, Vector[Int]]]
 
-      assertCompiles("implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]")
+      val _4 = implicitly[FunctorListen[WriterTStrTupleInt, Vector[Int]]]
     }
 
-    test("FunctorRaise") {
-      assertCompiles("implicitly[FunctorRaise[EitherStrId, String]]")
+    def FunctorRaise: Unit = {
+      val _1 = implicitly[FunctorRaise[EitherStrId, String]]
 
-      assertCompiles("implicitly[FunctorRaise[EitherTStrEitherTInt, Int]]")
+      val _2 = implicitly[FunctorRaise[EitherTStrEitherTInt, Int]]
 
-      assertCompiles("implicitly[FunctorRaise[EitherTStrEitherTInt, String]]")
+      val _3 = implicitly[FunctorRaise[EitherTStrEitherTInt, String]]
     }
 
-    test("ApplicativeLocal") {
-      assertCompiles("implicitly[ApplicativeLocal[ReaderStrId, String]]")
+    def ApplicativeLocal: Unit = {
+      val _1 = implicitly[ApplicativeLocal[ReaderStrId, String]]
 
-      assertCompiles("implicitly[ApplicativeLocal[ReaderStrInt, Int]]")
+      val _2 = implicitly[ApplicativeLocal[ReaderStrInt, Int]]
 
-      assertCompiles("implicitly[ApplicativeLocal[ReaderStrInt, String]]")
+      val _3 = implicitly[ApplicativeLocal[ReaderStrInt, String]]
 
-      assertCompiles("implicitly[ApplicativeLocal[ReaderStrFuncInt, Int]]")
+      val _4 = implicitly[ApplicativeLocal[ReaderStrFuncInt, Int]]
     }
 
-    test("MonadState") {
-      assertCompiles("implicitly[MonadState[StateStrId, String]]")
+    def MonadState: Unit = {
+      val _1 = implicitly[MonadState[StateStrId, String]]
 
-      assertCompiles("implicitly[MonadState[StateTStrStateTInt, String]]")
+      val _2 = implicitly[MonadState[StateTStrStateTInt, String]]
 
-      assertCompiles("implicitly[MonadState[StateTStrStateTInt, Int]]")
+      val _3 = implicitly[MonadState[StateTStrStateTInt, Int]]
     }
 
-    test("FunctorTell") {
-      assertCompiles("implicitly[FunctorTell[WriterStrId, String]]")
+    def FunctorTell: Unit = {
+      val _1 = implicitly[FunctorTell[WriterStrId, String]]
 
-      assertCompiles("implicitly[FunctorTell[WriterTStrWriterTInt, String]]")
+      val _2 = implicitly[FunctorTell[WriterTStrWriterTInt, String]]
 
-      assertCompiles("implicitly[FunctorTell[WriterTStrWriterTInt, Vector[Int]]]")
+      val _3 = implicitly[FunctorTell[WriterTStrWriterTInt, Vector[Int]]]
 
-      assertCompiles("implicitly[FunctorTell[WriterTStrTupleInt, Vector[Int]]]")
+      val _4 = implicitly[FunctorTell[WriterTStrTupleInt, Vector[Int]]]
     }
   }
 

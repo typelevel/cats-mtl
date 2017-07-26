@@ -8,8 +8,7 @@ final class Syntax extends BaseSuite {
   //noinspection ScalaUnusedSymbol
   {
     import cats.instances.all._
-    import cats.mtl.instances.all._
-    import cats.mtl.syntax.all._
+    import cats.mtl.implicits._
     import cats.data._
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
@@ -27,6 +26,25 @@ final class Syntax extends BaseSuite {
     test("FunctorRaise") {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
+    }
+    test("FunctorEmpty") {
+      def operateFunctorEmpty[F[_]: FunctorEmpty](fi: F[Int]): Unit = {
+        val _1 = fi.collect { case i if i < 2 => i }
+        val _2 = fi.filter(_ < 2)
+        val _3 = fi.mapFilter(Some(_).filter(_ < 2))
+        ()
+      }
+      val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)
+      operateFunctorEmpty(fa)
+    }
+    test("TraverseEmpty") {
+      def operateTraverseEmpty[F[_]: TraverseEmpty](fi: F[Int]): Unit = {
+        val _1 = fi.filterA[Option](i => Some(i < 2))
+        val _2 = fi.traverseFilter[Option, Int] { i => Some(Some(i).filter(_ < 2)) }
+        ()
+      }
+      val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)
+      operateTraverseEmpty(fa)
     }
     test("MonadState") {
       val mod: State[String, Unit] = ((s: String) => s + "!").modify[StateC[String]#l]

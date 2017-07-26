@@ -1,6 +1,6 @@
 package cats
 package mtl
 
-package object implicits {
+package object implicits extends hierarchy.BaseHierarchy
+    with instances.AllInstances with syntax.AllSyntax
 
-}
