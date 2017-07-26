@@ -67,6 +67,7 @@ final class Syntax extends BaseSuite {
     }
     test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
+      val tupled: WriterT[Option, String, Unit] = ("ha", ()).tuple[WriterTC[Option, String]#l]
       val toldC = FunctorTell.tell[WriterTC[Option, String]#l, String]("ha")
       val toldFC = FunctorTell.tellF[WriterTC[Option, String]#l]("ha")
     }
