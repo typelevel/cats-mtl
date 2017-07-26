@@ -37,15 +37,7 @@ object ApplicativeAsk {
     ask.ask
   }
 
-  def askE[E]: askEPartiallyApplied[E] = new askEPartiallyApplied[E]
-
   def askF[F[_]]: askFPartiallyApplied[F] = new askFPartiallyApplied[F]
-
-  @inline final private[mtl] class askEPartiallyApplied[E](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[F[_]]()(implicit ask: ApplicativeAsk[F, E]): F[E] = {
-      ask.ask
-    }
-  }
 
   @inline final private[mtl] class askFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[E]()(implicit ask: `ApplicativeAsk`[F, E]): F[E] = {

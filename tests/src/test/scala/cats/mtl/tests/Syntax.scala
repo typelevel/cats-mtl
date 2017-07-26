@@ -12,9 +12,10 @@ final class Syntax extends BaseSuite {
     import cats.data._
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
-      val asked = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
-      val askedF = ApplicativeAsk.askF[ReaderIntId]().run(1)
-      val readerFE = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
+      val askedC = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
+      val askedFC = ApplicativeAsk.askF[ReaderIntId]().run(1)
+      val readerFEC = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
+      val readerC = ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
     }
     test("FunctorListen") {
       val lift = WriterT.lift[Option, String, Int](Option.empty[Int])
