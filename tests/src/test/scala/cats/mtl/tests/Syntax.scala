@@ -10,6 +10,7 @@ final class Syntax extends BaseSuite {
     import cats.instances.all._
     import cats.mtl.implicits._
     import cats.data._
+    import cats.syntax.functor._
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
       val askedC: Id[Int] = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
@@ -42,6 +43,7 @@ final class Syntax extends BaseSuite {
         val _1 = fi.collect { case i if i < 2 => i }
         val _2 = fi.filter(_ < 2)
         val _3 = fi.mapFilter(Some(_).filter(_ < 2))
+        val _4 = fi.map(a => Some(a): Option[Int]).flattenOption
         ()
       }
       val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)

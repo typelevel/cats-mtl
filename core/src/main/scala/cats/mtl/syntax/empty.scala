@@ -20,7 +20,7 @@ final class EmptyOps[F[_], A](val fa: F[A]) extends AnyVal {
 }
 
 final class FlattenOptionOps[F[_], A](val fa: F[Option[A]]) extends AnyVal {
-  def flattenOption(fa: F[Option[A]])(implicit F: FunctorEmpty[F]): F[A] = F.flattenOption(fa)
+  def flattenOption(implicit F: FunctorEmpty[F]): F[A] = F.flattenOption(fa)
 }
 
 object empty extends EmptySyntax
