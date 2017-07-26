@@ -33,14 +33,6 @@ object FunctorTell {
 
   def tellF[F[_]]: tellFPartiallyApplied[F] = new tellFPartiallyApplied[F]
 
-  def tellL[L]: tellLPartiallyApplied[L] = new tellLPartiallyApplied[L]
-
-  final private[mtl] class tellLPartiallyApplied[L](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[F[_]](l: L)(implicit tell: FunctorTell[F, L]): F[Unit] = {
-      tell.tell(l)
-    }
-  }
-
   final private[mtl] class tellFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
     @inline def apply[L](l: L)(implicit tell: FunctorTell[F, L]): F[Unit] = {
       tell.tell(l)
