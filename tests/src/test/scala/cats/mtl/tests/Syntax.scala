@@ -61,6 +61,8 @@ final class Syntax extends BaseSuite {
       val getC = MonadState.get[StateC[String]#l, String].run("")
       val setFC = MonadState.setF[StateC[String]#l]("ha").run("")
       val setC = MonadState.set[StateC[String]#l, String]("ha").run("")
+      val modC = MonadState.modify[StateC[String]#l, String]((s: String) => s + "!")
+      val inspectC = MonadState.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
     }
     test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
