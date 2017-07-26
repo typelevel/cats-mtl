@@ -25,11 +25,3 @@ trait MonadLayerTests[M[_], Inner[_]] extends ApplicativeLayerTests[M, Inner] {
   }
 }
 
-object MonadLayerTests {
-  def apply[M[_], Inner[_]](implicit monadLayerInstance0: MonadLayer[M, Inner]): MonadLayerTests[M, Inner] =
-    new MonadLayerTests[M, Inner] {
-      override implicit val monadLayerInstance: MonadLayer[M, Inner] = monadLayerInstance0
-      override implicit val applicativeLayerInstance: ApplicativeLayer[M, Inner] = monadLayerInstance0
-      override implicit val functorLayer: FunctorLayer[M, Inner] = monadLayerInstance0
-    }
-}

@@ -57,8 +57,11 @@ final class Syntax extends BaseSuite {
       operateTraverseEmpty(fa)
     }
     test("MonadState") {
-      val mod: State[String, Unit] = ((s: String) => s + "!").modify[StateC[String]#l]
-      val set: State[String, Unit] = "ha".set[StateC[String]#l]
+      val mod = ((s: String) => s + "!").modify[StateC[String]#l].run("")
+      val set = "ha".set[StateC[String]#l].run("")
+      val getC = MonadState.get[StateC[String]#l, String].run("")
+      val setFC = MonadState.setF[StateC[String]#l]("ha").run("")
+      val setC = MonadState.set[StateC[String]]("ha").run("")
     }
     test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]

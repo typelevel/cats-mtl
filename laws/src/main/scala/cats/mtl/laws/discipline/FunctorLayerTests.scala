@@ -25,11 +25,3 @@ trait FunctorLayerTests[M[_], Inner[_]] extends Laws {
   }
 
 }
-
-object FunctorLayerTests {
-  def apply[M[_], Inner[_]](implicit instance0: FunctorLayer[M, Inner]): FunctorLayerTests[M, Inner] = {
-    new FunctorLayerTests[M, Inner] with Laws {
-      override lazy val functorLayer: FunctorLayer[M, Inner] = instance0
-    }
-  }
-}
