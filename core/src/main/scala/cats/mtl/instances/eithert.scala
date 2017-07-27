@@ -10,7 +10,7 @@ trait EitherTInstances extends EitherTInstances0 {
     new MonadLayerControl[EitherTC[M, E]#l, M] {
       type State[A] = E Either A
 
-      val outerInstance: Monad[CurryT[EitherTCE[E]#l, M]#l] =
+      val outerInstance: Monad[EitherTC[M, E]#l] =
         EitherT.catsDataMonadErrorForEitherT
 
       val innerInstance: Monad[M] = M

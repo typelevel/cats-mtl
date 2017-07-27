@@ -41,7 +41,7 @@ private[instances] trait WriterTInstances2 {
     new MonadLayerControl[WriterTC[M, L]#l, M] {
       type State[A] = (L, A)
 
-      val outerInstance: Monad[CurryT[WriterTCL[L]#l, M]#l] =
+      val outerInstance: Monad[WriterTC[M, L]#l] =
         WriterT.catsDataMonadWriterForWriterT
 
       val innerInstance: Monad[M] = M

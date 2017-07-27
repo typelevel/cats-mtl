@@ -40,7 +40,7 @@ trait LocalInstances extends LocalLowPriorityInstances {
 }
 
 private[instances] trait LocalLowPriorityInstances {
-  implicit final def localReader[M[_], E](implicit M: Applicative[M]): ApplicativeLocal[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+  implicit final def localReader[M[_], E](implicit M: Applicative[M]): ApplicativeLocal[ReaderTC[M, E]#l, E] = {
     new ApplicativeLocal[ReaderTC[M, E]#l, E] {
       val ask: ApplicativeAsk[ReaderTC[M, E]#l, E] =
         askReader[M, E]
@@ -62,7 +62,7 @@ private[instances] trait LocalLowPriorityInstances {
     }
   }
 
-  final def askReader[M[_], E](implicit M: Applicative[M]): ApplicativeAsk[CurryT[ReaderTCE[E]#l, M]#l, E] = {
+  final def askReader[M[_], E](implicit M: Applicative[M]): ApplicativeAsk[ReaderTC[M, E]#l, E] = {
     new ApplicativeAsk[ReaderTC[M, E]#l, E] {
       val applicative: Applicative[ReaderTC[M, E]#l] =
         ReaderT.catsDataApplicativeForKleisli(M)

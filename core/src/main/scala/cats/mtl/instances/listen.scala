@@ -74,8 +74,8 @@ trait ListenInstancesLowPriority {
     }
   }
 
-  final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] = {
-    new FunctorTell[CurryT[WriterTCL[L]#l, M]#l, L] {
+  final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): FunctorTell[WriterTC[M, L]#l, L] = {
+    new FunctorTell[WriterTC[M, L]#l, L] {
       val functor = new Functor[WriterTC[M, L]#l] {
         def map[A, B](fa: WriterT[M, L, A])(f: (A) => B): WriterT[M, L, B] = fa.map(f)
       }

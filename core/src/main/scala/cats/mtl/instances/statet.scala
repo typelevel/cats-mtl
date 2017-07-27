@@ -7,7 +7,7 @@ import cats.syntax.functor._
 
 trait StateTInstances {
   implicit final def stateMonadLayerControl[M[_], S]
-  (implicit M: Monad[M]): MonadLayerControl.Aux[CurryT[StateTCS[S]#l, M]#l, M, TupleC[S]#l] = {
+  (implicit M: Monad[M]): MonadLayerControl.Aux[StateTC[M, S]#l, M, TupleC[S]#l] = {
     new MonadLayerControl[StateTC[M, S]#l, M] {
       type State[A] = (S, A)
 

@@ -29,7 +29,7 @@ trait StateInstances extends StateInstancesLowPriority1 {
 }
 
 private[instances] trait StateInstancesLowPriority1 {
-  implicit final def stateState[M[_], S](implicit M: Monad[M]): MonadState[CurryT[StateTCS[S]#l, M]#l, S] = {
+  implicit final def stateState[M[_], S](implicit M: Monad[M]): MonadState[StateTC[M, S]#l, S] = {
     new MonadState[StateTC[M, S]#l, S] {
       val monadInstance: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
 
