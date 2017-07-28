@@ -10,7 +10,7 @@ trait OptionTInstances extends OptionTInstances1 {
     new FunctorLayerFunctor[OptionTC[M]#l, M] {
       def layerMapK[A](ma: OptionT[M, A])(trans: M ~> M): OptionT[M, A] = OptionT(trans(ma.value))
 
-      val outerInstance: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorFilterForOptionT(M)
+      val outerInstance: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorForOptionT(M)
       val innerInstance: Functor[M] = M
 
       def layer[A](inner: M[A]): OptionT[M, A] = OptionT.liftF(inner)

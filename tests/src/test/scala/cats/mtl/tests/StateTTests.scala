@@ -26,10 +26,6 @@ class StateTTests extends BaseSuite {
       def apply[A](fa: Option[A]): Option[A] = None
     }, FunctionK.id[Option]))
 
-  implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
-    Arbitrary(F.arbitrary.map(StateT.applyF))
-  }
-
   implicit def eqKleisli[F[_], A, B](implicit arb: Arbitrary[A], ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] = {
     Eq.by((x: (Kleisli[F, A, B])) => x.run)
   }

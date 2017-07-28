@@ -13,11 +13,11 @@ object Dependencies {
     val kindProjector = "0.9.3"
     val simulacrum = "0.10.0"
     val machinist = "0.6.1"
-    val cats = "0.9.0"
+    val cats = "1.0.0-MF"
     val shapeless = "2.3.2"
   }
 
-  val acyclic = Def.settings(
+  val acyclic: Seq[Def.Setting[_]] = Def.settings(
     libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.7" % "provided",
     autoCompilerPlugins := true,
     addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.7"),
@@ -44,7 +44,9 @@ object Dependencies {
   ))
 
   val catsBundle: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    "org.typelevel" %%% "cats" % Versions.cats
+    "org.typelevel" %%% "cats-core" % Versions.cats,
+    "org.typelevel" %%% "cats-free" % Versions.cats,
+    "org.typelevel" %%% "cats-laws" % Versions.cats
   ))
 
   val catsCore: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(

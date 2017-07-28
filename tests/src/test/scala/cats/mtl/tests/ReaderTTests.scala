@@ -26,10 +26,6 @@ class ReaderTTests extends BaseSuite {
     eqKleisli[Id, A, B]
   }
 
-  implicit def catsLawsArbitraryForKleisliId[A, B](implicit F: Arbitrary[A => B]): Arbitrary[Kleisli[Id, A, B]] = {
-    Arbitrary(F.arbitrary.map(Kleisli[Id, A, B]))
-  }
-
   implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
     Arbitrary(F.arbitrary.map(StateT.applyF))
   }

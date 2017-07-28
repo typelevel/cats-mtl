@@ -42,7 +42,7 @@ private[instances] trait WriterTInstances2 {
       type State[A] = (L, A)
 
       val outerInstance: Monad[WriterTC[M, L]#l] =
-        WriterT.catsDataMonadWriterForWriterT
+        WriterT.catsDataMonadForWriterT
 
       val innerInstance: Monad[M] = M
 

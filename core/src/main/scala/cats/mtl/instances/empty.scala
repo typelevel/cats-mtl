@@ -17,7 +17,7 @@ trait EmptyInstances extends EmptyInstances1 {
 
   implicit def optionTFunctorEmpty[F[_] : Functor]: FunctorEmpty[OptionTC[F]#l] = {
     new FunctorEmpty[OptionTC[F]#l] {
-      override val functor: Functor[OptionTC[F]#l] = OptionT.catsDataFunctorFilterForOptionT[F]
+      override val functor: Functor[OptionTC[F]#l] = OptionT.catsDataFunctorForOptionT[F]
 
       override def mapFilter[A, B](fa: OptionT[F, A])(f: (A) => Option[B]): OptionT[F, B] = fa.subflatMap(f)
 
@@ -165,7 +165,7 @@ trait EmptyInstances extends EmptyInstances1 {
   type ConstC[C] = {type l[A] = Const[C, A]}
   val constTraverseEmptyAny: TraverseEmpty[ConstC[Any]#l] = new TraverseEmpty[ConstC[Any]#l] {
     override val functorEmpty: FunctorEmpty[ConstC[Any]#l] = new FunctorEmpty[ConstC[Any]#l] {
-      override val functor: Functor[ConstC[Any]#l] = Const.catsDataTraverseFilterForConst
+      override val functor: Functor[ConstC[Any]#l] = Const.catsDataTraverseForConst[Any]
 
       override def mapFilter[A, B](fa: Const[Any, A])(f: (A) => Option[B]): Const[Any, B] = fa.retag
 
@@ -184,7 +184,7 @@ trait EmptyInstances extends EmptyInstances1 {
       fa.pure[G]
     }
 
-    override val traverse: Traverse[ConstC[Any]#l] = Const.catsDataTraverseFilterForConst[Any]
+    override val traverse: Traverse[ConstC[Any]#l] = Const.catsDataTraverseForConst[Any]
   }
 
   implicit def constTraverseEmpty[C]: TraverseEmpty[ConstC[C]#l] = {

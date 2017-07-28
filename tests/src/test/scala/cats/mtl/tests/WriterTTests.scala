@@ -22,10 +22,6 @@ class WriterTTests extends BaseSuite {
     Eq.by((x: (Kleisli[F, A, B])) => x.run)
   }
 
-  implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
-    Arbitrary(F.arbitrary.map(StateT.applyF))
-  }
-
   implicit def stateTEq[F[_], S, A](implicit S: Arbitrary[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {
     Eq.by[StateT[F, S, A], S => F[(S, A)]](state =>
       s => state.run(s))

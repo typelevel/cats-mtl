@@ -76,7 +76,7 @@ private[instances] trait LocalLowPriorityInstances {
   final def askFunction[E]: ApplicativeAsk[FunctionC[E]#l, E] = {
     new ApplicativeAsk[FunctionC[E]#l, E] {
       val applicative: Applicative[FunctionC[E]#l] =
-        cats.instances.function.catsStdMonadReaderForFunction1
+        cats.instances.function.catsStdMonadForFunction1[E]
 
       def ask: E => E = identity[E]
 

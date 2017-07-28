@@ -39,7 +39,7 @@ trait ReaderTInstances2 {
       type State[A] = Id[A]
 
       val outerInstance: Monad[ReaderTC[M, E]#l] =
-        ReaderT.catsDataMonadReaderForKleisli
+        ReaderT.catsDataMonadForKleisli
 
       val innerInstance: Monad[M] = M
 
