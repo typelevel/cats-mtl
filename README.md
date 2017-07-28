@@ -1,3 +1,9 @@
+## Usage
+```scala
+libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.0.1"
+resolvers += Resolver.bintrayRepo("edmundnoble", "maven")
+```
+
 ## cats-mtl
 
 [![Build Status](https://api.travis-ci.org/typelevel/cats.svg)](https://travis-ci.org/typelevel/cats)
