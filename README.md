@@ -6,7 +6,8 @@ resolvers += Resolver.bintrayRepo("edmundnoble", "maven")
 
 ## cats-mtl
 
-[![Build Status](https://api.travis-ci.org/typelevel/cats.svg)](https://travis-ci.org/typelevel/cats)
+[![Build Status](https://api.travis-ci.org/edmundnoble/cats-mtl.svg)](https://travis-ci.org/edmundnoble/cats-mtl)
+[![codecov.io](http://codecov.io/github/edmundnoble/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/edmundnoble/cats-mtl?branch=master)
 
 Transformer type classes for cats.
 
