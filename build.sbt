@@ -12,6 +12,12 @@ addCommandAlias("validateJS", ";catsMtlJS/compile;testsJS/test;js/test")
 
 addCommandAlias("validate", ";clean;validateJS;validateJVM")
 
+sbtPlugin := true
+
+publishMavenStyle := false
+
+bintrayOrganization in bintray := None
+
 // projects
 
 val core = crossProject.crossType(CrossType.Pure)
@@ -46,6 +52,7 @@ val laws = crossProject.crossType(CrossType.Pure)
   .settings(moduleName := "cats-mtl-laws", name := "Cats MTL laws")
   .settings(Settings.coreSettings:_*)
   .settings(Dependencies.catsBundle:_*)
+  .settings(Publishing.publishSettings)
   .settings(Dependencies.discipline:_*)
   .configureCross(Coverage.disableScoverage210Jvm)
   .settings(Dependencies.catalystsAndScalatest: _*)
