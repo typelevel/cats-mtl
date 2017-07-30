@@ -28,6 +28,15 @@ Here's a map from cats type classes to cats-mtl type classes:
  - `MonadReader --> ApplicativeLocal`
  - `MonadWriter --> FunctorListen`
  - `MonadState --> MonadState`
+ - `FunctorFilter --> FunctorEmpty`
+ - `TraverseFilter --> TraverseEmpty`
+
+cats type class parameters and context bounds have to be rewritten, to include base classes.
+For example: 
+- `[F[_]: FunctorFilter]` will have to be adjusted to `[F[_]: Functor: FunctorEmpty]`,
+- `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
+
+The root cause for this is addressed in the motivation section.
 
 #### MTL classes
 
@@ -102,14 +111,38 @@ For example, `FunctorListen` requires this type class to lift through a transfor
 `MonadTrans` forces the shape `T[_[_], _]` on anything which can "contain" another monad, 
 but newtyping around an instantiated transformer eliminates that shape.
 
+## Motivation
+
+The motivation for cats-mtl's existence can be summed up in a few points:
+- using subtyping to express typeclass subclassing results in implicit ambiguities,
+  and doing it another way would result in a massive inconsistency inside cats if only done for MTL classes.
+  for a detailed explanation, see Adelbert Chang's article
+  [here](http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html).
+- most MTL classes do not actually require `Monad` as a constraint for their laws.
+  cats-mtl weakens this constraint to `Functor` or `Applicative` whenever possible,
+  with the result that there's now a notion of a `Functor` transformer stack and 
+  `Applicative` transformer stack in addition to that of a `Monad` transformer stack.
+- the most used operations on `MonadWriter` and `MonadReader` are `tell` and `ask`,
+  and the other operations severely restrict the space of implementations despite being
+  used much less. To fix this `FunctorListen` and `ApplicativeLocal` are subclasses
+  of `FunctorTell` and `ApplicativeAsk`, which have only the essentials.
+
+For some historical info on the origins of cats-mtl, see:
+
+https://github.com/typelevel/cats/issues/1210
+
+https://github.com/typelevel/cats/pull/1379
+
+https://github.com/typelevel/cats/pull/1751
+
 ## Type class summaries
 From the scaladoc:
 
 `ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
 Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
 
-`ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
-using `ask`; the modification can only be observed from within that `F[A]` value.
+`ApplicativeLocal[F, E]` lets you substitute all of the `ask` occurrences in an `F[A]` value with
+`ask.map(f)`, for some `f: E => E` which produces a modified `E` input.
 
 `FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
 
@@ -144,7 +177,7 @@ or some justification attached to make sure these aren't just made up.
 
 People are expected to follow the
 [Typelevel Code of Conduct](http://typelevel.org/conduct.html) when
-discussing cats-mtl  on the Github page, Gitter channel, or other
+discussing cats-mtl on the Github page, Gitter channel, or other
 venues.
 
 We hope that our community will be respectful, helpful, and kind. If
