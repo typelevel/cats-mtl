@@ -108,8 +108,10 @@ as long as the value produced with it is already in the `M[_]` context.
 For example, `FunctorListen` requires this type class to lift through a transformer.
 
 #### Why not MonadTrans, etc?
-`MonadTrans` forces the shape `T[_[_], _]` on anything which can "contain" another monad, 
-but newtyping around an instantiated transformer eliminates that shape.
+`MonadTrans` forces the shape `T[_[_], _]` on anything which can "contain" another monad,
+but newtyping around an instantiated transformer eliminates that shape. I don't see usecases
+in the wild which lift transformations `M ~> N` inside a transformer to implement any MTL class,
+so the extra power was removed.
 
 ## Motivation
 
@@ -162,12 +164,11 @@ from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
 
 Laws come in a few loosely defined flavors in cats-mtl: internal, external, and free.
 
-Internal laws dictate how multiple operations inter-relate, 
+Internal laws dictate how multiple operations inter-relate,
 one side of the equation can always be reduced to a single function application of an operation.
 These express "default" implementations that should be indistinguishable in result from the actual implementation.
 
-External laws dictate how (potentially) multiple operations relate to each other and inherited operations,
-but do not dictate a default implementation.
+External laws are laws that still need to be tested but don't fall into the internal laws.
 
 Free laws are (in theory) unnecessary to test, because they are implied by other laws and the 
 types of the operations in question. There will usually be rudimentary proofs 
