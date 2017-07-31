@@ -9,29 +9,28 @@ resolvers += Resolver.bintrayRepo("edmundnoble", "maven")
 [![Build Status](https://api.travis-ci.org/edmundnoble/cats-mtl.svg)](https://travis-ci.org/edmundnoble/cats-mtl)
 [![codecov.io](http://codecov.io/github/edmundnoble/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/edmundnoble/cats-mtl?branch=master)
 
-Transformer type classes for cats.
+Transformer typeclasses for cats.
 
-Provides transformer type classes for cats' Monads, Applicatives and Functors.
+Provides transformer typeclasses for cats' Monads, Applicatives and Functors.
 
-As well, there are some abstractions thrown in that allow you to
-generically lift MTL type classes 
-through transformers.
+As well, there are some abstractions thrown in that allow you
+to generically lift MTL typeclasses through transformers.
 
-You can have multiple cats-mtl transformer type classes in scope at once 
+You can have multiple cats-mtl transformer typeclasses in scope at once
 without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 
-## Type classes
+## Typeclasses
 
 #### Migration guide
 
-Here's a map from cats type classes to cats-mtl type classes:
+Here's a map from cats typeclasses to cats-mtl typeclasses:
  - `MonadReader --> ApplicativeLocal`
  - `MonadWriter --> FunctorListen`
  - `MonadState --> MonadState`
  - `FunctorFilter --> FunctorEmpty`
  - `TraverseFilter --> TraverseEmpty`
 
-cats type class parameters and context bounds have to be rewritten, to include base classes.
+cats typeclass parameters and context bounds have to be rewritten, to include base classes.
 For example: 
 - `[F[_]: FunctorFilter]` will have to be adjusted to `[F[_]: Functor: FunctorEmpty]`,
 - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
@@ -49,17 +48,17 @@ cats-mtl provides the following "MTL classes":
  - `FunctorTell`
  - `MonadState`
 
-All of these are type classes built on top of other "base" type classes to provide extra laws.
-Because they are commonly combined, the base type classes are ambiguous in implicit scope using
+All of these are typeclasses built on top of other "base" typeclasses to provide extra laws.
+Because they are commonly combined, the base typeclasses are ambiguous in implicit scope using
 the typical cats subclass encoding via subtyping. Thus in cats-mtl, the ambiguity is avoided by using
 an implicit scope with a different priority to house each conversion `Subclass => Base`.
 
-Compared to cats and Haskell's mtl library, cats-mtl's type classes have the smallest superclass dependencies
+Compared to cats and Haskell's mtl library, cats-mtl's typeclasses have the smallest superclass dependencies
 practically possible and in some cases smaller sets of operations so that they can be lifted over more transformers.
 
 #### Lifting classes
 
-Several other type classes are provided to lift type classes 
+Several other typeclasses are provided to lift typeclasses
 through transformer data types, like `OptionT`.
 
 They form a hierarchy:
@@ -105,13 +104,36 @@ Mapping natural transformations over the inner `Inner` inside `M`.
 `MonadLayerControl` allows you to lift operations that *consume* `M` using the `layerControl` method,
 which allows one the ability to "unravel" an `M[A]` to an `Inner[State[A]]` temporarily,
 as long as the value produced with it is already in the `M[_]` context.
-For example, `FunctorListen` requires this type class to lift through a transformer.
+For example, `FunctorListen` requires this typeclass to lift through a transformer.
 
 #### Why not MonadTrans, etc?
 `MonadTrans` forces the shape `T[_[_], _]` on anything which can "contain" another monad,
 but newtyping around an instantiated transformer eliminates that shape. I don't see usecases
 in the wild which lift transformations `M ~> N` inside a transformer to implement any MTL class,
 so the extra power was removed.
+
+#### Typeclass summaries
+From the scaladoc:
+
+`ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
+Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
+
+`ApplicativeLocal[F, E]` lets you substitute all of the `ask` occurrences in an `F[A]` value with
+`ask.map(f)`, for some `f: E => E` which produces a modified `E` input.
+
+`FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
+
+`FunctorListen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
+that is contained in all `F[A]` values, and can be modified using `tell`.
+
+`FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
+This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,
+and further `map` calls will not have any values to execute the passed function on.
+
+`FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
+
+`MonadState[F, S]` is the capability to access and modify a state value
+from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
 
 ## Motivation
 
@@ -136,29 +158,6 @@ https://github.com/typelevel/cats/issues/1210
 https://github.com/typelevel/cats/pull/1379
 
 https://github.com/typelevel/cats/pull/1751
-
-## Type class summaries
-From the scaladoc:
-
-`ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
-Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
-
-`ApplicativeLocal[F, E]` lets you substitute all of the `ask` occurrences in an `F[A]` value with
-`ask.map(f)`, for some `f: E => E` which produces a modified `E` input.
-
-`FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
-
-`FunctorListen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
-that is contained in all `F[A]` values, and can be modified using `tell`.
-
-`FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
-This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,
-and further `map` calls will not have any values to execute the passed function on.
-
-`FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
-
-`MonadState[F, S]` is the capability to access and modify a state value
-from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
 
 ## Laws
 
