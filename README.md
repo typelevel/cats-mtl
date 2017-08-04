@@ -1,9 +1,3 @@
-## Usage
-```scala
-libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.0.1"
-resolvers += Resolver.bintrayRepo("edmundnoble", "maven")
-```
-
 ## cats-mtl
 
 [![Build Status](https://api.travis-ci.org/edmundnoble/cats-mtl.svg)](https://travis-ci.org/edmundnoble/cats-mtl)
@@ -19,6 +13,12 @@ to generically lift MTL typeclasses through transformers.
 You can have multiple cats-mtl transformer typeclasses in scope at once
 without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 
+## SBT
+```scala
+libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.0.1"
+resolvers += Resolver.bintrayRepo("edmundnoble", "maven")
+```
+
 ## Typeclasses
 
 #### Migration guide
@@ -31,7 +31,7 @@ Here's a map from cats typeclasses to cats-mtl typeclasses:
  - `TraverseFilter --> TraverseEmpty`
 
 cats typeclass parameters and context bounds have to be rewritten, to include base classes.
-For example: 
+For example:
 - `[F[_]: FunctorFilter]` will have to be adjusted to `[F[_]: Functor: FunctorEmpty]`,
 - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
 
@@ -151,6 +151,15 @@ The motivation for cats-mtl's existence can be summed up in a few points:
   used much less. To fix this `FunctorListen` and `ApplicativeLocal` are subclasses
   of `FunctorTell` and `ApplicativeAsk`, which have only the essentials.
 
+The first point there means that it's impossible for cats-mtl type classes
+to expose their base class instances implicitly; for example `F[_]: FunctorEmpty` isn't enough
+for a `Functor[F]` to be visible in implicit scope, despite `FunctorEmpty` containing a `Functor`
+instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
+explicitly can't work with cats and cats-mtl separate, as the `Functor[F]` instance for the type 
+from cats will always conflict with a derived instance.
+
+Thus `F[_]: FunctorFilter`, translated, becomes `F[_]: Functor: FunctorEmpty`.
+
 For some historical info on the origins of cats-mtl, see:
 
 https://github.com/typelevel/cats/issues/1210
@@ -161,10 +170,10 @@ https://github.com/typelevel/cats/pull/1751
 
 ## Laws
 
-Laws come in a few loosely defined flavors in cats-mtl: internal, external, and free.
+Type class laws come in a few varieties in cats-mtl: internal, external, and free.
 
-Internal laws dictate how multiple operations inter-relate,
-one side of the equation can always be reduced to a single function application of an operation.
+Internal laws dictate how multiple operations inter-relate.
+One side of the equation can always be reduced to a single function application of an operation.
 These express "default" implementations that should be indistinguishable in result from the actual implementation.
 
 External laws are laws that still need to be tested but don't fall into the internal laws.

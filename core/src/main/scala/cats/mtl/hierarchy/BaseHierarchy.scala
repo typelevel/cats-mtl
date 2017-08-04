@@ -4,20 +4,20 @@ package hierarchy
 
 trait BaseHierarchy extends BH0
 
-object BaseHierarchy extends BaseHierarchy
+object base extends BaseHierarchy
 
-private[hierarchy] trait BH0 {
+private[hierarchy] trait BH0 extends BH1 {
   implicit final def functorEmptyFromTraverseEmpty[F[_]](implicit F: TraverseEmpty[F]): FunctorEmpty[F] = F.functorEmpty
-
-  implicit final def functorFromFunctorEmpty[F[_]](implicit F: FunctorEmpty[F]): Functor[F] = F.functor
 
   implicit final def askFromLocal[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = local.ask
 
   implicit final def tellFromListen[F[_], L](implicit listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell
+}
 
+private[hierarchy] trait BH1 {
   implicit final def tellFromState[F[_], L](implicit state: MonadState[F, L]): FunctorTell[F, L] = {
     new FunctorTell[F, L] {
-      override val functor: Functor[F] = state.monadInstance
+      override val functor: Functor[F] = state.monad
 
       override def tell(l: L): F[Unit] = state.set(l)
 
@@ -29,7 +29,7 @@ private[hierarchy] trait BH0 {
 
   implicit final def askFromState[F[_], L](implicit state: MonadState[F, L]): ApplicativeAsk[F, L] = {
     new ApplicativeAsk[F, L] {
-      override val applicative: Applicative[F] = state.monadInstance
+      override val applicative: Applicative[F] = state.monad
 
       override def ask: F[L] = state.get
 
@@ -37,4 +37,3 @@ private[hierarchy] trait BH0 {
     }
   }
 }
-

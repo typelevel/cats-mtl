@@ -11,7 +11,7 @@ trait StateInstances extends StateInstancesLowPriority1 {
                                                  under: MonadState[Inner, E]
                                                     ): MonadState[M, E] = {
     new MonadState[M, E] {
-      val monadInstance: Monad[M] = ml.outerInstance
+      val monad: Monad[M] = ml.outerInstance
 
       def get: M[E] = ml.layer(under.get)
 
@@ -31,7 +31,7 @@ trait StateInstances extends StateInstancesLowPriority1 {
 private[instances] trait StateInstancesLowPriority1 {
   implicit final def stateState[M[_], S](implicit M: Monad[M]): MonadState[StateTC[M, S]#l, S] = {
     new MonadState[StateTC[M, S]#l, S] {
-      val monadInstance: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
+      val monad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
 
       def get: StateT[M, S, S] = StateT.get
 

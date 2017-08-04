@@ -8,7 +8,7 @@ import cats.syntax.cartesian._
 
 trait MonadStateLaws[F[_], S] {
   implicit val stateInstance: MonadState[F, S]
-  implicit val monad: Monad[F] = stateInstance.monadInstance
+  implicit val monad: Monad[F] = stateInstance.monad
 
   import stateInstance._
   import monad.pure

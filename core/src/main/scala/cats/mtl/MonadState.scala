@@ -34,7 +34,7 @@ package mtl
   *
   */
 trait MonadState[F[_], S] extends Serializable {
-  val monadInstance: Monad[F]
+  val monad: Monad[F]
 
   def get: F[S]
 
