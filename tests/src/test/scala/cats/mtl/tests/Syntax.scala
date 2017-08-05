@@ -39,7 +39,7 @@ final class Syntax extends BaseSuite {
       val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
     test("FunctorEmpty") {
-      def operateFunctorEmpty[F[_]: FunctorEmpty](fi: F[Int]): Unit = {
+      def operateFunctorEmpty[F[_]: Functor: FunctorEmpty](fi: F[Int]): Unit = {
         val _1 = fi.collect { case i if i < 2 => i }
         val _2 = fi.filter(_ < 2)
         val _3 = fi.mapFilter(Some(_).filter(_ < 2))

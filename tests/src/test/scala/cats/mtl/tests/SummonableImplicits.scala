@@ -11,44 +11,44 @@ final class SummonableImplicits extends BaseSuite {
     import cats.data._
     import cats.instances.all._
     import cats.mtl.implicits._
-    val ApplicativeAsk: Unit = {
-      ApplicativeAsk[ReaderStrId, String]
-      ApplicativeAsk[ReaderStrInt, Int]
-      ApplicativeAsk[ReaderStrInt, String]
-      ApplicativeAsk[ReaderStrFuncInt, Int]
+    val ApplicativeAskTest: Unit = {
+      def _1 = ApplicativeAsk[ReaderStrId, String]
+      def _2 = ApplicativeAsk[ReaderStrInt, Int]
+      def _3 = ApplicativeAsk[ReaderStrInt, String]
+      def _4 = ApplicativeAsk[ReaderStrFuncInt, Int]
     }
 
-    val FunctorListen: Unit = {
-      FunctorListen[WriterStrId, String]
-      FunctorListen[WriterTStrWriterTInt, String]
-      FunctorListen[WriterTStrWriterTInt, Vector[Int]]
-      FunctorListen[WriterTStrTupleInt, Vector[Int]]
+    val FunctorListenTest: Unit = {
+      def _1 = FunctorListen[WriterStrId, String]
+      def _2 = FunctorListen[WriterTStrWriterTInt, String]
+      def _3 = FunctorListen[WriterTStrWriterTInt, Vector[Int]]
+      def _4 = FunctorListen[WriterTStrTupleInt, Vector[Int]]
     }
 
-    val FunctorRaise: Unit = {
-      FunctorRaise[EitherStrId, String]
-      FunctorRaise[EitherTStrEitherTInt, Int]
-      FunctorRaise[EitherTStrEitherTInt, String]
+    val FunctorRaiseTest: Unit = {
+      def _1 = FunctorRaise[EitherStrId, String]
+      def _2 = FunctorRaise[EitherTStrEitherTInt, Int]
+      def _3 = FunctorRaise[EitherTStrEitherTInt, String]
     }
 
-    val ApplicativeLocal: Unit = {
-      ApplicativeLocal[ReaderStrId, String]
-      ApplicativeLocal[ReaderStrInt, Int]
-      ApplicativeLocal[ReaderStrInt, String]
-      ApplicativeLocal[ReaderStrFuncInt, Int]
+    val ApplicativeLocalTest: Unit = {
+      def _1 = ApplicativeLocal[ReaderStrId, String]
+      def _2 = ApplicativeLocal[ReaderStrInt, Int]
+      def _3 = ApplicativeLocal[ReaderStrInt, String]
+      def _4 = ApplicativeLocal[ReaderStrFuncInt, Int]
     }
 
-    val MonadState: Unit = {
-      MonadState[StateStrId, String]
-      MonadState[StateTStrStateTInt, String]
-      MonadState[StateTStrStateTInt, Int]
+    val MonadStateTest: Unit = {
+      def _1 = MonadState[StateStrId, String]
+      def _2 = MonadState[StateTStrStateTInt, String]
+      def _3 = MonadState[StateTStrStateTInt, Int]
     }
 
-    val FunctorTell: Unit = {
-      FunctorTell[WriterStrId, String]
-      FunctorTell[WriterTStrWriterTInt, String]
-      FunctorTell[WriterTStrWriterTInt, Vector[Int]]
-      FunctorTell[WriterTStrTupleInt, Vector[Int]]
+    val FunctorTellTest: Unit = {
+      def _1 = FunctorTell[WriterStrId, String]
+      def _2 = FunctorTell[WriterTStrWriterTInt, String]
+      def _3 = FunctorTell[WriterTStrWriterTInt, Vector[Int]]
+      def _4 = FunctorTell[WriterTStrTupleInt, Vector[Int]]
     }
   }
 

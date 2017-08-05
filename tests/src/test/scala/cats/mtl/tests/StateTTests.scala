@@ -16,7 +16,7 @@ import cats.mtl.instances.readert._
 import cats.mtl.instances.writert._
 import cats.mtl.instances.optiont._
 import cats.mtl.instances.eithert._
-import cats.mtl.hierarchy.BaseHierarchy._
+import cats.mtl.hierarchy.base._
 import cats.instances.all._
 import cats.mtl.MonadLayerControl.Aux
 

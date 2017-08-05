@@ -12,17 +12,17 @@ object Publishing {
   lazy val sharedPublishSettings = Seq(
     releaseCrossBuild := true,
     // releaseTagName := tagName.value,
-//    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-//    publishMavenStyle := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    publishMavenStyle := true,
     publishArtifact in Test := false,
-    pomIncludeRepository := Function.const(false)
-//    publishTo := {
-//      val nexus = "https://oss.sonatype.org/"
-//      if (isSnapshot.value)
-//        Some("Snapshots" at nexus + "content/repositories/snapshots")
-//      else
-//        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-//    }
+    pomIncludeRepository := Function.const(false),
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("Snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
+    }
   )
 
   lazy val sharedReleaseProcess = Seq(
@@ -37,7 +37,7 @@ object Publishing {
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-//      ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+      ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
       pushChanges)
   )
 
@@ -65,10 +65,10 @@ object Publishing {
 
   lazy val credentialSettings = Seq(
     // For Travis CI - see http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
-//    credentials ++= (for {
-//      username <- Option(System.getenv().get("SONATYPE_USERNAME"))
-//      password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
-//    } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
+    credentials ++= (for {
+      username <- Option(System.getenv().get("SONATYPE_USERNAME"))
+      password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+    } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq
   )
 
 
