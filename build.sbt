@@ -16,8 +16,6 @@ sbtPlugin := true
 
 publishMavenStyle := false
 
-bintrayOrganization in bintray := None
-
 // projects
 
 val core = crossProject.crossType(CrossType.Pure)
