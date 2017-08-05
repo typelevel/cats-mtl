@@ -1,7 +1,7 @@
 ## cats-mtl
 
-[![Build Status](https://api.travis-ci.org/edmundnoble/cats-mtl.svg)](https://travis-ci.org/edmundnoble/cats-mtl)
-[![codecov.io](http://codecov.io/github/edmundnoble/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/edmundnoble/cats-mtl?branch=master)
+[![Build Status](https://api.travis-ci.org/typelevel/cats-mtl.svg)](https://travis-ci.org/edmundnoble/cats-mtl)
+[![codecov.io](http://codecov.io/github/typelevel/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/edmundnoble/cats-mtl?branch=master)
 
 Transformer typeclasses for cats.
 
