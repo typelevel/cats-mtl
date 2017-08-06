@@ -51,8 +51,6 @@ env:
     - JS_BUILD=true
   global:
   - TRAVIS_NODE_VERSION="4"
-  - secure: llKXp4ESbYJSJ6Gq19D8IdIxFVNwDwVjm6HirsZEplyYSlHGKZWtMwdzRjemY+E83yGY/w53jFfmax
-  - secure: CwsCQUmbZQd09NNqdqInw6Fczzpv3oJk4oN0gcOqNN5cw+o4nsnDb69lh6dPBRR7OI9WXtSp2BS+1Q
 
 cache:
   directories:
@@ -68,5 +66,3 @@ before_cache:
   - find $HOME/.sbt -name "*.lock" -type f -delete
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete
 
-after_success:
-  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { sbt publish; };"
