@@ -2,12 +2,14 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
 trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
   implicit val listenInstance: FunctorListen[F, L]
-  import listenInstance.{listen, listens}
   import listenInstance.tell._
+  import listenInstance.{listen, listens}
 
   // external laws:
   def listenRespectsTell(l: L): IsEq[F[(Unit, L)]] = {

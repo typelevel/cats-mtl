@@ -6,6 +6,7 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait FunctorEmptyTests[F[_]] extends Laws {
   implicit val functorEmptyInstance: FunctorEmpty[F]

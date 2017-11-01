@@ -2,6 +2,8 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
 import cats.syntax.applicative._
 import cats.syntax.apply._
 

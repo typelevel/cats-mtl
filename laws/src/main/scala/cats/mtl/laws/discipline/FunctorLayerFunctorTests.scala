@@ -6,6 +6,7 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait FunctorLayerFunctorTests[M[_], Inner[_]] extends FunctorLayerTests[M, Inner] {
   implicit val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]

@@ -4,6 +4,8 @@ package instances
 
 import cats.data.{Const, EitherT, Nested, OptionT}
 
+import scala.collection.immutable.SortedMap
+
 object empty extends EmptyInstances
 
 import cats.syntax.functor._
@@ -198,38 +200,63 @@ trait EmptyInstances extends EmptyInstances1 {
     } with NestedTraverseEmpty[F, G]
   }
 
-  implicit def mapTraverseEmpty[K]: TraverseEmpty[MapC[K]#l] = {
-    new TraverseEmpty[MapC[K]#l] {
-      override def traverseFilter[G[_], A, B](fa: Map[K, A])(f: A => G[Option[B]])(implicit G: Applicative[G]): G[Map[K, B]] = {
-        val gba: Eval[G[Map[K, B]]] = Always(G.pure(Map.empty))
-        val gbb = Foldable.iterateRight(fa.iterator, gba) { (kv, lbuf) =>
-          G.map2Eval(f(kv._2), lbuf)({ (ob, buf) => ob.fold(buf)(b => buf + (kv._1 -> b)) })
-        }.value
-        G.map(gbb)(_.toMap)
+  implicit def mapFunctorEmpty[K]: FunctorEmpty[MapC[K]#l] = {
+    new FunctorEmpty[MapC[K]#l] {
+
+      override val functor: Functor[MapC[K]#l] = cats.instances.map.catsStdInstancesForMap[K]
+
+      override def mapFilter[A, B](fa: Map[K, A])(f: A => Option[B]) = {
+        fa.collect(scala.Function.unlift(t => f(t._2).map(t._1 -> _)))
       }
 
-      override val traverse: Traverse[MapC[K]#l] = cats.instances.map.catsStdInstancesForMap[K]
-      override val functorEmpty: FunctorEmpty[MapC[K]#l] = new FunctorEmpty[MapC[K]#l] {
-        override val functor: Functor[MapC[K]#l] = traverse
+      override def collect[A, B](fa: Map[K, A])(f: PartialFunction[A, B]) = {
+        fa.collect(scala.Function.unlift(t => f.lift(t._2).map(t._1 -> _)))
+      }
 
-        override def mapFilter[A, B](fa: Map[K, A])(f: (A) => Option[B]): Map[K, B] = {
+      override def flattenOption[A](fa: Map[K, Option[A]]) = {
+        fa.collect(scala.Function.unlift(t => t._2.map(t._1 -> _)))
+      }
+
+      override def filter[A](fa: Map[K, A])(f: A => Boolean) = {
+        fa.filter { case (_, v) => f(v) }
+      }
+    }
+  }
+
+  implicit def sortedMapTraverseEmpty[K: Order]: TraverseEmpty[SortedMapC[K]#l] = {
+    new TraverseEmpty[SortedMapC[K]#l] {
+
+      implicit val ordering: Ordering[K] = Order[K].toOrdering
+
+      override def traverseFilter[G[_], A, B](fa: SortedMap[K, A])(f: A => G[Option[B]])(implicit G: Applicative[G]): G[SortedMap[K, B]] = {
+        val gba: Eval[G[SortedMap[K, B]]] = Always(G.pure(SortedMap.empty))
+        Foldable.iterateRight(fa, gba) { (kv, lbuf) =>
+          G.map2Eval(f(kv._2), lbuf)({ (ob, buf) => ob.fold(buf)(b => buf + (kv._1 -> b)) })
+        }.value
+      }
+
+      override val traverse: Traverse[SortedMapC[K]#l] = cats.instances.sortedMap.catsStdInstancesForSortedMap[K]
+      override val functorEmpty: FunctorEmpty[SortedMapC[K]#l] = new FunctorEmpty[SortedMapC[K]#l] {
+        override val functor: Functor[SortedMapC[K]#l] = traverse
+
+        override def mapFilter[A, B](fa: SortedMap[K, A])(f: (A) => Option[B]): SortedMap[K, B] = {
           fa.collect(scala.Function.unlift(t => f(t._2).map(t._1 -> _)))
         }
 
-        override def collect[A, B](fa: Map[K, A])(f: PartialFunction[A, B]): Map[K, B] = {
+        override def collect[A, B](fa: SortedMap[K, A])(f: PartialFunction[A, B]): SortedMap[K, B] = {
           fa.collect(scala.Function.unlift(t => f.lift(t._2).map(t._1 -> _)))
         }
 
-        override def flattenOption[A](fa: Map[K, Option[A]]): Map[K, A] = {
+        override def flattenOption[A](fa: SortedMap[K, Option[A]]): SortedMap[K, A] = {
           fa.collect(scala.Function.unlift(t => t._2.map(t._1 -> _)))
         }
 
-        override def filter[A](fa: Map[K, A])(f: (A) => Boolean): Map[K, A] = {
+        override def filter[A](fa: SortedMap[K, A])(f: (A) => Boolean): SortedMap[K, A] = {
           fa.filter { case (_, v) => f(v) }
         }
       }
 
-      override def filterA[G[_], A](fa: Map[K, A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[Map[K, A]] = {
+      override def filterA[G[_], A](fa: SortedMap[K, A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[SortedMap[K, A]] = {
         traverseFilter(fa)(a => G.map(f(a))(if (_) Some(a) else None))
       }
     }

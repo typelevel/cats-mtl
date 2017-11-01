@@ -2,6 +2,9 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
+
 trait FunctorLayerLaws[M[_], Inner[_]] {
   implicit val functorLayerInstance: FunctorLayer[M, Inner]
 
