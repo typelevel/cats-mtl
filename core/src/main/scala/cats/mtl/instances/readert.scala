@@ -8,7 +8,7 @@ trait ReaderTInstances extends ReaderTInstances1 {
   implicit def readerFunctorLayerFunctor[M[_], E]
   (implicit M: Functor[M]): FunctorLayerFunctor[ReaderTC[M, E]#l, M] = {
     new FunctorLayerFunctor[ReaderTC[M, E]#l, M] {
-      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
+      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.mapK(trans)
 
       val outerInstance: Functor[ReaderTC[M, E]#l] = Kleisli.catsDataFunctorForKleisli(M)
       val innerInstance: Functor[M] = M
@@ -22,7 +22,7 @@ trait ReaderTInstances1 extends ReaderTInstances2 {
   implicit def readerApplicativeLayerFunctor[M[_], E]
   (implicit M: Applicative[M]): ApplicativeLayerFunctor[ReaderTC[M, E]#l, M] = {
     new ApplicativeLayerFunctor[ReaderTC[M, E]#l, M] {
-      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
+      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.mapK(trans)
 
       val outerInstance: Applicative[ReaderTC[M, E]#l] = Kleisli.catsDataApplicativeForKleisli(M)
       val innerInstance: Applicative[M] = M
@@ -43,7 +43,7 @@ trait ReaderTInstances2 {
 
       val innerInstance: Monad[M] = M
 
-      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.transform(trans)
+      def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.mapK(trans)
 
       def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.lift(inner)
 

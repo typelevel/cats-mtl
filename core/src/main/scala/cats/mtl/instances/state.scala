@@ -2,7 +2,7 @@ package cats
 package mtl
 package instances
 
-import data.StateT
+import data.{IndexedStateT, StateT}
 
 trait StateInstances extends StateInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
@@ -31,7 +31,7 @@ trait StateInstances extends StateInstancesLowPriority1 {
 private[instances] trait StateInstancesLowPriority1 {
   implicit final def stateState[M[_], S](implicit M: Monad[M]): MonadState[StateTC[M, S]#l, S] = {
     new MonadState[StateTC[M, S]#l, S] {
-      val monad: Monad[StateTC[M, S]#l] = StateT.catsDataMonadForStateT
+      val monad: Monad[StateTC[M, S]#l] = IndexedStateT.catsDataMonadForIndexedStateT
 
       def get: StateT[M, S, S] = StateT.get
 

@@ -6,6 +6,7 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait ApplicativeAskTests[F[_], E] extends Laws {
   implicit val askInstance: ApplicativeAsk[F, E]

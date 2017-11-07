@@ -5,6 +5,7 @@ package discipline
 
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait ApplicativeLocalTests[F[_], E] extends ApplicativeAskTests[F, E] {
   implicit val localInstance: ApplicativeLocal[F, E]

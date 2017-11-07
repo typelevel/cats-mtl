@@ -2,7 +2,7 @@ package cats
 package mtl
 package instances
 
-import cats.data.StateT
+import cats.data.{IndexedStateT, StateT}
 import cats.syntax.functor._
 
 trait StateTInstances {
@@ -12,7 +12,7 @@ trait StateTInstances {
       type State[A] = (S, A)
 
       val outerInstance: Monad[StateTC[M, S]#l] =
-        StateT.catsDataMonadForStateT
+        IndexedStateT.catsDataMonadForIndexedStateT
 
       val innerInstance: Monad[M] = M
 

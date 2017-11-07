@@ -5,6 +5,7 @@ package discipline
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.{forAll => ∀}
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait MonadLayerFunctorTests[M[_], Inner[_]] extends MonadLayerTests[M, Inner] with ApplicativeLayerFunctorTests[M, Inner] {
   implicit val monadLayerFunctorInstance: MonadLayerFunctor[M, Inner]

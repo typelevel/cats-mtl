@@ -3,6 +3,8 @@ package mtl
 package laws
 
 import cats.data.Nested
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
 import cats.syntax.all._
 import cats.mtl.syntax.empty._
 

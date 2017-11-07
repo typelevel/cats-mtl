@@ -2,11 +2,13 @@ package cats
 package mtl
 package tests
 
+
 final class Syntax extends BaseSuite {
 
   // test instances.all._
   //noinspection ScalaUnusedSymbol
   {
+    import scala.collection.immutable.SortedMap
     import cats.instances.all._
     import cats.mtl.implicits._
     import cats.data._
@@ -48,6 +50,9 @@ final class Syntax extends BaseSuite {
       }
       val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)
       operateFunctorEmpty(fa)
+
+      val sortedFa: SortedMap[Int, Int] = SortedMap(1 -> 1, 2 -> 3)
+      operateFunctorEmpty(sortedFa)
     }
     test("TraverseEmpty") {
       def operateTraverseEmpty[F[_]: TraverseEmpty](fi: F[Int]): Unit = {
@@ -55,7 +60,7 @@ final class Syntax extends BaseSuite {
         val _2 = fi.traverseFilter[Option, Int] { i => Some(Some(i).filter(_ < 2)) }
         ()
       }
-      val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)
+      val fa: SortedMap[Int, Int] = SortedMap(1 -> 1, 2 -> 3)
       operateTraverseEmpty(fa)
     }
     test("MonadState") {

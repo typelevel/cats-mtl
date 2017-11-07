@@ -2,6 +2,9 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
+
 trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
   implicit val localInstance: ApplicativeLocal[F, E]
 

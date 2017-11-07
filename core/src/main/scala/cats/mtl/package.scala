@@ -2,6 +2,8 @@ package cats
 
 import cats.data._
 
+import scala.collection.immutable.SortedMap
+
 package object mtl {
 
   private[mtl] type CurryT[T[_[_], _], M[_]] = {type l[A] = T[M, A]}
@@ -25,5 +27,6 @@ package object mtl {
   private[mtl] type of[F[_], G[_]] = {type l[A] = F[G[A]]}
   private[mtl] type NestedC[F[_], G[_]] = {type l[A] = Nested[F, G, A]}
   private[mtl] type MapC[K] = {type l[V] = Map[K, V]}
+  private[mtl] type SortedMapC[K] = {type l[V] = SortedMap[K, V]}
 
 }

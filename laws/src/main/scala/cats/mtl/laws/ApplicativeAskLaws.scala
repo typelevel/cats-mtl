@@ -2,7 +2,9 @@ package cats
 package mtl
 package laws
 
-import cats.syntax.cartesian._
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
+import cats.syntax.apply._
 import cats.syntax.functor._
 
 trait ApplicativeAskLaws[F[_], E] {
@@ -12,7 +14,7 @@ trait ApplicativeAskLaws[F[_], E] {
 
   // external law:
   def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] = {
-    (ask *> fa) <-> fa
+    ask *> fa <-> fa
   }
 
   // internal law:
