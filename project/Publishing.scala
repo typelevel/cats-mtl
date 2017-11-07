@@ -49,11 +49,6 @@ object Publishing {
     apiURL := None,
     pomExtra :=
       <developers>
-        <developer>
-          <id>edmundnoble</id>
-          <name>Edmund Noble</name>
-          <url>https://github.com/edmundnoble/</url>
-        </developer>
       </developers>
   ) ++ credentialSettings ++ sharedPublishSettings ++ sharedReleaseProcess
 
