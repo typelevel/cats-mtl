@@ -49,7 +49,22 @@ object Publishing {
     apiURL := None,
     pomExtra :=
       <developers>
-      </developers>
+        <developer>		
+          <id>SystemFw</id>		
+          <name>Fabio Labella</name>		
+          <url>https://github.com/SystemFw/</url>		
+        </developer>
+        <developer>		
+          <id>andyscott</id>		
+          <name>Andy Scott</name>		
+          <url>https://github.com/andyscott/</url>		
+        </developer>
+        <developer>		
+          <id>kailuowang</id>		
+          <name>Kailuo Wang</name>		
+          <url>https://github.com/kailuowang/</url>		
+        </developer>
+    </developers>
   ) ++ credentialSettings ++ sharedPublishSettings ++ sharedReleaseProcess
 
   lazy val noPublishSettings = Seq(
