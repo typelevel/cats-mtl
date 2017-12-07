@@ -15,7 +15,7 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 
 ## SBT
 ```scala
-libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.0.2"
+libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.1.0"
 ```
 
 ## Typeclasses
