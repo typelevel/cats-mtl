@@ -13,7 +13,7 @@ trait ReaderTInstances extends ReaderTInstances1 {
       val outerInstance: Functor[ReaderTC[M, E]#l] = Kleisli.catsDataFunctorForKleisli(M)
       val innerInstance: Functor[M] = M
 
-      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.lift(inner)
+      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.liftF(inner)
     }
   }
 }
@@ -27,7 +27,7 @@ trait ReaderTInstances1 extends ReaderTInstances2 {
       val outerInstance: Applicative[ReaderTC[M, E]#l] = Kleisli.catsDataApplicativeForKleisli(M)
       val innerInstance: Applicative[M] = M
 
-      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.lift(inner)
+      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.liftF(inner)
     }
   }
 }
@@ -45,7 +45,7 @@ trait ReaderTInstances2 {
 
       def layerMapK[A](ma: ReaderT[M, E, A])(trans: M ~> M): ReaderT[M, E, A] = ma.mapK(trans)
 
-      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.lift(inner)
+      def layer[A](inner: M[A]): ReaderT[M, E, A] = ReaderT.liftF(inner)
 
       def restore[A](state: Id[A]): ReaderT[M, E, A] = ReaderT.pure(state)
 

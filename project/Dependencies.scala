@@ -13,7 +13,7 @@ object Dependencies {
     val kindProjector = "0.9.3"
     val simulacrum = "0.10.0"
     val machinist = "0.6.1"
-    val cats = "1.0.0-RC1"
+    val cats = "1.0.0-RC2"
     val shapeless = "2.3.2"
   }
 
