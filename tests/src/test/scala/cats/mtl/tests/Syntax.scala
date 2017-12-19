@@ -21,7 +21,7 @@ final class Syntax extends BaseSuite {
       val readerC: Id[String] = ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
     }
     test("FunctorListen") {
-      val lift: WriterT[Option, String, Int] = WriterT.lift[Option, String, Int](Option.empty[Int])
+      val lift: WriterT[Option, String, Int] = WriterT.liftF[Option, String, Int](Option.empty[Int])
       val listen: WriterT[Option, String, (Int, String)] = lift.listen
       val listens: WriterT[Option, String, (Int, String)] = lift.listens((_: String) + "suffix")
       val listenC: WriterT[Option, String, (Int, String)] = FunctorListen.listen(lift)

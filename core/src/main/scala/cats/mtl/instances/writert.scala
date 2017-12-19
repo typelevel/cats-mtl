@@ -30,7 +30,7 @@ private[instances] trait WriterTInstances1 extends WriterTInstances2 {
       val outerInstance: Applicative[WriterTC[M, L]#l] = WriterT.catsDataApplicativeForWriterT(M, L)
       val innerInstance: Applicative[M] = M
 
-      def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.lift(inner)
+      def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.liftF(inner)
     }
   }
 }
@@ -48,7 +48,7 @@ private[instances] trait WriterTInstances2 {
 
       def layerMapK[A](ma: WriterT[M, L, A])(trans: M ~> M): WriterT[M, L, A] = WriterT(trans(ma.run))
 
-      def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.lift(inner)
+      def layer[A](inner: M[A]): WriterT[M, L, A] = WriterT.liftF(inner)
 
       def restore[A](state: (L, A)): WriterT[M, L, A] = WriterT(M.pure(state))
 

@@ -18,7 +18,7 @@ trait StateTInstances {
 
       def layerMapK[A](ma: StateT[M, S, A])(trans: M ~> M): StateT[M, S, A] = ma.transformF(trans(_))
 
-      def layer[A](inner: M[A]): StateT[M, S, A] = StateT.lift(inner)
+      def layer[A](inner: M[A]): StateT[M, S, A] = StateT.liftF(inner)
 
       def restore[A](state: (S, A)): StateT[M, S, A] = StateT((_: S) => innerInstance.pure(state))
 
