@@ -4,9 +4,9 @@ dist: trusty
 git:
   depth: 9999
 scala:
-- 2.10.6
-- 2.11.11
-- 2.12.2
+- 2.10.7
+- 2.11.12
+- 2.12.4
 jdk:
 - oraclejdk7
 - oraclejdk8
