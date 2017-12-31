@@ -9,12 +9,12 @@ object Dependencies {
     val scalaCheck = "1.13.4"
     val scalaTest = "3.0.0"
     val discipline = "0.8"
-    val macroParadise = "2.1.0"
-    val kindProjector = "0.9.3"
-    val simulacrum = "0.10.0"
+    val macroParadise = "2.1.1"
+    val kindProjector = "0.9.5"
+    val simulacrum = "0.11.0"
     val machinist = "0.6.1"
-    val cats = "1.0.0"
-    val shapeless = "2.3.2"
+    val cats = "1.0.1"
+    val shapeless = "2.3.3"
   }
 
   val acyclic: Seq[Def.Setting[_]] = Def.settings(
