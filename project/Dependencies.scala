@@ -39,8 +39,8 @@ object Dependencies {
   ))
 
   val compilerPlugins: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
-    compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
+    compilerPlugin("org.scalamacros" %% "paradise" % Versions.macroParadise cross CrossVersion.patch),
+    compilerPlugin("org.spire-math" %% "kind-projector" % Versions.kindProjector)
   ))
 
   val catsBundle: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
