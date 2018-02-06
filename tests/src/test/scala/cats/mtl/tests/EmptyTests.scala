@@ -6,12 +6,13 @@ import cats._
 import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
-import cats.mtl.instances.all._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline.{ApplicativeLocalTests, FunctorEmptyTests, TraverseEmptyTests}
 
 class EmptyTests extends BaseSuite {
+  import cats.mtl.instances.all._
+
   checkAll("Option",
     TraverseEmptyTests[Option](mtl.instances.empty.optionTraverseEmpty)
       .traverseEmpty[String, String, String])
@@ -79,4 +80,16 @@ class EmptyTests extends BaseSuite {
       .functorEmpty[String, String, String])
   checkAll("TraverseEmpty[OptionT[List, ?]]",
     SerializableTests.serializable(mtl.instances.empty.optionTFunctorEmpty[List]))
+}
+
+class EmptyDefaultTests extends BaseSuite {
+  val defaultListFunctorEmpty: FunctorEmpty[List] = new DefaultFunctorEmpty[List] {
+    def mapFilter[A, B](fa: List[A])(f: A => Option[B]): List[B] = fa.collect(Function.unlift(f))
+
+    val functor: Functor[List] = cats.instances.list.catsStdInstancesForList
+
+  }
+  checkAll("List",
+    FunctorEmptyTests[List](defaultListFunctorEmpty)
+      .functorEmpty[String, String, String])
 }
