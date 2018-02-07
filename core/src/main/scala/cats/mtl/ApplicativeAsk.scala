@@ -59,3 +59,6 @@ object ApplicativeAsk {
 
 }
 
+trait DefaultApplicativeAsk[F[_], E] extends ApplicativeAsk[F, E] {
+  def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
+}

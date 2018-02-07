@@ -51,3 +51,8 @@ trait TraverseEmpty[F[_]] extends Serializable {
 object TraverseEmpty {
   def apply[F[_]](implicit traverseEmpty: TraverseEmpty[F]): TraverseEmpty[F] = traverseEmpty
 }
+
+trait DefaultTraverseEmpty[F[_]] extends TraverseEmpty[F] {
+  def filterA[G[_], A](fa: F[A])(f: A => G[Boolean])(implicit G: Applicative[G]): G[F[A]] =
+    traverseFilter(fa)(a => G.map(f(a))(if (_) Some(a) else None))
+}

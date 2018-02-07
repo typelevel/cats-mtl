@@ -68,3 +68,11 @@ object MonadState {
 
   def apply[F[_], S](implicit monadState: MonadState[F, S]): MonadState[F, S] = monadState
 }
+
+
+trait DefaultMonadState[F[_], S] extends MonadState[F, S] {
+
+  def inspect[A](f: S => A): F[A] = monad.map(get)(f)
+
+  def modify(f: S => S): F[Unit] = monad.flatMap(inspect(f))(set)
+}
