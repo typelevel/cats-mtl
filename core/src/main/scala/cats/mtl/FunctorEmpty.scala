@@ -48,3 +48,15 @@ trait FunctorEmpty[F[_]] extends Serializable {
 object FunctorEmpty {
   def apply[F[_]](implicit functorEmpty: FunctorEmpty[F]): FunctorEmpty[F] = functorEmpty
 }
+
+
+trait DefaultFunctorEmpty[F[_]] extends FunctorEmpty[F] {
+  def collect[A, B](fa: F[A])(f: PartialFunction[A, B]): F[B] =
+    mapFilter(fa)(f.lift)
+
+  def flattenOption[A](fa: F[Option[A]]): F[A] =
+    mapFilter(fa)(identity)
+
+  def filter[A](fa: F[A])(f: A => Boolean): F[A] =
+    mapFilter(fa)(a => if (f(a)) Some(a) else None)
+}
