@@ -81,15 +81,3 @@ class EmptyTests extends BaseSuite {
   checkAll("TraverseEmpty[OptionT[List, ?]]",
     SerializableTests.serializable(mtl.instances.empty.optionTFunctorEmpty[List]))
 }
-
-class EmptyDefaultTests extends BaseSuite {
-  val defaultListFunctorEmpty: FunctorEmpty[List] = new DefaultFunctorEmpty[List] {
-    def mapFilter[A, B](fa: List[A])(f: A => Option[B]): List[B] = fa.collect(Function.unlift(f))
-
-    val functor: Functor[List] = cats.instances.list.catsStdInstancesForList
-
-  }
-  checkAll("List",
-    FunctorEmptyTests[List](defaultListFunctorEmpty)
-      .functorEmpty[String, String, String])
-}

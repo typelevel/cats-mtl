@@ -42,3 +42,9 @@ object FunctorTell {
   abstract class FunctorTellTemplate[F[_], L](implicit override val functor: Functor[F]) extends FunctorTell[F, L]
 }
 
+trait DefaultFunctorTell[F[_], L] extends FunctorTell[F, L] {
+  def writer[A](a: A, l: L): F[A] = functor.as(tell(l), a)
+
+  def tuple[A](ta: (L, A)): F[A] = writer(ta._2, ta._1)
+}
+
