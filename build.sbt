@@ -12,6 +12,8 @@ addCommandAlias("validateJS", ";catsMtlJS/compile;testsJS/test;js/test")
 
 addCommandAlias("validate", ";clean;validateJS;validateJVM")
 
+addCommandAlias("gitSnapshots", ";set version in ThisBuild := git.gitDescribedVersion.value.get + \"-SNAPSHOT\"")
+
 sbtPlugin := true
 
 publishMavenStyle := false
