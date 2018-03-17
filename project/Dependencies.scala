@@ -10,7 +10,7 @@ object Dependencies {
     val scalaTest = "3.0.5"
     val discipline = "0.8"
     val macroParadise = "2.1.1"
-    val kindProjector = "0.9.5"
+    val kindProjector = "0.9.6"
     val simulacrum = "0.12.0"
     val machinist = "0.6.4"
     val cats = "1.1.0"
