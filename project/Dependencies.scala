@@ -6,14 +6,14 @@ object Dependencies {
 
   //noinspection TypeAnnotation
   object Versions {
-    val scalaCheck = "1.13.4"
-    val scalaTest = "3.0.0"
-    val discipline = "0.8"
+    val scalaCheck = "1.13.5"
+    val scalaTest = "3.0.5"
+    val discipline = "0.9.0"
     val macroParadise = "2.1.1"
-    val kindProjector = "0.9.5"
-    val simulacrum = "0.11.0"
-    val machinist = "0.6.1"
-    val cats = "1.0.1"
+    val kindProjector = "0.9.6"
+    val simulacrum = "0.12.0"
+    val machinist = "0.6.4"
+    val cats = "1.1.0"
     val shapeless = "2.3.3"
   }
 
