@@ -77,7 +77,7 @@ trait ListenInstancesLowPriority {
   implicit final def listenReaderWriterState[M[_], R, L, S]
   (implicit L: Monoid[L], M: Monad[M]): FunctorListen[ReaderWriterStateT[M, R, L, S, ?], L] =
     new DefaultFunctorListen[ReaderWriterStateT[M, R, L, S, ?], L] {
-      val tell = tellReaderWriterState
+      val tell = tellReaderWriterState[M, R, L, S]
 
       def listen[A](fa: ReaderWriterStateT[M, R, L, S, A]): ReaderWriterStateT[M, R, L, S, (A, L)] =
         ReaderWriterStateT((e, s) => fa.run(e, s).map {
