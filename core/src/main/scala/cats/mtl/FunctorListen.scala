@@ -36,3 +36,9 @@ object FunctorListen {
   def listen[F[_], L, A](fa: F[A])(implicit ev: FunctorListen[F, L]): F[(A, L)] = ev.listen(fa)
   def listens[F[_], L, A, B](fa: F[A])(f: L => B)(implicit ev: FunctorListen[F, L]): F[(A, B)] = ev.listens(fa)(f)
 }
+
+trait DefaultFunctorListen[F[_], L] extends FunctorListen[F, L] {
+  def listens[A, B](fa: F[A])(f: L => B): F[(A, B)] = tell.functor.map(listen[A](fa)) {
+    case (a, l) => (a, f(l))
+  }
+}

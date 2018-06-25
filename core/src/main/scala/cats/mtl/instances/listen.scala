@@ -2,7 +2,7 @@ package cats
 package mtl
 package instances
 
-import cats.data.WriterT
+import cats.data.{IndexedReaderWriterStateT, ReaderWriterStateT, WriterT}
 import cats.syntax.functor._
 
 trait ListenInstances extends ListenInstancesLowPriority {
@@ -74,6 +74,17 @@ trait ListenInstancesLowPriority {
     }
   }
 
+  implicit final def listenReaderWriterState[M[_], R, L, S]
+  (implicit L: Monoid[L], M: Monad[M]): FunctorListen[ReaderWriterStateT[M, R, L, S, ?], L] =
+    new DefaultFunctorListen[ReaderWriterStateT[M, R, L, S, ?], L] {
+      val tell = tellReaderWriterState[M, R, L, S]
+
+      def listen[A](fa: ReaderWriterStateT[M, R, L, S, A]): ReaderWriterStateT[M, R, L, S, (A, L)] =
+        ReaderWriterStateT((e, s) => fa.run(e, s).map {
+          case (l, s, a) => (l, s, (a, l))
+        })
+    }
+
   final def tellWriter[M[_], L](implicit L: Monoid[L], M: Applicative[M]): FunctorTell[WriterTC[M, L]#l, L] = {
     new FunctorTell[WriterTC[M, L]#l, L] {
       val functor = new Functor[WriterTC[M, L]#l] {
@@ -97,6 +108,15 @@ trait ListenInstancesLowPriority {
       def writer[A](a: A, l: L): (L, A) = (l, a)
 
       def tuple[A](ta: (L, A)): (L, A) = ta
+    }
+  }
+
+  final def tellReaderWriterState[M[_], R, L, S](implicit L: Monoid[L], M: Monad[M]): FunctorTell[ReaderWriterStateT[M, R, L, S, ?], L] = {
+    new DefaultFunctorTell[ReaderWriterStateT[M, R, L, S, ?], L] {
+      val functor: Functor[ReaderWriterStateT[M, R, L, S, ?]] =
+        IndexedReaderWriterStateT.catsDataMonadForRWST
+
+      def tell(l: L): ReaderWriterStateT[M, R, L, S, Unit] = ReaderWriterStateT.tell(l)
     }
   }
 
