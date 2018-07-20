@@ -3,7 +3,6 @@ package mtl
 package instances
 
 import cats.data.{Ior, IorT}
-import cats.syntax.functor._
 
 trait IorTInstances extends IorTInstances1 {
   implicit def iorFunctorLayerFunctor[M[_], A](
@@ -36,7 +35,7 @@ trait IorTInstances1 extends IorTInstancesLowPriority1 {
         }
       }
 
-      override def zero[B](state: Ior[A, B]): Boolean = false
+      override def zero[B](state: Ior[A, B]): Boolean = state.isLeft
 
       override def layerMapK[B](ma: IorT[M, A, B])(trans: M ~> M): IorT[M, A, B] = ma.mapK(trans)
 
@@ -50,50 +49,20 @@ trait IorTInstances1 extends IorTInstancesLowPriority1 {
 private[instances] trait IorTInstancesLowPriority1 {
   final implicit def chronicleIorT[F[_], E](implicit S: Semigroup[E],
                                             F: Monad[F]): MonadChronicle[IorTC[F, E]#l, E] =
-    new MonadChronicle[IorTC[F, E]#l, E] {
+    new DefaultMonadChronicle[IorTC[F, E]#l, E] {
       override val monad: Monad[IorTC[F, E]#l] = IorT.catsDataMonadErrorForIorT
 
       override def dictate(c: E): IorT[F, E, Unit] = IorT.left(F.pure(c))
 
-      override def disclose[A](c: E)(implicit M: Monoid[A]): IorT[F, E, A] =
-        IorT.both(F.pure(c), F.pure(M.empty))
-
       override def confess[A](c: E): IorT[F, E, A] = IorT.left(F.pure(c))
 
-      override def memento[A](ma: IorT[F, E, A]): IorT[F, E, Either[E, A]] =
-        IorT[F, E, Either[E, A]] {
-          F.map(ma.value) {
-            case Ior.Left(e)    => Ior.right(Left(e))
-            case Ior.Right(a)   => Ior.right(Right(a))
-            case Ior.Both(e, a) => Ior.both(e, Right(a))
-          }
-        }
-
-      override def absolve[A](a: A, ma: IorT[F, E, A]): IorT[F, E, A] = IorT[F, E, A] {
-        F.map(ma.value) {
-          case Ior.Left(_)     => Ior.right(a)
-          case Ior.Right(a0)   => Ior.right(a0)
-          case Ior.Both(_, a0) => Ior.right(a0)
-        }
-      }
-
-      override def condemn[A](ma: IorT[F, E, A]): IorT[F, E, A] = IorT[F, E, A] {
-        F.map(ma.value) {
+      override def materialize[A](fa: IorT[F, E, A]): IorT[F, E, E Ior A] = IorT[F, E, E Ior A] {
+        F.map(fa.value) {
           case Ior.Left(e)    => Ior.left(e)
-          case Ior.Right(a)   => Ior.right(a)
-          case Ior.Both(e, _) => Ior.left(e)
+          case Ior.Right(a)   => Ior.right(Ior.right(a))
+          case Ior.Both(e, a) => Ior.both(e, Ior.right(a))
         }
       }
-
-      override def retcon[A](f: E => E, ma: IorT[F, E, A]): IorT[F, E, A] = IorT[F, E, A] {
-        F.map(ma.value) {
-          case Ior.Left(e)    => Ior.left(f(e))
-          case Ior.Right(a)   => Ior.right(a)
-          case Ior.Both(e, a) => Ior.both(f(e), a)
-        }
-      }
-
-      override def chronicle[A](ior: Ior[E, A]): IorT[F, E, A] = IorT(F.pure(ior))
     }
 }
 
