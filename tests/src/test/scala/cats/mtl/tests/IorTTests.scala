@@ -10,9 +10,6 @@ import cats.mtl.{FunctorLayerFunctor, IorC, IorTC, MonadLayerControl}
 import cats.~>
 import org.scalacheck._
 
-/**
-  * Created by Yuval.Itzchakov on 16/07/2018.
-  */
 class IorTTests extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
     Arbitrary(Gen.oneOf(new (Option ~> Option) {
