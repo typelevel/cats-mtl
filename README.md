@@ -22,7 +22,7 @@ libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.2.1"
 
 #### Migration guide
 
-Here's a map from cats typeclasses to cats-mtl typeclasses:
+Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:
  - `MonadReader --> ApplicativeLocal`
  - `MonadWriter --> FunctorListen`
  - `MonadState --> MonadState`
