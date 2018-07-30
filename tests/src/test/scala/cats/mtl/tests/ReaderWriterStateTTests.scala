@@ -10,6 +10,7 @@ import cats.laws.discipline.eq._
 import cats.mtl._
 import cats.mtl.implicits._
 import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadLayerControlTests, MonadStateTests}
+import cats.mtl.lifting.MonadLayerControl
 import org.scalacheck.{Arbitrary, Gen}
 
 

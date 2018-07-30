@@ -2,6 +2,8 @@ package cats
 package mtl
 package instances
 
+import cats.mtl.lifting.ApplicativeLayer
+
 trait TellInstances {
   implicit final def tellInd[M[_], Inner[_], L](implicit
                                                    lift: ApplicativeLayer[M, Inner],

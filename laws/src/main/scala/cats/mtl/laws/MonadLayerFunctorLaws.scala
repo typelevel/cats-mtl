@@ -2,6 +2,8 @@ package cats
 package mtl
 package laws
 
+import cats.mtl.lifting._
+
 trait MonadLayerFunctorLaws[M[_], Inner[_]] extends MonadLayerLaws[M, Inner] with ApplicativeLayerFunctorLaws[M, Inner] {
   val monadLayerFunctorInstance: MonadLayerFunctor[M, Inner]
   // no extra laws

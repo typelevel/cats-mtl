@@ -4,6 +4,7 @@ package instances
 
 import cats.data.EitherT
 import cats.mtl.FunctorRaise
+import cats.mtl.lifting.FunctorLayer
 
 trait RaiseInstances extends RaiseLowPriorityInstances1 {
   implicit final def raiseInd[M[_], Inner[_], E](implicit

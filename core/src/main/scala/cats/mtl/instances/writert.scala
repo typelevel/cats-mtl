@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.WriterT
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import cats.syntax.functor._
 
 trait WriterTInstances extends WriterTInstances1 {

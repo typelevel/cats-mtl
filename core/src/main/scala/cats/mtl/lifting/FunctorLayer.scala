@@ -1,5 +1,8 @@
 package cats
 package mtl
+package lifting
+
+import cats.{Functor, ~>}
 
 /**
   * `FunctorLayer[M, Inner]` has the following functionality:

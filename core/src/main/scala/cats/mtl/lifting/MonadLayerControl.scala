@@ -1,5 +1,9 @@
 package cats
 package mtl
+package lifting
+
+import cats.mtl.of
+import cats.~>
 
 /**
   * MonadLayerControl is possible to use to access lower monad layers in invariant position,

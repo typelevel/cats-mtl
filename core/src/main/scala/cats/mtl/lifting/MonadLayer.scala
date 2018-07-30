@@ -1,5 +1,8 @@
 package cats
 package mtl
+package lifting
+
+import cats.Monad
 
 /**
   * `MonadLayer[M, Inner]` has the following functionality:

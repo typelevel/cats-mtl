@@ -10,6 +10,7 @@ import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.instances.local._
 import cats.mtl.laws.discipline._
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class ReaderTTests extends BaseSuite {
