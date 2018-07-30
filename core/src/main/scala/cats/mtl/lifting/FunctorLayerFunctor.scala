@@ -2,8 +2,6 @@ package cats
 package mtl
 package lifting
 
-import cats.~>
-
 /**
   * `FunctorLayerFunctor` is the capability to lift `Functor` homomorphisms in
   * `Inner` (`Inner ~> Inner`) into homomorphisms in `M` (`Inner ~> Inner`).

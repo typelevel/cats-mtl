@@ -2,8 +2,6 @@ package cats
 package mtl
 package lifting
 
-import cats.{Functor, ~>}
-
 /**
   * `FunctorLayer[M, Inner]` has the following functionality:
   * - lifts values from the `Functor` `Inner` to the `Functor` `M`.

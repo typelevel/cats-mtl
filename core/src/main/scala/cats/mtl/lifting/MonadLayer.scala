@@ -2,8 +2,6 @@ package cats
 package mtl
 package lifting
 
-import cats.Monad
-
 /**
   * `MonadLayer[M, Inner]` has the following functionality:
   * - lifts values from the `Monad` `Inner` to the `Monad` `M`.

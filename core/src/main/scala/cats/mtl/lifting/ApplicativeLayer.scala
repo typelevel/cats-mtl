@@ -2,8 +2,6 @@ package cats
 package mtl
 package lifting
 
-import cats.Applicative
-
 /**
   * `ApplicativeLayer[M, Inner]` has the following functionality:
   * - the capability to lift values from the `Applicative` `Inner`
