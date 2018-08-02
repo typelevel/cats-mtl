@@ -10,6 +10,7 @@ import cats.laws.discipline.SerializableTests
 import cats.mtl.instances.listen._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline._
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class WriterTTests extends BaseSuite {

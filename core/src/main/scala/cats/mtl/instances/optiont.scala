@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.OptionT
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 
 trait OptionTInstances extends OptionTInstances1 {
   implicit def optionFunctorLayerFunctor[M[_]]

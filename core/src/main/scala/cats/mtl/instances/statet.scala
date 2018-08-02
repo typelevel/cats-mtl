@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{IndexedStateT, StateT}
+import cats.mtl.lifting.MonadLayerControl
 import cats.syntax.functor._
 
 trait StateTInstances {

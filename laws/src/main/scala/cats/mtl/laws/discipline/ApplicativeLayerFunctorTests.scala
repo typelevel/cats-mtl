@@ -3,6 +3,7 @@ package mtl
 package laws
 package discipline
 
+import cats.mtl.lifting.{ApplicativeLayer, ApplicativeLayerFunctor, FunctorLayer, FunctorLayerFunctor}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 

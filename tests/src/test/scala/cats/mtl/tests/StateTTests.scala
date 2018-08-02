@@ -18,7 +18,7 @@ import cats.mtl.instances.optiont._
 import cats.mtl.instances.eithert._
 import cats.mtl.hierarchy.base._
 import cats.instances.all._
-import cats.mtl.MonadLayerControl.Aux
+import cats.mtl.lifting.MonadLayerControl
 
 class StateTTestsBase extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =

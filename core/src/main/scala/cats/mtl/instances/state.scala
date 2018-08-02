@@ -2,6 +2,7 @@ package cats
 package mtl
 package instances
 
+import cats.mtl.lifting.MonadLayerFunctor
 import data.{IndexedReaderWriterStateT, IndexedStateT, ReaderWriterStateT, StateT}
 
 trait StateInstances extends StateInstancesLowPriority1 {

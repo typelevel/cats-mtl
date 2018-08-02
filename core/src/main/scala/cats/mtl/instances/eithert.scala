@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.EitherT
+import cats.mtl.lifting.{FunctorLayerFunctor, MonadLayerControl}
 
 trait EitherTInstances extends EitherTInstances0 {
   implicit final def eitherMonadLayerControl[M[_], E]

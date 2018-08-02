@@ -1,5 +1,6 @@
 package cats
 package mtl
+package lifting
 
 /**
   * `MonadLayerFunctor` is the capability to lift `Monad` homomorphisms

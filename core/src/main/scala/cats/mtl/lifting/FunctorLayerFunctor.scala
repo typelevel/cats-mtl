@@ -1,5 +1,6 @@
 package cats
 package mtl
+package lifting
 
 /**
   * `FunctorLayerFunctor` is the capability to lift `Functor` homomorphisms in
