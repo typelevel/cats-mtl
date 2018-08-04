@@ -6,12 +6,13 @@ import cats._
 import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
-import cats.mtl.instances.all._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline.{ApplicativeLocalTests, FunctorEmptyTests, TraverseEmptyTests}
 
 class EmptyTests extends BaseSuite {
+  import cats.mtl.instances.all._
+
   checkAll("Option",
     TraverseEmptyTests[Option](mtl.instances.empty.optionTraverseEmpty)
       .traverseEmpty[String, String, String])
@@ -25,10 +26,16 @@ class EmptyTests extends BaseSuite {
     SerializableTests.serializable(mtl.instances.empty.listTraverseEmpty))
 
   checkAll("Map[Int, ?]",
-    TraverseEmptyTests[MapC[Int]#l](mtl.instances.empty.mapTraverseEmpty[Int])
+    FunctorEmptyTests[MapC[Int]#l](mtl.instances.empty.mapFunctorEmpty[Int])
+      .functorEmpty[String, String, String])
+  checkAll("FunctorEmpty[Map[Int, ?]]",
+    SerializableTests.serializable(mtl.instances.empty.mapFunctorEmpty[Int]))
+
+  checkAll("SortedMap[Int, ?]",
+    TraverseEmptyTests[SortedMapC[Int]#l](mtl.instances.empty.sortedMapTraverseEmpty[Int])
       .traverseEmpty[String, String, String])
-  checkAll("TraverseEmpty[Map[Int, ?]]",
-    SerializableTests.serializable(mtl.instances.empty.mapTraverseEmpty[Int]))
+  checkAll("TraverseEmpty[SortedMap[Int, ?]]",
+    SerializableTests.serializable(mtl.instances.empty.sortedMapTraverseEmpty[Int]))
 
   checkAll("Vector",
     TraverseEmptyTests[Vector](mtl.instances.empty.vectorTraverseEmpty)

@@ -5,7 +5,7 @@ package mtl
   * `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
   * using `ask`; the modification can only be observed from within that `F[A]` value.
   *
-  * `ApplicativeLocal[F, E]` has one external law:
+  * `ApplicativeLocal[F, E]` has three external laws:
   * {{{
   * def askReflectsLocal(f: E => E) = {
   *   local(ask)(f) <-> ask map f
@@ -42,4 +42,8 @@ object ApplicativeLocal {
   def local[F[_], E, A](f: E => E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.local(f)(fa)
 
   def scope[F[_], E, A](e: E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(e)(fa)
+}
+
+trait DefaultApplicativeLocal[F[_], E] extends ApplicativeLocal[F, E]{
+  def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }

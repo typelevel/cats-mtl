@@ -6,15 +6,15 @@ object Dependencies {
 
   //noinspection TypeAnnotation
   object Versions {
-    val scalaCheck = "1.13.4"
-    val scalaTest = "3.0.0"
-    val discipline = "0.7.2"
-    val macroParadise = "2.1.0"
-    val kindProjector = "0.9.3"
-    val simulacrum = "0.10.0"
-    val machinist = "0.6.1"
-    val cats = "1.0.0-MF"
-    val shapeless = "2.3.2"
+    val scalaCheck = "1.13.5"
+    val scalaTest = "3.0.5"
+    val discipline = "0.9.0"
+    val macroParadise = "2.1.1"
+    val kindProjector = "0.9.6"
+    val simulacrum = "0.12.0"
+    val machinist = "0.6.4"
+    val cats = "1.1.0"
+    val shapeless = "2.3.3"
   }
 
   val acyclic: Seq[Def.Setting[_]] = Def.settings(
@@ -39,8 +39,8 @@ object Dependencies {
   ))
 
   val compilerPlugins: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
-    compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
+    compilerPlugin("org.scalamacros" %% "paradise" % Versions.macroParadise cross CrossVersion.patch),
+    compilerPlugin("org.spire-math" %% "kind-projector" % Versions.kindProjector)
   ))
 
   val catsBundle: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(

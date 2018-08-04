@@ -10,6 +10,7 @@ import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.instances.local._
 import cats.mtl.laws.discipline._
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class ReaderTTests extends BaseSuite {
@@ -24,10 +25,6 @@ class ReaderTTests extends BaseSuite {
 
   implicit def eqKleisliId[A, B](implicit arb: Arbitrary[A], ev: Eq[B]): Eq[Kleisli[Id, A, B]] = {
     eqKleisli[Id, A, B]
-  }
-
-  implicit def catsLawArbitraryForStateT[F[_], S, A](implicit F: Arbitrary[F[S => F[(S, A)]]]): Arbitrary[StateT[F, S, A]] = {
-    Arbitrary(F.arbitrary.map(StateT.applyF))
   }
 
   implicit def stateTEq[F[_], S, A](implicit S: Arbitrary[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {

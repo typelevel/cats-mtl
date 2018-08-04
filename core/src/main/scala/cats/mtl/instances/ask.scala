@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.mtl.ApplicativeAsk
+import cats.mtl.lifting.ApplicativeLayer
 
 trait AskInstances {
   implicit final def askLayerInd[M[_], Inner[_], E](implicit

@@ -2,6 +2,10 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
+import cats.mtl.lifting._
+
 trait MonadLayerControlLaws[M[_], Inner[_], State0[_]] extends MonadLayerFunctorLaws[M, Inner] {
 
   implicit val monadLayerControlInstance: MonadLayerControl.Aux[M, Inner, State0]

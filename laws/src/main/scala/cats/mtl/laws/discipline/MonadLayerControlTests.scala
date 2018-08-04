@@ -6,6 +6,8 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
+import cats.mtl.lifting._
 
 trait MonadLayerControlTests[M[_], Inner[_], State[_]] extends MonadLayerFunctorTests[M, Inner] {
   implicit val monadLayerControlInstance: MonadLayerControl.Aux[M, Inner, State]

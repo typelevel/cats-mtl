@@ -2,9 +2,11 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
 import cats.syntax.functor._
 import cats.syntax.flatMap._
-import cats.syntax.cartesian._
+import cats.syntax.apply._
 
 trait MonadStateLaws[F[_], S] {
   implicit val stateInstance: MonadState[F, S]

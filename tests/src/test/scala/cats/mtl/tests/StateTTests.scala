@@ -18,9 +18,9 @@ import cats.mtl.instances.optiont._
 import cats.mtl.instances.eithert._
 import cats.mtl.hierarchy.base._
 import cats.instances.all._
-import cats.mtl.MonadLayerControl.Aux
+import cats.mtl.lifting.MonadLayerControl
 
-class StateTTests extends BaseSuite {
+class StateTTestsBase extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
     Arbitrary(Gen.oneOf(new (Option ~> Option) {
       def apply[A](fa: Option[A]): Option[A] = None
@@ -34,7 +34,9 @@ class StateTTests extends BaseSuite {
     Eq.by[StateT[F, S, A], S => F[(S, A)]](state =>
       s => state.run(s))
   }
+}
 
+class StateTTests extends StateTTestsBase {
   {
     implicit val monadLayerControl: MonadLayerControl.Aux[StateTC[Option, String]#l, Option, TupleC[String]#l] =
       cats.mtl.instances.statet.stateMonadLayerControl[Option, String]

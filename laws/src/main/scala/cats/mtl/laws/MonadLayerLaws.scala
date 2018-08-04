@@ -2,6 +2,9 @@ package cats
 package mtl
 package laws
 
+import cats.laws.IsEq
+import cats.laws.IsEqArrow
+import cats.mtl.lifting.{ApplicativeLayer, FunctorLayer, MonadLayer}
 import cats.syntax.flatMap._
 
 trait MonadLayerLaws[M[_], Inner[_]] extends ApplicativeLayerLaws[M, Inner] {

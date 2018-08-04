@@ -6,6 +6,7 @@ package discipline
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait FunctorTellTests[F[_], L] extends Laws {
   implicit val tellInstance: FunctorTell[F, L]

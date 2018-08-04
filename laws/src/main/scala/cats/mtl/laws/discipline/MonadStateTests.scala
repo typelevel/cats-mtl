@@ -6,6 +6,7 @@ package discipline
 import org.scalacheck.{Arbitrary, Cogen}
 import org.scalacheck.Prop.{forAll => ∀}
 import org.typelevel.discipline.Laws
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait MonadStateTests[F[_], S] extends Laws {
   implicit val stateInstance: MonadState[F, S]

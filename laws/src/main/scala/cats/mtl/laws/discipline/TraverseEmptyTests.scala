@@ -7,6 +7,7 @@ import cats.data.Nested
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import cats.instances.option._
+import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait TraverseEmptyTests[F[_]] extends FunctorEmptyTests[F] {
   implicit val traverseEmptyInstance: TraverseEmpty[F]

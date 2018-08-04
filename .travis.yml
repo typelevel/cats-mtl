@@ -1,21 +1,15 @@
 language: scala
-
 sudo: required
-
 dist: trusty
-
 git:
   depth: 9999
-
 scala:
-  - 2.10.6
-  - 2.11.11
-  - 2.12.2
-
+- 2.10.7
+- 2.11.12
+- 2.12.4
 jdk:
-  - oraclejdk7
-  - oraclejdk8
-
+- oraclejdk7
+- oraclejdk8
 matrix:
   exclude:
   - scala: 2.12.2
@@ -24,19 +18,16 @@ matrix:
     jdk: oraclejdk8
   - scala: 2.11.11
     jdk: oraclejdk7
-
 before_install:
- - export PATH=${PATH}:./vendor/bundle
-
+- export PATH=${PATH}:./vendor/bundle
 script:
-  - scripts/travis-publish.sh
-
-# http://austinpray.com/ops/2015/09/20/change-travis-node-version.html
+- scripts/travis-publish.sh
 install:
-  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - pip install --user codecov
-  - gem install jekyll -v 2.5
-
+- rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
+  && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
+  install $TRAVIS_NODE_VERSION
+- pip install --user codecov
+- gem install jekyll -v 2.5
 notifications:
   webhooks:
     urls:
@@ -44,25 +35,23 @@ notifications:
     on_success: change
     on_failure: always
     on_start: false
-
 env:
   matrix:
-    - JS_BUILD=false
-    - JS_BUILD=true
+  - JS_BUILD=false
+  - JS_BUILD=true
   global:
   - TRAVIS_NODE_VERSION="4"
-
+  - secure: PB2RBOZLZlJvP6DJv9fCN8c6C/LcSzDCb2bkNoVOJB5JMwBPGq3WMPZX5hzG+LIwU1PtwUR8q9b4sA9Igsx+eii5+YnXjw/9ZHcCPP7/uxAhL1CywvV71abixi69Uih/j1IK0J2x5Qtt4EcWHFVCBce/X2U4C3DBt8Oovdy2P8ILocbnP3lBDsh5IGsRZrj4B9WIsWLnHbEu4KTBKDZ+H0FQwa/F63lay5d9lbueuzO7YS8QudR7wEch0vKPuWGmSdpX0K5IPZ72YSjtylMYa5ojHkDUpI0sYcvR0JlHU7UBov9oaDFQBoAWAWtTlpxZW/exT7DicO7hDH2AIW3iNF1bMEFzqDMPgQSCVFx47eydeLH0CN92ZOAFFjNPoDof9CSx9ynMMkvmH+yHN41njqY6K2p7+Lx5d2s0tKVQVapWJSKQVI/k7j7RY2Rqk5gD1q91OVS6Y/SdfNfkLcNqkxxjIk9RxAQ+/VWQ38CZS7vlk8lvG5wruZ8An+Gvy9CfC5l+vUVfd00+/QOgnejx4ELRtB4TQSd1Bvbjw8vJWT0zPjjELn8eDPlPR30YAzQGTgwgW6/gxj9LdyNoHubK9RxbJgRDE59S9upE2pJgzysMcRZJr+EnHB02UX5oTOQiio5jdZ/UH9UT2GGuNTykf7/ph1pGcLrnadytAesmhIw=
+  - secure: iacdrTwQo9k6O4mkAdLFzBYb20pMgaW6X9xi0R24TPJuTM2XJauYJDHgfw79XkfNlO8r4p5AS1EGOwKrOBbLHO/WbJtwhKgcHfFmqysQDcha4WARl3Uy883oO71CDBO/Xak/PZ2UQ1hgUS4Vzg2BUD0cXNstI4lVaaRvKfXb0Gh5HL34IHzelwd2AFqyWW41J3qC3+maur2zEUwP7GTJLa8Ctkpw5ufXnGrpZQ6F9uMAOLI71o9J9wtliMoMDlkvsSDdH2l1gnQi3HU511jkVFVnNHj6hExgwt9SBEsBK6HayGfAFEcX5QtCVDqMO+POY+y3QTl2JprlxZEF4Mo7NdAzrf++dNdskTTj9SuAuTM8QdzsgiGR76fuKQivGEuez3fy6sKQ3QyyznmHYb8qimkB4vdZasT9LGyJk/lo9Nhwf5xQbQbNmFkRsgl9LDZBTC/erR7Tc/Ec6rl2tjcBbJVdzZqoW066TudK9LkSmWItNUWX/yAK25lF2UaMHCOuXhUJdce3Ri9mamWQQ0kO/KGBT7vwqNFCue0Jorn5u3cHwlLUJhOf9a5ZAh5lfja61j14LakagrKhsaP9pfm0O7ylNZldiVbIc4mtKvenQBEAv8ni2nsdChntmS8HxO7wxsRt0dt7G13GuPDBGHVvIbYS9pEXup941mqMPQqFP3Q=
 cache:
   directories:
-  - $HOME/.sbt/0.13/dependency
-  - $HOME/.sbt/boot/scala*
-  - $HOME/.sbt/launchers
-  - $HOME/.ivy2/cache
-  - $HOME/.nvm
-
+  - "$HOME/.sbt/0.13/dependency"
+  - "$HOME/.sbt/boot/scala*"
+  - "$HOME/.sbt/launchers"
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.nvm"
 before_cache:
-  - du -h -d 1 $HOME/.ivy2/cache
-  - du -h -d 2 $HOME/.sbt/
-  - find $HOME/.sbt -name "*.lock" -type f -delete
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete
-
+- du -h -d 1 $HOME/.ivy2/cache
+- du -h -d 2 $HOME/.sbt/
+- find $HOME/.sbt -name "*.lock" -type f -delete
+- find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete

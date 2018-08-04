@@ -2,7 +2,8 @@ package cats
 package mtl
 package instances
 
-import cats.data.StateT
+import cats.data.{IndexedStateT, StateT}
+import cats.mtl.lifting.MonadLayerControl
 import cats.syntax.functor._
 
 trait StateTInstances {
@@ -12,13 +13,13 @@ trait StateTInstances {
       type State[A] = (S, A)
 
       val outerInstance: Monad[StateTC[M, S]#l] =
-        StateT.catsDataMonadForStateT
+        IndexedStateT.catsDataMonadForIndexedStateT
 
       val innerInstance: Monad[M] = M
 
       def layerMapK[A](ma: StateT[M, S, A])(trans: M ~> M): StateT[M, S, A] = ma.transformF(trans(_))
 
-      def layer[A](inner: M[A]): StateT[M, S, A] = StateT.lift(inner)
+      def layer[A](inner: M[A]): StateT[M, S, A] = StateT.liftF(inner)
 
       def restore[A](state: (S, A)): StateT[M, S, A] = StateT((_: S) => innerInstance.pure(state))
 
