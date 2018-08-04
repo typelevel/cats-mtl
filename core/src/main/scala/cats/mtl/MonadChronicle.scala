@@ -36,17 +36,6 @@ object MonadChronicle {
   def materialize[F[_], E, A](fa: F[A])(implicit ev: MonadChronicle[F, E]): F[E Ior A] =
     ev.materialize(fa)
 
-  def memento[F[_], E, A](fa: F[A])(implicit ev: MonadChronicle[F, E]): F[Either[E, A]] =
-    ev.memento(fa)
-
-  def absolve[F[_], E, A](a: => A, fa: F[A])(implicit ev: MonadChronicle[F, E]): F[A] =
-    ev.absolve(a, fa)
-
-  def condemn[F[_], E, A](fa: F[A])(implicit ev: MonadChronicle[F, E]): F[A] = ev.condemn(fa)
-
-  def retcon[F[_], E, A](cc: E => E, fa: F[A])(implicit ev: MonadChronicle[F, E]): F[A] =
-    ev.retcon(cc, fa)
-
   def chronicle[F[_], E, A](ior: E Ior A)(implicit ev: MonadChronicle[F, E]): F[A] =
     ev.chronicle(ior)
 
@@ -58,8 +47,8 @@ trait DefaultMonadChronicle[F[_], E] extends MonadChronicle[F, E] {
   override def disclose[A](c: E)(implicit M: Monoid[A]): F[A] = monad.as(dictate(c), M.empty)
 
   override def memento[A](fa: F[A]): F[Either[E, A]] = monad.flatMap(materialize(fa)) {
-    case Ior.Left(e) => monad.pure(Left(e))
-    case Ior.Right(a) => monad.pure(Right(a))
+    case Ior.Left(e)    => monad.pure(Left(e))
+    case Ior.Right(a)   => monad.pure(Right(a))
     case Ior.Both(e, a) => monad.as(dictate(e), Right(a))
   }
 
