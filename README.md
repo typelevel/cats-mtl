@@ -1,7 +1,7 @@
 ## cats-mtl
 
 [![Build Status](https://api.travis-ci.org/typelevel/cats-mtl.svg)](https://travis-ci.org/typelevel/cats-mtl)
-[![codecov.io](http://codecov.io/github/typelevel/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/typelevel/cats-mtl?branch=master)
+[![codecov.io](http://codecov.io/github/typelevel/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/typelevel/cats-mtl?branch=master) [![Join the chat at https://gitter.im/cats-mtl/Lobby](https://badges.gitter.im/cats-mtl/Lobby.svg)](https://gitter.im/cats-mtl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Transformer typeclasses for cats.
 
