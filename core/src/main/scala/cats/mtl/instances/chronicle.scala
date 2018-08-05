@@ -5,7 +5,30 @@ package instances
 import cats.data.{Ior, IorT}
 import cats.syntax.functor._
 
-trait ChronicleInstances extends ChronicleLowPriorityInstances
+trait ChronicleInstances extends ChronicleLowPriorityInstances {
+  implicit final def chronicleInd[M[_], Inner[_], E](implicit ml: MonadLayerControl[M, Inner],
+                                                     under: MonadChronicle[Inner, E]
+                                                    ): MonadChronicle[M, E] = {
+    new DefaultMonadChronicle[M, E] {
+      val monad: Monad[M] =
+        ml.outerInstance
+
+      def dictate(c: E): M[Unit] = {
+        ml.layer(under.dictate(c))
+      }
+
+      def confess[A](c: E): M[A] =
+        ml.layer(under.confess(c))
+
+      def materialize[A](fa: M[A]): M[Ior[E, A]] =
+        ml.outerInstance.flatMap(ml.layerControl { nt =>
+          under.materialize(nt(fa))
+        }) {x => x.traverse(ml.restore)(ml.outerInstance) }
+
+
+    }
+  }
+}
 
 trait ChronicleLowPriorityInstances {
   implicit final def chronicleIorT[F[_], E](implicit S: Semigroup[E],
