@@ -46,6 +46,8 @@ class IorTTests extends BaseSuite {
   }
 
   {
+    import cats.mtl.instances.writert._
+
     checkAll(
       "IorT[Option, String, ?]",
       MonadChronicleTests[IorTC[Option, String]#l, String]
@@ -53,9 +55,20 @@ class IorTTests extends BaseSuite {
     )
 
     checkAll(
-      "Ior[Option, String]",
+      "Ior[String, String]",
       MonadChronicleTests[IorC[String]#l, String]
         .monadChronicle[String]
     )
+
+    checkAll(
+      "WriterT[Ior[String, ?], Int]",
+      MonadChronicleTests[WriterTC[IorC[String]#l, Int]#l, String].monadChronicle[String]
+    )
+
+    checkAll(
+      "WriterT[IorT[Option, String, ?], Int]",
+      MonadChronicleTests[WriterTC[IorTC[Option, String]#l, Int]#l, String].monadChronicle[String]
+    )
+
   }
 }
