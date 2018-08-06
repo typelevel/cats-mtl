@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{IndexedReaderWriterStateT, ReaderWriterStateT, WriterT}
+import cats.mtl.lifting.MonadLayerControl
 import cats.syntax.functor._
 
 trait ListenInstances extends ListenInstancesLowPriority {

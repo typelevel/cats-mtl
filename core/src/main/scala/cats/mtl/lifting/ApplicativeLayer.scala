@@ -1,5 +1,6 @@
 package cats
 package mtl
+package lifting
 
 /**
   * `ApplicativeLayer[M, Inner]` has the following functionality:

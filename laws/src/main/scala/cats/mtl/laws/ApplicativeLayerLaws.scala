@@ -4,6 +4,7 @@ package laws
 
 import cats.laws.IsEq
 import cats.laws.IsEqArrow
+import cats.mtl.lifting.{ApplicativeLayer, FunctorLayer}
 import cats.syntax.applicative._
 import cats.syntax.apply._
 

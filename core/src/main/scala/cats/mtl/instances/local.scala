@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{IndexedReaderWriterStateT, Kleisli, ReaderT, ReaderWriterStateT}
+import cats.mtl.lifting.MonadLayer
 
 trait LocalInstances extends LocalLowPriorityInstances {
   implicit final def localInd[M[_], Inner[_], E](implicit ml: MonadLayer[M, Inner],
