@@ -9,6 +9,7 @@ import cats.mtl.instances.chronicle._
 import cats.laws.discipline.SerializableTests
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
+import cats.mtl.lifting.{FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class IorTTests extends BaseSuite {

@@ -5,7 +5,8 @@ package laws
 import cats.data.Ior
 import cats.laws.{IsEq, IsEqArrow}
 import cats.syntax.functor._
-
+import cats.syntax.apply._
+import cats.syntax.semigroup._
 /**
   * Created by Yuval.Itzchakov on 20/07/2018.
   */
@@ -54,6 +55,14 @@ trait MonadChronicleLaws[F[_], E] {
 
   def pureThenRetconIsPure[A](f: E => E, a: A): IsEq[F[A]] = {
     retcon[A](f, pure(a)) <-> pure(a)
+  }
+
+  def dictateSharkDictateIsDictateSemigroup(e0: E, e: E)(implicit ev: Semigroup[E]): IsEq[F[Unit]] = {
+    dictate(e0) *> dictate(e) <-> dictate(e0 |+| e)
+  }
+
+  def dictateSharkConfessIsConfessSemigroup[A](e0: E, e: E)(implicit ev: Semigroup[E]): IsEq[F[A]] = {
+    dictate(e0) *> confess[A](e) <-> confess[A](e0 |+| e)
   }
 }
 

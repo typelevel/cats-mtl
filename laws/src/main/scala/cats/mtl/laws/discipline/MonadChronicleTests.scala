@@ -24,7 +24,8 @@ trait MonadChronicleTests[F[_], E] extends Laws {
                                    EqFEIorUnit: Eq[F[E Ior Unit]],
                                    EqFEUnit: Eq[F[Either[E, Unit]]],
                                    EqFIor: Eq[F[E Ior A]],
-                                   EqFEither: Eq[F[Either[E, A]]]): RuleSet = {
+                                   EqFEither: Eq[F[Either[E, A]]],
+                                   SemigroupE: Semigroup[E]): RuleSet = {
     new DefaultRuleSet(
       name = "monadChronicle",
       parent = None,
@@ -37,7 +38,9 @@ trait MonadChronicleTests[F[_], E] extends Laws {
       "dictate then memento is dictate right unit" -> ∀(laws.dictateThenMementoIsDictateRightUnit _),
       "dictate then retcon is dictate" -> ∀(laws.dictateThenRetconIsDictate[A] _),
       "pure then materialize is right" -> ∀(laws.pureThenMaterializeIsRight[A] _),
-      "pure then retcon is pure" -> ∀(laws.pureThenRetconIsPure[A] _)
+      "pure then retcon is pure" -> ∀(laws.pureThenRetconIsPure[A] _),
+      "dictate shark dictate is dictate semigroup" -> ∀(laws.dictateSharkDictateIsDictateSemigroup _),
+      "dictate shark confess is confess semigroup" -> ∀(laws.dictateSharkConfessIsConfessSemigroup[A] _)
     )
   }
 }

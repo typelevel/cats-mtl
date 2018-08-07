@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{Ior, IorT}
+import cats.mtl.lifting.{FunctorLayerFunctor, MonadLayerControl}
 import cats.syntax.functor._
 
 trait IorTInstances extends IorTInstances1 {
