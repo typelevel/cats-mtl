@@ -28,5 +28,6 @@ package object mtl {
   private[mtl] type NestedC[F[_], G[_]] = {type l[A] = Nested[F, G, A]}
   private[mtl] type MapC[K] = {type l[V] = Map[K, V]}
   private[mtl] type SortedMapC[K] = {type l[V] = SortedMap[K, V]}
-
+  private[mtl] type IorTC[M[_], A] = {type l[B] = IorT[M, A, B]}
+  private[mtl] type IorC[A] = {type l[B] = Ior[A, B]}
 }
