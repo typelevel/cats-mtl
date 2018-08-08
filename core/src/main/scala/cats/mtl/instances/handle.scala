@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{EitherT, OptionT, Validated}
+import cats.mtl.lifting.MonadLayerControl
 
 trait HandleInstances extends HandleLowPriorityInstances1 {
   implicit final def raiseInd[M[_], Inner[_], E](implicit
