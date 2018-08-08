@@ -2,7 +2,8 @@ package cats
 package mtl
 package instances
 
-import data.{IndexedStateT, StateT}
+import cats.mtl.lifting.MonadLayerFunctor
+import data.{IndexedReaderWriterStateT, IndexedStateT, ReaderWriterStateT, StateT}
 
 trait StateInstances extends StateInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
@@ -42,6 +43,24 @@ private[instances] trait StateInstancesLowPriority1 {
       def inspect[A](f: (S) => A): StateT[M, S, A] = StateT.inspect(f)
     }
   }
+
+  implicit final def readerWriterStateState[M[_], R, L, S]
+  (implicit M: Monad[M], L: Monoid[L]): MonadState[ReaderWriterStateT[M, R, L, S, ?], S] =
+    new MonadState[ReaderWriterStateT[M, R, L, S, ?], S] {
+      val monad: Monad[ReaderWriterStateT[M, R, L, S, ?]] = IndexedReaderWriterStateT.catsDataMonadForRWST
+
+      def get: ReaderWriterStateT[M, R, L, S, S] =
+        ReaderWriterStateT.get[M, R, L, S]
+
+      def set(s: S): ReaderWriterStateT[M, R, L, S, Unit] =
+        ReaderWriterStateT.set[M, R, L, S](s)
+
+      def modify(f: S => S): ReaderWriterStateT[M, R, L, S, Unit] =
+        ReaderWriterStateT.modify[M, R, L, S](f)
+
+      def inspect[A](f: S => A): ReaderWriterStateT[M, R, L, S, A] =
+        ReaderWriterStateT.inspect[M, R, L, S, A](f)
+    }
 }
 
 object state extends StateInstances

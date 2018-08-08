@@ -4,6 +4,7 @@ package laws
 
 import cats.laws.IsEq
 import cats.laws.IsEqArrow
+import cats.mtl.lifting.{FunctorLayer, FunctorLayerFunctor}
 
 trait FunctorLayerFunctorLaws[M[_], Inner[_]] extends FunctorLayerLaws[M, Inner] {
   val functorLayerFunctorInstance: FunctorLayerFunctor[M, Inner]

@@ -2,7 +2,9 @@ package cats
 package mtl
 package instances
 
+
 import cats.data.{EitherT, OptionT, Validated}
+import cats.mtl.lifting.FunctorLayer
 
 trait RaiseInstances extends RaiseLowPriorityInstances1 {
   implicit final def raiseInd[M[_], Inner[_], E](implicit

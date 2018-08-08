@@ -3,6 +3,7 @@ package mtl
 package instances
 
 import cats.data.{Kleisli, ReaderT}
+import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 
 trait ReaderTInstances extends ReaderTInstances1 {
   implicit def readerFunctorLayerFunctor[M[_], E]

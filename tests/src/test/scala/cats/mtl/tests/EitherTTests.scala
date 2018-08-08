@@ -10,6 +10,7 @@ import cats.laws.discipline.SerializableTests
 import cats.mtl.instances.listen._
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
+import cats.mtl.lifting.{FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class EitherTTests extends BaseSuite {

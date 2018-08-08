@@ -2,6 +2,8 @@ package cats
 package mtl
 package laws
 
+import cats.mtl.lifting.{ApplicativeLayer, ApplicativeLayerFunctor, FunctorLayer, FunctorLayerFunctor}
+
 trait ApplicativeLayerFunctorLaws[M[_], Inner[_]] extends ApplicativeLayerLaws[M, Inner] with FunctorLayerFunctorLaws[M, Inner] {
   implicit val applicativeLayerFunctorInstance: ApplicativeLayerFunctor[M, Inner]
   // no extra laws

@@ -1,5 +1,6 @@
 package cats
 package mtl
+package lifting
 
 /**
   * `ApplicativeLayerFunctor` is the capability to lift `Applicative` homomorphisms

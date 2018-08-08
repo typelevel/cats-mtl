@@ -7,6 +7,7 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
+import cats.mtl.lifting.FunctorLayer
 
 trait FunctorLayerTests[M[_], Inner[_]] extends Laws {
   implicit val functorLayer: FunctorLayer[M, Inner]
