@@ -5,11 +5,14 @@ package laws
 import cats.laws.IsEq
 import cats.laws.IsEqArrow
 
+import scala.util.control.NonFatal
+
 trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
   implicit val handleInstance: ApplicativeHandle[F, E]
+  implicit val applicativeInstance: Applicative[F] = handleInstance.applicative
 
   import handleInstance.{handle, handleWith, attempt}
-  import raiseInstance.raise
+  import raiseInstance.{raise, catchNonFatal}
   import handleInstance.applicative._
 
   // external laws:
@@ -30,6 +33,14 @@ trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
 
   def pureAttemptIsPureRight[A](a: A): IsEq[F[Either[E, A]]] =
     attempt(pure(a)) <-> pure(Right(a))
+
+  // internal laws:
+  def catchNonFatalDefault[A](a: A, f: Throwable => E): IsEq[F[A]] =
+    catchNonFatal(a)(f) <-> (try {
+      pure(a)
+    } catch {
+      case NonFatal(ex) => raise(f(ex))
+    })
 
 }
 

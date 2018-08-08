@@ -17,14 +17,12 @@ trait FunctorRaiseTests[F[_], E] extends Laws {
                                 ArbE: Arbitrary[E],
                                 CogenA: Cogen[A],
                                 EqFU: Eq[F[Unit]],
-                                EqFA: Eq[F[A]],
-                                MonadF: Monad[F]
+                                EqFA: Eq[F[A]]
                                ): RuleSet = {
     new DefaultRuleSet(
       name = "functorRaise",
       parent = None,
-      "catch non fatal default" -> ∀(laws.catchNonFatalDefault[A] _),
-      "ensure default" -> ∀(laws.ensureDefault[A] _)
+      "catch non fatal default" -> ∀(laws.failThenFlatMapFails[A] _)
     )
   }
 

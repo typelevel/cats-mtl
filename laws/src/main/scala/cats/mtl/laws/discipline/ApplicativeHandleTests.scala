@@ -22,8 +22,7 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
                                         EqFA: Eq[F[A]],
                                         EqFUnit: Eq[F[Unit]],
                                         EqEitherA: Eq[F[Either[E, A]]],
-                                        EqEitherUnit: Eq[F[Either[E, Unit]]],
-                                        MonadF: Monad[F]
+                                        EqEitherUnit: Eq[F[Either[E, Unit]]]
                                        ): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeHandle",
@@ -33,7 +32,8 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
       "pure and handleWith is pure" -> ∀(laws.handleWithPureIsPure[A] _),
       "pure and handle is pure" -> ∀(laws.handlePureIsPure[A] _),
       "pure and attempt is pure Right" -> ∀(laws.pureAttemptIsPureRight[A] _),
-      "raise and attempt is pure Left" -> ∀(laws.raiseAttemptIsPureLeft _)
+      "raise and attempt is pure Left" -> ∀(laws.raiseAttemptIsPureLeft _),
+      "catch non fatal default" -> ∀(laws.catchNonFatalDefault[A] _)
     )
   }
 
