@@ -195,3 +195,5 @@ contact one of the [project maintainers](#maintainers) in private. We
 hope to avoid letting minor aggressions and misunderstandings escalate
 into larger problems.
 
+### License
+All code is available to you under the MIT license, available at http://opensource.org/licenses/mit-license.php and also in the COPYING file. 
