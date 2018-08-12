@@ -11,4 +11,4 @@ trait AllInstances extends EitherTInstances
   with StateTInstances with WriterTInstances
   with EmptyInstances with ReaderWriterStateTInstances
   with HandleInstances
-
+  with ChronicleInstances with IorTInstances

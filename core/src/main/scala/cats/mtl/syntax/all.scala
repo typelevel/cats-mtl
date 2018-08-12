@@ -10,4 +10,4 @@ trait AllSyntax extends AskSyntax
   with TellSyntax
   with EmptySyntax
   with HandleSyntax
-
+  with ChronicleSyntax
