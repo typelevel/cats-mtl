@@ -13,6 +13,7 @@ final class Syntax extends BaseSuite {
     import cats.mtl.implicits._
     import cats.data._
     import cats.syntax.functor._
+    import cats.syntax.either._
     test("ApplicativeAsk") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
       val askedC: Id[Int] = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
@@ -39,6 +40,10 @@ final class Syntax extends BaseSuite {
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
       val faC: Either[String, Int] = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
       val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
+    }
+    test("ApplicativeHandle") {
+      val fa: Option[Int] = Option.empty[Int].handle((_: Unit) => 42)
+      val fb: Option[Int] = Option.empty[Int].handleWith((_: Unit) => Some(22))
     }
     test("FunctorEmpty") {
       def operateFunctorEmpty[F[_]: Functor: FunctorEmpty](fi: F[Int]): Unit = {
