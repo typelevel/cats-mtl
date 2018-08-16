@@ -33,4 +33,22 @@ class EitherTTests extends BaseSuite {
     checkAll("FunctorLayerFunctor[EitherT[Option, String, ?], Option]",
       SerializableTests.serializable(functorLayerFunctor))
   }
+
+  {
+    import cats.mtl.instances.handle._
+    import cats.mtl.instances.eithert._
+    import cats.mtl.instances.writert._
+
+    checkAll("Either[String, ?]", ApplicativeHandleTests[Either[String, ?], String].applicativeHandle[Int])
+    checkAll("EitherT[Option, String, ?]",
+      ApplicativeHandleTests[EitherT[Option, String, ?], String].applicativeHandle[Int])
+
+    checkAll("WriterT[Either[String, ?], Int, ?]",
+      ApplicativeHandleTests[WriterT[Either[String, ?], Int, ?], String].applicativeHandle[Int])
+
+    checkAll("WriterT[EitherT[Option, [String, ?], Int, ?]",
+      ApplicativeHandleTests[WriterT[EitherT[Option, String, ?], Int, ?], String].applicativeHandle[Int])
+
+  }
+
 }
