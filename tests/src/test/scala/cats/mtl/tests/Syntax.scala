@@ -83,6 +83,22 @@ final class Syntax extends BaseSuite {
       val toldC = FunctorTell.tell[WriterTC[Option, String]#l, String]("ha")
       val toldFC = FunctorTell.tellF[WriterTC[Option, String]#l]("ha")
     }
-  }
+    test("MonadChronicle") {
+      val chronicleC: Ior[Int, String] = MonadChronicle.chronicle(Ior.right[Int, String]("w00t"))
+      val confessC: Ior[String, Int] = MonadChronicle.confess[IorC[String]#l, String, Int]("error")
+      val discloseTC: IorT[Option, String, String] = MonadChronicle.disclose[IorTC[Option, String]#l, String, String]("w00t")
+      val dictateC: Ior[Int, Unit] = MonadChronicle.dictate[IorC[Int]#l, Int](42)
+      val materializeTC: IorT[Option, String, Ior[String, Int]] = MonadChronicle.materialize[IorTC[Option, String]#l, String, Int](IorT.pure[Option, String](42))
 
+      val fa: IorT[Option, String, Int] = IorT.pure(42)
+      val dictate: IorT[Option, String, Unit] = fa.dictate("err")
+      val disclose: IorT[Option, String, Int] = fa.disclose("err")
+      val confess: IorT[Option, String, Int] = fa.confess("err")
+      val memento: IorT[Option, String, Either[String, Int]] = fa.memento[String]
+      val absolve: IorT[Option, String, Int] = fa.absolve(42)
+      val condemn: IorT[Option, String, Int] = fa.condemn
+      val retcon: IorT[Option, String, Int] = fa.retcon((str: String) => str + "err")
+      val chronicle: IorT[Option, String, Int] = fa.chronicle[String](Ior.both("hello", 42))
+    }
+  }
 }
