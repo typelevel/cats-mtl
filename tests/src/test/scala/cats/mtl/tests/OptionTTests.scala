@@ -48,4 +48,21 @@ class OptionTTests extends BaseSuite {
     checkAll("FunctorLayerFunctor[OptionT[Option, ?], Option]",
       SerializableTests.serializable(functorLayerFunctor))
   }
+
+  {
+    import cats.mtl.instances.handle._
+    import cats.mtl.instances.optiont._
+    import cats.mtl.instances.writert._
+
+    checkAll("Option", ApplicativeHandleTests[Option, Unit].applicativeHandle[Int])
+    checkAll("OptionT[Either[String, ?], ?]",
+      ApplicativeHandleTests[OptionT[Either[String, ?], ?], Unit].applicativeHandle[Int])
+
+    checkAll("WriterT[Option, Int, ?]",
+      ApplicativeHandleTests[WriterT[Option, Int, ?], Unit].applicativeHandle[Int])
+
+    checkAll("WriterT[OptionT[Either[String, ?], ?], Int, ?]",
+      ApplicativeHandleTests[WriterT[OptionT[Either[String, ?], ?], Int, ?], Unit].applicativeHandle[Int])
+
+  }
 }
