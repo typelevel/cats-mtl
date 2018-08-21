@@ -8,6 +8,5 @@ trait AllSyntax extends AskSyntax
   with RaiseSyntax
   with StateSyntax
   with TellSyntax
-  with EmptySyntax
   with HandleSyntax
   with ChronicleSyntax
