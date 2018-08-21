@@ -2,7 +2,6 @@ package cats
 package mtl
 package tests
 
-
 final class Syntax extends BaseSuite {
 
   // test instances.all._
@@ -18,21 +17,26 @@ final class Syntax extends BaseSuite {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
       val askedC: Id[Int] = ApplicativeAsk.ask[ReaderIntId, Int].run(1)
       val askedFC: Id[Int] = ApplicativeAsk.askF[ReaderIntId]().run(1)
-      val readerFEC: Id[String] = ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
-      val readerC: Id[String] = ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
+      val readerFEC: Id[String] =
+        ApplicativeAsk.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
+      val readerC: Id[String] =
+        ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
     }
     test("FunctorListen") {
       val lift: WriterT[Option, String, Int] = WriterT.liftF[Option, String, Int](Option.empty[Int])
       val listen: WriterT[Option, String, (Int, String)] = lift.listen
       val listens: WriterT[Option, String, (Int, String)] = lift.listens((_: String) + "suffix")
       val listenC: WriterT[Option, String, (Int, String)] = FunctorListen.listen(lift)
-      val listensC: WriterT[Option, String, (Int, String)] = FunctorListen.listens(lift)((_: String) + "suffix")
+      val listensC: WriterT[Option, String, (Int, String)] =
+        FunctorListen.listens(lift)((_: String) + "suffix")
     }
     test("ApplicativeLocal") {
       val fa: OptionT[FunctionC[String]#l, Int] = OptionT.liftF[FunctionC[String]#l, Int](_.length)
       val local = fa.local[String](s => s + "!").value("ha")
       val scope = fa.scope[String]("state").value("ha")
-      val localC: String = ApplicativeLocal.local((s: String) => s + "!")(ApplicativeAsk.askF[FunctionC[String]#l]()).apply("ha")
+      val localC: String = ApplicativeLocal
+        .local((s: String) => s + "!")(ApplicativeAsk.askF[FunctionC[String]#l]())
+        .apply("ha")
       val scopeC: Option[Int] = ApplicativeLocal.scope("state")(fa).value.apply("ha")
     }
     test("FunctorRaise") {
@@ -62,7 +66,9 @@ final class Syntax extends BaseSuite {
     test("TraverseEmpty") {
       def operateTraverseEmpty[F[_]: TraverseEmpty](fi: F[Int]): Unit = {
         val _1 = fi.filterA[Option](i => Some(i < 2))
-        val _2 = fi.traverseFilter[Option, Int] { i => Some(Some(i).filter(_ < 2)) }
+        val _2 = fi.traverseFilter[Option, Int] { i =>
+          Some(Some(i).filter(_ < 2))
+        }
         ()
       }
       val fa: SortedMap[Int, Int] = SortedMap(1 -> 1, 2 -> 3)
@@ -74,8 +80,10 @@ final class Syntax extends BaseSuite {
       val getC: Eval[(String, String)] = MonadState.get[StateC[String]#l, String].run("")
       val setFC: Eval[(String, Unit)] = MonadState.setF[StateC[String]#l]("ha").run("")
       val setC: Eval[(String, Unit)] = MonadState.set[StateC[String]#l, String]("ha").run("")
-      val modC: State[String, Unit] = MonadState.modify[StateC[String]#l, String]((s: String) => s + "!")
-      val inspectC: State[String, String] = MonadState.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
+      val modC: State[String, Unit] =
+        MonadState.modify[StateC[String]#l, String]((s: String) => s + "!")
+      val inspectC: State[String, String] =
+        MonadState.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
     }
     test("FunctorTell") {
       val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
@@ -84,11 +92,15 @@ final class Syntax extends BaseSuite {
       val toldFC = FunctorTell.tellF[WriterTC[Option, String]#l]("ha")
     }
     test("MonadChronicle") {
-      val chronicleC: Ior[Int, String] = MonadChronicle.chronicle(Ior.right[Int, String]("w00t"))
+      val chronicleC: Ior[Int, String] =
+        MonadChronicle.chronicle[IorC[Int]#l, Int, String](Ior.right[Int, String]("w00t"))
       val confessC: Ior[String, Int] = MonadChronicle.confess[IorC[String]#l, String, Int]("error")
-      val discloseTC: IorT[Option, String, String] = MonadChronicle.disclose[IorTC[Option, String]#l, String, String]("w00t")
+      val discloseTC: IorT[Option, String, String] =
+        MonadChronicle.disclose[IorTC[Option, String]#l, String, String]("w00t")
       val dictateC: Ior[Int, Unit] = MonadChronicle.dictate[IorC[Int]#l, Int](42)
-      val materializeTC: IorT[Option, String, Ior[String, Int]] = MonadChronicle.materialize[IorTC[Option, String]#l, String, Int](IorT.pure[Option, String](42))
+      val materializeTC: IorT[Option, String, Ior[String, Int]] =
+        MonadChronicle.materialize[IorTC[Option, String]#l, String, Int](
+          IorT.pure[Option, String](42))
 
       val fa: IorT[Option, String, Int] = IorT.pure(42)
       val dictate: IorT[Option, String, Unit] = fa.dictate("err")
