@@ -9,5 +9,6 @@ trait AllInstances extends EitherTInstances
   with RaiseInstances with ReaderTInstances
   with LocalInstances with StateInstances
   with StateTInstances with WriterTInstances
+  with ReaderWriterStateTInstances
   with HandleInstances
   with ChronicleInstances with IorTInstances
