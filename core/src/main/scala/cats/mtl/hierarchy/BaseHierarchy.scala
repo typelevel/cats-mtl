@@ -9,7 +9,7 @@ object base extends BaseHierarchy
 private[hierarchy] trait BH0 extends BH1 {
   implicit final def functorEmptyFromTraverseEmpty[F[_]](implicit F: TraverseEmpty[F]): FunctorEmpty[F] = F.functorEmpty
 
-  implicit final def askFromLocal[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = local.ask
+  implicit final def askFromLocal[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = instanceOf(local)
 
   implicit final def tellFromListen[F[_], L](implicit listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell
 
@@ -31,12 +31,12 @@ private[hierarchy] trait BH1 {
   }
 
   implicit final def askFromState[F[_], L](implicit state: MonadState[F, L]): ApplicativeAsk[F, L] = {
-    new ApplicativeAsk[F, L] {
+    instanceOf(new ApplicativeAskClass[F, L] {
       override val applicative: Applicative[F] = state.monad
 
       override def ask: F[L] = state.get
 
       override def reader[A](f: (L) => A): F[A] = state.inspect(f)
-    }
+    })
   }
 }

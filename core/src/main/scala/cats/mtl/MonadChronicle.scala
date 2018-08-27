@@ -1,9 +1,10 @@
-package cats
-package mtl
+package cats.mtl
 
 import cats.data.Ior
+import cats.{Monad, Monoid}
+import acyclic.skipped
 
-trait MonadChronicle[F[_], E] extends Serializable {
+trait MonadChronicleClass[F[_], E] extends Serializable {
   val monad: Monad[F]
 
   def dictate(c: E): F[Unit]
@@ -43,7 +44,7 @@ object MonadChronicle {
     ev
 }
 
-trait DefaultMonadChronicle[F[_], E] extends MonadChronicle[F, E] {
+trait DefaultMonadChronicle[F[_], E] extends MonadChronicleClass[F, E] {
   override def disclose[A](c: E)(implicit M: Monoid[A]): F[A] = monad.as(dictate(c), M.empty)
 
   override def memento[A](fa: F[A]): F[Either[E, A]] = monad.flatMap(materialize(fa)) {

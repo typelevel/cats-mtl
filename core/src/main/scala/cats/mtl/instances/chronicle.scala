@@ -10,7 +10,7 @@ trait ChronicleInstances extends ChronicleLowPriorityInstances {
   implicit final def chronicleInd[M[_], Inner[_], E](implicit ml: MonadLayerControl[M, Inner],
                                                      under: MonadChronicle[Inner, E]
                                                     ): MonadChronicle[M, E] = {
-    new DefaultMonadChronicle[M, E] {
+    instanceOf(new DefaultMonadChronicle[M, E] {
       val monad: Monad[M] =
         ml.outerInstance
 
@@ -27,14 +27,14 @@ trait ChronicleInstances extends ChronicleLowPriorityInstances {
         }) {x => x.traverse(ml.restore)(ml.outerInstance) }
 
 
-    }
+    })
   }
 }
 
 trait ChronicleLowPriorityInstances {
   implicit final def chronicleIorT[F[_], E](implicit S: Semigroup[E],
                                             F: Monad[F]): MonadChronicle[IorTC[F, E]#l, E] =
-    new DefaultMonadChronicle[IorTC[F, E]#l, E] {
+    instanceOf(new DefaultMonadChronicle[IorTC[F, E]#l, E] {
       override val monad: Monad[IorTC[F, E]#l] = IorT.catsDataMonadErrorForIorT
 
       override def dictate(c: E): IorT[F, E, Unit] = IorT.bothT[F](c, ())
@@ -48,10 +48,10 @@ trait ChronicleLowPriorityInstances {
           case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
         }
       }
-    }
+    })
 
   implicit final def chronicleIor[E](implicit S: Semigroup[E]): MonadChronicle[IorC[E]#l, E] =
-    new DefaultMonadChronicle[IorC[E]#l, E] {
+    instanceOf(new DefaultMonadChronicle[IorC[E]#l, E] {
       override val monad: Monad[IorC[E]#l] = Ior.catsDataMonadErrorForIor
 
       override def dictate(c: E): Ior[E, Unit] = Ior.both(c, ())
@@ -63,7 +63,7 @@ trait ChronicleLowPriorityInstances {
         case Ior.Right(a)   => Ior.right(Ior.right(a))
         case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
       }
-    }
+    })
 }
 
 object chronicle extends ChronicleInstances
