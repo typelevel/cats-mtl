@@ -23,9 +23,7 @@ package mtl
   * }
   * }}}
   */
-trait FunctorListen[F[_], L] extends Serializable {
-  val tell: FunctorTell[F, L]
-
+trait FunctorListen[F[_], L] extends FunctorTell[F, L] with Serializable {
   def listen[A](fa: F[A]): F[(A, L)]
 
   def listens[A, B](fa: F[A])(f: L => B): F[(A, B)]
@@ -37,8 +35,8 @@ object FunctorListen {
   def listens[F[_], L, A, B](fa: F[A])(f: L => B)(implicit ev: FunctorListen[F, L]): F[(A, B)] = ev.listens(fa)(f)
 }
 
-trait DefaultFunctorListen[F[_], L] extends FunctorListen[F, L] {
-  def listens[A, B](fa: F[A])(f: L => B): F[(A, B)] = tell.functor.map(listen[A](fa)) {
+trait DefaultFunctorListen[F[_], L] extends DefaultFunctorTell[F, L] with FunctorListen[F, L] {
+  def listens[A, B](fa: F[A])(f: L => B): F[(A, B)] = functor.map(listen[A](fa)) {
     case (a, l) => (a, f(l))
   }
 }

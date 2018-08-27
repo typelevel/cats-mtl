@@ -1,8 +1,7 @@
 package cats
 package mtl
 
-trait ApplicativeHandle[F[_], E] extends Serializable {
-  val raise: FunctorRaise[F, E]
+trait ApplicativeHandle[F[_], E] extends FunctorRaise[F, E] with Serializable {
   val applicative: Applicative[F]
 
   def handleWith[A](fa: F[A])(f: E => F[A]): F[A]

@@ -43,7 +43,7 @@ object ApplicativeHandleTests {
   def apply[F[_], E](implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleTests[F, E] = {
     new ApplicativeHandleTests[F, E] {
       override lazy val handleInstance: ApplicativeHandle[F, E] = instance0
-      override lazy val raiseInstance: FunctorRaise[F, E] = handleInstance.raise
+      override lazy val raiseInstance: FunctorRaise[F, E] = instance0
     }
   }
 }

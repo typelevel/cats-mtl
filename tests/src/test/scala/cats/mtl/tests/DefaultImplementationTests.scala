@@ -22,16 +22,36 @@ class FunctorEmptyDefaultTests extends BaseSuite {
 
 class TraverseEmptyDefaultTests extends BaseSuite {
   val defaultListTraverseEmpty: TraverseEmpty[List] = new DefaultTraverseEmpty[List] {
-    val traverse: Traverse[List] = implicitly
-    val functorEmpty: FunctorEmpty[List] = cats.mtl.instances.empty.listTraverseEmpty.functorEmpty
+    override val traverse: Traverse[List] = cats.instances.list.catsStdInstancesForList
 
-    def traverseFilter[G[_] : Applicative, A, B](fa: List[A])(f: A => G[Option[B]]): G[List[B]] =
+    override def mapFilter[A, B](fa: List[A])(f: (A) => Option[B]): List[B] =
+      fa.collect(Function.unlift(f))
+
+    override def filter[A](fa: List[A])(f: (A) => Boolean): List[A] = fa.filter(f)
+
+    override val functor: Functor[List] = cats.instances.list.catsStdInstancesForList
+
+    override def collect[A, B](fa: List[A])(f: PartialFunction[A, B]): List[B] = fa.collect(f)
+
+    override def flattenOption[A](fa: List[Option[A]]): List[A] = fa.flatten
+
+    override def filterA[G[_], A](fa: List[A])(f: (A) => G[Boolean])(implicit G: Applicative[G]): G[List[A]] = {
+      fa.foldRight(List.empty[A].pure[G].pure[Eval])(
+        (x, xse) => xse.map(xs =>
+          G.product(f(x), xs).map(z => if (z._1) x :: z._2 else z._2)
+        )
+      ).value
+    }
+
+    override def traverseFilter[G[_] : Applicative, A, B](fa: List[A])(f: (A) => G[Option[B]]): G[List[B]] = {
       fa.foldRight(List.empty[B].pure[G].pure[Eval])(
         (x, xse) =>
           xse.map(xs =>
             Applicative[G].product(f(x), xs).map { case (i, o) => i.fold(o)(_ :: o) }
           )
       ).value
+    }
+
   }
 
   checkAll("List",
@@ -88,7 +108,9 @@ class ApplicativeLocalDefaultTests extends BaseSuite {
 
   val defaultApplicativeLocal: ApplicativeLocal[FunctionC[Int]#l, Int] = new DefaultApplicativeLocal[FunctionC[Int]#l, Int] {
 
-    val ask: ApplicativeAsk[FunctionC[Int]#l, Int] = cats.mtl.instances.local.askFunction
+    val applicative: Applicative[FunctionC[Int]#l] = cats.instances.function.catsStdMonadForFunction1[Int]
+
+    def ask: Int => Int = identity[Int]
 
     def local[A](f: Int => Int)(fa: FunctionC[Int]#l[A]): FunctionC[Int]#l[A] = fa compose f
   }
