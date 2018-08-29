@@ -26,7 +26,7 @@ object Settings {
     fork in test := true,
     parallelExecution in Test := false,
     CompilerOptions.noFatalWarningsInDoc,
-//    CompilerOptions.warnUnusedImport, // unable to suppress warning from `import acyclic.skipped`
+    CompilerOptions.warnUnusedImport,
     CompilerOptions.update2_12,
     // workaround for https://github.com/scalastyle/scalastyle-sbt-plugin/issues/47
     scalastyleSources in Compile ++= (unmanagedSourceDirectories in Compile).value

@@ -37,7 +37,7 @@ object ApplicativeLocalLaws {
   def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalLaws[F, E] = {
     new ApplicativeLocalLaws[F, E] {
       lazy val localInstance: ApplicativeLocal[F, E] = instance0
-      override lazy val askInstance: ApplicativeAsk[F, E] = instanceOf(instance0)
+      override lazy val askInstance: ApplicativeAsk[F, E] = instance0
     }
   }
 }

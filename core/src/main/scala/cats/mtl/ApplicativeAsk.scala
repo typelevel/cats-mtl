@@ -1,8 +1,5 @@
-package cats.mtl
-
-import cats.Applicative
-
-import acyclic.skipped
+package cats
+package mtl
 
 /**
   * `ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
@@ -24,7 +21,7 @@ import acyclic.skipped
   * }}}
   *
   */
-trait ApplicativeAskClass[F[_], E] extends Serializable {
+trait ApplicativeAsk[F[_], E] extends Serializable {
   val applicative: Applicative[F]
 
   def ask: F[E]
@@ -62,6 +59,6 @@ object ApplicativeAsk {
 
 }
 
-trait DefaultApplicativeAskClass[F[_], E] extends ApplicativeAskClass[F, E] {
+trait DefaultApplicativeAsk[F[_], E] extends ApplicativeAsk[F, E] {
   def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
 }

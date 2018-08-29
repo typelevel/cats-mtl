@@ -9,7 +9,7 @@ trait LocalInstances extends LocalLowPriorityInstances {
   implicit final def localInd[M[_], Inner[_], E](implicit ml: MonadLayer[M, Inner],
                                                  under: ApplicativeLocal[Inner, E]
                                                 ): ApplicativeLocal[M, E] = {
-    instanceOf(new ApplicativeLocalClass[M, E] {
+    new ApplicativeLocal[M, E] {
       val applicative = ml.outerInstance
 
       def ask: M[E] = ml.layer(under.ask)
@@ -33,8 +33,7 @@ trait LocalInstances extends LocalLowPriorityInstances {
             def apply[X](fa: Inner[X]): Inner[X] = under.scope(r)(fa)
           }))
       }
-
-    })
+    }
   }
 
   implicit final def localReaderId[E]: ApplicativeLocal[ReaderTC[Id, E]#l, E] = {
@@ -45,7 +44,7 @@ trait LocalInstances extends LocalLowPriorityInstances {
 
 private[instances] trait LocalLowPriorityInstances {
   implicit final def localReader[M[_], E](implicit M: Applicative[M]): ApplicativeLocal[ReaderTC[M, E]#l, E] = {
-    instanceOf(new ApplicativeLocalClass[ReaderTC[M, E]#l, E] {
+    new ApplicativeLocal[ReaderTC[M, E]#l, E] {
       val applicative: Applicative[ReaderTC[M, E]#l] =
         ReaderT.catsDataApplicativeForKleisli(M)
 
@@ -56,11 +55,11 @@ private[instances] trait LocalLowPriorityInstances {
       def local[A](f: E => E)(fa: ReaderT[M, E, A]): ReaderT[M, E, A] = ReaderT.local(f)(fa)
 
       def scope[A](e: E)(fa: ReaderT[M, E, A]): ReaderT[M, E, A] = ReaderT(_ => fa.run(e))
-    })
+    }
   }
 
   implicit final def localFunction[E]: ApplicativeLocal[FunctionC[E]#l, E] = {
-    instanceOf(new ApplicativeLocalClass[FunctionC[E]#l, E] {
+    new ApplicativeLocal[FunctionC[E]#l, E] {
       val applicative: Applicative[FunctionC[E]#l] =
         cats.instances.function.catsStdMonadForFunction1[E]
 
@@ -71,12 +70,12 @@ private[instances] trait LocalLowPriorityInstances {
       def local[A](f: E => E)(fa: E => A): E => A = fa.compose(f)
 
       def scope[A](e: E)(fa: E => A): E => A = _ => fa(e)
-    })
+    }
   }
 
   implicit final def localReaderWriterState[M[_], E, L, S]
   (implicit M: Monad[M], L: Monoid[L]): ApplicativeLocal[ReaderWriterStateT[M, E, L, S, ?], E] =
-    instanceOf(new DefaultApplicativeLocalClass[ReaderWriterStateT[M, E, L, S, ?], E] {
+    new DefaultApplicativeLocal[ReaderWriterStateT[M, E, L, S, ?], E] {
       val applicative: Applicative[ReaderWriterStateT[M, E, L, S, ?]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
 
@@ -84,9 +83,7 @@ private[instances] trait LocalLowPriorityInstances {
 
       def local[A](f: E => E)(fa: ReaderWriterStateT[M, E, L, S, A]): ReaderWriterStateT[M, E, L, S, A] =
         ReaderWriterStateT((e, s) => fa.run(f(e), s))
-    })
-
-
+    }
 }
 
 object local extends LocalInstances

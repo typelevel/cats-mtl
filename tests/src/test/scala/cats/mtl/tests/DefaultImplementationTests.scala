@@ -1,12 +1,12 @@
 package cats.mtl.tests
 
 import cats.data.{State, StateT}
+import cats.{Applicative, Eval, Functor, Monad, Traverse}
+import cats.mtl._
+import cats.mtl.laws.discipline._
 import cats.implicits._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
-import cats.mtl._
-import cats.mtl.laws.discipline._
-import cats.{Applicative, Eval, Functor, Monad, Traverse}
 
 class FunctorEmptyDefaultTests extends BaseSuite {
   val defaultListFunctorEmpty: FunctorEmpty[List] = new DefaultFunctorEmpty[List] {
@@ -71,31 +71,31 @@ class MonadStateDefaultTests extends StateTTestsBase {
 
 class ApplicativeAskDefaultTests extends BaseSuite {
 
-  val defaultApplicativeAsk: ApplicativeAsk[FunctionC[Int]#l, Int] = instanceOf(
-    new DefaultApplicativeAskClass[FunctionC[Int]#l, Int] {
+  val defaultApplicativeAsk: ApplicativeAsk[FunctionC[Int]#l, Int] = new DefaultApplicativeAsk[FunctionC[Int]#l, Int] {
 
-      val applicative: Applicative[FunctionC[Int]#l] = implicitly
+    val applicative: Applicative[FunctionC[Int]#l] = implicitly
 
-      def ask: FunctionC[Int]#l[Int] = identity
-    })
+    def ask: FunctionC[Int]#l[Int] = identity
+  }
 
   checkAll("FunctionC[Int]#l[Int]",
-           ApplicativeAskTests[FunctionC[Int]#l, Int](defaultApplicativeAsk)
-             .applicativeAsk[String])
+    ApplicativeAskTests[FunctionC[Int]#l, Int](defaultApplicativeAsk)
+      .applicativeAsk[String])
 }
+
 
 class ApplicativeLocalDefaultTests extends BaseSuite {
 
-  val defaultApplicativeLocal: ApplicativeLocal[FunctionC[Int]#l, Int] = instanceOf(
-    new DefaultApplicativeLocalClass[FunctionC[Int]#l, Int] {
-      val applicative: Applicative[FunctionC[Int]#l] = cats.instances.function.catsStdMonadForFunction1[Int]
+  val defaultApplicativeLocal: ApplicativeLocal[FunctionC[Int]#l, Int] = new DefaultApplicativeLocal[FunctionC[Int]#l, Int] {
 
-      def ask: Int => Int = identity[Int]
+    val applicative: Applicative[FunctionC[Int]#l] = cats.instances.function.catsStdMonadForFunction1[Int]
 
-      def local[A](f: Int => Int)(fa: FunctionC[Int]#l[A]): FunctionC[Int]#l[A] = fa compose f
-    })
+    def ask: Int => Int = identity[Int]
+
+    def local[A](f: Int => Int)(fa: FunctionC[Int]#l[A]): FunctionC[Int]#l[A] = fa compose f
+  }
 
   checkAll("FunctionC[Int]#l[Int]",
-           ApplicativeLocalTests[FunctionC[Int]#l, Int](defaultApplicativeLocal)
-             .applicativeLocal[String, String])
+    ApplicativeLocalTests[FunctionC[Int]#l, Int](defaultApplicativeLocal)
+      .applicativeLocal[String, String])
 }

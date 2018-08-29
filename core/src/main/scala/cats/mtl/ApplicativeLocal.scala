@@ -1,6 +1,5 @@
-package cats.mtl
-
-import acyclic.skipped
+package cats
+package mtl
 
 /**
   * `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
@@ -29,7 +28,7 @@ import acyclic.skipped
   * }}}
   *
   */
-trait ApplicativeLocalClass[F[_], E] extends ApplicativeAskClass[F, E] with Serializable {
+trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] with Serializable {
   def local[A](f: E => E)(fa: F[A]): F[A]
 
   def scope[A](e: E)(fa: F[A]): F[A]
@@ -43,6 +42,6 @@ object ApplicativeLocal {
   def scope[F[_], E, A](e: E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(e)(fa)
 }
 
-trait DefaultApplicativeLocalClass[F[_], E] extends DefaultApplicativeAskClass[F, E] with ApplicativeLocalClass[F, E]{
+trait DefaultApplicativeLocal[F[_], E] extends DefaultApplicativeAsk[F, E] with ApplicativeLocal[F, E]{
   def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }
