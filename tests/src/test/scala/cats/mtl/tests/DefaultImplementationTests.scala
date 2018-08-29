@@ -88,7 +88,9 @@ class ApplicativeLocalDefaultTests extends BaseSuite {
 
   val defaultApplicativeLocal: ApplicativeLocal[FunctionC[Int]#l, Int] = new DefaultApplicativeLocal[FunctionC[Int]#l, Int] {
 
-    val ask: ApplicativeAsk[FunctionC[Int]#l, Int] = cats.mtl.instances.local.askFunction
+    val applicative: Applicative[FunctionC[Int]#l] = cats.instances.function.catsStdMonadForFunction1[Int]
+
+    def ask: Int => Int = identity[Int]
 
     def local[A](f: Int => Int)(fa: FunctionC[Int]#l[A]): FunctionC[Int]#l[A] = fa compose f
   }
