@@ -321,12 +321,6 @@ trait EmptyInstances1 {
   implicit def traverseEmptyLiftEitherT[M[_], E](implicit under: TraverseEmpty[M]): TraverseEmpty[EitherTC[M, E]#l] = {
     new TraverseEmpty[EitherTC[M, E]#l] {
 
-      //implicit def functorEmptyLiftEitherT[M[_], E](implicit under: FunctorEmpty[M]): FunctorEmpty[EitherTC[M, E]#l] = {
-       // new FunctorEmpty[EitherTC[M, E]#l] {
-
-
-//      override val functorEmpty: FunctorEmpty[EitherTC[M, E]#l] = functorEmptyLiftEitherT(under.functorEmpty)
-
       override val traverse: Traverse[EitherTC[M, E]#l] = EitherT.catsDataTraverseForEitherT[M, E](under.traverse)
 
       override lazy val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(under.functor)
