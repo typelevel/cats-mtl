@@ -6,7 +6,11 @@ trait BaseHierarchy extends BH0
 
 object base extends BaseHierarchy
 
-private[hierarchy] trait BH0 {
+private[hierarchy] trait BH0 extends BH1 {
+  implicit final def functorEmptyFromTraverseEmpty[F[_]](implicit F: TraverseEmpty[F]): FunctorEmpty[F] = F.functorEmpty
+}
+
+private[hierarchy] trait BH1 {
   implicit final def tellFromState[F[_], L](implicit state: MonadState[F, L]): FunctorTell[F, L] = {
     new FunctorTell[F, L] {
       override val functor: Functor[F] = state.monad

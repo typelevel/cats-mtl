@@ -45,7 +45,7 @@ object TraverseEmptyTests {
   def apply[F[_]](implicit traverseEmptyInstance0: TraverseEmpty[F]): TraverseEmptyTests[F] = {
     new TraverseEmptyTests[F] {
       override lazy val traverseEmptyInstance: TraverseEmpty[F] = traverseEmptyInstance0
-      override lazy val functorEmptyInstance: FunctorEmpty[F] = traverseEmptyInstance0
+      override lazy val functorEmptyInstance: FunctorEmpty[F] = traverseEmptyInstance0.functorEmpty
     }
   }
 }

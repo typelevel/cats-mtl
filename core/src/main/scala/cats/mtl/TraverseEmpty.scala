@@ -37,9 +37,11 @@ package mtl
   * Based on Haskell's [[https://hackage.haskell.org/package/witherable-0.1.3.3/docs/Data-Witherable.html Data.Witherable]]
   */
 
-trait TraverseEmpty[F[_]] extends FunctorEmpty[F] with Serializable {
+trait TraverseEmpty[F[_]] extends Serializable {
 
   val traverse: Traverse[F]
+
+  val functorEmpty: FunctorEmpty[F]
 
   def traverseFilter[G[_] : Applicative, A, B](fa: F[A])(f: A => G[Option[B]]): G[F[B]]
 
@@ -50,7 +52,7 @@ object TraverseEmpty {
   def apply[F[_]](implicit traverseEmpty: TraverseEmpty[F]): TraverseEmpty[F] = traverseEmpty
 }
 
-trait DefaultTraverseEmpty[F[_]] extends DefaultFunctorEmpty[F] with TraverseEmpty[F] {
+trait DefaultTraverseEmpty[F[_]] extends TraverseEmpty[F] {
   def filterA[G[_], A](fa: F[A])(f: A => G[Boolean])(implicit G: Applicative[G]): G[F[A]] =
     traverseFilter(fa)(a => G.map(f(a))(if (_) Some(a) else None))
 }
