@@ -37,7 +37,7 @@ object FunctorListenTests {
   def apply[F[_], L](implicit instance0: FunctorListen[F, L]): FunctorListenTests[F, L] = {
     new FunctorListenTests[F, L] with Laws {
       override val listenInstance: FunctorListen[F, L] = instance0
-      override implicit val tellInstance: FunctorTell[F, L] = instance0.tell
+      override implicit val tellInstance: FunctorTell[F, L] = instance0
     }
   }
 }
