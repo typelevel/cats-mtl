@@ -7,7 +7,12 @@ trait BaseHierarchy extends BH0
 object base extends BaseHierarchy
 
 private[hierarchy] trait BH0 extends BH1 {
-  implicit final def functorEmptyFromTraverseEmpty[F[_]](implicit F: TraverseEmpty[F]): FunctorEmpty[F] = F.functorEmpty
+  implicit final def askFromLocal[F[_], E](implicit local: ApplicativeLocal[F, E]): ApplicativeAsk[F, E] = local.ask
+
+  implicit final def tellFromListen[F[_], L](implicit listen: FunctorListen[F, L]): FunctorTell[F, L] = listen.tell
+
+  implicit final def raiseFromHandle[F[_], E](implicit handle: ApplicativeHandle[F, E]): FunctorRaise[F, E] =
+    handle.raise
 }
 
 private[hierarchy] trait BH1 {

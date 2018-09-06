@@ -75,9 +75,6 @@ final class SummonableImplicits extends BaseSuite {
       ApplicativeAsk[F, String]
     }
 
-    def traverseEmptyToFunctorEmpty[F[_] : TraverseEmpty]: FunctorEmpty[F] = {
-      FunctorEmpty[F]
-    }
   }
 
 

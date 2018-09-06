@@ -49,31 +49,6 @@ final class Syntax extends BaseSuite {
       val fa: Option[Int] = Option.empty[Int].handle((_: Unit) => 42)
       val fb: Option[Int] = Option.empty[Int].handleWith((_: Unit) => Some(22))
     }
-    test("FunctorEmpty") {
-      def operateFunctorEmpty[F[_]: Functor: FunctorEmpty](fi: F[Int]): Unit = {
-        val _1 = fi.collect { case i if i < 2 => i }
-        val _2 = fi.filter(_ < 2)
-        val _3 = fi.mapFilter(Some(_).filter(_ < 2))
-        val _4 = fi.map(a => Some(a): Option[Int]).flattenOption
-        ()
-      }
-      val fa: Map[Int, Int] = Map(1 -> 1, 2 -> 3)
-      operateFunctorEmpty(fa)
-
-      val sortedFa: SortedMap[Int, Int] = SortedMap(1 -> 1, 2 -> 3)
-      operateFunctorEmpty(sortedFa)
-    }
-    test("TraverseEmpty") {
-      def operateTraverseEmpty[F[_]: TraverseEmpty](fi: F[Int]): Unit = {
-        val _1 = fi.filterA[Option](i => Some(i < 2))
-        val _2 = fi.traverseFilter[Option, Int] { i =>
-          Some(Some(i).filter(_ < 2))
-        }
-        ()
-      }
-      val fa: SortedMap[Int, Int] = SortedMap(1 -> 1, 2 -> 3)
-      operateTraverseEmpty(fa)
-    }
     test("MonadState") {
       val mod: Eval[(String, Unit)] = ((s: String) => s + "!").modify[StateC[String]#l].run("")
       val set: Eval[(String, Unit)] = "ha".set[StateC[String]#l].run("")
