@@ -8,37 +8,6 @@ import cats.implicits._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 
-class FunctorEmptyDefaultTests extends BaseSuite {
-  val defaultListFunctorEmpty: FunctorEmpty[List] = new DefaultFunctorEmpty[List] {
-    def mapFilter[A, B](fa: List[A])(f: A => Option[B]): List[B] = fa.collect(Function.unlift(f))
-    val functor: Functor[List] = implicitly
-
-  }
-
-  checkAll("List",
-    FunctorEmptyTests[List](defaultListFunctorEmpty)
-      .functorEmpty[String, String, String])
-}
-
-class TraverseEmptyDefaultTests extends BaseSuite {
-  val defaultListTraverseEmpty: TraverseEmpty[List] = new DefaultTraverseEmpty[List] {
-    val traverse: Traverse[List] = implicitly
-    val functorEmpty: FunctorEmpty[List] = cats.mtl.instances.empty.listTraverseEmpty.functorEmpty
-
-    def traverseFilter[G[_] : Applicative, A, B](fa: List[A])(f: A => G[Option[B]]): G[List[B]] =
-      fa.foldRight(List.empty[B].pure[G].pure[Eval])(
-        (x, xse) =>
-          xse.map(xs =>
-            Applicative[G].product(f(x), xs).map { case (i, o) => i.fold(o)(_ :: o) }
-          )
-      ).value
-  }
-
-  checkAll("List",
-    TraverseEmptyTests[List](defaultListTraverseEmpty)
-      .traverseEmpty[String, String, String])
-}
-
 
 class FunctorTellDefaultTests extends StateTTestsBase {
   val defaultListFunctorTell: FunctorTell[StateTC[Option, String]#l, String] = new DefaultFunctorTell[StateTC[Option, String]#l, String] {
