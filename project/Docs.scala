@@ -10,21 +10,7 @@ import com.github.tkawachi.doctest.DoctestPlugin.autoImport._
 import tut.Plugin._
 
 object Docs {
-  def docsSourcesAndProjects(sv: String): (Boolean, Seq[ProjectReference]) = {
-    CrossVersion.partialVersion(sv) match {
-      case Some((2, 10)) => (false, Nil)
-      case _ => (true, Seq()) // kernelJVM, coreJVM, freeJVM))
-    }
-  }
-
   lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
-
-  lazy val javadocSettings = Seq(
-    sources in(Compile, doc) := {
-      if (docsSourcesAndProjects(scalaVersion.value)._1) (sources in(Compile, doc)).value
-      else Nil
-    }
-  )
 
   lazy val docSettings = Seq(
     micrositeName := "Cats MTL",
@@ -47,8 +33,6 @@ object Docs {
       "gray-lighter" -> "#F4F3F4",
       "white-color" -> "#FFFFFF"),
     autoAPIMappings := true,
-    unidocProjectFilter in(ScalaUnidoc, unidoc) :=
-      inProjects(docsSourcesAndProjects(scalaVersion.value)._2: _*),
     docsMappingsAPIDir := "api",
     addMappingsToSiteDir(mappings in(ScalaUnidoc, packageDoc), docsMappingsAPIDir),
     ghpagesNoJekyll := false,

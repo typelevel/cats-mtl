@@ -37,7 +37,7 @@ object Settings {
   }
 
   val coreSettings =
-    commonSettings ++ Publishing.publishSettings ++ Coverage.scoverageSettings ++ Docs.javadocSettings
+    commonSettings ++ Publishing.publishSettings ++ Coverage.scoverageSettings
 
   lazy val commonJvmSettings = Seq(
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
