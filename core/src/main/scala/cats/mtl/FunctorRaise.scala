@@ -61,13 +61,13 @@ trait FunctorRaise[F[_], E] extends Serializable {
 object FunctorRaise {
   def apply[F[_], E](implicit functorRaise: FunctorRaise[F, E]): FunctorRaise[F, E] = functorRaise
 
-  def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
+  def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, _ >: E]): F[A] =
     raise.raise(e)
 
   def raiseF[F[_]]: raiseFPartiallyApplied[F] = new raiseFPartiallyApplied[F]()
 
   final private[mtl] class raiseFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
-    @inline def apply[E, A](e: E)(implicit raise: FunctorRaise[F, E]): F[A] =
+    @inline def apply[E, A](e: E)(implicit raise: FunctorRaise[F, _ >: E]): F[A] =
       raise.raise(e)
   }
 
