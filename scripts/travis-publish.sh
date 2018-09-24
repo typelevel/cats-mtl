@@ -14,7 +14,7 @@
 #    metrics when the tests are executing. This causes the full JVM build to be run a second time.
 
 # Example setting to use at command line for testing:
-# export TRAVIS_SCALA_VERSION=2.10.5;export TRAVIS_PULL_REQUEST="false";export TRAVIS_BRANCH="master"
+# export TRAVIS_SCALA_VERSION=2.11.12;export TRAVIS_PULL_REQUEST="false";export TRAVIS_BRANCH="master"
 
 mkdir -p ~/.sbt/0.13/plugins
 echo "addSbtPlugin(\"io.get-coursier\" % \"sbt-coursier\" % \"1.0.0-RC10\")" >> ~/.sbt/0.13/plugins/build.sbt
