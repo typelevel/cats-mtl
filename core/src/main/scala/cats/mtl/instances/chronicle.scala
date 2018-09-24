@@ -25,8 +25,6 @@ trait ChronicleInstances extends ChronicleLowPriorityInstances {
         ml.outerInstance.flatMap(ml.layerControl { nt =>
           under.materialize(nt(fa))
         }) {x => x.traverse(ml.restore)(ml.outerInstance) }
-
-
     }
   }
 }

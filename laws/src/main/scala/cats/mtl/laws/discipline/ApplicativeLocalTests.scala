@@ -39,7 +39,7 @@ object ApplicativeLocalTests {
   def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalTests[F, E] = {
     new ApplicativeLocalTests[F, E] {
       override lazy val localInstance: ApplicativeLocal[F, E] = instance0
-      override lazy val askInstance: ApplicativeAsk[F, E] = localInstance.ask
+      override lazy val askInstance: ApplicativeAsk[F, E] = instance0
     }
   }
 }

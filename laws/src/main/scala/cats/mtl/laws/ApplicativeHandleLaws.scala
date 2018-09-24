@@ -48,7 +48,7 @@ object ApplicativeHandleLaws {
   def apply[F[_], E](implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleLaws[F, E] = {
     new ApplicativeHandleLaws[F, E] {
       lazy val handleInstance: ApplicativeHandle[F, E] = instance0
-      override lazy val raiseInstance: FunctorRaise[F, E] = instance0.raise
+      override lazy val raiseInstance: FunctorRaise[F, E] = instance0
     }
   }
 }
