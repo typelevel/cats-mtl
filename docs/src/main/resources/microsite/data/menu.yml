@@ -1,0 +1,50 @@
+options:
+
+  #############################
+  # Type Classes Menu Options #
+  #############################
+
+  - title: MTL Type Classes
+    url: mtl-classes.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: FunctorTell
+    url: mtl-classes/functortell.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: ApplicativeAsk
+    url: mtl-classes/applicativeask.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: MonadState
+    url: mtl-classes/monadstate.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: MonadChronicle
+    url: mtl-classes/monadchronicle.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: FunctorListen
+    url: mtl-classes/functorlisten.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: ApplicativeLocal
+    url: mtl-classes/applicativelocal.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: FunctorRaise
+    url: mtl-classes/functorraise.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses
+
+  - title: ApplicativeHandle
+    url: mtl-classes/applicativehandle.html
+    menu_type: mtlclasses
+    menu_section: mtlclasses

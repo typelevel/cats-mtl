@@ -1,5 +1,4 @@
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys.ghpagesNoJekyll
-import microsites.MicrositeKeys.{micrositeAuthor, micrositeBaseUrl, micrositeDescription, micrositeDocumentationUrl, micrositeExtraMdFiles, micrositeGithubOwner, micrositeGithubRepo, micrositeHighlightTheme, micrositeName, micrositePalette}
+import microsites._
 // project info
 
 organization in ThisBuild := "org.typelevel"
@@ -39,14 +38,19 @@ lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site t
 
 lazy val docSettings = Seq(
   micrositeName := "Cats MTL",
-  micrositeDescription := "Companion library to cats providing monad transformers",
+  micrositeDescription := "Monad Transformers made easy",
   micrositeAuthor := "Typelevel contributors",
   micrositeHighlightTheme := "atom-one-light",
   //  micrositeHomepage := "http://typelevel.org/cats",
   micrositeBaseUrl := "cats-mtl",
   micrositeDocumentationUrl := "api",
-  micrositeGithubOwner := "edmundnoble",
-  micrositeExtraMdFiles := Map(file("CONTRIBUTING.md") -> "contributing.md"),
+  micrositeGithubOwner := "typelevel",
+  micrositeExtraMdFiles := Map(
+    file("CONTRIBUTING.md") -> ExtraMdFileConfig(
+      "contributing.md",
+      "home",
+       Map("title" -> "Contributing", "section" -> "contributing", "position" -> "50"))
+  ),
   micrositeGithubRepo := "cats-mtl",
   micrositePalette := Map(
     "brand-primary" -> "#5B5988",
@@ -70,7 +74,7 @@ lazy val docSettings = Seq(
     "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
   ),
-  git.remoteRepo := "git@github.com:edmundnoble/cats-mtl.git",
+  git.remoteRepo := "git@github.com:typelevel/cats-mtl.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md"
 )
 
@@ -89,9 +93,7 @@ val docs = project
   .settings(moduleName := "cats-mtl-docs")
   .settings(Settings.coreSettings)
   .settings(Publishing.noPublishSettings)
-  .settings(ghpages.settings)
   .settings(docSettings)
-  .settings(tutScalacOptions ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))))
   .settings(Settings.commonJvmSettings)
   .dependsOn(coreJVM)
 
