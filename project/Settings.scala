@@ -37,13 +37,17 @@ object Settings {
   }
 
   val coreSettings =
-    commonSettings ++ Publishing.publishSettings ++ Coverage.scoverageSettings ++ Docs.javadocSettings
+    commonSettings ++ Publishing.publishSettings ++ Coverage.scoverageSettings
+
+  val catsDoctestSettings: Seq[Setting[_]] = Def.settings(
+    doctestWithDependencies := false
+  )
 
   lazy val commonJvmSettings = Seq(
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
     // currently sbt-doctest doesn't work in JS builds, so this has to go in the
     // JVM settings. https://github.com/tkawachi/sbt-doctest/issues/52
-  ) ++ Docs.catsDoctestSettings
+  ) ++ catsDoctestSettings
 
   lazy val commonJsSettings = Seq(
     scalacOptions += {
@@ -64,5 +68,4 @@ object Settings {
     doctestGenTests := Seq.empty,
     doctestWithDependencies := false
   )
-
 }

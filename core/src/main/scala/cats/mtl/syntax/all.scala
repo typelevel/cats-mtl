@@ -1,6 +1,6 @@
 package cats.mtl.syntax
 
-object all
+object all extends AllSyntax
 
 trait AllSyntax extends AskSyntax
   with ListenSyntax

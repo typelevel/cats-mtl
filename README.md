@@ -1,3 +1,6 @@
+<img src="docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
+
+
 ## cats-mtl
 
 [![Build Status](https://api.travis-ci.org/typelevel/cats-mtl.svg)](https://travis-ci.org/typelevel/cats-mtl)
