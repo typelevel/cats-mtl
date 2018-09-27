@@ -30,7 +30,7 @@ Cross-builds are available for Scala 2.12 and 2.11, Scala.js major version 0.6.x
 
 The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/shared/src/main/scala/cats/mtl/laws) for more.
 
-```sbt
+```scala
 libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "0.3.0" % Test
 ```
 
@@ -49,26 +49,10 @@ Related Cats links (the core):
 2. ScalaDoc: [typelevel.org/cats/api/](https://typelevel.org/cats/api/)
 
 
+## Migrating from Cats pre-1.0.0
 
-#### MTL classes
-
-cats-mtl provides the following "MTL classes":
- - `ApplicativeAsk`
- - `ApplicativeLocal`
- - `FunctorRaise`
- - `ApplicativeHandle`
- - `FunctorTell`
- - `FunctorListen`
- - `MonadState`
- - `MonadChroncicle`
-
-All of these are typeclasses built on top of other "base" typeclasses to provide extra laws.
-Because they are commonly combined, the base typeclasses are ambiguous in implicit scope using
-the typical cats subclass encoding via subtyping. Thus in cats-mtl, the ambiguity is avoided by using
-an implicit scope with a different priority to house each conversion `Subclass => Base`.
-
-Compared to cats and Haskell's mtl library, cats-mtl's typeclasses have the smallest superclass dependencies
-practically possible and in some cases smaller sets of operations so that they can be lifted over more transformers.
+cats-core used to provide various mtl-classes which were moved to cats-mtl and split up.
+You can find the migration guide [here](https://typelevel.org/cats-mtl/migration)
 
 ### Community
 
@@ -84,3 +68,5 @@ contact one of the [project maintainers](#maintainers) in private. We
 hope to avoid letting minor aggressions and misunderstandings escalate
 into larger problems.
 
+### License
+All code is available to you under the MIT license, available at http://opensource.org/licenses/mit-license.php and also in the COPYING file. 

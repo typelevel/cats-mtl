@@ -49,7 +49,12 @@ lazy val docSettings = Seq(
     file("CONTRIBUTING.md") -> ExtraMdFileConfig(
       "contributing.md",
       "home",
-       Map("title" -> "Contributing", "section" -> "contributing", "position" -> "50"))
+       Map("title" -> "Contributing", "section" -> "contributing", "position" -> "50")),
+    file("README.md") -> ExtraMdFileConfig(
+      "index.md",
+      "home",
+      Map("title" -> "Home", "section" -> "home", "position" -> "0")
+    )
   ),
   micrositeGithubRepo := "cats-mtl",
   micrositePalette := Map(
