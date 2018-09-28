@@ -116,13 +116,13 @@ val materializedProgram =
   checkState[EitherT[StateT[List, Int, ?], Exception, ?]]
 ```
 
-This process of turning a program defined by an abstract type constructor with additional type class constraints into an actual concrete data type is sometimes called *interpreting*  or *materializing*  a program.
+This process of turning a program defined by an abstract type constructor with additional type class constraints into an actual concrete data type is sometimes called *interpreting* or *materializing*  a program.
+Usually we don't have to do this until the very end where we want to run the full application, so the only places we see actual monad transformers at the very edge.
 
-This concludes the getting started section of the cats-mtl documentation, in summary Cats-mtl provides two things:
+In summary Cats-mtl provides two things:
 MTL type classes representing effects and a way to lift instances of these classes through transformer stacks.
 
-We suggest you start learning the MTL classes at first and learn how lifting works later, as you don't need to understand lifting at all to enjoy all the benefits of Cats-mtl.
-
+We suggest you start learning the MTL classes first and learn how lifting works later, as you don't need to understand lifting at all to enjoy all the benefits of Cats-mtl.
 
 #### Available MTL classes
 

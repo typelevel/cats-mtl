@@ -8,7 +8,7 @@ scaladoc: "#cats.mtl.ApplicativeAsk"
 
 ## ApplicativeAsk
 
-`ApplicativeAsk[F, E]` allows us to read a value of type `E` from a shared environment into a context `F`.
+`ApplicativeAsk[F, E]` allows us to read a value of type `E` from a shared environment into a context `F[_]`.
 In practical terms, this means, that if we have an instance of `ApplicativeAsk[F, E]`,
  we can now request a value of `F[E]` by using the `ask` method.
 

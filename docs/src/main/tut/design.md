@@ -34,20 +34,7 @@ were different priorities, the issue would be fixed, and that's exactly what cat
 
 Similarly to the [Scato](https://github.com/aloiscochard/scato) project, instead of inheritance
 the transformer classes in cats-mtl use aggregation. Mtl classes thus contain instances
-of their subclasses, and implicit defs taking the classes to their subclasses are prioritized explicitly
-in the hierarchy package.
-
-
-### ApplicativeAsk / ApplicativeLocal
-`MonadReader` from cats has been split into `ApplicativeAsk` and `ApplicativeLocal`;
-the `Monad` constraint has been weakened to `Applicative`, and the `local` method was split out
-into a subclass to widen the implementation space for `ApplicativeAsk`.
-
-### FunctorTell / FunctorListen
-Similarly to `MonadReader`, `MonadWriter` was split into `FunctorTell` and `FunctorListen`
-and the constraint weakened to `Functor`, and `FunctorListen` being `FunctorTell` with the `listen`
-method added.
-
+of their superclasses.
 
 
 ## Motivation
@@ -77,11 +64,11 @@ Thus `F[_]: FunctorFilter`, translated, becomes `F[_]: Functor: FunctorEmpty`.
 
 For some historical info on the origins of cats-mtl, see:
 
-https://github.com/typelevel/cats/issues/1210
+[https://github.com/typelevel/cats/issues/1210](https://github.com/typelevel/cats/issues/1210)
 
-https://github.com/typelevel/cats/pull/1379
+[https://github.com/typelevel/cats/pull/1379](https://github.com/typelevel/cats/pull/1379)
 
-https://github.com/typelevel/cats/pull/1751
+[https://github.com/typelevel/cats/pull/1751](https://github.com/typelevel/cats/pull/1751)
 
 ## Laws
 

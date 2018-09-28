@@ -18,3 +18,14 @@ For example:
 - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
 
 The root cause for this is addressed in the motivation section.
+
+
+### ApplicativeAsk / ApplicativeLocal
+`MonadReader` from cats has been split into `ApplicativeAsk` and `ApplicativeLocal`;
+the `Monad` constraint has been weakened to `Applicative`, and the `local` method was split out
+into a subclass to widen the implementation space for `ApplicativeAsk`.
+
+### FunctorTell / FunctorListen
+Similarly to `MonadReader`, `MonadWriter` was split into `FunctorTell` and `FunctorListen`
+and the constraint weakened to `Functor`, and `FunctorListen` being `FunctorTell` with the `listen`
+method added.

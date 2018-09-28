@@ -1,7 +1,7 @@
 ---
 layout: docs
 title:  "Lifting Classes"
-section: "liftingclasses"
+section: "lifting"
 position: 4
 ---
 

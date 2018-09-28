@@ -1,7 +1,7 @@
 options:
 
   #############################
-  # Type Classes Menu Options #
+  # MTL Classes Menu Options #
   #############################
 
   - title: MTL Type Classes
@@ -48,3 +48,12 @@ options:
     url: mtl-classes/applicativehandle.html
     menu_type: mtlclasses
     menu_section: mtlclasses
+
+  #############################
+  # MTL Classes Menu Options #
+  #############################
+
+  - title: Lifting Classes
+    url: lifting-classes.html
+    menu_type: lifting
+    menu_section: lifting
