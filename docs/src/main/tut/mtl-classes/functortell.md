@@ -35,7 +35,7 @@ case class ServiceParams(option1: String, option2: Int)
 
 case class ServiceResult(userId: Int, companies: List[String]) 
 
-// a call to some external service, replace with real implementation
+// a fake call to some external service, replace with real implementation
 def serviceCall[F[_]: Monad](params: ServiceParams): F[ServiceResult] = 
   ServiceResult(0, List("Raven Enterprises")).pure[F]
 ```

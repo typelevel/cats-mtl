@@ -45,6 +45,7 @@ lazy val docSettings = Seq(
   micrositeBaseUrl := "cats-mtl",
   micrositeDocumentationUrl := "api",
   micrositeGithubOwner := "typelevel",
+  micrositeDocumentationLabelDescription := "Scaladoc",
   micrositeExtraMdFiles := Map(
     file("CONTRIBUTING.md") -> ExtraMdFileConfig(
       "contributing.md",
