@@ -22,9 +22,8 @@ trait ChronicleInstances extends ChronicleLowPriorityInstances {
         ml.layer(under.confess(c))
 
       def materialize[A](fa: M[A]): M[Ior[E, A]] =
-        ml.outerInstance.flatMap(ml.layerControl { nt =>
-          under.materialize(nt(fa))
-        }) {x => x.traverse(ml.restore)(ml.outerInstance) }
+        ml.outerInstance.flatMap(ml.layerControl(nt =>
+          under.materialize(nt(fa))))(_.traverse(ml.restore)(ml.outerInstance))
     }
   }
 }
