@@ -1,4 +1,5 @@
 import microsites._
+
 // project info
 
 organization in ThisBuild := "org.typelevel"
