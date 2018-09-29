@@ -1,4 +1,4 @@
-<img src="docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
+<img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
 
 
 ## cats-mtl
@@ -25,6 +25,8 @@ libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.3.0"
 If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 1.x.
 
 Cross-builds are available for Scala 2.12 and 2.11, Scala.js major version 0.6.x.
+
+If you're not sure where to start or what Cats-mtl even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/geting-started.html).
 
 ### Laws
 

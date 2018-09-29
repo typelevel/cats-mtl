@@ -8,7 +8,7 @@ scaladoc: "#cats.mtl.ApplicativeLocal"
 
 ## ApplicativeLocal
 
-`ApplicativeLocal[F, E]` extends `ApplicativeAsk` and allows us express local modifications of the environment.
+`ApplicativeLocal[F, E]` extends `ApplicativeAsk` and allows to us express local modifications of the environment.
 In practice, this means, that whenever we use `local` on a value of `ask`, we can locally modify the environment with a function `E => E`.
 In this case, locally modifying means that the only place we can actually observe the modification is in the `F[A]` value passed to the `local` function.
 
