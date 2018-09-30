@@ -27,33 +27,23 @@ object Settings {
     parallelExecution in Test := false,
     CompilerOptions.noFatalWarningsInDoc,
     CompilerOptions.warnUnusedImport,
-    CompilerOptions.update2_12,
-    // workaround for https://github.com/scalastyle/scalastyle-sbt-plugin/issues/47
-    scalastyleSources in Compile ++= (unmanagedSourceDirectories in Compile).value
+    CompilerOptions.update2_12
   )
-
-  lazy val tagName = Def.setting {
-    s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
-  }
 
   val coreSettings =
     commonSettings ++ Publishing.publishSettings ++ Coverage.scoverageSettings
-
-  val catsDoctestSettings: Seq[Setting[_]] = Def.settings(
-    doctestWithDependencies := false
-  )
 
   lazy val commonJvmSettings = Seq(
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
     // currently sbt-doctest doesn't work in JS builds, so this has to go in the
     // JVM settings. https://github.com/tkawachi/sbt-doctest/issues/52
-  ) ++ catsDoctestSettings
+  )
 
   lazy val commonJsSettings = Seq(
     scalacOptions += {
       val tagOrHash =
         if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
-        else tagName.value
+        else "v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
       val a = (baseDirectory in LocalRootProject).value.toURI.toString
       val g = "https://raw.githubusercontent.com/typelevel/cats/" + tagOrHash
       s"-P:scalajs:mapSourceURI:$a->$g/"
@@ -65,7 +55,6 @@ object Settings {
     Publishing.botBuild := scala.sys.env.get("TRAVIS").isDefined,
     // batch mode decreases the amount of memory needed to compile scala.js code
     scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(Publishing.botBuild.value),
-    doctestGenTests := Seq.empty,
-    doctestWithDependencies := false
+    doctestGenTests := Seq.empty
   )
 }
