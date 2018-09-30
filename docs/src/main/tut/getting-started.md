@@ -62,7 +62,7 @@ At it's core `ApplicativeAsk` just encodes the fact that we can ask for a value 
 Exactly like `ReaderT`, it also includes another type parameter `E`, that represents that environment.
 
 If you're wondering why `ApplicativeAsk` has an `Applicative` field instead of just extending from `Applicative`, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here `Applicative`) in scope implicitly.
-So in this case we favor composition over inheritancem as otherwise, we could not e.g. use `Monad` together with `ApplicativeAsk`.
+So in this case we favor composition over inheritance as otherwise, we could not e.g. use `Monad` together with `ApplicativeAsk`.
 
 `ApplicativeAsk` is an example for what is at the core of Cats-mtl.
 Cats-mtl provides type classes for most common effects which let you choose what kind of effects you need without commiting to a specific monad transformer stack.
