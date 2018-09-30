@@ -54,13 +54,13 @@ The motivation for cats-mtl's existence can be summed up in a few points:
   of `FunctorTell` and `ApplicativeAsk`, which have only the essentials.
 
 The first point there means that it's impossible for cats-mtl type classes
-to expose their base class instances implicitly; for example `F[_]: FunctorEmpty` isn't enough
-for a `Functor[F]` to be visible in implicit scope, despite `FunctorEmpty` containing a `Functor`
+to expose their base class instances implicitly; for example `F[_]: MonadState[?[_], S]` isn't enough
+for a `Monad[F]` to be visible in implicit scope, despite `MonadState` containing a `Monad`
 instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
-explicitly can't work with cats and cats-mtl separate, as the `Functor[F]` instance for the type 
+explicitly can't work with cats and cats-mtl separate, as the `Monad[F]` instance for the type 
 from cats will always conflict with a derived instance.
 
-Thus `F[_]: FunctorFilter`, translated, becomes `F[_]: Functor: FunctorEmpty`.
+Thus `F[_]: MonadState[?[_], S]`, translated, becomes `F[_]: Monad: MonadState[?[_], S]`.
 
 For some historical info on the origins of cats-mtl, see:
 

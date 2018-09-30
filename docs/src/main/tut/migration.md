@@ -5,7 +5,7 @@ section: "migration"
 position: 5
 ---
 
-#### Migration guide
+## Migration guide
 
 Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:
  - `MonadReader --> ApplicativeLocal`
@@ -14,8 +14,9 @@ Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:
 
 cats typeclass parameters and context bounds have to be rewritten, to include base classes.
 For example:
-- `[F[_]: FunctorFilter]` will have to be adjusted to `[F[_]: Functor: FunctorEmpty]`,
-- `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
+ - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `[F[_]: Monad: ApplicativeLocal[?[_], E]]`,
+ - `[F[_]: MonadWriter[?[_], L]]` will have to be adjusted to `[F[_]: Monad: FunctorListen[?[_], L]]`,
+ - `[F[_]: MonadState[?[_], S]]` will have to be adjusted to `[F[_]: Monad: MonadState[?[_], S]]`
 
 The root cause for this is addressed in the motivation section.
 
