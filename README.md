@@ -1,4 +1,4 @@
-<img src="docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
+<img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
 
 
 ## cats-mtl
@@ -16,173 +16,45 @@ to generically lift MTL typeclasses through transformers.
 You can have multiple cats-mtl transformer typeclasses in scope at once
 without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 
-## SBT
+## Usage
+
 ```scala
-libraryDependencies += "org.typelevel" %%% "cats-mtl-core" % "0.3.0"
+libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.3.0"
 ```
 
-## Typeclasses
+If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 1.x.
 
-#### Migration guide
+Cross-builds are available for Scala 2.12 and 2.11, Scala.js major version 0.6.x.
 
-Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:
- - `MonadReader --> ApplicativeLocal`
- - `MonadWriter --> FunctorListen`
- - `MonadState --> MonadState`
- - `FunctorFilter --> FunctorEmpty`
- - `TraverseFilter --> TraverseEmpty`
+If you're not sure where to start or what Cats-mtl even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/geting-started.html).
 
-cats typeclass parameters and context bounds have to be rewritten, to include base classes.
-For example:
-- `[F[_]: FunctorFilter]` will have to be adjusted to `[F[_]: Functor: FunctorEmpty]`,
-- `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `F[_]: Monad: ApplicativeLocal[?[_], E]`
+### Laws
 
-The root cause for this is addressed in the motivation section.
+The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/shared/src/main/scala/cats/mtl/laws) for more.
 
-#### MTL classes
-
-cats-mtl provides the following "MTL classes":
- - `ApplicativeAsk`
- - `ApplicativeLocal`
- - `FunctorEmpty`
- - `FunctorListen`
- - `FunctorRaise`
- - `FunctorTell`
- - `MonadState`
-
-All of these are typeclasses built on top of other "base" typeclasses to provide extra laws.
-Because they are commonly combined, the base typeclasses are ambiguous in implicit scope using
-the typical cats subclass encoding via subtyping. Thus in cats-mtl, the ambiguity is avoided by using
-an implicit scope with a different priority to house each conversion `Subclass => Base`.
-
-Compared to cats and Haskell's mtl library, cats-mtl's typeclasses have the smallest superclass dependencies
-practically possible and in some cases smaller sets of operations so that they can be lifted over more transformers.
-
-#### Lifting classes
-
-Several other typeclasses are provided to lift typeclasses
-through transformer data types, like `OptionT`.
-
-They form a hierarchy:
-```
-MonadLayerControl
-    \
-    ||
-    ||
-    ||
-    ||
-    ||
-    MonadLayerFunctor <----------- ApplicativeLayerFunctor <----------------- FunctorLayerFunctor
-           \                                  \                                          \
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           || MonadLayer <----------------    || ApplicativeLayer <-------------------   || FunctorLayer
-           |\______________                    \______________                            \______________
+```scala
+libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "0.3.0" % Test
 ```
 
-`<X>Layer[M, Inner]` is three things:
- - an instance of `<X>[Inner]` and an instance of `<X>[M]`
- - a `FunctionK[Inner, M]` which respects the `<X>[Inner]` and `<X>[M]` instances
- - a higher-kinded variant of `cats.Invariant`, which maps
-   `<X>`-isomorphisms in `Inner` (`(Inner ~> Inner, Inner ~> Inner)`) to
-   `<X>`-homomorphisms in `M` (`M ~> M`)
+These laws are compatible with both Specs2 and ScalaTest.
 
-It lets you lift monadic values into other monads which are "larger" than them,
-for example monads that are being used inside monad transformers.
-For example, `ApplicativeLocal` requires `MonadLayer` to lift through a transformer, because
-all of its operations are invertible.
+## Documentation
 
-`<X>LayerFunctor` is a `<X>Layer` but instead a variant of `cats.Functor`, which maps
-`<X>`-homomorphisms in `Inner` (`Inner ~> Inner`) to
-`<X>`-homomorphisms in `M` (`M ~> M`).
+Links:
 
-Mapping natural transformations over the inner `Inner` inside `M`.
+1. Website: [typelevel.org/cats-mtl/](https://typelevel.org/cats-mtl/)
+2. ScalaDoc: [typelevel.org/cats-mtl/api/](https://typelevel.org/cats-mtl/api/)
 
-`MonadLayerControl` allows you to lift operations that *consume* `M` using the `layerControl` method,
-which allows one the ability to "unravel" an `M[A]` to an `Inner[State[A]]` temporarily,
-as long as the value produced with it is already in the `M[_]` context.
-For example, `FunctorListen` requires this typeclass to lift through a transformer.
+Related Cats links (the core):
 
-#### Why not MonadTrans, etc?
-`MonadTrans` forces the shape `T[_[_], _]` on anything which can "contain" another monad,
-but newtyping around an instantiated transformer eliminates that shape. I don't see usecases
-in the wild which lift transformations `M ~> N` inside a transformer to implement any MTL class,
-so the extra power was removed.
+1. Website: [typelevel.org/cats/](https://typelevel.org/cats/)
+2. ScalaDoc: [typelevel.org/cats/api/](https://typelevel.org/cats/api/)
 
-#### Typeclass summaries
-From the scaladoc:
 
-`ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
-Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
+## Migrating from Cats pre-1.0.0
 
-`ApplicativeLocal[F, E]` lets you substitute all of the `ask` occurrences in an `F[A]` value with
-`ask.map(f)`, for some `f: E => E` which produces a modified `E` input.
-
-`FunctorEmpty[F]` allows you to `map` and filter out elements simultaneously.
-
-`FunctorListen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
-that is contained in all `F[A]` values, and can be modified using `tell`.
-
-`FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
-This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,
-and further `map` calls will not have any values to execute the passed function on.
-
-`FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
-
-`MonadState[F, S]` is the capability to access and modify a state value
-from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
-
-## Motivation
-
-The motivation for cats-mtl's existence can be summed up in a few points:
-- using subtyping to express typeclass subclassing results in implicit ambiguities,
-  and doing it another way would result in a massive inconsistency inside cats if only done for MTL classes.
-  for a detailed explanation, see Adelbert Chang's article
-  [here](http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html).
-- most MTL classes do not actually require `Monad` as a constraint for their laws.
-  cats-mtl weakens this constraint to `Functor` or `Applicative` whenever possible,
-  with the result that there's now a notion of a `Functor` transformer stack and 
-  `Applicative` transformer stack in addition to that of a `Monad` transformer stack.
-- the most used operations on `MonadWriter` and `MonadReader` are `tell` and `ask`,
-  and the other operations severely restrict the space of implementations despite being
-  used much less. To fix this `FunctorListen` and `ApplicativeLocal` are subclasses
-  of `FunctorTell` and `ApplicativeAsk`, which have only the essentials.
-
-The first point there means that it's impossible for cats-mtl type classes
-to expose their base class instances implicitly; for example `F[_]: FunctorEmpty` isn't enough
-for a `Functor[F]` to be visible in implicit scope, despite `FunctorEmpty` containing a `Functor`
-instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
-explicitly can't work with cats and cats-mtl separate, as the `Functor[F]` instance for the type 
-from cats will always conflict with a derived instance.
-
-Thus `F[_]: FunctorFilter`, translated, becomes `F[_]: Functor: FunctorEmpty`.
-
-For some historical info on the origins of cats-mtl, see:
-
-https://github.com/typelevel/cats/issues/1210
-
-https://github.com/typelevel/cats/pull/1379
-
-https://github.com/typelevel/cats/pull/1751
-
-## Laws
-
-Type class laws come in a few varieties in cats-mtl: internal, external, and free.
-
-Internal laws dictate how multiple operations inter-relate.
-One side of the equation can always be reduced to a single function application of an operation.
-These express "default" implementations that should be indistinguishable in result from the actual implementation.
-
-External laws are laws that still need to be tested but don't fall into the internal laws.
-
-Free laws are (in theory) unnecessary to test, because they are implied by other laws and the 
-types of the operations in question. There will usually be rudimentary proofs 
-or some justification attached to make sure these aren't just made up.
+cats-core used to provide various mtl-classes which were moved to cats-mtl and split up.
+You can find the migration guide [here](https://typelevel.org/cats-mtl/migration)
 
 ### Community
 

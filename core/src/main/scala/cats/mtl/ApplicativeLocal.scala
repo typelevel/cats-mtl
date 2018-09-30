@@ -8,7 +8,7 @@ package mtl
   * `ApplicativeLocal[F, E]` has three external laws:
   * {{{
   * def askReflectsLocal(f: E => E) = {
-  *   local(ask)(f) <-> ask map f
+  *   local(f)(ask) <-> ask map f
   * }
   *
   * def localPureIsPure[A](a: A, f: E => E) = {
