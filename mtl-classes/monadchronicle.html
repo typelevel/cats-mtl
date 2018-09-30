@@ -33,7 +33,7 @@ You can read more about <code class="highlighter-rouge">Ior</code> in the <a hre
 
 <p>These three cases perfectly represent in which state the <code class="highlighter-rouge">F[A]</code> was in.
 If the <code class="highlighter-rouge">F[A]</code> passed to <code class="highlighter-rouge">materialize</code> was short-circuited by <code class="highlighter-rouge">confess</code>, then the result will be only an <code class="highlighter-rouge">E</code>.
-If <code class="highlighter-rouge">F[A]</code> at some point involved a call to <code class="highlighter-rouge">dicate</code>, meaning it had accumulated a log of <code class="highlighter-rouge">E</code>, then the result will be a pair of the log <code class="highlighter-rouge">E</code> and the resulting value <code class="highlighter-rouge">A</code>.
+If <code class="highlighter-rouge">F[A]</code> at some point involved a call to <code class="highlighter-rouge">dictate</code>, meaning it had accumulated a log of <code class="highlighter-rouge">E</code>, then the result will be a pair of the log <code class="highlighter-rouge">E</code> and the resulting value <code class="highlighter-rouge">A</code>.
 If neither <code class="highlighter-rouge">confess</code> or <code class="highlighter-rouge">dictate</code> were used to construct the <code class="highlighter-rouge">F[A]</code>, then <code class="highlighter-rouge">materialize</code> will only return the resulting value <code class="highlighter-rouge">A</code>.</p>
 
 <p>To gain a better understanding, let’s look at an example.
