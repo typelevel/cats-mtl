@@ -1,4 +1,4 @@
-<img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo.png" width="200px" height="231px" align="right">
+<img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo-microsite.png" width="200px" height="231px" align="right">
 
 
 ## cats-mtl
