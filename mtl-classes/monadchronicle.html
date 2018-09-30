@@ -1,0 +1,117 @@
+<html><head><title>Cats MTL: MonadChronicle</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Typelevel contributors" /><meta name="description" content="Monad Transformers made easy" /><meta name="og:image" content="/cats-mtl/img/poster.png" /><meta name="og:title" content="Cats MTL: MonadChronicle" /><meta name="og:site_name" content="Cats MTL" /><meta name="og:url" content="https://github.com/edmundnoble/cats-mtl" /><meta name="og:type" content="website" /><meta name="og:description" content="Monad Transformers made easy" /><link rel="icon" type="image/png" href="/cats-mtl/img/favicon.png" /><meta name="twitter:title" content="Cats MTL: MonadChronicle" /><meta name="twitter:image" content="https://github.com/edmundnoble/cats-mtlimg/poster.png" /><meta name="twitter:description" content="Monad Transformers made easy" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/cats-mtl/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/cats-mtl/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/cats-mtl/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/cats-mtl/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/cats-mtl/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/cats-mtl/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/cats-mtl/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/cats-mtl/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/cats-mtl/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/cats-mtl/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/cats-mtl/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/cats-mtl/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/cats-mtl/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/cats-mtl/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/cats-mtl/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/cats-mtl/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/cats-mtl/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/cats-mtl/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/cats-mtl/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/cats-mtl/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cats-mtl/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cats-mtl/css/style.css" /><link rel="stylesheet" href="/cats-mtl/css/palette.css" /><link rel="stylesheet" href="/cats-mtl/css/codemirror.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/cats-mtl/" class="brand"><div class="brand-wrapper"><span>Cats MTL</span></div></a></li> <li><a href="/cats-mtl/mtl-classes.html" class="">MTL Type Classes</a></li> <li><a href="/cats-mtl/mtl-classes/functortell.html" class="">FunctorTell</a></li> <li><a href="/cats-mtl/mtl-classes/applicativeask.html" class="">ApplicativeAsk</a></li> <li><a href="/cats-mtl/mtl-classes/monadstate.html" class="">MonadState</a></li> <li><a href="/cats-mtl/mtl-classes/monadchronicle.html" class=" active ">MonadChronicle</a></li> <li><a href="/cats-mtl/mtl-classes/functorlisten.html" class="">FunctorListen</a></li> <li><a href="/cats-mtl/mtl-classes/applicativelocal.html" class="">ApplicativeLocal</a></li> <li><a href="/cats-mtl/mtl-classes/functorraise.html" class="">FunctorRaise</a></li> <li><a href="/cats-mtl/mtl-classes/applicativehandle.html" class="">ApplicativeHandle</a></li> </ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/typelevel/cats-mtl"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/typelevel/cats-mtl"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Cats MTL Monad Transformers made easy');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Cats MTL Monad Transformers made easy');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="typelevel" data-github-repo="cats-mtl"><div class="content-wrapper"><section><h2 id="monadchronicle">MonadChronicle</h2>
+
+<p><code class="highlighter-rouge">MonadChronicle[F, E]</code> allows us to both accumulate values and also short-circuit computations with a final output.
+In that sense it can be seen as a hybrid of <code class="highlighter-rouge">FunctorTell</code> and <code class="highlighter-rouge">ApplicativeHandle</code>/<code class="highlighter-rouge">MonadError</code>.</p>
+
+<p><code class="highlighter-rouge">MonadChronicle</code> is defined by 3 distinct operators, to understand it better, let’s look at a simplified definition:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">trait</span> <span class="nc">MonadChronicle</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">E</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">dictate</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span>
+
+  <span class="k">def</span> <span class="n">confess</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">c</span><span class="k">:</span> <span class="kt">E</span><span class="o">)</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
+
+  <span class="k">def</span> <span class="n">materialize</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">fa</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">E</span> <span class="kt">Ior</span> <span class="kt">A</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>If you’re already familiar with <code class="highlighter-rouge">FunctorTell</code>, <code class="highlighter-rouge">dictate</code> should look familiar.
+In fact, it has the same signature as <code class="highlighter-rouge">FunctorTell#tell</code> and achieves roughly the same thing,
+ appending a value of <code class="highlighter-rouge">E</code> to some internal log.</p>
+
+<p>Next, we have <code class="highlighter-rouge">confess</code>, which might seems familar if you know <code class="highlighter-rouge">FunctorRaise</code>/<code class="highlighter-rouge">ApplicativeError</code>’s <code class="highlighter-rouge">raise</code>/raiseError` method.
+It also does the same thing here, which is raising an error that will short-circuit the computation.</p>
+
+<p>This means, that internally, instances of <code class="highlighter-rouge">MonadChronicle</code> need to differentiate between values of type <code class="highlighter-rouge">E</code>.
+<code class="highlighter-rouge">dictate</code> adds a value of <code class="highlighter-rouge">E</code> to a log, but allows the computation to continue.
+Values coming from <code class="highlighter-rouge">confess</code> on the other hand, stop all computations afterwards and short-circuit,
+ since calls to <code class="highlighter-rouge">flatMap</code> will no longer have any effect.</p>
+
+<p>The only way to recover from the short-circuiting behaviour of <code class="highlighter-rouge">confess</code> is to use <code class="highlighter-rouge">MonadChronicle</code>’s third method <code class="highlighter-rouge">materialize</code>.
+<code class="highlighter-rouge">materialize</code> takes an <code class="highlighter-rouge">F[A]</code> and returns an <code class="highlighter-rouge">F[E Ior A]</code>.
+<code class="highlighter-rouge">Ior</code> represents an inclusive-or relationship, meaning an <code class="highlighter-rouge">E Ior A</code> can either be an <code class="highlighter-rouge">E</code>, an <code class="highlighter-rouge">A</code> or a tuple of both <code class="highlighter-rouge">(E, A)</code>.
+You can read more about <code class="highlighter-rouge">Ior</code> in the <a href="https://typelevel.org/cats/datatypes/ior.html">cats documentation</a>.</p>
+
+<p>These three cases perfectly represent in which state the <code class="highlighter-rouge">F[A]</code> was in.
+If the <code class="highlighter-rouge">F[A]</code> passed to <code class="highlighter-rouge">materialize</code> was short-circuited by <code class="highlighter-rouge">confess</code>, then the result will be only an <code class="highlighter-rouge">E</code>.
+If <code class="highlighter-rouge">F[A]</code> at some point involved a call to <code class="highlighter-rouge">dicate</code>, meaning it had accumulated a log of <code class="highlighter-rouge">E</code>, then the result will be a pair of the log <code class="highlighter-rouge">E</code> and the resulting value <code class="highlighter-rouge">A</code>.
+If neither <code class="highlighter-rouge">confess</code> or <code class="highlighter-rouge">dictate</code> were used to construct the <code class="highlighter-rouge">F[A]</code>, then <code class="highlighter-rouge">materialize</code> will only return the resulting value <code class="highlighter-rouge">A</code>.</p>
+
+<p>To gain a better understanding, let’s look at an example.
+Some applications call for a notion of <em>non-fatal errors</em>, along with the more standard fatal errors that halt computations.
+<code class="highlighter-rouge">MonadChronicle</code> is perfect for these kinds of use cases.
+Let’s say we want to create a sign up where users can register with username and password.
+We can prohibit bad user data by using a computation halting <code class="highlighter-rouge">confess</code> and nudge them in the right direction by giving warnings when e.g. their password is fairly short:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.Monad</span>
+<span class="c1">// import cats.Monad
+</span>
+<span class="k">import</span> <span class="nn">cats.data._</span>
+<span class="c1">// import cats.data._
+</span>
+<span class="k">import</span> <span class="nn">cats.implicits._</span>
+<span class="c1">// import cats.implicits._
+</span>
+<span class="k">import</span> <span class="nn">cats.mtl.MonadChronicle</span>
+<span class="c1">// import cats.mtl.MonadChronicle
+</span>
+<span class="k">import</span> <span class="nn">cats.mtl.implicits._</span>
+<span class="c1">// import cats.mtl.implicits._
+</span>
+<span class="k">type</span> <span class="kt">Failures</span> <span class="o">=</span> <span class="nc">NonEmptyChain</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="c1">// defined type alias Failures
+</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Username</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="c1">// defined class Username
+</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Password</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="c1">// defined class Password
+</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">User</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">Username</span><span class="o">,</span> <span class="n">pw</span><span class="k">:</span> <span class="kt">Password</span><span class="o">)</span>
+<span class="c1">// defined class User
+</span>
+<span class="k">def</span> <span class="n">validateUsername</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Monad</span><span class="o">](</span><span class="n">u</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">MonadChronicle</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Failures</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">Username</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">u</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">confess</span><span class="o">(</span><span class="nc">NonEmptyChain</span><span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="s">"Can't be empty"</span><span class="o">))</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">u</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="s">"."</span><span class="o">))</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">dictate</span><span class="o">(</span><span class="nc">NonEmptyChain</span><span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="s">"Dot in name is deprecated"</span><span class="o">)).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Username</span><span class="o">(</span><span class="n">u</span><span class="o">))</span>
+  <span class="k">else</span>
+    <span class="nc">Username</span><span class="o">(</span><span class="n">u</span><span class="o">).</span><span class="n">pure</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span>
+<span class="o">}</span>
+<span class="c1">// validateUsername: [F[_]](u: String)(implicit evidence$1: cats.Monad[F], implicit F: cats.mtl.MonadChronicle[F,Failures])F[Username]
+</span>
+<span class="k">def</span> <span class="n">validatePassword</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Monad</span><span class="o">](</span><span class="n">p</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">MonadChronicle</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Failures</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">Password</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="o">)</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">confess</span><span class="o">(</span><span class="nc">NonEmptyChain</span><span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="s">"Password too short"</span><span class="o">))</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">)</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">dictate</span><span class="o">(</span><span class="nc">NonEmptyChain</span><span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="s">"Password should be longer"</span><span class="o">)).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Password</span><span class="o">(</span><span class="n">p</span><span class="o">))</span>
+  <span class="k">else</span>
+    <span class="nc">Password</span><span class="o">(</span><span class="n">p</span><span class="o">).</span><span class="n">pure</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span>
+<span class="o">}</span>
+<span class="c1">// validatePassword: [F[_]](p: String)(implicit evidence$1: cats.Monad[F], implicit F: cats.mtl.MonadChronicle[F,Failures])F[Password]
+</span>
+<span class="k">def</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">Monad</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">F</span><span class="k">:</span> <span class="kt">MonadChronicle</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Failures</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">User</span><span class="o">]</span> <span class="k">=</span>
+  <span class="o">(</span><span class="n">validateUsername</span><span class="o">[</span><span class="kt">F</span><span class="o">](</span><span class="n">name</span><span class="o">),</span> <span class="n">validatePassword</span><span class="o">[</span><span class="kt">F</span><span class="o">](</span><span class="n">password</span><span class="o">)).</span><span class="n">mapN</span><span class="o">(</span><span class="nc">User</span><span class="o">)</span>
+<span class="c1">// validateUser: [F[_]](name: String, password: String)(implicit evidence$1: cats.Monad[F], implicit F: cats.mtl.MonadChronicle[F,Failures])F[User]
+</span></code></pre></div></div>
+
+<p>Now we can fully validate users and accumulate a log of warnings or fail entirely when an invalid name or password was encountered.
+Pretty neat, next let’s actually run this program to see if what we did was correct.
+We can do that with <code class="highlighter-rouge">Ior</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">luka</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"Luka"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">)</span>
+<span class="c1">// luka: cats.data.Ior[cats.data.NonEmptyChainImpl.Type[String],User] = Left(Chain(Password too short))
+</span>
+<span class="k">val</span> <span class="n">john</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"john.doe"</span><span class="o">,</span> <span class="s">"secret123"</span><span class="o">)</span>
+<span class="c1">// john: cats.data.Ior[cats.data.NonEmptyChainImpl.Type[String],User] = Both(Chain(Dot in name is deprecated, Password should be longer),User(Username(john.doe),Password(secret123)))
+</span>
+<span class="k">val</span> <span class="n">jane</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"jane"</span><span class="o">,</span> <span class="s">"reallysecurepassword"</span><span class="o">)</span>
+<span class="c1">// jane: cats.data.Ior[cats.data.NonEmptyChainImpl.Type[String],User] = Right(User(Username(jane),Password(reallysecurepassword)))
+</span></code></pre></div></div>
+
+<p>Apart from <code class="highlighter-rouge">Ior</code> instances for <code class="highlighter-rouge">MonadChronicle</code> also include its <code class="highlighter-rouge">IorT</code> and any monad transformer stack where <code class="highlighter-rouge">Ior</code> or <code class="highlighter-rouge">IorT</code> appear.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>hljs.configure({
+languages:['scala','java','bash']
+});
+hljs.initHighlighting();
+             </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'typelevel/cats-mtl'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/cats-mtl/js/main.js"></script></body></html>
