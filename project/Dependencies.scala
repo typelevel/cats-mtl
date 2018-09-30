@@ -11,16 +11,16 @@ object Dependencies {
     val discipline = "0.9.0"
     val macroParadise = "2.1.1"
     val kindProjector = "0.9.6"
-    val simulacrum = "0.12.0"
+    val simulacrum = "0.13.0"
     val machinist = "0.6.5"
     val cats = "1.4.0"
     val shapeless = "2.3.3"
   }
 
   val acyclic: Seq[Def.Setting[_]] = Def.settings(
-    libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.7" % "provided",
+    libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.8" % "provided",
     autoCompilerPlugins := true,
-    addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.7"),
+    addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.8"),
     scalacOptions += "-P:acyclic:force"
   )
 
