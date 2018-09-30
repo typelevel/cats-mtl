@@ -42,7 +42,7 @@ You can read more about `Ior` in the [cats documentation](https://typelevel.org/
 
 These three cases perfectly represent in which state the `F[A]` was in.
 If the `F[A]` passed to `materialize` was short-circuited by `confess`, then the result will be only an `E`.
-If `F[A]` at some point involved a call to `dicate`, meaning it had accumulated a log of `E`, then the result will be a pair of the log `E` and the resulting value `A`.
+If `F[A]` at some point involved a call to `dictate`, meaning it had accumulated a log of `E`, then the result will be a pair of the log `E` and the resulting value `A`.
 If neither `confess` or `dictate` were used to construct the `F[A]`, then `materialize` will only return the resulting value `A`.
 
 To gain a better understanding, let's look at an example.
