@@ -32,9 +32,7 @@ In fact the implementation for <code class="highlighter-rouge">ask</code> is jus
 <code class="highlighter-rouge">StateT[Reader[E, ?], S, A]</code> and <code class="highlighter-rouge">EitherT[ReaderT[List, E, ?], Error, A]</code> will both have <code class="highlighter-rouge">ApplicativeAsk</code> instances whenever you import from  <code class="highlighter-rouge">cats.mtl.instances._</code>.</p>
 
 <p>In general every monad transformer stack where <code class="highlighter-rouge">Reader</code> appears once, will have an instance of <code class="highlighter-rouge">ApplicativeAsk</code>.</p>
-</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>hljs.configure({
-languages:['scala','java','bash']
-});
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
 hljs.initHighlighting();
-             </script><script>((window.gitter = {}).chat = {}).options = {
+              </script><script>((window.gitter = {}).chat = {}).options = {
 room: 'typelevel/cats-mtl'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/cats-mtl/js/main.js"></script></body></html>
