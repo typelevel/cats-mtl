@@ -6,7 +6,7 @@ object Dependencies {
 
   //noinspection TypeAnnotation
   object Versions {
-    val scalaCheck = "1.13.5"
+    val scalaCheck = "1.14.0"
     val scalaTest = "3.0.5"
     val discipline = "0.9.0"
     val macroParadise = "2.1.1"
