@@ -8,8 +8,8 @@ position: 2
 
 ## What is MTL?
 
-Mtl is an acronym and stands for Monad Transformer Library. 
-It's main purpose it make it easier to work with nested monad transformers. 
+MTL is an acronym and stands for Monad Transformer Library. 
+Its main purpose is to make it easier to work with nested monad transformers. 
 It achieves this by encoding the effects of most common monad transformers as type classes.
 
 ### The problem
@@ -117,7 +117,7 @@ val materializedProgram =
 ```
 
 This process of turning a program defined by an abstract type constructor with additional type class constraints into an actual concrete data type is sometimes called *interpreting* or *materializing*  a program.
-Usually we don't have to do this until the very end where we want to run the full application, so the only places we see actual monad transformers at the very edge.
+Usually we don't have to do this until the very end where we want to run the full application, so the only place we see actual monad transformers is at the very edge.
 
 In summary Cats-mtl provides two things:
 MTL type classes representing effects and a way to lift instances of these classes through transformer stacks.
