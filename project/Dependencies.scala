@@ -8,7 +8,7 @@ object Dependencies {
   object Versions {
     val scalaCheck = "1.13.5"
     val scalaTest = "3.0.5"
-    val discipline = "0.9.0"
+    val discipline = "0.10.0"
     val macroParadise = "2.1.1"
     val kindProjector = "0.9.8"
     val simulacrum = "0.13.0"
