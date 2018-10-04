@@ -21,8 +21,5 @@ trait AskInstances {
 
 }
 
-private[instances] trait AskInstancesLowPriority1 {
-}
-
 object ask extends AskInstances
 

@@ -7,18 +7,16 @@ import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
 trait FunctorTellLaws[F[_], L] {
-  implicit val tellInstance: FunctorTell[F, L]
-  implicit val functor: Functor[F] = tellInstance.functor
-
-  import tellInstance._
+  implicit def F: FunctorTell[F, L]
+  implicit def functor(implicit F: FunctorTell[F, L]): Functor[F] = F.functor
 
   // internal laws:
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
-    (tell(l) as a) <-> writer(a, l)
+    F.tell(l).as(a) <-> F.writer(a, l)
   }
 
   def tupleIsWriterFlipped[A](a: A, l: L): IsEq[F[A]] = {
-    writer(a, l) <-> tuple((l, a))
+    F.writer(a, l) <-> F.tuple((l, a))
   }
 
 }
@@ -26,7 +24,7 @@ trait FunctorTellLaws[F[_], L] {
 object FunctorTellLaws {
   def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellLaws[F, L] = {
     new FunctorTellLaws[F, L] {
-      override lazy val tellInstance: FunctorTell[F, L] = instance0
+      def F: FunctorTell[F, L] = instance0
     }
   }
 }

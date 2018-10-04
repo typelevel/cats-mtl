@@ -5,12 +5,10 @@ package discipline
 
 import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
-import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
-  implicit val listenInstance: FunctorListen[F, L]
-  override def laws: FunctorListenLaws[F, L] = FunctorListenLaws[F, L]
+  def laws: FunctorListenLaws[F, L]
 
   def functorListen[A: Arbitrary, B: Arbitrary](implicit
                                                     ArbFA: Arbitrary[F[A]],
@@ -35,9 +33,8 @@ trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
 
 object FunctorListenTests {
   def apply[F[_], L](implicit instance0: FunctorListen[F, L]): FunctorListenTests[F, L] = {
-    new FunctorListenTests[F, L] with Laws {
-      override val listenInstance: FunctorListen[F, L] = instance0
-      override implicit val tellInstance: FunctorTell[F, L] = instance0
+    new FunctorListenTests[F, L] {
+      override def laws: FunctorListenLaws[F, L] = FunctorListenLaws[F, L]
     }
   }
 }
