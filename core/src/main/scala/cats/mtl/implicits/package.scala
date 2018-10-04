@@ -1,6 +1,5 @@
 package cats
 package mtl
 
-package object implicits extends hierarchy.BaseHierarchy
-    with instances.AllInstances with syntax.AllSyntax
+package object implicits extends instances.AllInstances with syntax.AllSyntax
 
