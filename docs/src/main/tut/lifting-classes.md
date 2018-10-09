@@ -11,26 +11,8 @@ Several typeclasses are provided to lift transformer typeclasses
 through transformer data types, like `OptionT`.
 
 They form a hierarchy:
-```
-MonadLayerControl
-    \
-    ||
-    ||
-    ||
-    ||
-    ||
-    MonadLayerFunctor <----------- ApplicativeLayerFunctor <----------------- FunctorLayerFunctor
-           \                                  \                                          \
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           ||                                 ||                                         ||
-           || MonadLayer <----------------    || ApplicativeLayer <-------------------   || FunctorLayer
-           |\______________                    \______________                            \______________
-```
+
+![cats-mtl hierarchy](img/cats-mtl-hierarchy.png)
 
 `<X>Layer[M, Inner]` is three things:
  - an instance of `<X>[Inner]` and an instance of `<X>[M]`
