@@ -32,7 +32,7 @@ def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
 } yield result
 ```
 
-There's a bunch of type annotations and extra machinery that really has nothing to do with the actual progam and this problem only gets worse as you add more expressions to your for-comprehension or add an additional monad transformer to the stack.
+There's a bunch of type annotations and extra machinery that really has nothing to do with the actual program and this problem only gets worse as you add more expressions to your for-comprehension or add an additional monad transformer to the stack.
 
 Thankfully, Cats-mtl is here to help.
 
