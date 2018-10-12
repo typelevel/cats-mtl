@@ -1,5 +1,6 @@
 package cats.mtl.bench
 
+import cats.implicits._
 import cats.data.StateT
 import cats.effect.IO
 import org.openjdk.jmh.annotations._
@@ -16,7 +17,7 @@ class StateBench {
       if (i > bound) StateIO.pure(i)
       else StateIO.pure[Int, Int](i + 1).flatMap(loop)
 
-    StateIO.pure[Int, Int](0).flatMap(loop).unsafeRunSyncS(0)
+    StateIO.pure[Int, Int](0).flatMap(loop).unsafeRunSyncA(0)
   }
 
   def leftFlatMapStateT(bound: Int): Int = {
@@ -24,7 +25,7 @@ class StateBench {
       if (i > bound) StateT.pure[IO, Int, Int](i)
       else StateT.pure[IO, Int, Int](i + 1).flatMap(loop)
 
-    StateT.pure[IO, Int, Int](0).flatMap(loop).runS(0).unsafeRunSync()
+    StateT.pure[IO, Int, Int](0).flatMap(loop).runA(0).unsafeRunSync()
   }
 
   @Benchmark
