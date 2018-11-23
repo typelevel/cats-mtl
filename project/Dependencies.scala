@@ -12,7 +12,7 @@ object Dependencies {
     val discipline = "0.9.0"
     val macroParadise = "2.1.1"
     val kindProjector = "0.9.9"
-    val simulacrum = "0.13.0"
+    val simulacrum = "0.14.0"
     val machinist = "0.6.5"
     val cats = "1.4.0"
     val shapeless = "2.3.3"
