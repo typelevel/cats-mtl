@@ -15,7 +15,7 @@ object Dependencies {
     val simulacrum = "0.13.0"
     val machinist = "0.6.5"
     val cats = "1.4.0"
-    val shapeless = "2.3.3"
+    val catsEffect = "1.0.0"
   }
 
   val acyclic: Seq[Def.Setting[_]] = Def.settings(
@@ -54,8 +54,12 @@ object Dependencies {
     "org.typelevel" %%% "cats-core" % Versions.cats
   ))
 
-  val shapeless: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    "com.chuusai" %%% "shapeless" % Versions.shapeless
+  val catsEffect: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
+    "org.typelevel" %%% "cats-effect" % Versions.catsEffect
+  ))
+
+  val catsEffectLaws: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
+    "org.typelevel" %%% "cats-effect-laws" % Versions.catsEffect
   ))
 
   val simulacrumAndMachinist: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
