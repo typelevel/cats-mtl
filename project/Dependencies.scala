@@ -34,8 +34,8 @@ object Dependencies {
   ))
 
   val catalystsAndScalatest: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    "org.typelevel" %%% "catalysts-platform" % "0.7",
-    "org.typelevel" %%% "catalysts-macros" % "0.7" % "test",
+    "org.typelevel" %%% "catalysts-platform" % "0.8",
+    "org.typelevel" %%% "catalysts-macros" % "0.8" % "test",
     "org.scalatest" %%% "scalatest" % Versions.scalaTest % "test"
   ))
 
