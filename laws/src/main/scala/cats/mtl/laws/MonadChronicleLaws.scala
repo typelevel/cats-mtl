@@ -30,7 +30,7 @@ trait MonadChronicleLaws[F[_], E] {
   }
 
   def confessThenAbsolveIsPure[A](a: A, e: E): IsEq[F[A]] = {
-    absolve(a, confess(e)) <-> pure(a)
+    absolve(confess[A](e))(a) <-> pure(a)
   }
 
   def dictateThenCondemIsConfess[A](e: E): IsEq[F[Unit]] = {
@@ -46,15 +46,15 @@ trait MonadChronicleLaws[F[_], E] {
   }
 
   def confessThenRetconIsConfess[A](f: E => E, e: E): IsEq[F[A]] = {
-    retcon[A](f, confess[A](e)) <-> confess[A](f(e))
+    retcon(confess[A](e))(f) <-> confess[A](f(e))
   }
 
   def dictateThenRetconIsDictate[A](f: E => E, e: E): IsEq[F[Unit]] = {
-    retcon(f, dictate(e)) <-> dictate(f(e))
+    retcon(dictate(e))(f) <-> dictate(f(e))
   }
 
   def pureThenRetconIsPure[A](f: E => E, a: A): IsEq[F[A]] = {
-    retcon[A](f, pure(a)) <-> pure(a)
+    retcon(pure(a))(f) <-> pure(a)
   }
 
   def dictateSharkDictateIsDictateSemigroup(e0: E, e: E)(implicit ev: Semigroup[E]): IsEq[F[Unit]] = {

@@ -78,14 +78,14 @@ final class Syntax extends BaseSuite {
           IorT.pure[Option, String](42))
 
       val fa: IorT[Option, String, Int] = IorT.pure(42)
-      val dictate: IorT[Option, String, Unit] = fa.dictate("err")
-      val disclose: IorT[Option, String, Int] = fa.disclose("err")
-      val confess: IorT[Option, String, Int] = fa.confess("err")
-      val memento: IorT[Option, String, Either[String, Int]] = fa.memento[String]
+      val dictate: IorT[Option, String, Unit] = "err".dictate[IorTC[Option, String]#l]
+      val disclose: IorT[Option, String, Int] = "err".disclose[IorTC[Option, String]#l, Int]
+      val confess: IorT[Option, String, Int] = "err".confess[IorTC[Option, String]#l, Int]
+      val memento: IorT[Option, String, Either[String, Int]] = fa.memento
       val absolve: IorT[Option, String, Int] = fa.absolve(42)
       val condemn: IorT[Option, String, Int] = fa.condemn
       val retcon: IorT[Option, String, Int] = fa.retcon((str: String) => str + "err")
-      val chronicle: IorT[Option, String, Int] = fa.chronicle[String](Ior.both("hello", 42))
+      val chronicle: IorT[Option, String, Int] = Ior.both("hello", 42).chronicle[IorTC[Option, String]#l]
     }
   }
 }

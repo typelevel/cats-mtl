@@ -16,11 +16,11 @@ trait MonadChronicle[F[_], E] extends Serializable {
 
   def memento[A](fa: F[A]): F[Either[E, A]]
 
-  def absolve[A](a: => A, fa: F[A]): F[A]
+  def absolve[A](fa: F[A])(a: => A): F[A]
 
   def condemn[A](fa: F[A]): F[A]
 
-  def retcon[A](cc: E => E, fa: F[A]): F[A]
+  def retcon[A](fa: F[A])(cc: E => E): F[A]
 
   def chronicle[A](ior: E Ior A): F[A]
 }
@@ -52,7 +52,7 @@ trait DefaultMonadChronicle[F[_], E] extends MonadChronicle[F, E] {
     case Ior.Both(e, a) => monad.as(dictate(e), Right(a))
   }
 
-  override def absolve[A](a: => A, fa: F[A]): F[A] = monad.map(materialize(fa)) {
+  override def absolve[A](fa: F[A])(a: => A): F[A] = monad.map(materialize(fa)) {
     case Ior.Left(_)     => a
     case Ior.Right(a0)   => a0
     case Ior.Both(_, a0) => a0
@@ -64,7 +64,7 @@ trait DefaultMonadChronicle[F[_], E] extends MonadChronicle[F, E] {
     case Ior.Both(e, _) => confess(e)
   }
 
-  override def retcon[A](cc: E => E, fa: F[A]): F[A] = monad.flatMap(materialize(fa)) {
+  override def retcon[A](fa: F[A])(cc: E => E): F[A] = monad.flatMap(materialize(fa)) {
     case Ior.Left(e)    => confess(cc(e))
     case Ior.Right(a)   => monad.pure(a)
     case Ior.Both(e, a) => monad.as(dictate(cc(e)), a)
