@@ -7,8 +7,8 @@ import cats.arrow.FunctionK
 import cats.data._
 import cats.instances.all._
 import cats.laws.discipline.SerializableTests
-import cats.mtl.instances.listen._
 import cats.laws.discipline.eq._
+import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
 import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
@@ -31,60 +31,36 @@ class WriterTTests extends BaseSuite {
   type WriterTStringOverWriterTStringOverOption[A] = WriterT[WriterTC[Option, String]#l, List[Int], A]
 
   locally {
-    // I know, this is unbelievably odd.
-    // The reason this is in its own scope is that the Arbitrary and Eq instance induction for WriterT
-    // is detected as "divergent" by 2.10, so I have to isolate the *rest* of the imports in the file,
-    locally {
-      import cats.mtl.instances.listen._, cats.mtl.instances.writert._
-      //      implicit val listen = FunctorListen[WriterTStringOverWriterTStringOverOption, String]
-      implicit val arb = cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[WriterTC[Option, String]#l, List[Int], String](
-        cats.laws.discipline.arbitrary.catsLawsArbitraryForWriterT[Option, String, (List[Int], String)]
-      )
-      implicit val eqS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], String](
-        WriterT.catsDataEqForWriterT[Option, String, (List[Int], String)]
-      )
-      implicit val eqSS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], (String, String)](
-        WriterT.catsDataEqForWriterT[Option, String, (List[Int], (String, String))]
-      )
-      implicit val eqUS = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], (Unit, String)](
-        WriterT.catsDataEqForWriterT[Option, String, (List[Int], (Unit, String))]
-      )
-      implicit val eqU = WriterT.catsDataEqForWriterT[WriterTC[Option, String]#l, List[Int], Unit](
-        WriterT.catsDataEqForWriterT[Option, String, (List[Int], Unit)]
-      )
-      // this diverges in 2.10. Maybe just don't promise it?
-      checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
-        FunctorListenTests[WriterTStringOverWriterTStringOverOption, String]
-          .functorListen[String, String]
-      )
-      checkAll("FunctorListen[WriterT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(FunctorListen[WriterTStringOverWriterTStringOverOption, String]))
-    }
-
-    locally {
       import cats.laws.discipline.arbitrary._
       import cats.mtl.instances.all._
 
+      checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
+        ApplicativeCensorTests[WriterTStringOverWriterTStringOverOption, String]
+          .applicativeCensor[String, String]
+      )
+      checkAll("ApplicativePass[WriterT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(ApplicativeCensor[WriterTStringOverWriterTStringOverOption, String]))
+
       checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-        FunctorListenTests[ReaderTStringOverWriterTStringOverOption, String]
-          .functorListen[String, String])
-      checkAll("FunctorListen[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(FunctorListen[ReaderTStringOverWriterTStringOverOption, String]))
+        ApplicativeCensorTests[ReaderTStringOverWriterTStringOverOption, String]
+          .applicativeCensor[String, String])
+      checkAll("ApplicativePass[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(ApplicativeCensor[ReaderTStringOverWriterTStringOverOption, String]))
 
       checkAll("StateT[WriterTC[Option, String]#l, List[Int], String]",
-        FunctorListenTests[StateTStringOverWriterTStringOverOption, String]
-          .functorListen[String, String])
-      checkAll("FunctorListen[StateT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(FunctorListen[StateTStringOverWriterTStringOverOption, String]))
-    }
+        ApplicativeCensorTests[StateTStringOverWriterTStringOverOption, String]
+          .applicativeCensor[String, String])
+      checkAll("ApplicativePass[StateT[WriterTC[Option, String]#l, List[Int], String]",
+        SerializableTests.serializable(ApplicativeCensor[StateTStringOverWriterTStringOverOption, String]))
   }
 
   locally {
     import cats.laws.discipline.arbitrary._
+    import cats.mtl.instances.censor._
 
     checkAll("WriterT[Option, String, String]",
-      FunctorListenTests[WriterTC[Option, String]#l, String]
-        .functorListen[String, String])
+      ApplicativeCensorTests[WriterTC[Option, String]#l, String]
+        .applicativeCensor[String, String])
     checkAll("FunctorListen[WriterT[Option, String, ?]]",
       SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
 

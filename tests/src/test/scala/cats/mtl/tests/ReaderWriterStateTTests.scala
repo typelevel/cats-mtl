@@ -9,7 +9,7 @@ import cats.laws.discipline._
 import cats.laws.discipline.eq._
 import cats.mtl._
 import cats.mtl.implicits._
-import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadLayerControlTests, MonadStateTests}
+import cats.mtl.laws.discipline._
 import cats.mtl.lifting.MonadLayerControl
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -46,15 +46,15 @@ class ReaderWriterStateTTests extends StateTTestsBase {
     SerializableTests.serializable(MonadState[ReaderWriterStateT[Option, Boolean, Int, String, ?], String]))
 
   checkAll("ReaderWriterStateT[Option, Boolean, Int, String, Int]",
-    FunctorTellTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
-      .functorTell[Int])
-  checkAll("FunctorTell[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
-    SerializableTests.serializable(FunctorTell[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]))
+    ApplicativeCensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
+      .applicativeCensor[Int, String])
+  checkAll("ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    SerializableTests.serializable(ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]))
 
   checkAll("ReaderWriterStateT[Option, Boolean, Int, String, Boolean]",
-    ApplicativeAskTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]
-      .applicativeAsk[Boolean])
-  checkAll("ApplicativeAsk[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
-    SerializableTests.serializable(ApplicativeAsk[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]))
+    ApplicativeLocalTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]
+      .applicativeLocal[Boolean, String])
+  checkAll("ApplicativeLocal[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    SerializableTests.serializable(ApplicativeLocal[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]))
 
 }
