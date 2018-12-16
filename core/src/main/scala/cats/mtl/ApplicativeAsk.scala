@@ -33,6 +33,11 @@ object ApplicativeAsk {
 
   def apply[F[_], E](implicit applicativeAsk: ApplicativeAsk[F, E]): ApplicativeAsk[F, E] = applicativeAsk
 
+  def const[F[_]: Applicative, E](e: E): ApplicativeAsk[F, E] = new DefaultApplicativeAsk[F, E] {
+    val applicative: Applicative[F] = Applicative[F]
+    val ask: F[E] = applicative.pure(e)
+  }
+
   def ask[F[_], E](implicit ask: ApplicativeAsk[F, E]): F[E] = {
     ask.ask
   }

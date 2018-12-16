@@ -67,8 +67,14 @@ class ApplicativeAskDefaultTests extends BaseSuite {
     def ask: FunctionC[Int]#l[Int] = identity
   }
 
-  checkAll("FunctionC[Int]#l[Int]",
+  val pureApplicativeAsk: ApplicativeAsk[FunctionC[Int]#l, Int] = ApplicativeAsk.const(42)
+
+  checkAll("DefaultApplicativeAsk FunctionC[Int]#l[Int]",
     ApplicativeAskTests[FunctionC[Int]#l, Int](defaultApplicativeAsk)
+      .applicativeAsk[String])
+
+  checkAll("ApplicativeAsk.const FunctionC[Int]#l[Int]",
+    ApplicativeAskTests[FunctionC[Int]#l, Int](pureApplicativeAsk)
       .applicativeAsk[String])
 }
 
