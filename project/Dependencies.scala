@@ -30,7 +30,7 @@ object Dependencies {
   ))
 
   val scalaCheck: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
-    "org.scalacheck" %%% "scalacheck" % Versions.scalaCheck
+    "org.scalacheck" %%% "scalacheck" % Versions.scalaCheck % "test"
   ))
 
   val catalystsAndScalatest: Seq[Setting[_]] = Def.settings(libraryDependencies ++= Seq(
