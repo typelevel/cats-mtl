@@ -6,21 +6,11 @@ import cats.data.Ior
 
 trait ChronicleSyntax {
   implicit def toChronicleOps[F[_], A](fa: F[A]): ChronicleOps[F, A] = new ChronicleOps[F, A](fa)
+  implicit def toChronicleIdOps[E](e: E): ChronicleIdOps[E] = new ChronicleIdOps[E](e)
+  implicit def toChronicleIorOps[A, E](ior: E Ior A): ChronicleIorOps[A, E] = new ChronicleIorOps[A, E](ior)
 }
 
 final class ChronicleOps[F[_], A](val fa: F[A]) extends AnyVal {
-  def dictate[E](e: E)(implicit chronicle: MonadChronicle[F, E]): F[Unit] = {
-    chronicle.dictate(e)
-  }
-
-  def disclose[E](e: E)(implicit chronicle: MonadChronicle[F, E], monoid: Monoid[A]): F[A] = {
-    chronicle.disclose(e)
-  }
-
-  def confess[E](e: E)(implicit chronicle: MonadChronicle[F, E]): F[A] = {
-    chronicle.confess(e)
-  }
-
   def materialize[E](implicit chronicle: MonadChronicle[F, E]): F[E Ior A] = {
     chronicle.materialize(fa)
   }
@@ -30,7 +20,7 @@ final class ChronicleOps[F[_], A](val fa: F[A]) extends AnyVal {
   }
 
   def absolve[E](a: => A)(implicit chronicle: MonadChronicle[F, E]): F[A] = {
-    chronicle.absolve(a, fa)
+    chronicle.absolve(fa)(a)
   }
 
   def condemn[E](implicit chronicle: MonadChronicle[F, E]): F[A] = {
@@ -38,10 +28,26 @@ final class ChronicleOps[F[_], A](val fa: F[A]) extends AnyVal {
   }
 
   def retcon[E](cc: E => E)(implicit chronicle: MonadChronicle[F, E]): F[A] = {
-    chronicle.retcon(cc, fa)
+    chronicle.retcon(fa)(cc)
   }
+}
 
-  def chronicle[E](ior: E Ior A)(implicit chronicle: MonadChronicle[F, E]): F[A] = {
+final class ChronicleIdOps[E](val e: E) extends AnyVal {
+  def dictate[F[_]](implicit chronicle: MonadChronicle[F, E]): F[Unit] = {
+      chronicle.dictate(e)
+    }
+
+  def disclose[F[_], A](implicit chronicle: MonadChronicle[F, E], monoid: Monoid[A]): F[A] = {
+      chronicle.disclose(e)
+    }
+
+  def confess[F[_], A](implicit chronicle: MonadChronicle[F, E]): F[A] = {
+      chronicle.confess(e)
+    }
+}
+
+final class ChronicleIorOps[A, E](val ior: E Ior A) extends AnyVal {
+  def chronicle[F[_]](implicit chronicle: MonadChronicle[F, E]): F[A] = {
     chronicle.chronicle(ior)
   }
 }
