@@ -1,4 +1,5 @@
 import microsites._
+import sbtcrossproject.{crossProject, CrossType}
 
 // project info
 
@@ -22,7 +23,7 @@ publishMavenStyle := false
 
 // projects
 
-val core = crossProject.crossType(CrossType.Pure)
+val core = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure)
   .settings(moduleName := "cats-mtl-core", name := "Cats MTL core")
   .settings(Settings.coreSettings:_*)
   .settings(Settings.includeGeneratedSrc)
@@ -104,7 +105,7 @@ val docs = project
   .settings(Settings.commonJvmSettings)
   .dependsOn(coreJVM)
 
-val laws = crossProject.crossType(CrossType.Pure)
+val laws = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure)
   .dependsOn(core)
   .settings(moduleName := "cats-mtl-laws", name := "Cats MTL laws")
   .settings(Settings.coreSettings:_*)
@@ -118,7 +119,7 @@ val laws = crossProject.crossType(CrossType.Pure)
 val lawsJVM = laws.jvm
 val lawsJS = laws.js
 
-val tests = crossProject.crossType(CrossType.Pure)
+val tests = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure)
   .dependsOn(core, laws)
   .settings(moduleName := "cats-mtl-tests")
   .settings(Settings.coreSettings:_*)
