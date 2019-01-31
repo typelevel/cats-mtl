@@ -59,7 +59,7 @@ You can find the migration guide [here](https://typelevel.org/cats-mtl/migration
 ### Community
 
 People are expected to follow the
-[Typelevel Code of Conduct](http://typelevel.org/conduct.html) when
+[Scala Code of Conduct](https://www.scala-lang.org/conduct/) when
 discussing cats-mtl on the Github page, Gitter channel, or other
 venues.
 
