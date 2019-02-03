@@ -29,17 +29,8 @@ if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $(cat ver
   #fi
 fi
 
-sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
+set -ex
 
-core_js="$sbt_cmd validateJS"
-
-js="$core_js"
-jvm="$sbt_cmd coverage validateJVM coverageReport && codecov"
-
-if [[ $JS_BUILD == "true" ]]; then
-run_cmd="$js"
-else
-run_cmd="$jvm && $sbt_cmd $publish_cmd"
-fi
-
-eval $run_cmd
+sbt ++$TRAVIS_SCALA_VERSION validateJS
+sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport && codecov
+sbt ++$TRAVIS_SCALA_VERSION $publish_cmd
