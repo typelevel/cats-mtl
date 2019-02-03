@@ -7,13 +7,13 @@ organization in ThisBuild := "org.typelevel"
 
 // aliases
 
-addCommandAlias("buildJVM", "catsMtlJVM/test")
+addCommandAlias("buildJVM", "testsJVM/test")
 
 addCommandAlias(
   "validateJVM",
   ";scalastyle;sbt:scalafmt::test;scalafmt::test;test:scalafmt::test;buildJVM;mimaReportBinaryIssues;makeMicrosite")
 
-addCommandAlias("validateJS", ";catsMtlJS/compile;testsJS/test;js/test")
+addCommandAlias("validateJS", ";testsJS/compile;testsJS/test")
 
 addCommandAlias("validate", ";clean;validateJS;validateJVM")
 
@@ -120,7 +120,6 @@ val laws = crossProject(JSPlatform, JVMPlatform)
   .settings(moduleName := "cats-mtl-laws", name := "Cats MTL laws")
   .settings(Settings.coreSettings: _*)
   .settings(Dependencies.catsBundle: _*)
-  .settings(Dependencies.discipline: _*)
   .settings(Dependencies.catalystsAndScalatest: _*)
   .jsSettings(Settings.commonJsSettings: _*)
   .jvmSettings(Settings.commonJvmSettings: _*)
@@ -135,7 +134,6 @@ val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(moduleName := "cats-mtl-tests")
   .settings(Settings.coreSettings: _*)
   .settings(Dependencies.catsBundle: _*)
-  .settings(Dependencies.discipline: _*)
   .settings(Dependencies.scalaCheck: _*)
   .settings(Publishing.noPublishSettings: _*)
   .settings(Dependencies.catalystsAndScalatest: _*)
@@ -145,46 +143,9 @@ val tests = crossProject(JSPlatform, JVMPlatform)
 val testsJVM = tests.jvm
 val testsJS = tests.js
 
-// cats-mtl-js is JS-only
-val js = project
-  .dependsOn(coreJS, testsJS % "test-internal -> test")
-  .settings(moduleName := "cats-mtl-js")
-  .settings(Settings.coreSettings: _*)
-  .settings(Settings.commonJsSettings: _*)
-  .settings(Publishing.noPublishSettings)
-  .enablePlugins(ScalaJSPlugin)
-
-// cats-mtl-jvm is JVM-only
-val jvm = project
-  .dependsOn(coreJVM, testsJVM % "test-internal -> test")
-  .settings(moduleName := "cats-mtl-jvm")
-  .settings(Settings.coreSettings: _*)
-  .settings(Settings.commonJvmSettings: _*)
-  .settings(Publishing.noPublishSettings)
-
-val catsMtlJVM = project
-  .in(file(".catsJVM"))
-  .settings(moduleName := "cats-mtl")
-  .settings(Settings.coreSettings)
-  .settings(Settings.commonJvmSettings)
-  .settings(Publishing.noPublishSettings)
-  .aggregate(coreJVM, lawsJVM, testsJVM, jvm, docs)
-  .dependsOn(coreJVM, lawsJVM, testsJVM % "test-internal -> test", jvm)
-
-val catsMtlJS = project
-  .in(file(".catsJS"))
-  .settings(moduleName := "cats-mtl")
-  .settings(Settings.coreSettings)
-  .settings(Settings.commonJsSettings)
-  .settings(Publishing.noPublishSettings)
-  .aggregate(coreJS, lawsJS, testsJS, js)
-  .dependsOn(coreJS, lawsJS, testsJS % "test-internal -> test", js)
-  .enablePlugins(ScalaJSPlugin)
-
 val catsMtl = project
   .in(file("."))
   .settings(moduleName := "root")
   .settings(Settings.coreSettings)
   .settings(Publishing.noPublishSettings)
-  .aggregate(catsMtlJVM, catsMtlJS)
-  .dependsOn(catsMtlJVM, catsMtlJS, testsJVM % "test-internal -> test")
+  .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
