@@ -32,5 +32,6 @@ fi
 set -ex
 
 sbt ++$TRAVIS_SCALA_VERSION validateJS
-sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport && codecov
+sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport
+codecov
 sbt ++$TRAVIS_SCALA_VERSION $publish_cmd
