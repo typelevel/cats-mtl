@@ -20,25 +20,83 @@ addCommandAlias("validate", ";clean;validateJS;validateJVM")
 addCommandAlias("gitSnapshots",
                 ";set version in ThisBuild := git.gitDescribedVersion.value.get + \"-SNAPSHOT\"")
 
-sbtPlugin := true
-
 publishMavenStyle := false
+
+// common settings
+
+lazy val includeGeneratedSrc: Seq[Setting[_]] = Seq(
+  mappings in (Compile, packageSrc) ++= {
+    val base = (sourceManaged in Compile).value
+    (managedSources in Compile).value.map { file =>
+      file -> file.relativeTo(base).get.getPath
+    }
+  }
+)
+
+lazy val commonSettings: Seq[Setting[_]] = Seq(
+  incOptions := incOptions.value.withLogRecompileOnMacro(false),
+  scalacOptions ++= CompilerOptions.commonScalacOptions,
+  libraryDependencies ++= Seq(
+    compilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.patch),
+    compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9"),
+    "com.github.mpilquist" %%% "simulacrum" % "0.15.0",
+    "org.typelevel" %%% "machinist" % "0.6.6"
+  ),
+  fork in test := true,
+  parallelExecution in Test := false
+) ++ CompilerOptions.noFatalWarningsInDoc ++ CompilerOptions.warnUnusedImport ++ CompilerOptions.update2_12
+
+lazy val coreSettings = Seq(
+  coverageMinimum := 90,
+  coverageFailOnMinimum := false
+) ++ commonSettings ++ Publishing.publishSettings
+
+lazy val commonJvmSettings = Seq(
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
+  // currently sbt-doctest doesn't work in JS builds, so this has to go in the
+  // JVM settings. https://github.com/tkawachi/sbt-doctest/issues/52
+)
+
+lazy val commonJsSettings = Seq(
+  scalacOptions += {
+    val tagOrHash =
+      if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
+      else "v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
+    val a = (baseDirectory in LocalRootProject).value.toURI.toString
+    val g = "https://raw.githubusercontent.com/typelevel/cats/" + tagOrHash
+    s"-P:scalajs:mapSourceURI:$a->$g/"
+  },
+  scalaJSStage in Global := FastOptStage,
+  parallelExecution := false,
+  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
+  // Only used for scala.js for now
+  Publishing.botBuild := scala.sys.env.get("TRAVIS").isDefined,
+  // batch mode decreases the amount of memory needed to compile scala.js code
+  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(Publishing.botBuild.value),
+  doctestGenTests := Seq.empty
+)
 
 // projects
 
-val core = crossProject(JSPlatform, JVMPlatform)
+lazy val catsVersion = "1.6.0"
+
+lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .settings(moduleName := "cats-mtl-core", name := "Cats MTL core")
-  .settings(Settings.coreSettings: _*)
-  .settings(Settings.includeGeneratedSrc)
-  .settings(Dependencies.acyclic)
-  .settings(Dependencies.catsCore)
-  .settings(Dependencies.scalaCheck)
-  .jsSettings(Settings.commonJsSettings: _*)
-  .jvmSettings(Settings.commonJvmSettings: _*)
+  .settings(coreSettings: _*)
+  .settings(includeGeneratedSrc)
+  .settings(
+    libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.8" % "provided",
+    autoCompilerPlugins := true,
+    addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.8"),
+    scalacOptions += "-P:acyclic:force",
+    libraryDependencies += "org.typelevel" %%% "cats-core" % catsVersion
+  )
+  .jsSettings(commonJsSettings: _*)
+  .jvmSettings(commonJvmSettings: _*)
 
-val coreJVM = core.jvm
-val coreJS = core.js
+lazy val coreJVM = core.jvm
+lazy val coreJS = core.js
 
 lazy val docsMappingsAPIDir =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -104,48 +162,48 @@ lazy val crossVersionSharedSources: Seq[Setting[_]] =
     }
   }
 
-val docs = project
+lazy val docs = project
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(ScalaUnidocPlugin)
   .settings(moduleName := "cats-mtl-docs")
-  .settings(Settings.coreSettings)
+  .settings(coreSettings)
   .settings(Publishing.noPublishSettings)
   .settings(docSettings)
-  .settings(Settings.commonJvmSettings)
+  .settings(commonJvmSettings)
   .dependsOn(coreJVM)
 
-val laws = crossProject(JSPlatform, JVMPlatform)
+lazy val laws = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
   .settings(moduleName := "cats-mtl-laws", name := "Cats MTL laws")
-  .settings(Settings.coreSettings: _*)
-  .settings(Dependencies.catsBundle: _*)
-  .settings(Dependencies.catalystsAndScalatest: _*)
-  .jsSettings(Settings.commonJsSettings: _*)
-  .jvmSettings(Settings.commonJvmSettings: _*)
+  .settings(coreSettings: _*)
+  .settings(
+    libraryDependencies += "org.typelevel" %%% "cats-laws" % catsVersion
+  )
+  .jsSettings(commonJsSettings: _*)
+  .jvmSettings(commonJvmSettings: _*)
   .jsSettings(coverageEnabled := false)
 
-val lawsJVM = laws.jvm
-val lawsJS = laws.js
+lazy val lawsJVM = laws.jvm
+lazy val lawsJS = laws.js
 
-val tests = crossProject(JSPlatform, JVMPlatform)
+lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, laws)
   .settings(moduleName := "cats-mtl-tests")
-  .settings(Settings.coreSettings: _*)
-  .settings(Dependencies.catsBundle: _*)
-  .settings(Dependencies.scalaCheck: _*)
+  .settings(coreSettings: _*)
+  .settings(
+    libraryDependencies += "org.typelevel" %%% "cats-testkit" % catsVersion
+  )
   .settings(Publishing.noPublishSettings: _*)
-  .settings(Dependencies.catalystsAndScalatest: _*)
-  .jsSettings(Settings.commonJsSettings: _*)
-  .jvmSettings(Settings.commonJvmSettings: _*)
+  .jsSettings(commonJsSettings: _*)
+  .jvmSettings(commonJvmSettings: _*)
 
-val testsJVM = tests.jvm
-val testsJS = tests.js
+lazy val testsJVM = tests.jvm
+lazy val testsJS = tests.js
 
-val catsMtl = project
+lazy val catsMtl = project
   .in(file("."))
   .settings(moduleName := "root")
-  .settings(Settings.coreSettings)
   .settings(Publishing.noPublishSettings)
   .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
