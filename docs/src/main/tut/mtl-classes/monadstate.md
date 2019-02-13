@@ -37,8 +37,8 @@ import cats.mtl.implicits._
 
 case class ServiceResult(id: Int, companies: List[String])
 
-// a fake call to some external service, impure, so don't do this at home!
 def serviceCall[F[_]: Monad](id: String): F[ServiceResult] = {
+  // a fake call to some external service, impure, so don't do this at home!
   println(show"Called service with $id")
   ServiceResult(0, List("Raven Enterprises")).pure[F]
 }

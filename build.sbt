@@ -34,17 +34,15 @@ lazy val includeGeneratedSrc: Seq[Setting[_]] = Seq(
 )
 
 lazy val commonSettings: Seq[Setting[_]] = Seq(
-  incOptions := incOptions.value.withLogRecompileOnMacro(false),
   scalacOptions ++= CompilerOptions.commonScalacOptions,
   libraryDependencies ++= Seq(
-    compilerPlugin("org.scalamacros" %% "paradise" % "2.1.1" cross CrossVersion.patch),
     compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9"),
     "com.github.mpilquist" %%% "simulacrum" % "0.15.0",
     "org.typelevel" %%% "machinist" % "0.6.6"
   ),
   fork in test := true,
   parallelExecution in Test := false
-) ++ CompilerOptions.noFatalWarningsInDoc ++ CompilerOptions.warnUnusedImport ++ CompilerOptions.update2_12
+) ++ CompilerOptions.noFatalWarningsInDoc ++ CompilerOptions.update2_12
 
 lazy val coreSettings = Seq(
   coverageMinimum := 90,
