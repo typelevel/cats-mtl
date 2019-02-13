@@ -30,8 +30,9 @@ import cats.implicits._
 import cats.mtl._
 import cats.mtl.implicits._
 
+
+// The function which might raise an error
 def parseNumber[F[_]: Applicative](in: String)(implicit F: FunctorRaise[F, String]): F[Int] = {
-  // this function might raise an error
   if (in.matches("-?[0-9]+")) in.toInt.pure[F]
   else F.raise(show"'$in' could not be parsed as a number")
 }
