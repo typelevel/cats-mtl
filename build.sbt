@@ -59,7 +59,8 @@ lazy val commonJsSettings = Seq(
   scalacOptions += {
     val tagOrHash =
       if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
-      else "v" + (if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value)
+      else
+        "v" + (if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value)
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
     val g = "https://raw.githubusercontent.com/typelevel/cats/" + tagOrHash
     s"-P:scalajs:mapSourceURI:$a->$g/"
