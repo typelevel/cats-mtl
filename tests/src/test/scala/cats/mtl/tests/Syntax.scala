@@ -46,8 +46,9 @@ final class Syntax extends BaseSuite {
       val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
     test("ApplicativeHandle") {
-      val fa: Option[Int] = Option.empty[Int].handle((_: Unit) => 42)
-      val fb: Option[Int] = Option.empty[Int].handleWith((_: Unit) => Some(22))
+      val fa: Option[Either[Unit, Int]] = Option.empty[Int].attempt
+      val fb: Option[Int] = Option.empty[Int].handle((_: Unit) => 42)
+      val fc: Option[Int] = Option.empty[Int].handleWith((_: Unit) => Some(22))
     }
     test("MonadState") {
       val mod: Eval[(String, Unit)] = ((s: String) => s + "!").modify[StateC[String]#l].run("")
