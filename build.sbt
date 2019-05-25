@@ -36,7 +36,7 @@ lazy val includeGeneratedSrc: Seq[Setting[_]] = Seq(
 lazy val commonSettings: Seq[Setting[_]] = Seq(
   scalacOptions ++= CompilerOptions.commonScalacOptions,
   libraryDependencies ++= Seq(
-    compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9"),
+    compilerPlugin("org.typelevel" %% "kind-projector" % "0.10.0"),
     "com.github.mpilquist" %%% "simulacrum" % "0.15.0",
     "org.typelevel" %%% "machinist" % "0.6.6"
   ),
