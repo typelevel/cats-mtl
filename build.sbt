@@ -58,7 +58,7 @@ lazy val commonJvmSettings = Seq(
 lazy val commonJsSettings = Seq(
   scalacOptions += {
     val tagOrHash =
-      if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
+      if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lineStream_!.head
       else
         "v" + (if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value)
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
