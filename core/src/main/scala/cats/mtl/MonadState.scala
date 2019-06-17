@@ -40,6 +40,8 @@ trait MonadState[F[_], S] extends Serializable {
 
   def set(s: S): F[Unit]
 
+  def state[A](f: S => (S, A)): F[A]
+
   def inspect[A](f: S => A): F[A]
 
   def modify(f: S => S): F[Unit]
@@ -63,6 +65,9 @@ object MonadState {
   def modify[F[_], S](f: S => S)(implicit state: MonadState[F, S]): F[Unit] =
     state.modify(f)
 
+  def state[F[_], S, A](f: S => (S, A))(implicit state: MonadState[F, S]): F[A] =
+    state.state(f)
+
   def inspect[F[_], S, A](f: S => A)(implicit state: MonadState[F, S]): F[A] =
     state.inspect(f)
 
@@ -73,6 +78,8 @@ object MonadState {
 trait DefaultMonadState[F[_], S] extends MonadState[F, S] {
 
   def inspect[A](f: S => A): F[A] = monad.map(get)(f)
+
+  def set(s: S): F[Unit] = state(_ => (s, ()))
 
   def modify(f: S => S): F[Unit] = monad.flatMap(inspect(f))(set)
 }
