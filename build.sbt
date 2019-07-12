@@ -85,10 +85,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(coreSettings: _*)
   .settings(includeGeneratedSrc)
   .settings(
-    libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.2.0" % "provided",
     autoCompilerPlugins := true,
-    addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.2.0"),
-    scalacOptions += "-P:acyclic:force",
     libraryDependencies += "org.typelevel" %%% "cats-core" % catsVersion
   )
   .jsSettings(commonJsSettings: _*)
