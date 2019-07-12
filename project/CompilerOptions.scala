@@ -19,6 +19,7 @@ object CompilerOptions {
     scalacOptions -= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, 12)) => "-Yinline-warnings"
+        case Some((2, 13)) => "-Xfuture"
         case _ => ""
       }
     }

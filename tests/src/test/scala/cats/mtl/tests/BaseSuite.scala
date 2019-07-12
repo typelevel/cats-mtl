@@ -2,9 +2,9 @@ package cats
 package mtl
 package tests
 
-import catalysts.Platform
 import cats.arrow.FunctionK
 import cats.data._
+import cats.laws.discipline.ExhaustiveCheck
 import cats.syntax.{EqOps, EqSyntax}
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
@@ -18,6 +18,9 @@ abstract class BaseSuite extends FunSuite
   with StrictCatsEquality
   with EqSyntax
   with Discipline {
+
+  implicit def catsMtlLawsExhaustiveCheckForArbitrary[A: Arbitrary]: ExhaustiveCheck[A] =
+    ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[Stream[A]]).sample.get)
 
   protected type ReaderStr[M[_], A] = ReaderT[M, String, A]
   protected type ReaderStrId[A] = ReaderT[Id, String, A]
