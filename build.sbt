@@ -11,7 +11,7 @@ addCommandAlias("buildJVM", "testsJVM/test")
 
 addCommandAlias(
   "validateJVM",
-  ";scalastyle;sbt:scalafmt::test;scalafmt::test;test:scalafmt::test;buildJVM;mimaReportBinaryIssues;makeMicrosite")
+  ";scalastyle;sbt:scalafmt::test;scalafmt::test;test:scalafmt::test;buildJVM;makeMicrosite")
 
 addCommandAlias("validateJS", ";testsJS/compile;testsJS/test")
 
