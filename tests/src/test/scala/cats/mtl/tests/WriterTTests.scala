@@ -6,7 +6,7 @@ import cats._
 import cats.arrow.FunctionK
 import cats.data._
 import cats.instances.all._
-import cats.laws.discipline.SerializableTests
+import cats.laws.discipline.{ExhaustiveCheck, SerializableTests}
 import cats.laws.discipline.eq._
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
@@ -19,11 +19,11 @@ class WriterTTests extends BaseSuite {
       def apply[A](fa: Option[A]): Option[A] = None
     }, FunctionK.id[Option]))
 
-  implicit def eqKleisli[F[_], A, B](implicit arb: Arbitrary[A], ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] = {
+  implicit def eqKleisli[F[_], A, B](implicit arb: ExhaustiveCheck[A], ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] = {
     Eq.by((x: (Kleisli[F, A, B])) => x.run)
   }
 
-  implicit def stateTEq[F[_], S, A](implicit S: Arbitrary[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {
+  implicit def stateTEq[F[_], S, A](implicit S: ExhaustiveCheck[S], FSA: Eq[F[(S, A)]], F: FlatMap[F]): Eq[StateT[F, S, A]] = {
     Eq.by[StateT[F, S, A], S => F[(S, A)]](state =>
       s => state.run(s))
   }
