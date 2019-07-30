@@ -36,11 +36,11 @@ package mtl
 trait MonadState[F[_], S] extends Serializable {
   val monad: Monad[F]
 
+  def state[A](f: S => (S, A)): F[A]
+
   def get: F[S]
 
   def set(s: S): F[Unit]
-
-  def state[A](f: S => (S, A)): F[A]
 
   def inspect[A](f: S => A): F[A]
 
@@ -76,10 +76,8 @@ object MonadState {
 
 
 trait DefaultMonadState[F[_], S] extends MonadState[F, S] {
-
-  def inspect[A](f: S => A): F[A] = monad.map(get)(f)
-
+  def get: F[S] = state(s => (s, s))
   def set(s: S): F[Unit] = state(_ => (s, ()))
-
-  def modify(f: S => S): F[Unit] = monad.flatMap(inspect(f))(set)
+  def inspect[A](f: S => A): F[A] = state(s => (s, f(s)))
+  def modify(f: S => S): F[Unit] = state(s => (f(s), ()))
 }
