@@ -45,9 +45,6 @@ class ApplicativeCensorDefaultTests extends StateTTestsBase {
 class MonadStateDefaultTests extends StateTTestsBase {
   val defaultListMonadState: MonadState[StateC[String]#l, String] = new DefaultMonadState[StateC[String]#l, String] {
     val monad: Monad[StateC[String]#l] = implicitly
-
-    def get: StateC[String]#l[String] = State.get
-
     def state[A](f: String => (String, A)): State[String, A] = State(f)
   }
 
