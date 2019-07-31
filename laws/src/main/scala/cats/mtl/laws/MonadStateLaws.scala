@@ -20,7 +20,7 @@ trait MonadStateLaws[F[_], S] {
     (get >>= set) <-> pure(())
   }
 
-  def setThenGetReturnsSetted(s: S): IsEq[F[S]] = {
+  def setThenGetReturnsSet(s: S): IsEq[F[S]] = {
     (set(s) *> get) <-> (set(s) *> pure(s))
   }
 
@@ -32,9 +32,25 @@ trait MonadStateLaws[F[_], S] {
     get *> get <-> get
   }
 
-  // internal law:
+  // internal laws:
   def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] = {
     modify(f) <-> ((get map f) flatMap set)
+  }
+
+  def setIsStateUnit(s: S): IsEq[F[Unit]] = {
+    set(s) <-> state(_ => (s, ()))
+  }
+
+  def inpectIsState[A](f: S => A): IsEq[F[A]] = {
+    inspect(f) <-> state(s => (s, f(s)))
+  }
+
+  def modifyIsState(f: S => S): IsEq[F[Unit]] = {
+    modify(f) <-> state(s => (f(s), ()))
+  }
+
+  def stateIsGetAndModify[A](f: S => (S, A)): IsEq[F[A]] = {
+    state(f) <-> (get.map(old => f(old)._2) <* modify(old => f(old)._1))
   }
 }
 

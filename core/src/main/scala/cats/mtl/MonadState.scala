@@ -7,10 +7,11 @@ package mtl
   *
   * MonadState has four external laws:
   * {{{
+  *
   * def getThenSetDoesNothing = {
   *   get >>= set <-> pure(())
   * }
-  * def setThenGetReturnsSetted(s: S) = {
+  * def setThenGetReturnsSet(s: S) = {
   *   set(s) *> get <-> set(s) *> pure(s)
   * }
   * def setThenSetSetsLast(s1: S, s2: S) = {
@@ -21,14 +22,26 @@ package mtl
   * }
   * }}}
   *
-  * `MonadState` has two internal law:
+  * `MonadState` has five internal laws:
   * {{{
   * def modifyIsGetThenSet(f: S => S) = {
   *   modify(f) <-> (inspect(f) flatMap set)
   * }
   *
-  * def inspectLaw[A](f: S => A) = {
-  *   inspect(f) <-> (get map f)
+  * def setIsStateUnit(s: S) = {
+  *  set(s) <-> state(_ => (s, ()))
+  * }
+
+  * def inpectIsState[A](f: S => A) = {
+  *   inspect(f) <-> state(s => (s, f(s)))
+  * }
+  *
+  * def modifyIsState(f: S => S) = {
+  *   modify(f) <-> state(s => (f(s), ()))
+  * }
+  *
+  * def stateIsGetAndModify[A](f: S => (S, A)) = {
+  *   state(f) <-> (get.map(old => f(old)._2) <* modify(old => f(old)._1))
   * }
   * }}}
   *
