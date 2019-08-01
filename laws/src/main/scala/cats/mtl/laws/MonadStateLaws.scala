@@ -4,7 +4,6 @@ package laws
 
 import cats.laws.IsEq
 import cats.laws.IsEqArrow
-import cats.syntax.functor._
 import cats.syntax.flatMap._
 import cats.syntax.apply._
 
@@ -33,10 +32,6 @@ trait MonadStateLaws[F[_], S] {
   }
 
   // internal laws:
-  def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] = {
-    modify(f) <-> ((get map f) flatMap set)
-  }
-
   def setIsStateUnit(s: S): IsEq[F[Unit]] = {
     set(s) <-> state(_ => (s, ()))
   }
@@ -47,10 +42,6 @@ trait MonadStateLaws[F[_], S] {
 
   def modifyIsState(f: S => S): IsEq[F[Unit]] = {
     modify(f) <-> state(s => (f(s), ()))
-  }
-
-  def stateIsGetAndModify[A](f: S => (S, A)): IsEq[F[A]] = {
-    state(f) <-> (get.map(old => f(old)._2) <* modify(old => f(old)._1))
   }
 }
 

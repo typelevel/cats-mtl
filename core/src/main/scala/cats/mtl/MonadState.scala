@@ -22,12 +22,8 @@ package mtl
   * }
   * }}}
   *
-  * `MonadState` has five internal laws:
+  * `MonadState` has three internal laws:
   * {{{
-  * def modifyIsGetThenSet(f: S => S) = {
-  *   modify(f) <-> (inspect(f) flatMap set)
-  * }
-  *
   * def setIsStateUnit(s: S) = {
   *  set(s) <-> state(_ => (s, ()))
   * }
@@ -38,10 +34,6 @@ package mtl
   *
   * def modifyIsState(f: S => S) = {
   *   modify(f) <-> state(s => (f(s), ()))
-  * }
-  *
-  * def stateIsGetAndModify[A](f: S => (S, A)) = {
-  *   state(f) <-> (get.map(old => f(old)._2) <* modify(old => f(old)._1))
   * }
   * }}}
   *
