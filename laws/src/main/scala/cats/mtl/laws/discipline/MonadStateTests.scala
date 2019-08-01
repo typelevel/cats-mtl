@@ -28,11 +28,9 @@ trait MonadStateTests[F[_], S] extends Laws {
       "set then get returns the set value" -> ∀(laws.setThenGetReturnsSet _),
       "set then set sets the last value" -> ∀(laws.setThenSetSetsLast _),
       "get then get gets once" -> laws.getThenGetGetsOnce,
-      "modify is get then set" -> ∀(laws.modifyIsGetThenSet _),
       "set is state(unit)" -> ∀(laws.setIsStateUnit _),
       "inspect is state" -> ∀(laws.inpectIsState[A] _),
-      "modify is state" -> ∀(laws.modifyIsState _),
-      "stateIsGetAndModify" -> ∀(laws.stateIsGetAndModify[A] _)
+      "modify is state" -> ∀(laws.modifyIsState _)
     )
   }
 
