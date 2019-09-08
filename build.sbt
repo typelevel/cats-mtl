@@ -77,7 +77,7 @@ lazy val commonJsSettings = Seq(
 
 // projects
 
-lazy val catsVersion = "2.0.0-M4"
+lazy val catsVersion = "2.0.0-RC3"
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
