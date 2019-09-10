@@ -37,7 +37,7 @@ lazy val commonSettings: Seq[Setting[_]] = Seq(
   scalacOptions ++= CompilerOptions.commonScalacOptions,
   libraryDependencies ++= Seq(
     compilerPlugin("org.typelevel" %% "kind-projector" % "0.10.3"),
-    "com.github.mpilquist" %%% "simulacrum" % "0.19.0",
+    "com.github.mpilquist" %%% "simulacrum" % "0.19.0" % config("CompileTime").hide,
     "org.typelevel" %%% "machinist" % "0.6.8"
   ),
   fork in test := true,
