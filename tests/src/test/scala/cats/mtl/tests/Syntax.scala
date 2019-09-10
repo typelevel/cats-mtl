@@ -42,6 +42,7 @@ final class Syntax extends BaseSuite {
     test("FunctorRaise") {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
+      def fb[F[_] : FunctorRaise[?[_], EE], E <: EE, EE](e: E): F[E] = e.raise[F, E]
       val faC: Either[String, Int] = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
       val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
