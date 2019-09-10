@@ -9,10 +9,11 @@ import cats.syntax.{EqOps, EqSyntax}
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
 import org.scalatest.prop.Configuration
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
 import org.typelevel.discipline.scalatest.Discipline
 
-abstract class BaseSuite extends FunSuite
+abstract class BaseSuite extends AnyFunSuite
   with Matchers
   with Configuration
   with StrictCatsEquality
@@ -20,7 +21,7 @@ abstract class BaseSuite extends FunSuite
   with Discipline {
 
   implicit def catsMtlLawsExhaustiveCheckForArbitrary[A: Arbitrary]: ExhaustiveCheck[A] =
-    ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[Stream[A]]).sample.get)
+    ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[List[A]]).sample.get)
 
   protected type ReaderStr[M[_], A] = ReaderT[M, String, A]
   protected type ReaderStrId[A] = ReaderT[Id, String, A]
