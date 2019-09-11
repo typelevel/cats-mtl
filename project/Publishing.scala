@@ -1,5 +1,5 @@
-import com.typesafe.sbt.pgp.PgpKeys
 import sbtrelease.ReleasePlugin.autoImport._
+import xerial.sbt.Sonatype.autoImport._
 
 import sbt._, Keys._
 import sbtrelease.ReleaseStateTransformations._
@@ -12,17 +12,10 @@ object Publishing {
   lazy val sharedPublishSettings = Seq(
     releaseCrossBuild := true,
     // releaseTagName := tagName.value,
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := Function.const(false),
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value)
-        Some("Snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-    }
+    publishTo := sonatypePublishToBundle.value
   )
 
   lazy val sharedReleaseProcess = Seq(
@@ -37,7 +30,7 @@ object Publishing {
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-      ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+      ReleaseStep(action = Command.process("sonatypeBundleRelease", _), enableCrossBuild = true),
       pushChanges)
   )
 
@@ -70,8 +63,8 @@ object Publishing {
   lazy val noPublishSettings = Seq(
     publish := (()),
     publishLocal := (()),
-    PgpKeys.publishSigned := (()),
-    publishArtifact := false
+    publishArtifact := false,
+    publish / skip := true
   )
 
   lazy val credentialSettings = Seq(
