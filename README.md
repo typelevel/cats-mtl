@@ -22,7 +22,7 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
 ```
 
-If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 1.x.
+If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
 
 Cross-builds are available for Scala 2.11–2.13, Scala.js major version 0.6.x.
 
