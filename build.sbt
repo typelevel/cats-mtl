@@ -40,12 +40,14 @@ lazy val commonSettings: Seq[Setting[_]] = Seq(
   libraryDependencies ++= Seq(
     compilerPlugin("org.typelevel" %% "kind-projector" % "0.10.3"),
     "com.github.mpilquist" %%% "simulacrum" % "0.19.0" % CompileTime,
-    "org.typelevel" %%% "machinist" % "0.6.8" % CompileTime),
+    "org.typelevel" %%% "machinist" % "0.6.8" % CompileTime
+  ),
   fork in test := true,
   parallelExecution in Test := false,
   ivyConfigurations += CompileTime,
-  unmanagedClasspath in Compile ++= update.value.select(configurationFilter("CompileTime"))) ++
-    CompilerOptions.noFatalWarningsInDoc ++ CompilerOptions.update2_12
+  unmanagedClasspath in Compile ++= update.value.select(configurationFilter("CompileTime"))
+) ++
+  CompilerOptions.noFatalWarningsInDoc ++ CompilerOptions.update2_12
 
 lazy val coreSettings = Seq(
   coverageMinimum := 90,
@@ -193,9 +195,8 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(moduleName := "cats-mtl-tests")
   .settings(coreSettings: _*)
   .settings(
-    libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-testkit" % catsVersion,
-      "org.typelevel" %%% "discipline-scalatest" % "1.0.0-M1")
+    libraryDependencies ++= Seq("org.typelevel" %%% "cats-testkit" % catsVersion,
+                                "org.typelevel" %%% "discipline-scalatest" % "1.0.0-M1")
   )
   .settings(Publishing.noPublishSettings: _*)
   .jsSettings(commonJsSettings: _*)
