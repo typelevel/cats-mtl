@@ -16,9 +16,6 @@
 # Example setting to use at command line for testing:
 # export TRAVIS_SCALA_VERSION=2.11.12;export TRAVIS_PULL_REQUEST="false";export TRAVIS_BRANCH="master"
 
-mkdir -p ~/.sbt/1.0/plugins
-echo "addSbtPlugin(\"io.get-coursier\" % \"sbt-coursier\" % \"1.0.1\")" >> ~/.sbt/1.0/plugins/build.sbt
-
 export publish_cmd="publishLocal"
 
 if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $(cat version.sbt) =~ "-SNAPSHOT" ]]; then
@@ -31,7 +28,7 @@ fi
 
 set -ex
 
-sbt ++$TRAVIS_SCALA_VERSION validateJS
-sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport
+$SBT ++$TRAVIS_SCALA_VERSION validateJS
+$SBT ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport
 codecov
-sbt ++$TRAVIS_SCALA_VERSION $publish_cmd
+$SBT ++$TRAVIS_SCALA_VERSION $publish_cmd
