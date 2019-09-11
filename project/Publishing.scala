@@ -35,9 +35,9 @@ object Publishing {
   )
 
   lazy val publishSettings = Seq(
-    homepage := Some(url("https://github.com/edmundnoble/cats-mtl")),
+    homepage := Some(url("https://github.com/typelevel/cats-mtl")),
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-    scmInfo := Some(ScmInfo(url("https://github.com/edmundnoble/cats-mtl"), "scm:git:git@github.com:edmundnoble/cats-mtl.git")),
+    scmInfo := Some(ScmInfo(url("https://github.com/typelevel/cats-mtl"), "scm:git:git@github.com:typelevel/cats-mtl.git")),
     autoAPIMappings := true,
     apiURL := None,
     pomExtra :=
@@ -56,6 +56,21 @@ object Publishing {
           <id>kailuowang</id>
           <name>Kailuo Wang</name>
           <url>https://github.com/kailuowang/</url>
+        </developer>
+        <developer>
+          <id>djspiewak</id>
+          <name>Daniel Spiewak</name>
+          <url>https://github.com/djspiewak/</url>
+        </developer>
+        <developer>
+          <id>LukaJCB</id>
+          <name>Luka Jacobowitz</name>
+          <url>https://github.com/LukaJCB/</url>
+        </developer>
+        <developer>
+          <id>edmundnoble</id>
+          <name>Edmund Noble</name>
+          <url>https://github.com/edmundnoble/</url>
         </developer>
     </developers>
   ) ++ credentialSettings ++ sharedPublishSettings ++ sharedReleaseProcess
