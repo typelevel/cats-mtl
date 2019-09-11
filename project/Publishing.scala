@@ -15,7 +15,13 @@ object Publishing {
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := Function.const(false),
-    publishTo := sonatypePublishToBundle.value
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("Snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
+    }
   )
 
   lazy val sharedReleaseProcess = Seq(
@@ -30,7 +36,7 @@ object Publishing {
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-      ReleaseStep(action = Command.process("sonatypeBundleRelease", _), enableCrossBuild = true),
+      ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
       pushChanges)
   )
 
