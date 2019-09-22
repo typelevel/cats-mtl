@@ -27,6 +27,7 @@ install:
   - nvm install $TRAVIS_NODE_VERSION
 
   - pip install --user codecov
+  - gem install jekyll -v 2.5
 
 script:
   - set -e
