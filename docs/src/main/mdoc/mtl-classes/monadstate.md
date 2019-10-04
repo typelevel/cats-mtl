@@ -28,7 +28,7 @@ If we've already accessed a service with a given identifier, we can then access 
 
 Let's say we have the following function to access a service:
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._
@@ -47,7 +47,7 @@ def serviceCall[F[_]: Monad](id: String): F[ServiceResult] = {
 Now, we want a new function that looks inside of a cache for the desired value and if it's not there, access the service and put the result inside the cache.
 To do so, we'll make use of `MonadState` with a simple `Map[String, ServiceResult]` as our cache:
 
-```tut:book
+```scala mdoc
 type Cache = Map[String, ServiceResult]
 
 def cachedServiceCall[F[_]: Monad](id: String)(implicit F: MonadState[F, Cache]): F[ServiceResult] = for {
@@ -59,37 +59,28 @@ def cachedServiceCall[F[_]: Monad](id: String)(implicit F: MonadState[F, Cache])
 } yield result
 ```
 
-So far, so good, we're succesfully reading from the cache if it has the value we need, but it also doesn't actually write anything into the cache when we call our service.
+So far, so good, we're successfully reading from the cache if it has the value we need, but it also doesn't actually write anything into the cache when we call our service.
 Let's try again to write to the cache after making the service call.
 
-```tut:book
+```scala mdoc
 
 def serviceCallAndWriteToCache[F[_]: Monad](id: String)(implicit F: MonadState[F, Cache]): F[ServiceResult] = for {
   result <- serviceCall[F](id)
   cache <- F.get
   _ <- F.set(cache.updated(id, result))
 } yield result
-
-
-def cachedServiceCall[F[_]: Monad](id: String)(implicit F: MonadState[F, Cache]): F[ServiceResult] = for {
-  cache <- F.get
-  result <- cache.get(id) match {
-              case Some(result) => result.pure[F]
-              case None => serviceCallAndWriteToCache[F](id)
-            }
-} yield result
 ```
 
 Lastly, we want to be able to invalidate our cache. This is fairly simple, as all we need to do is to use `set` with an empty cache:
 
-```tut:book
+```scala mdoc
 def invalidate[F[_]](implicit F: MonadState[F, Cache]): F[Unit] = F.set(Map.empty)
 ```
 
 Now that we have our building blocks, we can now build a program that makes a few requests then invalidates the cache and makes another request:
 
 
-```tut:book
+```scala mdoc
 def program[F[_]: Monad](implicit F: MonadState[F, Cache]): F[ServiceResult] = for {
   result1 <- cachedServiceCall[F]("ab94d2")
   result2 <- cachedServiceCall[F]("ab94d2") // This should use the cached value
@@ -101,7 +92,7 @@ def program[F[_]: Monad](implicit F: MonadState[F, Cache]): F[ServiceResult] = f
 And we're done, now, to be able to run this, we need to materialize our `program` into an actual value.
 As the name suggests, `State` and `StateT` both allow us to use `MonadState`:
 
-```tut:book
+```scala mdoc
 val initialCache: Cache = Map.empty
 
 val (result, cache) = program[State[Cache, ?]].run(initialCache).value

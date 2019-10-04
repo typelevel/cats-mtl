@@ -19,7 +19,7 @@ If you haven't, working with what some call **monad transformer stacks** can be 
 This is because, the more monad transformers you add to your stack the more type parameters the type system has to deal with and the worse type inference gets.
 For example, here's a small example of a method that modifies reads the current state in `StateT` and raises an error using `EitherT`: 
 
-```tut:book
+```scala mdoc
 import cats.data._
 import cats.implicits._
 
@@ -72,7 +72,7 @@ So without further ado, let's look at what the program from earlier looks when u
 
 First, the original program again:
 
-```tut:book
+```scala mdoc:reset
 import cats.data._
 import cats.implicits._
 
@@ -87,8 +87,9 @@ def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
 
 And now the mtl version:
 
-```tut:book
+```scala mdoc:reset
 import cats.MonadError
+import cats.data._
 import cats.implicits._
 import cats.mtl.implicits._
 import cats.mtl.MonadState
@@ -111,7 +112,7 @@ That means, that e.g. `EitherT[StateT[List, Int, ?], Exception, A]` has both the
 
 So let's try turning our abstract `F[String]` into an actual value:
 
-```tut:silent
+```scala mdoc:silent
 val materializedProgram =
   checkState[EitherT[StateT[List, Int, ?], Exception, ?]]
 ```
@@ -127,14 +128,14 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 #### Available MTL classes
 
 cats-mtl provides the following "MTL classes":
- - [ApplicativeAsk](mtl-classes/applicativeask.html)
- - [ApplicativeLocal](mtl-classes/applicativelocal.html)
- - [FunctorRaise](mtl-classes/functorraise.html)
- - [ApplicativeHandle](mtl-classes/applicativehandle.html)
- - [FunctorTell](mtl-classes/functortell.html)
- - [FunctorListen](mtl-classes/functorlisten.html)
- - [MonadState](mtl-classes/monadstate.html)
- - [MonadChronicle](mtl-classes/monadchronicle.html)
+ - [ApplicativeAsk](mtl-classes/applicativeask.md)
+ - [ApplicativeLocal](mtl-classes/applicativelocal.md)
+ - [FunctorRaise](mtl-classes/functorraise.md)
+ - [ApplicativeHandle](mtl-classes/applicativehandle.md)
+ - [FunctorTell](mtl-classes/functortell.md)
+ - [FunctorListen](mtl-classes/functorlisten.md)
+ - [MonadState](mtl-classes/monadstate.md)
+ - [MonadChronicle](mtl-classes/monadchronicle.md)
 
 If you're wondering why some of these are based on `Monad` and others on `Functor` or `Applicative`, 
  it is because these are the smallest superclass dependencies practically possible with which you can define their laws.
