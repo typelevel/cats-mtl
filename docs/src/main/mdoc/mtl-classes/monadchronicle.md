@@ -51,7 +51,7 @@ Some applications call for a notion of *non-fatal errors*, along with the more s
 Let's say we want to create a sign up where users can register with username and password.
 We can prohibit bad user data by using a computation halting `confess` and nudge them in the right direction by giving warnings when e.g. their password is fairly short:
 
-```tut:book
+```scala mdoc
 import cats.Monad
 import cats.data._
 import cats.implicits._
@@ -92,7 +92,7 @@ Now we can fully validate users and accumulate a log of warnings or fail entirel
 Pretty neat, next let's actually run this program to see if what we did was correct.
 We can do that with `Ior`:
 
-```tut:book
+```scala mdoc
 val luka = validateUser[Ior[Failures, ?]]("Luka", "secret")
 val john = validateUser[Ior[Failures, ?]]("john.doe", "secret123")
 val jane = validateUser[Ior[Failures, ?]]("jane", "reallysecurepassword")

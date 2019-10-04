@@ -25,19 +25,17 @@ trait FunctorRaise[F[_], E] {
 
 Here's a quick example of how you might use it:
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._
 import cats.mtl._
 import cats.mtl.implicits._
 
-
 def parseNumber[F[_]: Applicative](in: String)(implicit F: FunctorRaise[F, String]): F[Int] = {
   if (in.matches("-?[0-9]+")) in.toInt.pure[F]
   else F.raise(show"'$in' could not be parsed as a number")
 }
-
 
 val valid = parseNumber[Either[String, ?]]("123")
 val invalid = parseNumber[Either[String, ?]]("123abc")

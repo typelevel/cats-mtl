@@ -23,7 +23,7 @@ trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] {
 
 Here's a quick example of how it works:
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._
@@ -45,12 +45,11 @@ We can see that the content length returned is 12, because the string `"Prefix "
 To see that `local` only applies to the passed parameter we can run both `calculateContentLength` and
  `calculateModifiedContentLength` in one for-expression:
 
-```tut:book
+```scala mdoc
 def both[F[_]: Monad](implicit F: ApplicativeLocal[F, String]): F[(Int, Int)] = for {
   length <- calculateContentLength[F]
   modifiedLength <- calculateModifiedContentLength[F]
 } yield (length, modifiedLength)
 
-val result = both[Reader[String, ?]].run("Hello")
-
+val res = both[Reader[String, ?]].run("Hello")
 ```

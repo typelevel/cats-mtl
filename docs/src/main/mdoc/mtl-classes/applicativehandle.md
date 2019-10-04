@@ -23,7 +23,7 @@ This function is fully equivalent to `handleErrorWith` from `cats.ApplicativeErr
 
 Let's look at an example of how to use this function:
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._

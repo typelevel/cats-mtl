@@ -14,7 +14,7 @@ In practical terms, this means, that if we have an instance of `ApplicativeAsk[F
 
 Simplified, it is defined like this:
 
-```tut:book
+```scala mdoc
 trait ApplicativeAsk[F[_], E] {
   def ask: F[E]
 }
@@ -27,7 +27,7 @@ This typeclass comes in handy whenever we want to be able to request a value fro
 
 A trivial instance for `ApplicativeAsk` can be just a plain function:
 
-```tut:book
+```scala mdoc
 def functionApplicativeAsk[E]: ApplicativeAsk[E => ?, E] = new ApplicativeAsk[E => ?, E] {
   def ask: E => E = identity
 }

@@ -135,12 +135,14 @@ lazy val docSettings = Seq(
     "gray-lighter" -> "#F4F3F4",
     "white-color" -> "#FFFFFF"
   ),
+  micrositeCompilingDocsTool := WithMdoc,
+  mdocIn := (sourceDirectory in Compile).value / "mdoc",
   autoAPIMappings := true,
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM, lawsJVM),
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
-  fork in tut := true,
+  fork in mdoc := true,
   fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
@@ -164,9 +166,7 @@ lazy val crossVersionSharedSources: Seq[Setting[_]] =
   }
 
 lazy val docs = project
-  .enablePlugins(MicrositesPlugin)
-  .enablePlugins(ScalaUnidocPlugin)
-  .settings(crossScalaVersions -= "2.13.0") // force 2.12 in docs, since tut is not available
+  .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, MdocPlugin)
   .settings(moduleName := "cats-mtl-docs")
   .settings(coreSettings)
   .settings(Publishing.noPublishSettings)

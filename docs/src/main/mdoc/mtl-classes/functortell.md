@@ -24,7 +24,7 @@ Let's have a look at an example how you could `FunctorTell` to log service calls
 First we'll add the actual service call with its parameters and result types:
 
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._
@@ -43,7 +43,7 @@ def serviceCall[F[_]: Monad](params: ServiceParams): F[ServiceResult] =
 Now let's write an extra function that log what kind of parameters were passed as well as what the service returned.
 For the log, we'll be using a `Chain[String]`, as it supports very efficient concatenation:
 
-```tut:book
+```scala mdoc
 
 def serviceCallWithLog[F[_]: Monad](params: ServiceParams)(implicit F: FunctorTell[F, Chain[String]]): F[ServiceResult] =
   for {
@@ -57,7 +57,7 @@ Now let's materialize this to see if it worked.
 Instances for `FunctorTell` include `Writer` and `WriterT`, but also `Tuple2`:
 
   
-```tut:book
+```scala mdoc
 
 val (log, result): (Chain[String], ServiceResult) =
   serviceCallWithLog[Writer[Chain[String], ?]](ServiceParams("business", 42)).run

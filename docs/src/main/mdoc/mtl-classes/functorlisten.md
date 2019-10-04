@@ -16,7 +16,7 @@ For example, we might want to send our logs to some external server.
 Let's have a look at an example of how one could do this:
 
 
-```tut:book
+```scala mdoc
 import cats._
 import cats.data._
 import cats.implicits._
@@ -36,7 +36,7 @@ def sendLogsToServer[F[_]: Monad, A](logProgram: F[A])(implicit F: FunctorListen
 Now we have a function `sendLogsToServer` that takes any program with logging and will send those logs to the server.
 To see if it works, let's write some logging program and run it all with `Writer`.
 
-```tut:book
+```scala mdoc
 
 def logging[F[_]: Monad](implicit F: FunctorTell[F, Chain[String]]): F[Unit] =
   // Example of some logging activity in your application
