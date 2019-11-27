@@ -38,7 +38,7 @@ val CompileTime = config("CompileTime").hide
 lazy val commonSettings: Seq[Setting[_]] = Seq(
   scalacOptions ++= CompilerOptions.commonScalacOptions,
   libraryDependencies ++= Seq(
-    compilerPlugin("org.typelevel" %% "kind-projector" % "0.10.3"),
+    compilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full),
     "org.typelevel" %%% "simulacrum" % "1.0.0" % CompileTime,
     "org.typelevel" %%% "machinist" % "0.6.8" % CompileTime
   ),

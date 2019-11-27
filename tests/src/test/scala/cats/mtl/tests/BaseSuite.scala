@@ -9,7 +9,7 @@ import cats.syntax.{EqOps, EqSyntax}
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
 import org.scalatest.prop.Configuration
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.typelevel.discipline.scalatest.Discipline
 
