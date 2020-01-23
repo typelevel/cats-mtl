@@ -11,14 +11,14 @@ import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
 import org.scalatest.prop.Configuration
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.funsuite.AnyFunSuite
-import org.typelevel.discipline.scalatest.Discipline
+import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
 abstract class BaseSuite extends AnyFunSuite
   with Matchers
   with Configuration
   with StrictCatsEquality
   with EqSyntax
-  with Discipline {
+  with FunSuiteDiscipline {
 
   implicit def catsMtlLawsExhaustiveCheckForArbitrary[A: Arbitrary]: ExhaustiveCheck[A] =
     ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[List[A]]).sample.get)
