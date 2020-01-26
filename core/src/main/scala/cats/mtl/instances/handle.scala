@@ -3,27 +3,8 @@ package mtl
 package instances
 
 import cats.data.{EitherT, OptionT, Validated}
-import cats.mtl.lifting.MonadLayerControl
 
-trait HandleInstances extends HandleLowPriorityInstances1 {
-  implicit final def raiseInd[M[_], Inner[_], E](implicit
-                                                 lift: MonadLayerControl[M, Inner],
-                                                 under: ApplicativeHandle[Inner, E]
-                                                ): ApplicativeHandle[M, E] = {
-    new DefaultApplicativeHandle[M, E] {
-      val applicative = lift.outerInstance
-
-      val functor = lift.outerInstance
-
-      def raise[A](e: E): M[A] = lift.layer(under.raise(e))
-
-      def handleWith[A](fa: M[A])(f: E => M[A]): M[A] =
-        lift.outerInstance.flatMap(lift.layerControl { nt =>
-          under.handleWith(nt(fa))(e => nt(f(e)))
-        })(lift.restore)
-    }
-  }
-}
+trait HandleInstances extends HandleLowPriorityInstances1
 
 private[instances] trait HandleLowPriorityInstances1 {
   implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): ApplicativeHandle[EitherTC[M, E]#l, E] = {

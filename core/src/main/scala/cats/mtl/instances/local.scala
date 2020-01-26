@@ -3,44 +3,8 @@ package mtl
 package instances
 
 import cats.data.{IndexedReaderWriterStateT, Kleisli, ReaderT, ReaderWriterStateT}
-import cats.mtl.lifting.MonadLayer
 
-trait LocalInstances extends LocalLowPriorityInstances {
-  implicit final def localInd[M[_], Inner[_], E](implicit ml: MonadLayer[M, Inner],
-                                                 under: ApplicativeLocal[Inner, E]
-                                                ): ApplicativeLocal[M, E] = {
-    new ApplicativeLocal[M, E] {
-      val applicative = ml.outerInstance
-
-      def ask: M[E] = ml.layer(under.ask)
-
-      def reader[A](f: E => A): M[A] = ml.layer(under.reader(f))
-
-      def local[A](f: E => E)(fa: M[A]): M[A] = {
-        ml.outerInstance.flatMap(ask)(r =>
-          ml.layerImapK(fa)(new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.local(f)(fa)
-          }, new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(r)(fa)
-          }))
-      }
-
-      def scope[A](e: E)(fa: M[A]): M[A] = {
-        ml.outerInstance.flatMap(ask)(r =>
-          ml.layerImapK(fa)(new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(e)(fa)
-          }, new (Inner ~> Inner) {
-            def apply[X](fa: Inner[X]): Inner[X] = under.scope(r)(fa)
-          }))
-      }
-    }
-  }
-
-  implicit final def localReaderId[E]: ApplicativeLocal[ReaderTC[Id, E]#l, E] = {
-    localReader[Id, E]
-  }
-
-}
+trait LocalInstances extends LocalLowPriorityInstances
 
 private[instances] trait LocalLowPriorityInstances {
   implicit final def localReader[M[_], E](implicit M: Applicative[M]): ApplicativeLocal[ReaderTC[M, E]#l, E] = {

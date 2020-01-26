@@ -3,62 +3,15 @@ package mtl
 package instances
 
 import cats.data.{IndexedReaderWriterStateT, ReaderWriterStateT, WriterT}
-import cats.mtl.lifting.MonadLayerControl
 import cats.syntax.functor._
 
 trait CensorInstances extends CensorInstancesLowPriority {
-  implicit final def censorInd[M[_], L, Inner[_], State[_]](implicit
-                                                            layer: MonadLayerControl.Aux[M, Inner, State],
-                                                            under: ApplicativeCensor[Inner, L],
-                                                            monoidL: Monoid[L]
-                                                           ): ApplicativeCensor[M, L] =
-    new ApplicativeCensor[M, L] {
-      val applicative: Applicative[M] = layer.outerInstance
-      val monoid: Monoid[L] = monoidL
-
-      def tell(l: L): M[Unit] = layer.layer(under.tell(l))
-
-      def writer[A](a: A, l: L): M[A] = layer.layer(under.writer(a, l))
-
-      def tuple[A](ta: (L, A)): M[A] = layer.layer(under.tuple(ta))
-
-      def censor[A](fa: M[A])(f: L => L): M[A] =
-        layer.outerInstance.flatMap(layer.layerControl { cps =>
-          under.censor(cps(fa))(f)
-        })(layer.restore)
-
-      def clear[A](fa: M[A]): M[A] =
-        layer.outerInstance.flatMap(layer.layerControl { cps =>
-          under.clear(cps(fa))
-        })(layer.restore)
-
-      def listen[A](fa: M[A]): M[(A, L)] = {
-        layer.outerInstance.flatMap(layer.layerControl { cps =>
-          under.listen(cps(fa))
-        })(x =>
-          layer.outerInstance.map(layer.restore(x._1))(z => (z, x._2))
-        )
-      }
-
-      def listens[A, B](fa: M[A])(f: (L) => B): M[(A, B)] = {
-        layer.outerInstance.map(listen(fa)) { case (a, l) =>
-          (a, f(l))
-        }
-      }
-
-    }
-
-  implicit final def passWriterId[L]
-  (implicit L: Monoid[L]
-  ): ApplicativeCensor[WriterTC[Id, L]#l, L] = {
+  implicit final def passWriterId[L](implicit L: Monoid[L]): ApplicativeCensor[WriterTC[Id, L]#l, L] =
     passWriter[Id, L]
-  }
 }
 
 trait CensorInstancesLowPriority {
-  implicit final def passWriter[M[_], L]
-  (implicit M: Monad[M], L: Monoid[L]
-  ): ApplicativeCensor[WriterT[M, L, ?], L] =
+  implicit final def passWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): ApplicativeCensor[WriterT[M, L, ?], L] =
     new ApplicativeCensor[WriterT[M, L, ?], L] {
       val applicative: Applicative[WriterT[M, L, ?]] =
         cats.data.WriterT.catsDataMonadForWriterT[M, L]
@@ -84,9 +37,7 @@ trait CensorInstancesLowPriority {
         WriterT[M, L, (A, B)](fa.run.map { case (l, a) => (l, (a, f(l))) })
     }
 
-  implicit final def passTuple[L]
-  (implicit L: Monoid[L]
-  ): ApplicativeCensor[(L, ?), L] =
+  implicit final def passTuple[L](implicit L: Monoid[L]): ApplicativeCensor[(L, ?), L] =
     new ApplicativeCensor[(L, ?), L] {
       val applicative: Applicative[Tuple2[L, ?]] =
         cats.instances.tuple.catsStdMonadForTuple2
@@ -117,8 +68,7 @@ trait CensorInstancesLowPriority {
       }
     }
 
-  implicit final def passReaderWriterState[M[_], R, L, S]
-  (implicit L: Monoid[L], M: Monad[M]): ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] =
+  implicit final def passReaderWriterState[M[_], R, L, S](implicit L: Monoid[L], M: Monad[M]): ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] =
     new DefaultApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] {
       val applicative: Applicative[ReaderWriterStateT[M, R, L, S, ?]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST

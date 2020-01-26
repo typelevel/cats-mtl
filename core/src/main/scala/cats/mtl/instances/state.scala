@@ -2,32 +2,9 @@ package cats
 package mtl
 package instances
 
-import cats.mtl.lifting.MonadLayerFunctor
 import data.{IndexedReaderWriterStateT, IndexedStateT, ReaderWriterStateT, StateT}
 
-trait StateInstances extends StateInstancesLowPriority1 {
-  // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
-  // to lift MonadState into
-  implicit final def stateInd[M[_], Inner[_], E](implicit ml: MonadLayerFunctor[M, Inner],
-                                                 under: MonadState[Inner, E]
-                                                    ): MonadState[M, E] = {
-    new MonadState[M, E] {
-      val monad: Monad[M] = ml.outerInstance
-
-      def get: M[E] = ml.layer(under.get)
-
-      def set(s: E): M[Unit] = ml.layer(under.set(s))
-
-      def modify(f: E => E): M[Unit] = ml.layer(under.modify(f))
-
-      def inspect[A](f: (E) => A): M[A] = ml.layer(under.inspect(f))
-    }
-  }
-
-  implicit final def stateIdState[S]: MonadState[StateTC[Id, S]#l, S] = {
-    stateState[Id, S]
-  }
-}
+trait StateInstances extends StateInstancesLowPriority1
 
 private[instances] trait StateInstancesLowPriority1 {
   implicit final def stateState[M[_], S](implicit M: Monad[M]): MonadState[StateTC[M, S]#l, S] = {
