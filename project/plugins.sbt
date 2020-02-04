@@ -1,4 +1,4 @@
-addSbtPlugin("com.eed3si9n"        % "sbt-unidoc"               % "0.4.2")
+addSbtPlugin("com.eed3si9n"        % "sbt-unidoc"               % "0.4.3")
 addSbtPlugin("com.github.gseitz"   % "sbt-release"              % "1.0.13")
 addSbtPlugin("io.crashbox"         % "sbt-gpg"                  % "0.2.1")
 addSbtPlugin("org.scalastyle"      % "scalastyle-sbt-plugin"    % "1.0.0")
