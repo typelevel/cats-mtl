@@ -52,7 +52,6 @@ trait MonadState[F[_], S] extends Serializable {
   def modify(f: S => S): F[Unit]
 }
 
-
 object MonadState {
   def get[F[_], S](implicit ev: MonadState[F, S]): F[S] =
     ev.get
@@ -78,7 +77,6 @@ object MonadState {
 
   def apply[F[_], S](implicit monadState: MonadState[F, S]): MonadState[F, S] = monadState
 }
-
 
 trait DefaultMonadState[F[_], S] extends MonadState[F, S] {
   def get: F[S] = state(s => (s, s))
