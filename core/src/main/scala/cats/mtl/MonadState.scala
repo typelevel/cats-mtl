@@ -7,10 +7,11 @@ package mtl
   *
   * MonadState has four external laws:
   * {{{
+  *
   * def getThenSetDoesNothing = {
   *   get >>= set <-> pure(())
   * }
-  * def setThenGetReturnsSetted(s: S) = {
+  * def setThenGetReturnsSet(s: S) = {
   *   set(s) *> get <-> set(s) *> pure(s)
   * }
   * def setThenSetSetsLast(s1: S, s2: S) = {
@@ -21,20 +22,26 @@ package mtl
   * }
   * }}}
   *
-  * `MonadState` has two internal law:
+  * `MonadState` has three internal laws:
   * {{{
-  * def modifyIsGetThenSet(f: S => S) = {
-  *   modify(f) <-> (inspect(f) flatMap set)
+  * def setIsStateUnit(s: S) = {
+  *  set(s) <-> state(_ => (s, ()))
+  * }
+
+  * def inpectIsState[A](f: S => A) = {
+  *   inspect(f) <-> state(s => (s, f(s)))
   * }
   *
-  * def inspectLaw[A](f: S => A) = {
-  *   inspect(f) <-> (get map f)
+  * def modifyIsState(f: S => S) = {
+  *   modify(f) <-> state(s => (f(s), ()))
   * }
   * }}}
   *
   */
 trait MonadState[F[_], S] extends Serializable {
   val monad: Monad[F]
+
+  def state[A](f: S => (S, A)): F[A]
 
   def get: F[S]
 
@@ -44,7 +51,6 @@ trait MonadState[F[_], S] extends Serializable {
 
   def modify(f: S => S): F[Unit]
 }
-
 
 object MonadState {
   def get[F[_], S](implicit ev: MonadState[F, S]): F[S] =
@@ -63,16 +69,18 @@ object MonadState {
   def modify[F[_], S](f: S => S)(implicit state: MonadState[F, S]): F[Unit] =
     state.modify(f)
 
+  def state[F[_], S, A](f: S => (S, A))(implicit state: MonadState[F, S]): F[A] =
+    state.state(f)
+
   def inspect[F[_], S, A](f: S => A)(implicit state: MonadState[F, S]): F[A] =
     state.inspect(f)
 
   def apply[F[_], S](implicit monadState: MonadState[F, S]): MonadState[F, S] = monadState
 }
 
-
 trait DefaultMonadState[F[_], S] extends MonadState[F, S] {
-
-  def inspect[A](f: S => A): F[A] = monad.map(get)(f)
-
-  def modify(f: S => S): F[Unit] = monad.flatMap(inspect(f))(set)
+  def get: F[S] = state(s => (s, s))
+  def set(s: S): F[Unit] = state(_ => (s, ()))
+  def inspect[A](f: S => A): F[A] = state(s => (s, f(s)))
+  def modify(f: S => S): F[Unit] = state(s => (f(s), ()))
 }

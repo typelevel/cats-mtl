@@ -9,8 +9,7 @@ trait StateInstances extends StateInstancesLowPriority1 {
   // this dependency on LayerFunctor is required because non-`LayerFunctor`s may not be lawful
   // to lift MonadState into
   implicit final def stateInd[M[_], Inner[_], E](implicit ml: MonadLayerFunctor[M, Inner],
-                                                 under: MonadState[Inner, E]
-                                                    ): MonadState[M, E] = {
+                                                 under: MonadState[Inner, E]): MonadState[M, E] = {
     new MonadState[M, E] {
       val monad: Monad[M] = ml.outerInstance
 
@@ -20,7 +19,9 @@ trait StateInstances extends StateInstancesLowPriority1 {
 
       def modify(f: E => E): M[Unit] = ml.layer(under.modify(f))
 
-      def inspect[A](f: (E) => A): M[A] = ml.layer(under.inspect(f))
+      def inspect[A](f: E => A): M[A] = ml.layer(under.inspect(f))
+
+      def state[A](f: E => (E, A)): M[A] = ml.layer(under.state(f))
     }
   }
 
@@ -40,14 +41,20 @@ private[instances] trait StateInstancesLowPriority1 {
 
       def modify(f: S => S): StateT[M, S, Unit] = StateT.modify(f)
 
-      def inspect[A](f: (S) => A): StateT[M, S, A] = StateT.inspect(f)
+      def inspect[A](f: S => A): StateT[M, S, A] = StateT.inspect(f)
+
+      def state[A](f: S => (S, A)): StateT[M, S, A] = StateT { s =>
+        M.pure(f(s))
+      }
     }
   }
 
-  implicit final def readerWriterStateState[M[_], R, L, S]
-  (implicit M: Monad[M], L: Monoid[L]): MonadState[ReaderWriterStateT[M, R, L, S, ?], S] =
+  implicit final def readerWriterStateState[M[_], R, L, S](
+      implicit M: Monad[M],
+      L: Monoid[L]): MonadState[ReaderWriterStateT[M, R, L, S, ?], S] =
     new MonadState[ReaderWriterStateT[M, R, L, S, ?], S] {
-      val monad: Monad[ReaderWriterStateT[M, R, L, S, ?]] = IndexedReaderWriterStateT.catsDataMonadForRWST
+      val monad: Monad[ReaderWriterStateT[M, R, L, S, ?]] =
+        IndexedReaderWriterStateT.catsDataMonadForRWST
 
       def get: ReaderWriterStateT[M, R, L, S, S] =
         ReaderWriterStateT.get[M, R, L, S]
@@ -60,6 +67,12 @@ private[instances] trait StateInstancesLowPriority1 {
 
       def inspect[A](f: S => A): ReaderWriterStateT[M, R, L, S, A] =
         ReaderWriterStateT.inspect[M, R, L, S, A](f)
+
+      def state[A](f: S => (S, A)): ReaderWriterStateT[M, R, L, S, A] = ReaderWriterStateT.apply {
+        (e, s) =>
+          val (s2, a) = f(s)
+          M.pure((L.empty, s2, a))
+      }
     }
 }
 
