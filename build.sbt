@@ -39,8 +39,7 @@ lazy val commonSettings: Seq[Setting[_]] = Seq(
   scalacOptions ++= CompilerOptions.commonScalacOptions,
   libraryDependencies ++= Seq(
     compilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full),
-    "org.typelevel" %%% "simulacrum" % "1.0.0" % CompileTime,
-    "org.typelevel" %%% "machinist" % "0.6.8" % CompileTime
+    "org.typelevel" %%% "simulacrum" % "1.0.0" % CompileTime
   ),
   fork in test := true,
   parallelExecution in Test := false,
@@ -75,8 +74,6 @@ lazy val commonJsSettings = Seq(
   jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
   // Only used for scala.js for now
   Publishing.botBuild := scala.sys.env.get("TRAVIS").isDefined,
-  // batch mode decreases the amount of memory needed to compile scala.js code
-  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(Publishing.botBuild.value),
   doctestGenTests := Seq.empty
 )
 
