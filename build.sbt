@@ -96,6 +96,9 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(commonJsSettings: _*)
   .jvmSettings(commonJvmSettings: _*)
 
+lazy val coreJVM = core.jvm
+lazy val coreJS = core.js
+
 lazy val covariant = crossProject(JSPlatform, JVMPlatform)
   .dependsOn(core)
   .settings(moduleName := "cats-mtl-covariant", name := "Cats MTL covariant")
@@ -104,8 +107,8 @@ lazy val covariant = crossProject(JSPlatform, JVMPlatform)
   .jvmSettings(commonJvmSettings: _*)
   .jsSettings(coverageEnabled := false)
 
-lazy val coreJVM = core.jvm
-lazy val coreJS = core.js
+lazy val covariantJVM = covariant.jvm
+lazy val covariantJS = covariant.js
 
 lazy val docsMappingsAPIDir =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -218,4 +221,4 @@ lazy val catsMtl = project
   .settings(moduleName := "root")
   .settings(Publishing.noPublishSettings)
   .settings(coreSettings)
-  .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
+  .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, covariantJVM, covariantJS, docs, testsJVM, testsJS)
