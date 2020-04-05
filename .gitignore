@@ -13,6 +13,9 @@ TAGS
 .idea
 .idea/*
 .idea_modules
+.metals
+.bloop
+project/metals.sbt
 .DS_Store
 .sbtrc
 *.sublime-project

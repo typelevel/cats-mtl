@@ -96,6 +96,14 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .jsSettings(commonJsSettings: _*)
   .jvmSettings(commonJvmSettings: _*)
 
+lazy val covariant = crossProject(JSPlatform, JVMPlatform)
+  .dependsOn(core)
+  .settings(moduleName := "cats-mtl-covariant", name := "Cats MTL covariant")
+  .settings(coreSettings: _*)
+  .jsSettings(commonJsSettings: _*)
+  .jvmSettings(commonJvmSettings: _*)
+  .jsSettings(coverageEnabled := false)
+
 lazy val coreJVM = core.jvm
 lazy val coreJS = core.js
 
