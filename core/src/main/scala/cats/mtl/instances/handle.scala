@@ -8,7 +8,7 @@ trait HandleInstances extends HandleLowPriorityInstances1
 
 private[instances] trait HandleLowPriorityInstances1 {
   implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): ApplicativeHandle[EitherTC[M, E]#l, E] = {
-    new DefaultApplicativeHandle[EitherTC[M, E]#l, E] {
+    new ApplicativeHandle[EitherTC[M, E]#l, E] {
       val applicative: Applicative[EitherTC[M, E]#l] = EitherT.catsDataMonadErrorForEitherT(M)
 
       val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(M)
@@ -24,7 +24,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleEither[E]: ApplicativeHandle[EitherC[E]#l, E] = {
-    new DefaultApplicativeHandle[EitherC[E]#l, E] {
+    new ApplicativeHandle[EitherC[E]#l, E] {
       val applicative: Applicative[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither[E]
 
       val functor: Functor[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither
@@ -39,7 +39,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleOptionT[M[_]](implicit M: Monad[M]): ApplicativeHandle[OptionTC[M]#l, Unit] = {
-    new DefaultApplicativeHandle[OptionTC[M]#l, Unit] {
+    new ApplicativeHandle[OptionTC[M]#l, Unit] {
       val applicative: Applicative[OptionTC[M]#l] = OptionT.catsDataMonadForOptionT(M)
 
       val functor: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorForOptionT(M)
@@ -55,7 +55,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleOption[E]: ApplicativeHandle[Option, Unit] = {
-    new DefaultApplicativeHandle[Option, Unit] {
+    new ApplicativeHandle[Option, Unit] {
       val applicative: Applicative[Option] = cats.instances.option.catsStdInstancesForOption
 
       val functor: Functor[Option] = cats.instances.option.catsStdInstancesForOption
@@ -70,7 +70,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleValidated[E](implicit E: Semigroup[E]): ApplicativeHandle[Validated[E, ?], E] =
-    new DefaultApplicativeHandle[Validated[E, ?], E] {
+    new ApplicativeHandle[Validated[E, ?], E] {
       val applicative: Applicative[Validated[E, ?]] = Validated.catsDataApplicativeErrorForValidated[E]
 
       val functor: Functor[Validated[E, ?]] = Validated.catsDataApplicativeErrorForValidated[E]

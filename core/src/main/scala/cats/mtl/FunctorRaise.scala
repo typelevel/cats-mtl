@@ -42,7 +42,7 @@ import scala.util.control.NonFatal
   * }}}
   */
 trait FunctorRaise[F[_], E] extends Serializable {
-  val functor: Functor[F]
+  def functor: Functor[F]
 
   def raise[A](e: E): F[A]
 
@@ -58,7 +58,15 @@ trait FunctorRaise[F[_], E] extends Serializable {
     A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
-object FunctorRaise {
+private[mtl] trait FunctorRaiseInstances {
+  implicit def functorRaiseForMonadError[F[_], E](implicit F: MonadError[F, E]): FunctorRaise[F, E] =
+    new FunctorRaise[F, E] {
+      val functor = F
+      def raise[A](e: E) = F.raiseError(e)
+    }
+}
+
+object FunctorRaise extends FunctorRaiseInstances {
   def apply[F[_], E](implicit functorRaise: FunctorRaise[F, E]): FunctorRaise[F, E] = functorRaise
 
   def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, _ >: E]): F[A] =

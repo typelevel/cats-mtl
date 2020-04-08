@@ -18,7 +18,7 @@ trait CensorInstancesLowPriority {
 
       val monoid: Monoid[L] = L
 
-      def clear[A](fa: WriterT[M, L, A]): WriterT[M, L, A] =
+      override def clear[A](fa: WriterT[M, L, A]): WriterT[M, L, A] =
         WriterT(fa.value.tupleLeft(L.empty))
 
       def censor[A](fa: WriterT[M, L, A])(f: L => L): WriterT[M, L, A] =
@@ -26,14 +26,14 @@ trait CensorInstancesLowPriority {
 
       def tell(l: L): WriterT[M, L, Unit] = WriterT.tell(l)
 
-      def writer[A](a: A, l: L): WriterT[M, L, A] = WriterT.put(a)(l)
+      override def writer[A](a: A, l: L): WriterT[M, L, A] = WriterT.put(a)(l)
 
-      def tuple[A](ta: (L, A)): WriterT[M, L, A] = WriterT(M.pure(ta))
+      override def tuple[A](ta: (L, A)): WriterT[M, L, A] = WriterT(M.pure(ta))
 
       def listen[A](fa: WriterT[M, L, A]): WriterT[M, L, (A, L)] =
         WriterT[M, L, (A, L)](fa.run.map { case (l, a) => (l, (a, l)) })
 
-      def listens[A, B](fa: WriterT[M, L, A])(f: (L) => B): WriterT[M, L, (A, B)] =
+      override def listens[A, B](fa: WriterT[M, L, A])(f: (L) => B): WriterT[M, L, (A, B)] =
         WriterT[M, L, (A, B)](fa.run.map { case (l, a) => (l, (a, f(l))) })
     }
 
@@ -46,11 +46,11 @@ trait CensorInstancesLowPriority {
 
       def tell(l: L): (L, Unit) = (l, ())
 
-      def writer[A](a: A, l: L): (L, A) = (l, a)
+      override def writer[A](a: A, l: L): (L, A) = (l, a)
 
-      def tuple[A](ta: (L, A)): (L, A) = ta
+      override def tuple[A](ta: (L, A)): (L, A) = ta
 
-      def clear[A](fa: (L, A)): (L, A) = (L.empty, fa._2)
+      override def clear[A](fa: (L, A)): (L, A) = (L.empty, fa._2)
 
       def censor[A](fa: (L, A))(f: L => L): (L, A) = {
         val (l, a) = fa
@@ -62,14 +62,14 @@ trait CensorInstancesLowPriority {
         (l, (a, l))
       }
 
-      def listens[A, B](fa: (L, A))(f: (L) => B): (L, (A, B)) = {
+      override def listens[A, B](fa: (L, A))(f: (L) => B): (L, (A, B)) = {
         val (l, a) = fa
         (l, (a, f(l)))
       }
     }
 
   implicit final def passReaderWriterState[M[_], R, L, S](implicit L: Monoid[L], M: Monad[M]): ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] =
-    new DefaultApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] {
+    new ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] {
       val applicative: Applicative[ReaderWriterStateT[M, R, L, S, ?]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
 

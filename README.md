@@ -28,6 +28,15 @@ Cross-builds are available for Scala 2.11–2.13, Scala.js major version 0.6.x.
 
 If you're not sure where to start or what Cats-mtl even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
 
+### Supported Classes
+
+- `EitherT`
+- `Kleisli`
+- `OptionT`
+- `ReaderWriterStateT`
+- `StateT`
+- `WriterT`
+
 ### Laws
 
 The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws) for more.
