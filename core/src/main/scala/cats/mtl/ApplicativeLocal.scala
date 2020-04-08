@@ -1,6 +1,8 @@
 package cats
 package mtl
 
+import cats.data.{Kleisli, ReaderWriterStateT => RWST}
+
 /**
   * `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
   * using `ask`; the modification can only be observed from within that `F[A]` value.
@@ -31,17 +33,34 @@ package mtl
 trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] with Serializable {
   def local[A](f: E => E)(fa: F[A]): F[A]
 
-  def scope[A](e: E)(fa: F[A]): F[A]
+  def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }
 
-object ApplicativeLocal {
+private[mtl] trait LowPriorityApplicativeLocalInstances {
+
+}
+
+private[mtl] trait ApplicativeLocalInstances extends LowPriorityApplicativeLocalInstances {
+
+  implicit def baseApplicativeLocalForKleisli[F[_]: Applicative, E]: ApplicativeLocal[Kleisli[F, E, *], E] =
+    new ApplicativeLocal[Kleisli[F, E, *], E] {
+      val applicative = Applicative[Kleisli[F, E, *]]
+      def ask = Kleisli.ask[F, E]
+      def local[A](f: E => E)(fa: Kleisli[F, E, A]) = fa.local(f)
+    }
+
+  implicit def baseApplicativeLocalForRWST[F[_]: Monad, E, L: Monoid, S]: ApplicativeLocal[RWST[F, E, L, S, *], E] =
+    new ApplicativeLocal[RWST[F, E, L, S, *], E] {
+      val applicative = Applicative[RWST[F, E, L, S, *]]
+      def ask = RWST.ask[F, E, L, S]
+      def local[A](f: E => E)(fa: RWST[F, E, L, S, A]) = fa.local(f)
+    }
+}
+
+object ApplicativeLocal extends ApplicativeLocalInstances {
   def apply[F[_], A](implicit local: ApplicativeLocal[F, A]): ApplicativeLocal[F, A] = local
 
   def local[F[_], E, A](f: E => E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.local(f)(fa)
 
   def scope[F[_], E, A](e: E)(fa: F[A])(implicit local: ApplicativeLocal[F, E]): F[A] = local.scope(e)(fa)
-}
-
-trait DefaultApplicativeLocal[F[_], E] extends DefaultApplicativeAsk[F, E] with ApplicativeLocal[F, E]{
-  def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }

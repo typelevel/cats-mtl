@@ -3,31 +3,12 @@ package mtl
 package instances
 
 import cats.data.{EitherT, OptionT, Validated}
-import cats.mtl.lifting.MonadLayerControl
 
-trait HandleInstances extends HandleLowPriorityInstances1 {
-  implicit final def raiseInd[M[_], Inner[_], E](implicit
-                                                 lift: MonadLayerControl[M, Inner],
-                                                 under: ApplicativeHandle[Inner, E]
-                                                ): ApplicativeHandle[M, E] = {
-    new DefaultApplicativeHandle[M, E] {
-      val applicative = lift.outerInstance
-
-      val functor = lift.outerInstance
-
-      def raise[A](e: E): M[A] = lift.layer(under.raise(e))
-
-      def handleWith[A](fa: M[A])(f: E => M[A]): M[A] =
-        lift.outerInstance.flatMap(lift.layerControl { nt =>
-          under.handleWith(nt(fa))(e => nt(f(e)))
-        })(lift.restore)
-    }
-  }
-}
+trait HandleInstances extends HandleLowPriorityInstances1
 
 private[instances] trait HandleLowPriorityInstances1 {
   implicit final def handleEitherT[M[_], E](implicit M: Monad[M]): ApplicativeHandle[EitherTC[M, E]#l, E] = {
-    new DefaultApplicativeHandle[EitherTC[M, E]#l, E] {
+    new ApplicativeHandle[EitherTC[M, E]#l, E] {
       val applicative: Applicative[EitherTC[M, E]#l] = EitherT.catsDataMonadErrorForEitherT(M)
 
       val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(M)
@@ -43,7 +24,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleEither[E]: ApplicativeHandle[EitherC[E]#l, E] = {
-    new DefaultApplicativeHandle[EitherC[E]#l, E] {
+    new ApplicativeHandle[EitherC[E]#l, E] {
       val applicative: Applicative[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither[E]
 
       val functor: Functor[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither
@@ -58,7 +39,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleOptionT[M[_]](implicit M: Monad[M]): ApplicativeHandle[OptionTC[M]#l, Unit] = {
-    new DefaultApplicativeHandle[OptionTC[M]#l, Unit] {
+    new ApplicativeHandle[OptionTC[M]#l, Unit] {
       val applicative: Applicative[OptionTC[M]#l] = OptionT.catsDataMonadForOptionT(M)
 
       val functor: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorForOptionT(M)
@@ -74,7 +55,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleOption[E]: ApplicativeHandle[Option, Unit] = {
-    new DefaultApplicativeHandle[Option, Unit] {
+    new ApplicativeHandle[Option, Unit] {
       val applicative: Applicative[Option] = cats.instances.option.catsStdInstancesForOption
 
       val functor: Functor[Option] = cats.instances.option.catsStdInstancesForOption
@@ -89,7 +70,7 @@ private[instances] trait HandleLowPriorityInstances1 {
   }
 
   implicit final def handleValidated[E](implicit E: Semigroup[E]): ApplicativeHandle[Validated[E, ?], E] =
-    new DefaultApplicativeHandle[Validated[E, ?], E] {
+    new ApplicativeHandle[Validated[E, ?], E] {
       val applicative: Applicative[Validated[E, ?]] = Validated.catsDataApplicativeErrorForValidated[E]
 
       val functor: Functor[Validated[E, ?]] = Validated.catsDataApplicativeErrorForValidated[E]
