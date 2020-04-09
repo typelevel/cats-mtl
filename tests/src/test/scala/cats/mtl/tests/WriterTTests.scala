@@ -10,7 +10,6 @@ import cats.laws.discipline.{ExhaustiveCheck, SerializableTests}
 import cats.laws.discipline.eq._
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
-import cats.mtl.lifting.{ApplicativeLayerFunctor, FunctorLayerFunctor, MonadLayerControl}
 import org.scalacheck._
 
 class WriterTTests extends BaseSuite {
@@ -61,37 +60,7 @@ class WriterTTests extends BaseSuite {
     checkAll("WriterT[Option, String, String]",
       ApplicativeCensorTests[WriterTC[Option, String]#l, String]
         .applicativeCensor[String, String])
-    checkAll("FunctorListen[WriterT[Option, String, ?]]",
+    checkAll("FunctorListen[WriterT[Option, String, *]]",
       SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
-
-    {
-      implicit val monadLayerControl: MonadLayerControl.Aux[WriterTC[Option, String]#l, Option, TupleC[String]#l] =
-        cats.mtl.instances.writert.writerMonadLayerControl[Option, String]
-      checkAll("WriterT[Option, String, ?]",
-        MonadLayerControlTests[WriterTC[Option, String]#l, Option, TupleC[String]#l]
-          .monadLayerControl[Boolean, Boolean])
-      checkAll("MonadLayerControl[WriterT[Option, String, ?], Option]",
-        SerializableTests.serializable(monadLayerControl))
-    }
-
-    {
-      implicit val applicativeLayerFunctor: ApplicativeLayerFunctor[WriterTC[Option, String]#l, Option] =
-        cats.mtl.instances.writert.writerApplicativeLayerFunctor[Option, String]
-      checkAll("WriterT[Option, String, ?]",
-        ApplicativeLayerFunctorTests[WriterTC[Option, String]#l, Option]
-          .applicativeLayerFunctor[Boolean, Boolean])
-      checkAll("ApplicativeLayerFunctor[WriterT[Option, String, ?], Option]",
-        SerializableTests.serializable(applicativeLayerFunctor))
-    }
-
-    {
-      implicit val functorLayerFunctor: FunctorLayerFunctor[WriterTC[Option, String]#l, Option] =
-        cats.mtl.instances.writert.writerFunctorLayerFunctor[Option, String]
-      checkAll("WriterT[Option, String, ?]",
-        FunctorLayerFunctorTests[WriterTC[Option, String]#l, Option]
-          .functorLayerFunctor[Boolean])
-      checkAll("FunctorLayerFunctor[WriterT[Option, String, ?], Option]",
-        SerializableTests.serializable(functorLayerFunctor))
-    }
   }
 }

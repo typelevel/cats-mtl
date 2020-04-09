@@ -10,7 +10,6 @@ import cats.laws.discipline.eq._
 import cats.mtl._
 import cats.mtl.implicits._
 import cats.mtl.laws.discipline._
-import cats.mtl.lifting.MonadLayerControl
 import org.scalacheck.{Arbitrary, Gen}
 
 
@@ -26,12 +25,6 @@ class ReaderWriterStateTTests extends StateTTestsBase {
     Arbitrary(Gen.oneOf(new ((L, S, ?) ~> (L, S, ?)) {
       def apply[A](fa: (L, S, A)): (L, S, A) = (Monoid[L].empty, fa._2, fa._3)
     }, FunctionK.id[(L, S, ?)]))
-
-  checkAll("ReaderWriterStateT[Option, Boolean, Int, String, ?]",
-    MonadLayerControlTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Option, (Int, String, ?)]
-      .monadLayerControl[Boolean, Boolean])
-  checkAll("MonadLayerControl[ReaderWriterStateT[Option, Boolean, Int, String, ?], Option]",
-    SerializableTests.serializable(MonadLayerControl[ReaderWriterStateT[Option, Boolean, Int, String, ?], Option]))
 
   checkAll("ReaderWriterState[Boolean, Int, String, String]",
     MonadStateTests[ReaderWriterState[Boolean, Int, String, ?], String]

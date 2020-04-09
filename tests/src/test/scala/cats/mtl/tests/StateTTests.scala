@@ -5,7 +5,7 @@ package tests
 import cats.arrow.FunctionK
 import cats.data.{Kleisli, State, StateT}
 import cats.laws.discipline.SerializableTests
-import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadLayerControlTests, MonadStateTests}
+import cats.mtl.laws.discipline.{ApplicativeAskTests, FunctorTellTests, MonadStateTests}
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline._
 import cats.laws.discipline.eq._
@@ -17,7 +17,6 @@ import cats.mtl.instances.writert._
 import cats.mtl.instances.optiont._
 import cats.mtl.instances.eithert._
 import cats.instances.all._
-import cats.mtl.lifting.MonadLayerControl
 
 class StateTTestsBase extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
@@ -36,16 +35,6 @@ class StateTTestsBase extends BaseSuite {
 }
 
 class StateTTests extends StateTTestsBase {
-  {
-    implicit val monadLayerControl: MonadLayerControl.Aux[StateTC[Option, String]#l, Option, TupleC[String]#l] =
-      cats.mtl.instances.statet.stateMonadLayerControl[Option, String]
-    checkAll("StateT[Option, String, ?]",
-      MonadLayerControlTests[StateTC[Option, String]#l, Option, TupleC[String]#l]
-        .monadLayerControl[Boolean, Boolean])
-    checkAll("MonadLayerControl[StateT[Option, String, ?], Option]",
-      SerializableTests.serializable(monadLayerControl))
-  }
-
   checkAll("State[String, String]",
     MonadStateTests[StateC[String]#l, String]
       .monadState[String])

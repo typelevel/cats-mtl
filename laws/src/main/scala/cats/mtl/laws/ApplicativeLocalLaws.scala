@@ -7,10 +7,11 @@ import cats.laws.IsEqArrow
 
 trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
   implicit val localInstance: ApplicativeLocal[F, E]
+  override implicit val applicative = localInstance.applicative
 
   import localInstance.{local, scope}
   import askInstance.ask
-  import askInstance.applicative._
+  import applicative._
   import cats.syntax.apply._
 
   // external laws:
@@ -23,7 +24,7 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
   }
 
   def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E): IsEq[F[B]] = {
-    local(f)(ff ap fa) <-> (local(f)(ff) ap local(f)(fa))
+    local(f)(applicative.ap(ff)(fa)) <-> applicative.ap(local(f)(ff))(local(f)(fa))
   }
 
   // internal law:

@@ -6,14 +6,14 @@ import cats.data.{IndexedReaderWriterStateT, ReaderWriterStateT, WriterT}
 import cats.syntax.functor._
 
 trait CensorInstances extends CensorInstancesLowPriority {
-  implicit final def passWriterId[L](implicit L: Monoid[L]): ApplicativeCensor[WriterTC[Id, L]#l, L] =
+  implicit final def passWriterId[L](implicit L: Monoid[L]): ApplicativeCensor[WriterT[Id, L, *], L] =
     passWriter[Id, L]
 }
 
 trait CensorInstancesLowPriority {
-  implicit final def passWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): ApplicativeCensor[WriterT[M, L, ?], L] =
-    new ApplicativeCensor[WriterT[M, L, ?], L] {
-      val applicative: Applicative[WriterT[M, L, ?]] =
+  implicit final def passWriter[M[_], L](implicit M: Monad[M], L: Monoid[L]): ApplicativeCensor[WriterT[M, L, *], L] =
+    new ApplicativeCensor[WriterT[M, L, *], L] {
+      val applicative: Applicative[WriterT[M, L, *]] =
         cats.data.WriterT.catsDataMonadForWriterT[M, L]
 
       val monoid: Monoid[L] = L
@@ -37,9 +37,9 @@ trait CensorInstancesLowPriority {
         WriterT[M, L, (A, B)](fa.run.map { case (l, a) => (l, (a, f(l))) })
     }
 
-  implicit final def passTuple[L](implicit L: Monoid[L]): ApplicativeCensor[(L, ?), L] =
-    new ApplicativeCensor[(L, ?), L] {
-      val applicative: Applicative[Tuple2[L, ?]] =
+  implicit final def passTuple[L](implicit L: Monoid[L]): ApplicativeCensor[(L, *), L] =
+    new ApplicativeCensor[(L, *), L] {
+      val applicative: Applicative[Tuple2[L, *]] =
         cats.instances.tuple.catsStdMonadForTuple2
 
       val monoid: Monoid[L] = L
@@ -68,9 +68,9 @@ trait CensorInstancesLowPriority {
       }
     }
 
-  implicit final def passReaderWriterState[M[_], R, L, S](implicit L: Monoid[L], M: Monad[M]): ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] =
-    new ApplicativeCensor[ReaderWriterStateT[M, R, L, S, ?], L] {
-      val applicative: Applicative[ReaderWriterStateT[M, R, L, S, ?]] =
+  implicit final def passReaderWriterState[M[_], R, L, S](implicit L: Monoid[L], M: Monad[M]): ApplicativeCensor[ReaderWriterStateT[M, R, L, S, *], L] =
+    new ApplicativeCensor[ReaderWriterStateT[M, R, L, S, *], L] {
+      val applicative: Applicative[ReaderWriterStateT[M, R, L, S, *]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
 
       val monoid: Monoid[L] = L
