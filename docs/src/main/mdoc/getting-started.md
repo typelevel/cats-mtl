@@ -58,7 +58,7 @@ trait ApplicativeAsk[F[_], E] {
 }
 ```
 
-At it's core `ApplicativeAsk` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
+At its core `ApplicativeAsk` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
 Exactly like `ReaderT`, it also includes another type parameter `E`, that represents that environment.
 
 If you're wondering why `ApplicativeAsk` has an `Applicative` field instead of just extending from `Applicative`, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here `Applicative`) in scope implicitly.
