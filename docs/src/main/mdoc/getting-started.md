@@ -17,7 +17,7 @@ It achieves this by encoding the effects of most common monad transformers as ty
 Have you ever worked with two or more monad transformers nested inside each other?
 If you haven't, working with what some call **monad transformer stacks** can be incredibly painful.
 This is because, the more monad transformers you add to your stack the more type parameters the type system has to deal with and the worse type inference gets.
-For example, here's a small example of a method that modifies reads the current state in `StateT` and raises an error using `EitherT`: 
+For example, here's a small example of a method that reads the current state in `StateT` and raises an error using `EitherT`: 
 
 ```scala mdoc
 import cats.data._
