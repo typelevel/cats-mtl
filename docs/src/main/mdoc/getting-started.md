@@ -17,7 +17,7 @@ It achieves this by encoding the effects of most common monad transformers as ty
 Have you ever worked with two or more monad transformers nested inside each other?
 If you haven't, working with what some call **monad transformer stacks** can be incredibly painful.
 This is because, the more monad transformers you add to your stack the more type parameters the type system has to deal with and the worse type inference gets.
-For example, here's a small example of a method that modifies reads the current state in `StateT` and raises an error using `EitherT`: 
+For example, here's a small example of a method that reads the current state in `StateT` and raises an error using `EitherT`: 
 
 ```scala mdoc
 import cats.data._
@@ -58,7 +58,7 @@ trait ApplicativeAsk[F[_], E] {
 }
 ```
 
-At it's core `ApplicativeAsk` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
+At its core `ApplicativeAsk` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
 Exactly like `ReaderT`, it also includes another type parameter `E`, that represents that environment.
 
 If you're wondering why `ApplicativeAsk` has an `Applicative` field instead of just extending from `Applicative`, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here `Applicative`) in scope implicitly.
