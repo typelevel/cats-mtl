@@ -36,8 +36,8 @@ private[mtl] trait ApplicativeAskForMonadPartialOrder[F[_], G[_], E] extends App
   val lift: MonadPartialOrder[F, G]
   val F: ApplicativeAsk[F, E]
   
-  val applicative = lift.monadG
-  def ask = lift(F.ask)
+  override def applicative = lift.monadG
+  override def ask = lift(F.ask)
 }
 
 private[mtl] trait LowPriorityApplicativeAskInstances {

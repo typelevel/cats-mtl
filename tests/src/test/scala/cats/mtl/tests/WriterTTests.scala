@@ -33,12 +33,14 @@ class WriterTTests extends BaseSuite {
       import cats.laws.discipline.arbitrary._
       import cats.mtl.instances.all._
 
+      
       checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
         ApplicativeCensorTests[WriterTStringOverWriterTStringOverOption, String]
           .applicativeCensor[String, String]
       )
       checkAll("ApplicativePass[WriterT[WriterTC[Option, String]#l, List[Int], String]",
         SerializableTests.serializable(ApplicativeCensor[WriterTStringOverWriterTStringOverOption, String]))
+        
 
       checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
         ApplicativeCensorTests[ReaderTStringOverWriterTStringOverOption, String]

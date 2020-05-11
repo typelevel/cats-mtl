@@ -59,6 +59,14 @@ trait FunctorRaise[F[_], E] extends Serializable {
     A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
+private[mtl] trait FunctorRaiseMonadPartialOrder[F[_], G[_], E] extends FunctorRaise[G, E] {
+  val lift: MonadPartialOrder[F, G]
+  val F: FunctorRaise[F,E]
+  
+  override def functor = lift.monadG
+  override def raise[A](e: E) = lift(F.raise(e))
+}
+
 private[mtl] trait LowPriorityFunctorRaiseInstances {
   implicit def functorRaiseForMonadPartialOrder[F[_], G[_]: Functor, E](
     implicit F: FunctorRaise[F, E], 
@@ -85,6 +93,13 @@ private[mtl] trait FunctorRaiseInstances extends LowPriorityFunctorRaiseInstance
 
   implicit final def raiseValidated[E](implicit E: Semigroup[E]): FunctorRaise[Validated[E, ?], E] =
     ApplicativeHandle.handleValidated
+
+  implicit final def raiseIor[E](implicit E: Semigroup[E]): FunctorRaise[Ior[E, *], E] =
+    ApplicativeHandle.handleIor[E]
+  
+  implicit final def raiseIorT[F[_], E](implicit E: Semigroup[E], F: Monad[F]): FunctorRaise[IorT[F, E, *], E] =
+    ApplicativeHandle.handleIorT[F, E]
+    
 }
 
 object FunctorRaise extends FunctorRaiseInstances {

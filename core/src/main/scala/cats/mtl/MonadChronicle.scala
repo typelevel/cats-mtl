@@ -47,7 +47,41 @@ trait MonadChronicle[F[_], E] extends Serializable {
   }
 }
 
-private[mtl] trait LowPriorityMonadChronicleInstances {
+
+private[mtl] trait MonadChronicleInstances {
+
+  implicit def monadChronicleForIorT[F[_], E: Semigroup](implicit F: Monad[F]): MonadChronicle[IorT[F, E, *], E] =
+    new MonadChronicle[IorT[F, E, *], E] {
+      override val monad: Monad[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT
+
+      override def dictate(c: E): IorT[F, E, Unit] = IorT.bothT[F](c, ())
+
+      override def confess[A](c: E): IorT[F, E, A] = IorT.leftT[F, A](c)
+
+      override def materialize[A](fa: IorT[F, E, A]): IorT[F, E, E Ior A] = IorT[F, E, E Ior A] {
+        F.map(fa.value) {
+          case Ior.Left(e)    => Ior.right(Ior.left(e))
+          case Ior.Right(a)   => Ior.right(Ior.right(a))
+          case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
+        }
+      }
+    }
+
+  implicit final def chronicleIor[E](implicit S: Semigroup[E]): MonadChronicle[Ior[E, *], E] =
+    new MonadChronicle[Ior[E, *], E] {
+      override val monad: Monad[Ior[E, *]] = Ior.catsDataMonadErrorForIor
+
+      override def dictate(c: E): Ior[E, Unit] = Ior.both(c, ())
+
+      override def confess[A](c: E): Ior[E, A] = Ior.left(c)
+
+      override def materialize[A](fa: Ior[E, A]): Ior[E, Ior[E, A]] = fa match {
+        case Ior.Left(e)    => Ior.right(Ior.left(e))
+        case Ior.Right(a)   => Ior.right(Ior.right(a))
+        case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
+      }
+    }
+
   implicit def monadChronicleForWriterT[F[_]: Monad, E, L: Monoid](implicit F: MonadChronicle[F, E]): MonadChronicle[WriterT[F, L, *], E] =
     new MonadChronicle[WriterT[F, L, *], E] {
       val monad: Monad[WriterT[F,L, *]] = WriterT.catsDataMonadForWriterT[F, L]
@@ -108,43 +142,6 @@ private[mtl] trait LowPriorityMonadChronicleInstances {
           case Ior.Left(e) => (Monoid[L].empty, s, Ior.Left(e))
           case Ior.Right((l, s2, a)) => (l, s2, Ior.Right(a))
         })
-    }
-  
-}
-
-
-private[mtl] trait MonadChronicleInstances extends LowPriorityApplicativeAskInstances {
-
-  implicit def monadChronicleForIorT[F[_], E: Semigroup](implicit F: Monad[F]): MonadChronicle[IorT[F, E, *], E] =
-    new MonadChronicle[IorT[F, E, *], E] {
-      override val monad: Monad[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT
-
-      override def dictate(c: E): IorT[F, E, Unit] = IorT.bothT[F](c, ())
-
-      override def confess[A](c: E): IorT[F, E, A] = IorT.leftT[F, A](c)
-
-      override def materialize[A](fa: IorT[F, E, A]): IorT[F, E, E Ior A] = IorT[F, E, E Ior A] {
-        F.map(fa.value) {
-          case Ior.Left(e)    => Ior.right(Ior.left(e))
-          case Ior.Right(a)   => Ior.right(Ior.right(a))
-          case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
-        }
-      }
-    }
-
-  implicit final def chronicleIor[E](implicit S: Semigroup[E]): MonadChronicle[Ior[E, *], E] =
-    new MonadChronicle[Ior[E, *], E] {
-      override val monad: Monad[Ior[E, *]] = Ior.catsDataMonadErrorForIor
-
-      override def dictate(c: E): Ior[E, Unit] = Ior.both(c, ())
-
-      override def confess[A](c: E): Ior[E, A] = Ior.left(c)
-
-      override def materialize[A](fa: Ior[E, A]): Ior[E, Ior[E, A]] = fa match {
-        case Ior.Left(e)    => Ior.right(Ior.left(e))
-        case Ior.Right(a)   => Ior.right(Ior.right(a))
-        case Ior.Both(e, a) => Ior.right(Ior.both(e, a))
-      }
     }
 }
 

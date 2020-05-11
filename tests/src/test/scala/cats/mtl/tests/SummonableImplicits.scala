@@ -15,19 +15,17 @@ final class SummonableImplicits extends BaseSuite {
       def _1 = ApplicativeAsk[ReaderStrId, String]
       def _2 = ApplicativeAsk[ReaderStrInt, Int]
       def _3 = ApplicativeAsk[ReaderStrInt, String]
-      def _4 = ApplicativeAsk[ReaderStrFuncInt, Int]
     }
 
     val FunctorListenTest: Unit = {
       def _1 = FunctorListen[WriterStrId, String]
       def _2 = FunctorListen[WriterTStrWriterTInt, String]
       def _3 = FunctorListen[WriterTStrWriterTInt, Vector[Int]]
-      def _4 = FunctorListen[WriterTStrTupleInt, Vector[Int]]
     }
 
     val FunctorRaiseTest: Unit = {
       def _1 = FunctorRaise[EitherStrId, String]
-      def _2 = FunctorRaise[EitherTStrEitherTInt, Int]
+      //def _2 = FunctorRaise[EitherTStrEitherTInt, Int]
       def _3 = FunctorRaise[EitherTStrEitherTInt, String]
     }
 
@@ -35,7 +33,6 @@ final class SummonableImplicits extends BaseSuite {
       def _1 = ApplicativeLocal[ReaderStrId, String]
       def _2 = ApplicativeLocal[ReaderStrInt, Int]
       def _3 = ApplicativeLocal[ReaderStrInt, String]
-      def _4 = ApplicativeLocal[ReaderStrFuncInt, Int]
     }
 
     val MonadStateTest: Unit = {
@@ -48,7 +45,6 @@ final class SummonableImplicits extends BaseSuite {
       def _1 = FunctorTell[WriterStrId, String]
       def _2 = FunctorTell[WriterTStrWriterTInt, String]
       def _3 = FunctorTell[WriterTStrWriterTInt, Vector[Int]]
-      def _4 = FunctorTell[WriterTStrTupleInt, Vector[Int]]
     }
   }
 

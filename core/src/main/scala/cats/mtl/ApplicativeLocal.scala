@@ -36,13 +36,44 @@ trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] with Serializable {
   def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }
 
-private[mtl] trait LowPriorityApplicativeLocalInstances {
+private[mtl] trait ApplicativeLocalInstances {
+
+  implicit def baseApplicativeLocalForKleisli[F[_], E](implicit F: Applicative[F]): ApplicativeLocal[Kleisli[F, E, *], E] =
+    new ApplicativeLocal[Kleisli[F, E, *], E] {
+      def local[A](f: E => E)(fa: Kleisli[F, E, A]) = fa.local(f)
+      val applicative = Applicative[Kleisli[F, E, *]]
+      def ask = Kleisli.ask[F, E]
+    }
+
+  implicit def baseApplicativeLocalForRWST[F[_], E, L, S](implicit F: Monad[F], L: Monoid[L]): ApplicativeLocal[RWST[F, E, L, S, *], E] =
+    new ApplicativeLocal[RWST[F, E, L, S, *], E] {
+      def local[A](f: E => E)(fa: RWST[F, E, L, S, A]) = fa.local(f)
+      val applicative = Applicative[RWST[F, E, L, S, *]]
+      def ask = RWST.ask[F, E, L, S]
+    }
+
   implicit def applicativeLocalForWriterT[F[_]: Monad, E, L: Monoid](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[WriterT[F, L, *], E] = 
     new ApplicativeLocal[WriterT[F, L, *], E] with ApplicativeAskForMonadPartialOrder[F, WriterT[F, L, *], E] {
       def local[A](f: E => E)(fa: WriterT[F, L, A]): WriterT[F, L, A] = 
         WriterT(F0.local(f)(fa.run))
       val F: ApplicativeAsk[F,E] = F0
       val lift: MonadPartialOrder[F, WriterT[F,L, *]] = MonadPartialOrder.monadPartialOrderForWriterT[F, L]
+    }
+
+  implicit def applicativeLocalForKleisli[F[_]: Monad, E, R](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[Kleisli[F, R, *], E] = 
+    new ApplicativeLocal[Kleisli[F, R, *], E] with ApplicativeAskForMonadPartialOrder[F, Kleisli[F, R, *], E] {
+      def local[A](f: E => E)(fa: Kleisli[F, R, A]): Kleisli[F, R, A] = 
+        Kleisli(r => F0.local(f)(fa.run(r)))
+      val F: ApplicativeAsk[F,E] = F0
+      val lift: MonadPartialOrder[F, Kleisli[F,R, *]] = MonadPartialOrder.monadPartialOrderForKleisli[F, R]
+    }
+
+  implicit def applicativeLocalForRWST[F[_]: Monad, E, R, L: Monoid, S](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[RWST[F, R, L, S, *], E] = 
+    new ApplicativeLocal[RWST[F, R, L, S, *], E] with ApplicativeAskForMonadPartialOrder[F, RWST[F, R, L, S, *], E] {
+      def local[A](f: E => E)(fa: RWST[F, R, L, S, A]): RWST[F, R, L, S, A] = 
+        RWST((r, s) => F0.local(f)(fa.run(r, s)))
+      val F: ApplicativeAsk[F,E] = F0
+      val lift: MonadPartialOrder[F, RWST[F,R, L, S, *]] = MonadPartialOrder.monadPartialOrderForRWST[F, R, L, S]
     }
 
   implicit def applicativeLocalForStateT[F[_]: Monad, E, S](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[StateT[F, S, *], E] = 
@@ -75,23 +106,6 @@ private[mtl] trait LowPriorityApplicativeLocalInstances {
         IorT(F0.local(f)(fa.value))
       val F: ApplicativeAsk[F,E] = F0
       val lift: MonadPartialOrder[F, IorT[F,E2, *]] = MonadPartialOrder.monadPartialOrderForIorT[F, E2]
-    }
-}
-
-private[mtl] trait ApplicativeLocalInstances extends LowPriorityApplicativeLocalInstances {
-
-  implicit def baseApplicativeLocalForKleisli[F[_], E](implicit F: Applicative[F]): ApplicativeLocal[Kleisli[F, E, *], E] =
-    new ApplicativeLocal[Kleisli[F, E, *], E] {
-      def local[A](f: E => E)(fa: Kleisli[F, E, A]) = fa.local(f)
-      val applicative = Applicative[Kleisli[F, E, *]]
-      def ask = Kleisli.ask[F, E]
-    }
-
-  implicit def baseApplicativeLocalForRWST[F[_], E, L, S](implicit F: Monad[F], L: Monoid[L]): ApplicativeLocal[RWST[F, E, L, S, *], E] =
-    new ApplicativeLocal[RWST[F, E, L, S, *], E] {
-      def local[A](f: E => E)(fa: RWST[F, E, L, S, A]) = fa.local(f)
-      val applicative = Applicative[RWST[F, E, L, S, *]]
-      def ask = RWST.ask[F, E, L, S]
     }
 }
 

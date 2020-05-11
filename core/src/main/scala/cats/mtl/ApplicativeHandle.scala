@@ -95,6 +95,81 @@ private[mtl] trait ApplicativeHandleInstances {
         case v @ Validated.Valid(_) => v
       }
     }
+
+  implicit final def handleIorT[F[_], E](implicit E: Semigroup[E], F: Monad[F]): ApplicativeHandle[IorT[F, E, *], E] =
+    new ApplicativeHandle[IorT[F, E, *], E] {
+      val applicative: Applicative[IorT[F, E, ?]] = IorT.catsDataMonadErrorForIorT[F, E]
+
+      val functor: Functor[IorT[F, E, ?]] = IorT.catsDataMonadErrorForIorT[F, E]
+
+      def raise[A](e: E): IorT[F, E, A] = IorT.leftT(e)
+
+      def handleWith[A](fa: IorT[F, E, A])(f: E => IorT[F, E, A]): IorT[F, E, A] = IorT(F.flatMap(fa.value) {
+        case Ior.Left(e) => f(e).value
+        case e @ _ => F.pure(e)
+      })
+    }
+  
+  implicit final def handleIor[E](implicit E: Semigroup[E]): ApplicativeHandle[Ior[E, *], E] =
+    new ApplicativeHandle[Ior[E, *], E] {
+      val applicative: Applicative[Ior[E, ?]] = Ior.catsDataMonadErrorForIor[E]
+
+      val functor: Functor[Ior[E, ?]] = Ior.catsDataMonadErrorForIor[E]
+
+      def raise[A](e: E): Ior[E, A] = Ior.Left(e)
+
+      def handleWith[A](fa: Ior[E, A])(f: E => Ior[E, A]): Ior[E, A] = fa match {
+        case Ior.Left(e) => f(e)
+        case _ => fa
+      }
+    }
+
+  implicit final def applicativeHandleKleisli[F[_], E, R](implicit F0: ApplicativeHandle[F, E], M: Monad[F]): ApplicativeHandle[Kleisli[F, R, *], E] =
+    new ApplicativeHandle[Kleisli[F, R, *], E] with FunctorRaiseMonadPartialOrder[F, Kleisli[F, R, *], E] {
+      val applicative: Applicative[Kleisli[F, R, *]] = Kleisli.catsDataMonadForKleisli[F, R]
+
+      val F: FunctorRaise[F,E] = F0
+      val lift: MonadPartialOrder[F, Kleisli[F, R, *]] = MonadPartialOrder.monadPartialOrderForKleisli[F, R]
+
+      def handleWith[A](fa: Kleisli[F,R,A])(f: E => Kleisli[F,R,A]): Kleisli[F,R,A] = 
+        Kleisli(r => F0.handleWith(fa.run(r))(e => f(e).run(r)))
+    }
+
+  implicit final def applicativeHandleWriterT[F[_], E, L](
+      implicit F0: ApplicativeHandle[F, E], 
+      M: Monad[F], 
+      L: Monoid[L]): ApplicativeHandle[WriterT[F, L, *], E] =
+    new ApplicativeHandle[WriterT[F, L, *], E] with FunctorRaiseMonadPartialOrder[F, WriterT[F, L, *], E] {
+      val applicative: Applicative[WriterT[F, L, *]] = WriterT.catsDataApplicativeForWriterT[F, L]
+
+      val F: FunctorRaise[F,E] = F0
+      val lift: MonadPartialOrder[F, WriterT[F, L, *]] = MonadPartialOrder.monadPartialOrderForWriterT[F, L]
+
+      def handleWith[A](fa: WriterT[F,L,A])(f: E => WriterT[F,L,A]): WriterT[F,L,A] = 
+        WriterT(F0.handleWith(fa.run)(e => f(e).run))
+    }
+
+  implicit final def applicativeHandleStateT[F[_], E, S](implicit F0: ApplicativeHandle[F, E], M: Monad[F]): ApplicativeHandle[StateT[F, S, *], E] =
+    new ApplicativeHandle[StateT[F, S, *], E] with FunctorRaiseMonadPartialOrder[F, StateT[F, S, *], E] {
+      val applicative: Applicative[StateT[F, S, *]] = IndexedStateT.catsDataMonadForIndexedStateT[F, S]
+
+      val F: FunctorRaise[F,E] = F0
+      val lift: MonadPartialOrder[F, StateT[F, S, *]] = MonadPartialOrder.monadPartialOrderForStateT[F, S]
+
+      def handleWith[A](fa: StateT[F,S,A])(f: E => StateT[F,S,A]): StateT[F,S,A] = 
+        StateT(s => F0.handleWith(fa.run(s))(e => f(e).run(s)))
+    }
+
+  implicit final def applicativeHandleRWST[F[_], E, R, L, S](implicit F0: ApplicativeHandle[F, E], M: Monad[F], L: Monoid[L]): ApplicativeHandle[RWST[F, R, L, S, *], E] =
+    new ApplicativeHandle[RWST[F, R, L, S, *], E] with FunctorRaiseMonadPartialOrder[F, RWST[F, R, L, S, *], E] {
+      val applicative: Applicative[RWST[F, R, L, S, *]] = IndexedReaderWriterStateT.catsDataMonadForRWST
+
+      val F: FunctorRaise[F,E] = F0
+      val lift: MonadPartialOrder[F, RWST[F, R, L, S, *]] = MonadPartialOrder.monadPartialOrderForRWST
+
+      def handleWith[A](fa: RWST[F, R, L, S, A])(f: E => RWST[F, R, L, S, A]): RWST[F, R, L, S, A] = 
+        RWST { case (r, s) => F0.handleWith(fa.run(r, s))(e => f(e).run(r, s)) }
+    }
 }
 
 object ApplicativeHandle extends ApplicativeHandleInstances {
