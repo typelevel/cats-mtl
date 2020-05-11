@@ -1,5 +1,5 @@
 package cats
 package mtl
 
-package object implicits extends instances.AllInstances with syntax.AllSyntax
+package object implicits extends syntax.AllSyntax
 

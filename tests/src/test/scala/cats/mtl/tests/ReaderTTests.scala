@@ -8,7 +8,6 @@ import cats.instances.all._
 import cats.laws.discipline.SerializableTests
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
-import cats.mtl.instances.local._
 import cats.mtl.laws.discipline._
 import org.scalacheck._
 

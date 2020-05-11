@@ -10,12 +10,6 @@ import cats.laws.discipline.arbitrary._
 import cats.laws.discipline._
 import cats.laws.discipline.eq._
 import org.scalacheck.{Arbitrary, Gen}
-import cats.mtl.instances.state._
-import cats.mtl.instances.local._
-import cats.mtl.instances.readert._
-import cats.mtl.instances.writert._
-import cats.mtl.instances.optiont._
-import cats.mtl.instances.eithert._
 import cats.instances.all._
 
 class StateTTestsBase extends BaseSuite {

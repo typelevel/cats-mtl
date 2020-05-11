@@ -31,7 +31,6 @@ class WriterTTests extends BaseSuite {
 
   locally {
       import cats.laws.discipline.arbitrary._
-      import cats.mtl.instances.all._
 
       
       checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
@@ -57,7 +56,6 @@ class WriterTTests extends BaseSuite {
 
   locally {
     import cats.laws.discipline.arbitrary._
-    import cats.mtl.instances.censor._
 
     checkAll("WriterT[Option, String, String]",
       ApplicativeCensorTests[WriterTC[Option, String]#l, String]

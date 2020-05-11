@@ -1,7 +1,0 @@
-package cats
-package mtl
-package instances
-
-trait ReaderWriterStateTInstances
-
-object readerwriterstatet extends ReaderWriterStateTInstances
