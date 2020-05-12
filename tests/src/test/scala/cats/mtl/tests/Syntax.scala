@@ -31,11 +31,11 @@ final class Syntax extends BaseSuite {
         FunctorListen.listens(lift)((_: String) + "suffix")
     }
     test("ApplicativeLocal") {
-      val fa: OptionT[FunctionC[String]#l, Int] = OptionT.liftF[FunctionC[String]#l, Int](_.length)
+      val fa: OptionT[Reader[String, *], Int] = OptionT.liftF[Reader[String, *], Int](Reader(_.length))
       val local = fa.local[String](s => s + "!").value("ha")
       val scope = fa.scope[String]("state").value("ha")
       val localC: String = ApplicativeLocal
-        .local((s: String) => s + "!")(ApplicativeAsk.askF[FunctionC[String]#l]())
+        .local((s: String) => s + "!")(ApplicativeAsk.askF[Reader[String, *]]())
         .apply("ha")
       val scopeC: Option[Int] = ApplicativeLocal.scope("state")(fa).value.apply("ha")
     }

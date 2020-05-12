@@ -2,6 +2,7 @@ package cats
 package mtl
 
 import scala.util.control.NonFatal
+import cats.data._
 
 /**
   * `FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
@@ -58,12 +59,47 @@ trait FunctorRaise[F[_], E] extends Serializable {
     A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
-private[mtl] trait FunctorRaiseInstances {
-  implicit def functorRaiseForMonadError[F[_], E](implicit F: MonadError[F, E]): FunctorRaise[F, E] =
-    new FunctorRaise[F, E] {
-      val functor = F
-      def raise[A](e: E) = F.raiseError(e)
-    }
+private[mtl] trait FunctorRaiseMonadPartialOrder[F[_], G[_], E] extends FunctorRaise[G, E] {
+  val lift: MonadPartialOrder[F, G]
+  val F: FunctorRaise[F,E]
+  
+  override def functor = lift.monadG
+  override def raise[A](e: E) = lift(F.raise(e))
+}
+
+private[mtl] trait LowPriorityFunctorRaiseInstances {
+  implicit def functorRaiseForMonadPartialOrder[F[_], G[_]: Functor, E](
+    implicit F: FunctorRaise[F, E], 
+    lift: MonadPartialOrder[F, G]
+  ): FunctorRaise[G, E] =
+      new FunctorRaise[G, E] {
+        val functor = Functor[G]
+        def raise[A](e: E) = lift(F.raise(e))
+      }
+}
+
+private[mtl] trait FunctorRaiseInstances extends LowPriorityFunctorRaiseInstances {
+  implicit final def raiseEitherT[M[_], E](implicit M: Monad[M]): FunctorRaise[EitherTC[M, E]#l, E] =
+    ApplicativeHandle.handleEitherT
+
+  implicit final def raiseEither[E]: FunctorRaise[EitherC[E]#l, E] =
+    ApplicativeHandle.handleEither
+
+  implicit final def raiseOptionT[M[_]](implicit M: Monad[M]): FunctorRaise[OptionTC[M]#l, Unit] =
+    ApplicativeHandle.handleOptionT
+
+  implicit final def raiseOption[E]: FunctorRaise[Option, Unit] = 
+    ApplicativeHandle.handleOption
+
+  implicit final def raiseValidated[E](implicit E: Semigroup[E]): FunctorRaise[Validated[E, ?], E] =
+    ApplicativeHandle.handleValidated
+
+  implicit final def raiseIor[E](implicit E: Semigroup[E]): FunctorRaise[Ior[E, *], E] =
+    ApplicativeHandle.handleIor[E]
+  
+  implicit final def raiseIorT[F[_], E](implicit E: Semigroup[E], F: Monad[F]): FunctorRaise[IorT[F, E, *], E] =
+    ApplicativeHandle.handleIorT[F, E]
+    
 }
 
 object FunctorRaise extends FunctorRaiseInstances {

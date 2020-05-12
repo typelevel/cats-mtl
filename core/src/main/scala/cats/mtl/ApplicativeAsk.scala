@@ -2,6 +2,7 @@ package cats
 package mtl
 
 import cats.data.{Kleisli, ReaderWriterStateT => RWST}
+import cats.data.IndexedReaderWriterStateT
 
 /**
   * `ApplicativeAsk[F, E]` lets you access an `E` value in the `F[_]` context.
@@ -31,33 +32,34 @@ trait ApplicativeAsk[F[_], E] extends Serializable {
   def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
 }
 
+private[mtl] trait ApplicativeAskForMonadPartialOrder[F[_], G[_], E] extends ApplicativeAsk[G, E] {
+  val lift: MonadPartialOrder[F, G]
+  val F: ApplicativeAsk[F, E]
+  
+  override def applicative = lift.monadG
+  override def ask = lift(F.ask)
+}
+
 private[mtl] trait LowPriorityApplicativeAskInstances {
 
   implicit def applicativeAskForMonadPartialOrder[F[_], G[_], E](
-      implicit lift: MonadPartialOrder[F, G],
-      F: ApplicativeAsk[F, E])
+      implicit lift0: MonadPartialOrder[F, G],
+      F0: ApplicativeAsk[F, E])
       : ApplicativeAsk[G, E] =
-    new ApplicativeAsk[G, E] {
-      val applicative = lift.monadG
-      def ask = lift(F.ask)
+    new ApplicativeAskForMonadPartialOrder[F, G, E] { 
+      val lift: MonadPartialOrder[F,G] = lift0 
+      val F: ApplicativeAsk[F,E] = F0
     }
 }
 
+
 private[mtl] trait ApplicativeAskInstances extends LowPriorityApplicativeAskInstances {
 
-  implicit def applicativeAskForKleisli[F[_]: Applicative, E]: ApplicativeAsk[Kleisli[F, E, *], E] =
-    new ApplicativeAsk[Kleisli[F, E, *], E] {
-      val applicative = Applicative[Kleisli[F, E, *]]
+  implicit def applicativeAskForKleisli[F[_], E](implicit F: Applicative[F]): ApplicativeAsk[Kleisli[F, E, *], E] =
+    ApplicativeLocal.baseApplicativeLocalForKleisli[F, E]
 
-      def ask = Kleisli.ask[F, E]
-    }
-
-  implicit def applicativeAskForRWST[F[_]: Monad, E, L: Monoid, S]: ApplicativeAsk[RWST[F, E, L, S, *], E] =
-    new ApplicativeAsk[RWST[F, E, L, S, *], E] {
-      val applicative = Applicative[RWST[F, E, L, S, *]]
-
-      def ask = RWST.ask[F, E, L, S]
-    }
+  implicit def applicativeAskForRWST[F[_], E, L, S](implicit F: Monad[F], L: Monoid[L]): ApplicativeAsk[RWST[F, E, L, S, *], E] =
+    ApplicativeLocal.baseApplicativeLocalForRWST[F, E, L, S]
 }
 
 object ApplicativeAsk extends ApplicativeAskInstances {

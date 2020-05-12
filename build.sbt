@@ -82,7 +82,7 @@ lazy val commonJsSettings = Seq(
 
 // projects
 
-lazy val catsVersion = "2.0.0"
+lazy val catsVersion = "2.1.1"
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
@@ -196,7 +196,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(coreSettings: _*)
   .settings(
     libraryDependencies ++= Seq("org.typelevel" %%% "cats-testkit" % catsVersion,
-                                "org.typelevel" %%% "discipline-scalatest" % "1.0.0-RC2")
+                                "org.typelevel" %%% "discipline-scalatest" % "1.0.1")
   )
   .settings(Publishing.noPublishSettings: _*)
   .jsSettings(commonJsSettings: _*)

@@ -29,15 +29,23 @@ trait FunctorTell[F[_], L] extends Serializable {
   def tuple[A](ta: (L, A)): F[A] = writer(ta._2, ta._1)
 }
 
+private[mtl] trait FunctorTellMonadPartialOrder[F[_], G[_], L] extends FunctorTell[G, L] {
+  val lift: MonadPartialOrder[F, G]
+  val F: FunctorTell[F, L]
+  
+  override val functor = lift.monadG
+  override def tell(l: L) = lift(F.tell(l))
+}
+
 private[mtl] trait LowPriorityFunctorTellInstances {
 
   implicit def functorTellForPartialOrder[F[_], G[_], L](
-      implicit lift: MonadPartialOrder[F, G],
-      F: FunctorTell[F, L])
+      implicit lift0: MonadPartialOrder[F, G],
+      F0: FunctorTell[F, L])
       : FunctorTell[G, L] =
-    new FunctorTell[G, L] {
-      val functor = lift.monadG
-      def tell(l: L) = lift(F.tell(l))
+    new FunctorTellMonadPartialOrder[F, G, L] {
+      val lift: MonadPartialOrder[F, G] = lift0
+      val F: FunctorTell[F, L] = F0
     }
 }
 

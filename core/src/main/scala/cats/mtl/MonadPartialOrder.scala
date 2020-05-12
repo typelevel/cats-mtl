@@ -59,6 +59,13 @@ private[mtl] trait MonadPartialOrderInstances {
       val monadG = IndexedReaderWriterStateT.catsDataMonadForRWST[F, E, L, S]
       def apply[A](fa: F[A]) = RWST.liftF(fa)
     }
+
+  implicit def monadPartialOrderForIorT[F[_], E: Semigroup](implicit F: Monad[F]): MonadPartialOrder[F, IorT[F, E, *]] =
+    new MonadPartialOrder[F, IorT[F, E, *]] {
+      def apply[A](fa: F[A]): IorT[F,E,A] = IorT.liftF(fa)
+      val monadF: Monad[F] = F
+      val monadG: Monad[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT[F, E]
+    }
 }
 
 object MonadPartialOrder extends MonadPartialOrderInstances {

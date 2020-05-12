@@ -13,7 +13,8 @@ trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
 
   import handleInstance.{handle, handleWith, attempt}
   import raiseInstance.{raise, catchNonFatal}
-  import handleInstance.applicative._
+
+  import applicativeInstance._
 
   // external laws:
   def raiseAndHandleWithIsFunctionApplication[A](e: E, f: E => F[A]): IsEq[F[A]] =
