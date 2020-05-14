@@ -36,7 +36,24 @@ trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] with Serializable {
   def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
 }
 
-private[mtl] trait ApplicativeLocalInstances {
+private[mtl] trait LowPriorityApplicativeLocalInstances { 
+  implicit def applicativeLocalForKleisli[F[_]: Monad, E, R](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[Kleisli[F, R, *], E] = 
+    new ApplicativeLocal[Kleisli[F, R, *], E] with ApplicativeAskForMonadPartialOrder[F, Kleisli[F, R, *], E] {
+      def local[A](f: E => E)(fa: Kleisli[F, R, A]): Kleisli[F, R, A] = 
+        Kleisli(r => F0.local(f)(fa.run(r)))
+      val F: ApplicativeAsk[F,E] = F0
+      val lift: MonadPartialOrder[F, Kleisli[F,R, *]] = MonadPartialOrder.monadPartialOrderForKleisli[F, R]
+    }
+
+  implicit def applicativeLocalForReader[E]: ApplicativeLocal[Reader[E, *], E] =
+    new ApplicativeLocal[Reader[E, *], E] {
+      def local[A](f: E => E)(fa: Reader[E, A]) = fa.local(f)
+      val applicative = Applicative[Reader[E, *]]
+      def ask = Kleisli.ask[Id, E]
+    }
+}
+
+private[mtl] trait ApplicativeLocalInstances extends LowPriorityApplicativeLocalInstances {
 
   implicit def baseApplicativeLocalForKleisli[F[_], E](implicit F: Applicative[F]): ApplicativeLocal[Kleisli[F, E, *], E] =
     new ApplicativeLocal[Kleisli[F, E, *], E] {
@@ -58,14 +75,6 @@ private[mtl] trait ApplicativeLocalInstances {
         WriterT(F0.local(f)(fa.run))
       val F: ApplicativeAsk[F,E] = F0
       val lift: MonadPartialOrder[F, WriterT[F,L, *]] = MonadPartialOrder.monadPartialOrderForWriterT[F, L]
-    }
-
-  implicit def applicativeLocalForKleisli[F[_]: Monad, E, R](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[Kleisli[F, R, *], E] = 
-    new ApplicativeLocal[Kleisli[F, R, *], E] with ApplicativeAskForMonadPartialOrder[F, Kleisli[F, R, *], E] {
-      def local[A](f: E => E)(fa: Kleisli[F, R, A]): Kleisli[F, R, A] = 
-        Kleisli(r => F0.local(f)(fa.run(r)))
-      val F: ApplicativeAsk[F,E] = F0
-      val lift: MonadPartialOrder[F, Kleisli[F,R, *]] = MonadPartialOrder.monadPartialOrderForKleisli[F, R]
     }
 
   implicit def applicativeLocalForRWST[F[_]: Monad, E, R, L: Monoid, S](implicit F0: ApplicativeLocal[F, E]): ApplicativeLocal[RWST[F, R, L, S, *], E] = 

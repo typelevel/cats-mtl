@@ -1,7 +1,7 @@
 package cats
 package mtl
 
-import cats.data.{Kleisli, ReaderWriterStateT => RWST}
+import cats.data.{Kleisli, Reader, ReaderWriterStateT => RWST}
 import cats.data.IndexedReaderWriterStateT
 
 /**
@@ -49,6 +49,12 @@ private[mtl] trait LowPriorityApplicativeAskInstances {
     new ApplicativeAskForMonadPartialOrder[F, G, E] { 
       val lift: MonadPartialOrder[F,G] = lift0 
       val F: ApplicativeAsk[F,E] = F0
+    }
+
+  implicit def applicativeAskForReader[E]: ApplicativeAsk[Reader[E, *], E] =
+    new ApplicativeAsk[Reader[E, *], E] {
+      val applicative = Applicative[Reader[E, *]]
+      def ask = Kleisli.ask[Id, E]
     }
 }
 

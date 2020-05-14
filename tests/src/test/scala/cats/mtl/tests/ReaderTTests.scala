@@ -31,11 +31,12 @@ class ReaderTTests extends BaseSuite {
   }
 
   {
+    Applicative[Reader[String, *]]
     checkAll("Reader[String, *]",
-      ApplicativeLocalTests[ReaderTC[Id, String]#l, String]
+      ApplicativeLocalTests[Kleisli[Id, String, *], String]
         .applicativeLocal[String, String])
     checkAll("FunctorLocal[Reader[String, *], String]",
-      SerializableTests.serializable(ApplicativeLocal[ReaderTC[Id, String]#l, String]))
+      SerializableTests.serializable(ApplicativeLocal[Kleisli[Id, String, *], String]))
   }
 
   {
