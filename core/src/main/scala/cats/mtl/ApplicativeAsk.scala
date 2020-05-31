@@ -35,26 +35,20 @@ trait ApplicativeAsk[F[_], E] extends Serializable {
 private[mtl] trait ApplicativeAskForMonadPartialOrder[F[_], G[_], E] extends ApplicativeAsk[G, E] {
   val lift: MonadPartialOrder[F, G]
   val F: ApplicativeAsk[F, E]
-  
+
   override def applicative = lift.monadG
   override def ask = lift(F.ask)
 }
 
-private[mtl] trait LowPriorityApplicativeAskInstances {
+private[mtl] trait LowPriorityApplicativeAskInstances extends LowPriorityApplicativeAskInstancesCompat {
 
   implicit def applicativeAskForMonadPartialOrder[F[_], G[_], E](
       implicit lift0: MonadPartialOrder[F, G],
       F0: ApplicativeAsk[F, E])
       : ApplicativeAsk[G, E] =
-    new ApplicativeAskForMonadPartialOrder[F, G, E] { 
-      val lift: MonadPartialOrder[F,G] = lift0 
+    new ApplicativeAskForMonadPartialOrder[F, G, E] {
+      val lift: MonadPartialOrder[F,G] = lift0
       val F: ApplicativeAsk[F,E] = F0
-    }
-
-  implicit def applicativeAskForReader[E]: ApplicativeAsk[Reader[E, *], E] =
-    new ApplicativeAsk[Reader[E, *], E] {
-      val applicative = Applicative[Reader[E, *]]
-      def ask = Kleisli.ask[Id, E]
     }
 }
 
