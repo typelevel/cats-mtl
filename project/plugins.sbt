@@ -1,5 +1,5 @@
 addSbtPlugin("com.eed3si9n"        % "sbt-unidoc"               % "0.4.3")
-addSbtPlugin("org.scala-js"        % "sbt-scalajs"              % "0.6.33")
+addSbtPlugin("org.scala-js"        % "sbt-scalajs"              % "1.1.0")
 addSbtPlugin("com.github.tkawachi" % "sbt-doctest"              % "0.9.6")
 addSbtPlugin("com.47deg"           % "sbt-microsites"           % "1.2.1")
 addSbtPlugin("org.scalameta"       % "sbt-scalafmt"             % "2.4.0")
