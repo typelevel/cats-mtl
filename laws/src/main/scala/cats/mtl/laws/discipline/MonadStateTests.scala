@@ -13,13 +13,12 @@ trait MonadStateTests[F[_], S] extends Laws {
 
   def laws: MonadStateLaws[F, S] = MonadStateLaws[F, S]
 
-  def monadState[A: Arbitrary](implicit
-                               ArbFA: Arbitrary[F[A]],
-                               ArbS: Arbitrary[S],
-                               CogenS: Cogen[S],
-                               EqFU: Eq[F[Unit]],
-                               EqFS: Eq[F[S]]
-                              ): RuleSet = {
+  def monadState[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbS: Arbitrary[S],
+      CogenS: Cogen[S],
+      EqFU: Eq[F[Unit]],
+      EqFS: Eq[F[S]]): RuleSet = {
     new DefaultRuleSet(
       name = "monadState",
       parent = None,

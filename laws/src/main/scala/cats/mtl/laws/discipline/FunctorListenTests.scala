@@ -10,16 +10,15 @@ import cats.kernel.laws.discipline.catsLawsIsEqToProp
 trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
   def laws: FunctorListenLaws[F, L]
 
-  def functorListen[A: Arbitrary, B: Arbitrary](implicit
-                                                    ArbFA: Arbitrary[F[A]],
-                                                    ArbL: Arbitrary[L],
-                                                    CogenA: Cogen[A],
-                                                    CogenL: Cogen[L],
-                                                    EqFU: Eq[F[Unit]],
-                                                    EqFA: Eq[F[A]],
-                                                    EqFAB: Eq[F[(A, B)]],
-                                                    EqFUL: Eq[F[(Unit, L)]]
-                                                   ): RuleSet = {
+  def functorListen[A: Arbitrary, B: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbL: Arbitrary[L],
+      CogenA: Cogen[A],
+      CogenL: Cogen[L],
+      EqFU: Eq[F[Unit]],
+      EqFA: Eq[F[A]],
+      EqFAB: Eq[F[(A, B)]],
+      EqFUL: Eq[F[(Unit, L)]]): RuleSet = {
     new DefaultRuleSet(
       name = "functorListen",
       parent = Some(functorTell[A]),

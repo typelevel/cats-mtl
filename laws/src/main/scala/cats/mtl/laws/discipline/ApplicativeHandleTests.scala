@@ -12,22 +12,22 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
 
   override def laws: ApplicativeHandleLaws[F, E] = ApplicativeHandleLaws[F, E]
 
-  def applicativeHandle[A: Arbitrary](implicit
-                                        ArbFA: Arbitrary[F[A]],
-                                        ArbEE: Arbitrary[E => E],
-                                        ArbE: Arbitrary[E],
-                                        CogenA: Cogen[A],
-                                        CogenE: Cogen[E],
-                                        EqFU: Eq[F[E]],
-                                        EqFA: Eq[F[A]],
-                                        EqFUnit: Eq[F[Unit]],
-                                        EqEitherA: Eq[F[Either[E, A]]],
-                                        EqEitherUnit: Eq[F[Either[E, Unit]]]
-                                       ): RuleSet = {
+  def applicativeHandle[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbEE: Arbitrary[E => E],
+      ArbE: Arbitrary[E],
+      CogenA: Cogen[A],
+      CogenE: Cogen[E],
+      EqFU: Eq[F[E]],
+      EqFA: Eq[F[A]],
+      EqFUnit: Eq[F[Unit]],
+      EqEitherA: Eq[F[Either[E, A]]],
+      EqEitherUnit: Eq[F[Either[E, Unit]]]): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeHandle",
       parent = Some(functorRaise[A]),
-      "raise and handleWith is function application" -> ∀(laws.raiseAndHandleWithIsFunctionApplication[A]  _),
+      "raise and handleWith is function application" -> ∀(
+        laws.raiseAndHandleWithIsFunctionApplication[A] _),
       "raise and handle is pure and function application" -> ∀(laws.raiseAndHandleIsPure[A] _),
       "pure and handleWith is pure" -> ∀(laws.handleWithPureIsPure[A] _),
       "pure and handle is pure" -> ∀(laws.handlePureIsPure[A] _),
@@ -40,7 +40,8 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
 }
 
 object ApplicativeHandleTests {
-  def apply[F[_], E](implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleTests[F, E] = {
+  def apply[F[_], E](
+      implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleTests[F, E] = {
     new ApplicativeHandleTests[F, E] {
       override lazy val handleInstance: ApplicativeHandle[F, E] = instance0
       override lazy val raiseInstance: FunctorRaise[F, E] = instance0

@@ -13,12 +13,13 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
-abstract class BaseSuite extends AnyFunSuite
-  with Matchers
-  with Configuration
-  with StrictCatsEquality
-  with EqSyntax
-  with FunSuiteDiscipline {
+abstract class BaseSuite
+    extends AnyFunSuite
+    with Matchers
+    with Configuration
+    with StrictCatsEquality
+    with EqSyntax
+    with FunSuiteDiscipline {
 
   implicit def catsMtlLawsExhaustiveCheckForArbitrary[A: Arbitrary]: ExhaustiveCheck[A] =
     ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[List[A]]).sample.get)
@@ -48,26 +49,36 @@ abstract class BaseSuite extends AnyFunSuite
   protected type WriterTIntId[A] = WriterT[Id, Vector[Int], A]
   protected type WriterTStrWriterTInt[A] = WriterTStr[WriterTIntId, A]
   protected type WriterTStrTupleInt[A] = WriterTStr[TupleC[Vector[Int]]#l, A]
-  protected type ReaderTStringOverWriterTStringOverOption[A] = ReaderT[WriterTC[Option, String]#l, List[Int], A]
-  protected type StateTStringOverWriterTStringOverOption[A] = StateT[WriterTC[Option, String]#l, List[Int], A]
-  protected type ReaderTIntOverReaderTStringOverOption[A] = ReaderT[ReaderTC[Option, String]#l, Int, A]
-  protected type WriterTIntOverReaderTStringOverOption[A] = WriterT[ReaderTC[Option, String]#l, Int, A]
+  protected type ReaderTStringOverWriterTStringOverOption[A] =
+    ReaderT[WriterTC[Option, String]#l, List[Int], A]
+  protected type StateTStringOverWriterTStringOverOption[A] =
+    StateT[WriterTC[Option, String]#l, List[Int], A]
+  protected type ReaderTIntOverReaderTStringOverOption[A] =
+    ReaderT[ReaderTC[Option, String]#l, Int, A]
+  protected type WriterTIntOverReaderTStringOverOption[A] =
+    WriterT[ReaderTC[Option, String]#l, Int, A]
   protected type OptionTOverReaderTStringOverOption[A] = OptionT[ReaderTC[Option, String]#l, A]
-  protected type EitherTIntOverReaderTStringOverOption[A] = EitherT[ReaderTC[Option, String]#l, Int, A]
-  protected type StateTIntOverReaderTStringOverOption[A] = StateT[ReaderTC[Option, String]#l, Int, A]
-  protected type ReaderTIntOverStateTStringOverOption[A] = ReaderT[StateTC[Option, String]#l, Int, A]
-  protected type WriterTIntOverStateTStringOverOption[A] = WriterT[StateTC[Option, String]#l, Int, A]
+  protected type EitherTIntOverReaderTStringOverOption[A] =
+    EitherT[ReaderTC[Option, String]#l, Int, A]
+  protected type StateTIntOverReaderTStringOverOption[A] =
+    StateT[ReaderTC[Option, String]#l, Int, A]
+  protected type ReaderTIntOverStateTStringOverOption[A] =
+    ReaderT[StateTC[Option, String]#l, Int, A]
+  protected type WriterTIntOverStateTStringOverOption[A] =
+    WriterT[StateTC[Option, String]#l, Int, A]
   protected type OptionTOverStateTStringOverOption[A] = OptionT[StateTC[Option, String]#l, A]
-  protected type EitherTIntOverStateTStringOverOption[A] = EitherT[StateTC[Option, String]#l, Int, A]
-  protected type StateTIntOverStateTStringOverOption[A] = StateT[StateTC[Option, String]#l, Int, A]
+  protected type EitherTIntOverStateTStringOverOption[A] =
+    EitherT[StateTC[Option, String]#l, Int, A]
+  protected type StateTIntOverStateTStringOverOption[A] =
+    StateT[StateTC[Option, String]#l, Int, A]
 
   // disable Eq syntax (by making `catsSyntaxEq` not implicit), since it collides
   // with scalactic's equality
-  override def catsSyntaxEq[A: Eq](a: A): EqOps[A] = {
+  override def catsSyntaxEq[A: Eq](a: A): EqOps[A] =
     new EqOps[A](a)
-  }
 
-  implicit def tupleCTransArb[L](implicit arb: Arbitrary[L => L]): Arbitrary[TupleC[L]#l ~> TupleC[L]#l] = {
+  implicit def tupleCTransArb[L](
+      implicit arb: Arbitrary[L => L]): Arbitrary[TupleC[L]#l ~> TupleC[L]#l] = {
     Arbitrary(arb.arbitrary.map { f =>
       new (TupleC[L]#l ~> TupleC[L]#l) {
         def apply[A](fa: (L, A)): (L, A) = (f(fa._1), fa._2)
@@ -77,27 +88,39 @@ abstract class BaseSuite extends AnyFunSuite
 
   implicit def idTransArb: Arbitrary[Id ~> Id] = Arbitrary(Gen.const(FunctionK.id[Id]))
 
-  def tweakableCatsLawsEqForFn1[A, B](cnt: Int)(implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] = new Eq[A => B] {
-    def eqv(f: A => B, g: A => B): Boolean = {
-      val samples = List.fill(cnt)(A.arbitrary.sample).collect{
-        case Some(a) => a
-        case None => sys.error("Could not generate arbitrary values to compare two functions")
+  def tweakableCatsLawsEqForFn1[A, B](
+      cnt: Int)(implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] =
+    new Eq[A => B] {
+      def eqv(f: A => B, g: A => B): Boolean = {
+        val samples = List.fill(cnt)(A.arbitrary.sample).collect {
+          case Some(a) => a
+          case None => sys.error("Could not generate arbitrary values to compare two functions")
+        }
+        samples.forall(s => B.eqv(f(s), g(s)))
       }
-      samples.forall(s => B.eqv(f(s), g(s)) )
     }
-  }
 
-  implicit def eitherTransArb[E](implicit arbF: Arbitrary[E => E], arbE: Arbitrary[E]): Arbitrary[EitherC[E]#l ~> EitherC[E]#l] = {
+  implicit def eitherTransArb[E](
+      implicit arbF: Arbitrary[E => E],
+      arbE: Arbitrary[E]): Arbitrary[EitherC[E]#l ~> EitherC[E]#l] = {
     Arbitrary(for {
       num <- Gen.chooseNum(1, 3)
       res <-
-      if (num == 1) Gen.const(FunctionK.id[EitherC[E]#l])
-      else if (num == 2) arbF.arbitrary.map(f => new (EitherC[E]#l ~> EitherC[E]#l) {
-        def apply[A](e: E Either A) = e.left.map(f)
-      })
-      else arbE.arbitrary.map(e => new (EitherC[E]#l ~> EitherC[E]#l) {
-        def apply[A](unused: E Either A) = Left(e)
-      })
+        if (num == 1) Gen.const(FunctionK.id[EitherC[E]#l])
+        else if (num == 2)
+          arbF
+            .arbitrary
+            .map(f =>
+              new (EitherC[E]#l ~> EitherC[E]#l) {
+                def apply[A](e: E Either A) = e.left.map(f)
+              })
+        else
+          arbE
+            .arbitrary
+            .map(e =>
+              new (EitherC[E]#l ~> EitherC[E]#l) {
+                def apply[A](unused: E Either A) = Left(e)
+              })
     } yield res)
   }
 
@@ -121,7 +144,8 @@ abstract class BaseSuite extends AnyFunSuite
       maxDiscardedFactor = if (Platform.isJvm) PosZDouble(5.0) else PosZDouble(50.0),
       minSize = PosZInt(0),
       sizeRange = if (Platform.isJvm) PosZInt(10) else PosZInt(5),
-      workers = PosInt(1))
+      workers = PosInt(1)
+    )
 
   lazy val slowCheckConfiguration: PropertyCheckConfiguration =
     if (Platform.isJvm) checkConfiguration

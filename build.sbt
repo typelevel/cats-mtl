@@ -9,9 +9,8 @@ organization in ThisBuild := "org.typelevel"
 
 addCommandAlias("buildJVM", "testsJVM/test")
 
-addCommandAlias(
-  "validateJVM",
-  ";scalastyle;sbt:scalafmt::test;scalafmt::test;test:scalafmt::test;buildJVM;makeMicrosite")
+addCommandAlias("validateJVM",
+                ";scalafmtCheckAll;buildJVM;makeMicrosite")
 
 addCommandAlias("validateJS", ";testsJS/compile;testsJS/test")
 

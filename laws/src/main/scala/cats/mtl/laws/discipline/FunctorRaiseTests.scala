@@ -12,13 +12,12 @@ trait FunctorRaiseTests[F[_], E] extends Laws {
   implicit val raiseInstance: FunctorRaise[F, E]
   def laws: FunctorRaiseLaws[F, E] = FunctorRaiseLaws[F, E]
 
-  def functorRaise[A: Arbitrary](implicit
-                                ArbFA: Arbitrary[F[A]],
-                                ArbE: Arbitrary[E],
-                                CogenA: Cogen[A],
-                                EqFU: Eq[F[Unit]],
-                                EqFA: Eq[F[A]]
-                               ): RuleSet = {
+  def functorRaise[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbE: Arbitrary[E],
+      CogenA: Cogen[A],
+      EqFU: Eq[F[Unit]],
+      EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "functorRaise",
       parent = None,

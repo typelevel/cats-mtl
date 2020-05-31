@@ -13,14 +13,12 @@ trait ApplicativeAskLaws[F[_], E] {
   implicit val applicative: Applicative[F] = askInstance.applicative
 
   // external law:
-  def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] = {
+  def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] =
     ask *> fa <-> fa
-  }
 
   // internal law:
-  def readerIsAskAndMap[A](f: E => A): IsEq[F[A]] = {
+  def readerIsAskAndMap[A](f: E => A): IsEq[F[A]] =
     ask.map(f) <-> reader(f)
-  }
 }
 
 object ApplicativeAskLaws {

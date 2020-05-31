@@ -11,13 +11,11 @@ trait FunctorTellLaws[F[_], L] {
   implicit def functor(implicit F: FunctorTell[F, L]): Functor[F] = F.functor
 
   // internal laws:
-  def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] = {
+  def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] =
     F.tell(l).as(a) <-> F.writer(a, l)
-  }
 
-  def tupleIsWriterFlipped[A](a: A, l: L): IsEq[F[A]] = {
+  def tupleIsWriterFlipped[A](a: A, l: L): IsEq[F[A]] =
     F.writer(a, l) <-> F.tuple((l, a))
-  }
 
 }
 

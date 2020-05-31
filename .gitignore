@@ -3,6 +3,9 @@ target
 .ensime
 .ensime_lucene
 .ensime_cache
+.bloop
+.metals
+project/metals.sbt
 TAGS
 \#*#
 *~

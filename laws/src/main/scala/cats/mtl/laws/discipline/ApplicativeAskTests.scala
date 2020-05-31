@@ -13,14 +13,13 @@ trait ApplicativeAskTests[F[_], E] extends Laws {
 
   def laws: ApplicativeAskLaws[F, E] = ApplicativeAskLaws[F, E]
 
-  def applicativeAsk[A: Arbitrary](implicit
-                                   ArbFA: Arbitrary[F[A]],
-                                   ArbE: Arbitrary[E],
-                                   CogenA: Cogen[A],
-                                   CogenE: Cogen[E],
-                                   EqFU: Eq[F[E]],
-                                   EqFA: Eq[F[A]]
-                                  ): RuleSet = {
+  def applicativeAsk[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbE: Arbitrary[E],
+      CogenA: Cogen[A],
+      CogenE: Cogen[E],
+      EqFU: Eq[F[E]],
+      EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeAsk",
       parent = None,
@@ -38,4 +37,3 @@ object ApplicativeAskTests {
     }
   }
 }
-

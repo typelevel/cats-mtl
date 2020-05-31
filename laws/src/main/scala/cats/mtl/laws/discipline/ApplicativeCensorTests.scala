@@ -10,16 +10,15 @@ import cats.kernel.laws.discipline.catsLawsIsEqToProp
 trait ApplicativeCensorTests[F[_], L] extends FunctorListenTests[F, L] {
   def laws: ApplicativeCensorLaws[F, L]
 
-  def applicativeCensor[A: Arbitrary, B: Arbitrary](implicit
-                                                    ArbFA: Arbitrary[F[A]],
-                                                    ArbL: Arbitrary[L],
-                                                    CogenA: Cogen[A],
-                                                    CogenL: Cogen[L],
-                                                    EqFU: Eq[F[Unit]],
-                                                    EqFA: Eq[F[A]],
-                                                    EqFAB: Eq[F[(A, B)]],
-                                                    EqFUL: Eq[F[(Unit, L)]]
-                                                 ): RuleSet = {
+  def applicativeCensor[A: Arbitrary, B: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbL: Arbitrary[L],
+      CogenA: Cogen[A],
+      CogenL: Cogen[L],
+      EqFU: Eq[F[Unit]],
+      EqFA: Eq[F[A]],
+      EqFAB: Eq[F[(A, B)]],
+      EqFUL: Eq[F[(Unit, L)]]): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeCensor",
       parent = Some(functorListen[A, B]),
@@ -34,7 +33,8 @@ trait ApplicativeCensorTests[F[_], L] extends FunctorListenTests[F, L] {
 }
 
 object ApplicativeCensorTests {
-  def apply[F[_], L](implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorTests[F, L] = {
+  def apply[F[_], L](
+      implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorTests[F, L] = {
     new ApplicativeCensorTests[F, L] {
       override def laws: ApplicativeCensorLaws[F, L] = ApplicativeCensorLaws[F, L]
     }

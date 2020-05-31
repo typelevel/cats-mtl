@@ -3,7 +3,7 @@ package mtl
 package syntax
 
 trait AskSyntax {
-  implicit def toReaderOps[E, A](fun: E => A): ReaderOps[E, A]  = new ReaderOps(fun)
+  implicit def toReaderOps[E, A](fun: E => A): ReaderOps[E, A] = new ReaderOps(fun)
 }
 
 final class ReaderOps[E, A](val fun: E => A) extends AnyVal {
