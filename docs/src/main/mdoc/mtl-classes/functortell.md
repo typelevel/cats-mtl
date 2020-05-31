@@ -29,7 +29,6 @@ import cats._
 import cats.data._
 import cats.implicits._
 import cats.mtl.FunctorTell
-import cats.mtl.implicits._
 
 case class ServiceParams(option1: String, option2: Int)
 

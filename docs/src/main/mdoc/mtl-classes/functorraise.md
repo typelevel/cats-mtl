@@ -27,10 +27,8 @@ Here's a quick example of how you might use it:
 
 ```scala mdoc
 import cats._
-import cats.data._
 import cats.implicits._
 import cats.mtl._
-import cats.mtl.implicits._
 
 def parseNumber[F[_]: Applicative](in: String)(implicit F: FunctorRaise[F, String]): F[Int] = {
   if (in.matches("-?[0-9]+")) in.toInt.pure[F]

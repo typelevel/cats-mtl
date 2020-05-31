@@ -56,7 +56,6 @@ import cats.Monad
 import cats.data._
 import cats.implicits._
 import cats.mtl.MonadChronicle
-import cats.mtl.implicits._
 
 type Failures = NonEmptyChain[String]
 

@@ -89,9 +89,7 @@ And now the mtl version:
 
 ```scala mdoc:reset
 import cats.MonadError
-import cats.data._
 import cats.implicits._
-import cats.mtl.implicits._
 import cats.mtl.MonadState
 
 def checkState[F[_]](implicit S: MonadState[F, Int], E: MonadError[F, Exception]): F[String] = for {
@@ -112,7 +110,8 @@ That means, that e.g. `EitherT[StateT[List, Int, ?], Exception, A]` has both the
 
 So let's try turning our abstract `F[String]` into an actual value:
 
-```scala mdoc:silent
+<!-- TODO make this back into an mdoc:silent; I had to remove it because of the deprecation of any2stringadd -->
+```scala
 val materializedProgram =
   checkState[EitherT[StateT[List, Int, ?], Exception, ?]]
 ```
