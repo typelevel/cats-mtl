@@ -32,7 +32,7 @@ trait FunctorTell[F[_], L] extends Serializable {
 private[mtl] trait FunctorTellMonadPartialOrder[F[_], G[_], L] extends FunctorTell[G, L] {
   val lift: MonadPartialOrder[F, G]
   val F: FunctorTell[F, L]
-  
+
   override val functor = lift.monadG
   override def tell(l: L) = lift(F.tell(l))
 }
@@ -49,7 +49,7 @@ private[mtl] trait LowPriorityFunctorTellInstances {
     }
 }
 
-private[mtl] trait FunctorTellInstances extends LowPriorityFunctorTellInstances {
+private[mtl] trait FunctorTellInstances extends LowPriorityFunctorTellInstances with LowPriorityFunctorTellInstancesCompat {
 
   implicit def functorTellForWriterT[F[_]: Applicative, L: Monoid]: FunctorTell[WriterT[F, L, *], L] =
     new FunctorTell[WriterT[F, L, *], L] {

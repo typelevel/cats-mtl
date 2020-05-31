@@ -29,32 +29,34 @@ class WriterTTests extends BaseSuite {
 
   type WriterTStringOverWriterTStringOverOption[A] = WriterT[WriterTC[Option, String]#l, List[Int], A]
 
-  locally {
-      import cats.laws.discipline.arbitrary._
+  FunctorTell[Writer[Chain[String], *], Chain[String]]
 
-      
-      checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
-        ApplicativeCensorTests[WriterTStringOverWriterTStringOverOption, String]
-          .applicativeCensor[String, String]
-      )
-      checkAll("ApplicativePass[WriterT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(ApplicativeCensor[WriterTStringOverWriterTStringOverOption, String]))
-        
+  {
+    import cats.laws.discipline.arbitrary._
 
-      checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-        ApplicativeCensorTests[ReaderTStringOverWriterTStringOverOption, String]
-          .applicativeCensor[String, String])
-      checkAll("ApplicativePass[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(ApplicativeCensor[ReaderTStringOverWriterTStringOverOption, String]))
 
-      checkAll("StateT[WriterTC[Option, String]#l, List[Int], String]",
-        ApplicativeCensorTests[StateTStringOverWriterTStringOverOption, String]
-          .applicativeCensor[String, String])
-      checkAll("ApplicativePass[StateT[WriterTC[Option, String]#l, List[Int], String]",
-        SerializableTests.serializable(ApplicativeCensor[StateTStringOverWriterTStringOverOption, String]))
+    checkAll("WriterT[WriterTC[Option, String]#l, List[Int], String]",
+      ApplicativeCensorTests[WriterTStringOverWriterTStringOverOption, String]
+      .applicativeCensor[String, String]
+    )
+    checkAll("ApplicativePass[WriterT[WriterTC[Option, String]#l, List[Int], String]",
+      SerializableTests.serializable(ApplicativeCensor[WriterTStringOverWriterTStringOverOption, String]))
+
+
+    checkAll("ReaderT[WriterTC[Option, String]#l, List[Int], String]",
+      ApplicativeCensorTests[ReaderTStringOverWriterTStringOverOption, String]
+      .applicativeCensor[String, String])
+    checkAll("ApplicativePass[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
+      SerializableTests.serializable(ApplicativeCensor[ReaderTStringOverWriterTStringOverOption, String]))
+
+    checkAll("StateT[WriterTC[Option, String]#l, List[Int], String]",
+      ApplicativeCensorTests[StateTStringOverWriterTStringOverOption, String]
+      .applicativeCensor[String, String])
+    checkAll("ApplicativePass[StateT[WriterTC[Option, String]#l, List[Int], String]",
+      SerializableTests.serializable(ApplicativeCensor[StateTStringOverWriterTStringOverOption, String]))
   }
 
-  locally {
+  {
     import cats.laws.discipline.arbitrary._
 
     checkAll("WriterT[Option, String, String]",
