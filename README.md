@@ -32,6 +32,7 @@ If you're not sure where to start or what Cats-mtl even is, please refer to the 
 
 - `EitherT`
 - `Kleisli`
+- `IorT`
 - `OptionT`
 - `ReaderWriterStateT`
 - `StateT`

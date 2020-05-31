@@ -12,27 +12,31 @@ import org.scalacheck._
 
 class IorTTests extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
-    Arbitrary(Gen.oneOf(new (Option ~> Option) {
-      def apply[A](fa: Option[A]): Option[A] = None
-    }, FunctionK.id[Option]))
+    Arbitrary(
+      Gen.oneOf(
+        new (Option ~> Option) {
+          def apply[A](fa: Option[A]): Option[A] = None
+        },
+        FunctionK.id[Option]))
 
   implicit def arbFunctionKIor[A]: Arbitrary[Ior[A, *] ~> Ior[A, *]] =
-    Arbitrary(Gen.oneOf(new (Ior[A, *] ~> Ior[A, *]) {
-      override def apply[B](fa: Ior[A, B]): Ior[A, B] = fa
-    }, FunctionK.id[Ior[A, *]]))
+    Arbitrary(
+      Gen.oneOf(
+        new (Ior[A, *] ~> Ior[A, *]) {
+          override def apply[B](fa: Ior[A, B]): Ior[A, B] = fa
+        },
+        FunctionK.id[Ior[A, *]]))
 
   {
 
     checkAll(
       "IorT[Option, String, *]",
-      MonadChronicleTests[IorTC[Option, String]#l, String]
-        .monadChronicle[String]
+      MonadChronicleTests[IorTC[Option, String]#l, String].monadChronicle[String]
     )
 
     checkAll(
       "Ior[String, String]",
-      MonadChronicleTests[IorC[String]#l, String]
-        .monadChronicle[String]
+      MonadChronicleTests[IorC[String]#l, String].monadChronicle[String]
     )
 
     checkAll(
@@ -42,7 +46,8 @@ class IorTTests extends BaseSuite {
 
     checkAll(
       "WriterT[IorT[Option, String, *], Int]",
-      MonadChronicleTests[WriterTC[IorTC[Option, String]#l, Int]#l, String].monadChronicle[String]
+      MonadChronicleTests[WriterTC[IorTC[Option, String]#l, Int]#l, String]
+        .monadChronicle[String]
     )
 
   }

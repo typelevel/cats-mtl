@@ -4,36 +4,36 @@ package mtl
 import cats.data.{ReaderWriterStateT => RWST, StateT}
 
 /**
- * `MonadState[F, S]` is the capability to access and modify a state value
- * from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
- *
+  * `MonadState[F, S]` is the capability to access and modify a state value
+  * from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
+  *
  * MonadState has four external laws:
- * {{{
- * def getThenSetDoesNothing = {
- *   get >>= set <-> pure(())
- * }
- * def setThenGetReturnsSetted(s: S) = {
- *   set(s) *> get <-> set(s) *> pure(s)
- * }
- * def setThenSetSetsLast(s1: S, s2: S) = {
- *   set(s1) *> set(s2) <-> set(s2)
- * }
- * def getThenGetGetsOnce = {
- *   get *> get <-> get
- * }
- * }}}
- *
+  * {{{
+  * def getThenSetDoesNothing = {
+  *   get >>= set <-> pure(())
+  * }
+  * def setThenGetReturnsSetted(s: S) = {
+  *   set(s) *> get <-> set(s) *> pure(s)
+  * }
+  * def setThenSetSetsLast(s1: S, s2: S) = {
+  *   set(s1) *> set(s2) <-> set(s2)
+  * }
+  * def getThenGetGetsOnce = {
+  *   get *> get <-> get
+  * }
+  * }}}
+  *
  * `MonadState` has two internal law:
- * {{{
- * def modifyIsGetThenSet(f: S => S) = {
- *   modify(f) <-> (inspect(f) flatMap set)
- * }
- *
+  * {{{
+  * def modifyIsGetThenSet(f: S => S) = {
+  *   modify(f) <-> (inspect(f) flatMap set)
+  * }
+  *
  * def inspectLaw[A](f: S => A) = {
- *   inspect(f) <-> (get map f)
- * }
- * }}}
- *
+  *   inspect(f) <-> (get map f)
+  * }
+  * }}}
+  *
  */
 trait MonadState[F[_], S] extends Serializable {
   def monad: Monad[F]
@@ -50,9 +50,11 @@ trait MonadState[F[_], S] extends Serializable {
 private[mtl] trait LowPriorityMonadStateInstances {
 
   implicit def monadStateForPartialOrder[F[_], G[_], S](
-      implicit liftF: MonadPartialOrder[F, G],    // NB don't make this the *second* parameter; it won't infer
-      ms: MonadState[F, S])
-      : MonadState[G, S] =
+      implicit liftF: MonadPartialOrder[
+        F,
+        G
+      ], // NB don't make this the *second* parameter; it won't infer
+      ms: MonadState[F, S]): MonadState[G, S] =
     new MonadState[G, S] {
       val monad = liftF.monadG
       def get: G[S] = liftF(ms.get)
@@ -71,7 +73,8 @@ private[mtl] trait MonadStateInstances extends LowPriorityMonadStateInstances {
       def set(s: S) = StateT.set[F, S](s)
     }
 
-  implicit def monadStateForRWST[F[_]: Monad, E, L: Monoid, S]: MonadState[RWST[F, E, L, S, *], S] =
+  implicit def monadStateForRWST[F[_]: Monad, E, L: Monoid, S]
+      : MonadState[RWST[F, E, L, S, *], S] =
     new MonadState[RWST[F, E, L, S, *], S] {
       val monad = Monad[RWST[F, E, L, S, *]]
 
@@ -90,7 +93,8 @@ object MonadState extends MonadStateInstances {
 
   def setF[F[_]]: setFPartiallyApplied[F] = new setFPartiallyApplied[F]
 
-  final private[mtl] class setFPartiallyApplied[F[_]](val dummy: Boolean = false) extends AnyVal {
+  final private[mtl] class setFPartiallyApplied[F[_]](val dummy: Boolean = false)
+      extends AnyVal {
     @inline def apply[E, A](e: E)(implicit state: MonadState[F, E]): F[Unit] =
       state.set(e)
   }

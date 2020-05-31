@@ -23,7 +23,8 @@ final class Syntax extends BaseSuite {
         ApplicativeAsk.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
     }
     test("FunctorListen") {
-      val lift: WriterT[Option, String, Int] = WriterT.liftF[Option, String, Int](Option.empty[Int])
+      val lift: WriterT[Option, String, Int] =
+        WriterT.liftF[Option, String, Int](Option.empty[Int])
       val listen: WriterT[Option, String, (Int, String)] = lift.listen
       val listens: WriterT[Option, String, (Int, String)] = lift.listens((_: String) + "suffix")
       val listenC: WriterT[Option, String, (Int, String)] = FunctorListen.listen(lift)
@@ -31,7 +32,8 @@ final class Syntax extends BaseSuite {
         FunctorListen.listens(lift)((_: String) + "suffix")
     }
     test("ApplicativeLocal") {
-      val fa: OptionT[Reader[String, *], Int] = OptionT.liftF[Reader[String, *], Int](Reader(_.length))
+      val fa: OptionT[Reader[String, *], Int] =
+        OptionT.liftF[Reader[String, *], Int](Reader(_.length))
       val local = fa.local[String](s => s + "!").value("ha")
       val scope = fa.scope[String]("state").value("ha")
       val localC: String = ApplicativeLocal
@@ -42,7 +44,7 @@ final class Syntax extends BaseSuite {
     test("FunctorRaise") {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
       val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
-      def fb[F[_] : FunctorRaise[?[_], EE], E <: EE, EE](e: E): F[E] = e.raise[F, E]
+      def fb[F[_]: FunctorRaise[?[_], EE], E <: EE, EE](e: E): F[E] = e.raise[F, E]
       val faC: Either[String, Int] = FunctorRaise.raise[EitherC[String]#l, String, Int]("ha")
       val faeC: Either[String, Nothing] = FunctorRaise.raiseF[EitherC[String]#l]("ha")
     }
@@ -72,7 +74,8 @@ final class Syntax extends BaseSuite {
     test("MonadChronicle") {
       val chronicleC: Ior[Int, String] =
         MonadChronicle.chronicle[IorC[Int]#l, Int, String](Ior.right[Int, String]("w00t"))
-      val confessC: Ior[String, Int] = MonadChronicle.confess[IorC[String]#l, String, Int]("error")
+      val confessC: Ior[String, Int] =
+        MonadChronicle.confess[IorC[String]#l, String, Int]("error")
       val discloseTC: IorT[Option, String, String] =
         MonadChronicle.disclose[IorTC[Option, String]#l, String, String]("w00t")
       val dictateC: Ior[Int, Unit] = MonadChronicle.dictate[IorC[Int]#l, Int](42)
@@ -88,7 +91,8 @@ final class Syntax extends BaseSuite {
       val absolve: IorT[Option, String, Int] = fa.absolve(42)
       val condemn: IorT[Option, String, Int] = fa.condemn
       val retcon: IorT[Option, String, Int] = fa.retcon((str: String) => str + "err")
-      val chronicle: IorT[Option, String, Int] = Ior.both("hello", 42).chronicle[IorTC[Option, String]#l]
+      val chronicle: IorT[Option, String, Int] =
+        Ior.both("hello", 42).chronicle[IorTC[Option, String]#l]
     }
   }
 }

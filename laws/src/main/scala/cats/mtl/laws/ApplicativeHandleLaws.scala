@@ -11,8 +11,8 @@ trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
   implicit val handleInstance: ApplicativeHandle[F, E]
   implicit val applicativeInstance: Applicative[F] = handleInstance.applicative
 
-  import handleInstance.{handle, handleWith, attempt}
-  import raiseInstance.{raise, catchNonFatal}
+  import handleInstance.{attempt, handle, handleWith}
+  import raiseInstance.{catchNonFatal, raise}
 
   import applicativeInstance._
 
@@ -37,16 +37,16 @@ trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
 
   // internal laws:
   def catchNonFatalDefault[A](a: A, f: Throwable => E): IsEq[F[A]] =
-    catchNonFatal(a)(f) <-> (try {
-      pure(a)
-    } catch {
+    catchNonFatal(a)(f) <-> (try pure(a)
+    catch {
       case NonFatal(ex) => raise(f(ex))
     })
 
 }
 
 object ApplicativeHandleLaws {
-  def apply[F[_], E](implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleLaws[F, E] = {
+  def apply[F[_], E](
+      implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleLaws[F, E] = {
     new ApplicativeHandleLaws[F, E] {
       lazy val handleInstance: ApplicativeHandle[F, E] = instance0
       override lazy val raiseInstance: FunctorRaise[F, E] = instance0

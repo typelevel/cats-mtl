@@ -16,30 +16,26 @@ trait MonadStateLaws[F[_], S] {
   import monad.pure
 
   // external laws:
-  def getThenSetDoesNothing: IsEq[F[Unit]] = {
+  def getThenSetDoesNothing: IsEq[F[Unit]] =
     (get >>= set) <-> pure(())
-  }
 
-  def setThenGetReturnsSetted(s: S): IsEq[F[S]] = {
+  def setThenGetReturnsSetted(s: S): IsEq[F[S]] =
     (set(s) *> get) <-> (set(s) *> pure(s))
-  }
 
-  def setThenSetSetsLast(s1: S, s2: S): IsEq[F[Unit]] = {
+  def setThenSetSetsLast(s1: S, s2: S): IsEq[F[Unit]] =
     set(s1) *> set(s2) <-> set(s2)
-  }
 
-  def getThenGetGetsOnce: IsEq[F[S]] = {
+  def getThenGetGetsOnce: IsEq[F[S]] =
     get *> get <-> get
-  }
 
   // internal law:
-  def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] = {
+  def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] =
     modify(f) <-> ((get map f) flatMap set)
-  }
 }
 
 object MonadStateLaws {
-  def apply[F[_], S](implicit instance0: MonadState[F, S]): MonadStateLaws[F, S] = new MonadStateLaws[F, S] {
-    override lazy val stateInstance: MonadState[F, S] = instance0
-  }
+  def apply[F[_], S](implicit instance0: MonadState[F, S]): MonadStateLaws[F, S] =
+    new MonadStateLaws[F, S] {
+      override lazy val stateInstance: MonadState[F, S] = instance0
+    }
 }

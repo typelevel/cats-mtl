@@ -11,13 +11,12 @@ import cats.kernel.laws.discipline.catsLawsIsEqToProp
 trait FunctorTellTests[F[_], L] extends Laws {
   def laws: FunctorTellLaws[F, L]
 
-  def functorTell[A: Arbitrary](implicit
-                                    ArbFA: Arbitrary[F[A]],
-                                    ArbL: Arbitrary[L],
-                                    CogenA: Cogen[A],
-                                    EqFU: Eq[F[Unit]],
-                                    EqFA: Eq[F[A]]
-                                   ): RuleSet = {
+  def functorTell[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbL: Arbitrary[L],
+      CogenA: Cogen[A],
+      EqFU: Eq[F[Unit]],
+      EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "functorTell",
       parent = None,

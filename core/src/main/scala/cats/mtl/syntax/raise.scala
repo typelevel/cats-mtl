@@ -7,7 +7,8 @@ trait RaiseSyntax {
 }
 
 final class RaiseOps[E](val e: E) extends AnyVal {
-  def raise[F[_], A](implicit functorRaise: FunctorRaise[F, _ >: E]): F[A] = functorRaise.raise(e)
+  def raise[F[_], A](implicit functorRaise: FunctorRaise[F, _ >: E]): F[A] =
+    functorRaise.raise(e)
 }
 
 object raise extends RaiseSyntax

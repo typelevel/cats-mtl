@@ -13,7 +13,8 @@ import org.scalacheck._
 
 class ValidatedTests extends BaseSuite {
 
-
-  checkAll("Validated[String, *]", ApplicativeHandleTests[Validated[String, *], String].applicativeHandle[Int])
+  checkAll(
+    "Validated[String, *]",
+    ApplicativeHandleTests[Validated[String, *], String].applicativeHandle[Int])
 
 }

@@ -2,7 +2,6 @@ package cats
 package mtl
 package tests
 
-
 final class SummonableImplicits extends BaseSuite {
 
   // test instances.all._
@@ -55,23 +54,18 @@ final class SummonableImplicits extends BaseSuite {
     import cats.instances.all._
     import cats.mtl.implicits._
 
-    def localToAsk[F[_]](implicit F: ApplicativeLocal[F, String]): ApplicativeAsk[F, String] = {
+    def localToAsk[F[_]](implicit F: ApplicativeLocal[F, String]): ApplicativeAsk[F, String] =
       ApplicativeAsk[F, String]
-    }
 
-    def listenToTell[F[_]](implicit F: FunctorListen[F, String]): FunctorTell[F, String] = {
+    def listenToTell[F[_]](implicit F: FunctorListen[F, String]): FunctorTell[F, String] =
       FunctorTell[F, String]
-    }
 
-    def stateToTell[F[_]](implicit F: FunctorTell[F, String]): FunctorTell[F, String] = {
+    def stateToTell[F[_]](implicit F: FunctorTell[F, String]): FunctorTell[F, String] =
       FunctorTell[F, String]
-    }
 
-    def stateToAsk[F[_]](implicit F: ApplicativeAsk[F, String]): ApplicativeAsk[F, String] = {
+    def stateToAsk[F[_]](implicit F: ApplicativeAsk[F, String]): ApplicativeAsk[F, String] =
       ApplicativeAsk[F, String]
-    }
 
   }
-
 
 }

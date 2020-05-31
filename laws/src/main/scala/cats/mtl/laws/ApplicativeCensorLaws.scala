@@ -30,7 +30,8 @@ trait ApplicativeCensorLaws[F[_], L] extends FunctorListenLaws[F, L] {
 }
 
 object ApplicativeCensorLaws {
-  def apply[F[_], L](implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorLaws[F, L] = {
+  def apply[F[_], L](
+      implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorLaws[F, L] = {
     new ApplicativeCensorLaws[F, L] {
       def F: ApplicativeCensor[F, L] = instance0
     }

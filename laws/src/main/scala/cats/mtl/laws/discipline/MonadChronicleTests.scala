@@ -14,18 +14,19 @@ trait MonadChronicleTests[F[_], E] extends Laws {
 
   def laws: MonadChronicleLaws[F, E] = MonadChronicleLaws[F, E]
 
-  def monadChronicle[A: Arbitrary](implicit ArbFA: Arbitrary[F[A]],
-                                   ArbE: Arbitrary[E],
-                                   CogenA: Cogen[A],
-                                   CogenE: Cogen[E],
-                                   EqFU: Eq[F[E]],
-                                   EqFA: Eq[F[A]],
-                                   EqFUnit: Eq[F[Unit]],
-                                   EqFEIorUnit: Eq[F[E Ior Unit]],
-                                   EqFEUnit: Eq[F[Either[E, Unit]]],
-                                   EqFIor: Eq[F[E Ior A]],
-                                   EqFEither: Eq[F[Either[E, A]]],
-                                   SemigroupE: Semigroup[E]): RuleSet = {
+  def monadChronicle[A: Arbitrary](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbE: Arbitrary[E],
+      CogenA: Cogen[A],
+      CogenE: Cogen[E],
+      EqFU: Eq[F[E]],
+      EqFA: Eq[F[A]],
+      EqFUnit: Eq[F[Unit]],
+      EqFEIorUnit: Eq[F[E Ior Unit]],
+      EqFEUnit: Eq[F[Either[E, Unit]]],
+      EqFIor: Eq[F[E Ior A]],
+      EqFEither: Eq[F[Either[E, A]]],
+      SemigroupE: Semigroup[E]): RuleSet = {
     new DefaultRuleSet(
       name = "monadChronicle",
       parent = None,
@@ -35,12 +36,15 @@ trait MonadChronicleTests[F[_], E] extends Laws {
       "confess then retcon is confess" -> ∀(laws.confessThenRetconIsConfess[A] _),
       "dictate then condem is confess" -> ∀(laws.dictateThenCondemIsConfess[A] _),
       "dictate then materialize is both" -> ∀(laws.dictateThenMaterializeIsBoth _),
-      "dictate then memento is dictate right unit" -> ∀(laws.dictateThenMementoIsDictateRightUnit _),
+      "dictate then memento is dictate right unit" -> ∀(
+        laws.dictateThenMementoIsDictateRightUnit _),
       "dictate then retcon is dictate" -> ∀(laws.dictateThenRetconIsDictate[A] _),
       "pure then materialize is right" -> ∀(laws.pureThenMaterializeIsRight[A] _),
       "pure then retcon is pure" -> ∀(laws.pureThenRetconIsPure[A] _),
-      "dictate shark dictate is dictate semigroup" -> ∀(laws.dictateSharkDictateIsDictateSemigroup _),
-      "dictate shark confess is confess semigroup" -> ∀(laws.dictateSharkConfessIsConfessSemigroup[A] _)
+      "dictate shark dictate is dictate semigroup" -> ∀(
+        laws.dictateSharkDictateIsDictateSemigroup _),
+      "dictate shark confess is confess semigroup" -> ∀(
+        laws.dictateSharkConfessIsConfessSemigroup[A] _)
     )
   }
 }

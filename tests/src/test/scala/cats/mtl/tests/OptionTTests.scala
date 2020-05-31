@@ -13,22 +13,28 @@ import org.scalacheck._
 
 class OptionTTests extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
-    Arbitrary(Gen.oneOf(new (Option ~> Option) {
-      def apply[A](fa: Option[A]): Option[A] = None
-    }, FunctionK.id[Option]))
-
+    Arbitrary(
+      Gen.oneOf(
+        new (Option ~> Option) {
+          def apply[A](fa: Option[A]): Option[A] = None
+        },
+        FunctionK.id[Option]))
 
   {
 
     checkAll("Option", ApplicativeHandleTests[Option, Unit].applicativeHandle[Int])
-    checkAll("OptionT[Either[String, *], *]",
+    checkAll(
+      "OptionT[Either[String, *], *]",
       ApplicativeHandleTests[OptionT[Either[String, *], *], Unit].applicativeHandle[Int])
 
-    checkAll("WriterT[Option, Int, *]",
+    checkAll(
+      "WriterT[Option, Int, *]",
       ApplicativeHandleTests[WriterT[Option, Int, *], Unit].applicativeHandle[Int])
 
-    checkAll("WriterT[OptionT[Either[String, *], *], Int, *]",
-      ApplicativeHandleTests[WriterT[OptionT[Either[String, *], *], Int, *], Unit].applicativeHandle[Int])
+    checkAll(
+      "WriterT[OptionT[Either[String, *], *], Int, *]",
+      ApplicativeHandleTests[WriterT[OptionT[Either[String, *], *], Int, *], Unit]
+        .applicativeHandle[Int])
 
   }
 }

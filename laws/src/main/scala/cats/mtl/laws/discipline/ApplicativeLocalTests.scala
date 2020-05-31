@@ -12,17 +12,16 @@ trait ApplicativeLocalTests[F[_], E] extends ApplicativeAskTests[F, E] {
 
   override def laws: ApplicativeLocalLaws[F, E] = ApplicativeLocalLaws[F, E]
 
-  def applicativeLocal[A: Arbitrary, B](implicit
-                                        ArbFA: Arbitrary[F[A]],
-                                        ArbFAB: Arbitrary[F[A => B]],
-                                        ArbEE: Arbitrary[E => E],
-                                        ArbE: Arbitrary[E],
-                                        CogenA: Cogen[A],
-                                        CogenE: Cogen[E],
-                                        EqFU: Eq[F[E]],
-                                        EqFA: Eq[F[A]],
-                                        EqFB: Eq[F[B]]
-                                       ): RuleSet = {
+  def applicativeLocal[A: Arbitrary, B](
+      implicit ArbFA: Arbitrary[F[A]],
+      ArbFAB: Arbitrary[F[A => B]],
+      ArbEE: Arbitrary[E => E],
+      ArbE: Arbitrary[E],
+      CogenA: Cogen[A],
+      CogenE: Cogen[E],
+      EqFU: Eq[F[E]],
+      EqFA: Eq[F[A]],
+      EqFB: Eq[F[B]]): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeLocal",
       parent = Some(applicativeAsk[A]),
@@ -36,7 +35,8 @@ trait ApplicativeLocalTests[F[_], E] extends ApplicativeAskTests[F, E] {
 }
 
 object ApplicativeLocalTests {
-  def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalTests[F, E] = {
+  def apply[F[_], E](
+      implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalTests[F, E] = {
     new ApplicativeLocalTests[F, E] {
       override lazy val localInstance: ApplicativeLocal[F, E] = instance0
       override lazy val askInstance: ApplicativeAsk[F, E] = instance0
