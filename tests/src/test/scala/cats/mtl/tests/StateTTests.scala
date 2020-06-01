@@ -21,7 +21,7 @@ package tests
 import cats.arrow.FunctionK
 import cats.data.{Kleisli, State, StateT}
 import cats.laws.discipline.SerializableTests
-import cats.mtl.laws.discipline.MonadStateTests
+import cats.mtl.laws.discipline.StatefulTests
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline._
 import cats.laws.discipline.eq._
@@ -50,21 +50,19 @@ class StateTTestsBase extends BaseSuite {
 }
 
 class StateTTests extends StateTTestsBase {
+  checkAll("State[String, String]", StatefulTests[StateC[String]#l, String].stateful[String])
   checkAll(
-    "State[String, String]",
-    MonadStateTests[StateC[String]#l, String].monadState[String])
-  checkAll(
-    "MonadState[State[String, ?]]",
-    SerializableTests.serializable(MonadState[StateC[String]#l, String]))
+    "Stateful[State[String, ?]]",
+    SerializableTests.serializable(Stateful[StateC[String]#l, String]))
 
   checkAll(
     "StateT[Option, String, String]",
-    MonadStateTests[StateTC[Option, String]#l, String].monadState[String])
+    StatefulTests[StateTC[Option, String]#l, String].stateful[String])
   checkAll(
-    "MonadState[StateT[Option, String, ?]]",
-    SerializableTests.serializable(MonadState[StateTC[Option, String]#l, String]))
+    "Stateful[StateT[Option, String, ?]]",
+    SerializableTests.serializable(Stateful[StateTC[Option, String]#l, String]))
 
-  MonadState[State[Int, *], Int]
+  Stateful[State[Int, *], Int]
 
   {
     implicit def slowCatsLawsEqForFn1[A, B](implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] =
@@ -72,33 +70,33 @@ class StateTTests extends StateTTestsBase {
 
     checkAll(
       "ReaderT[StateT[Option, String, ?], Int, String]",
-      MonadStateTests[ReaderTIntOverStateTStringOverOption, String].monadState[String])
+      StatefulTests[ReaderTIntOverStateTStringOverOption, String].stateful[String])
     checkAll(
-      "MonadState[ReaderT[StateT[Option, String, ?], Int, ?]]",
-      SerializableTests.serializable(MonadState[ReaderTIntOverStateTStringOverOption, String]))
+      "Stateful[ReaderT[StateT[Option, String, ?], Int, ?]]",
+      SerializableTests.serializable(Stateful[ReaderTIntOverStateTStringOverOption, String]))
   }
 
   checkAll(
     "WriterT[StateT[Option, String, ?], Int, String]",
-    MonadStateTests[WriterTIntOverStateTStringOverOption, String].monadState[String])
+    StatefulTests[WriterTIntOverStateTStringOverOption, String].stateful[String])
   checkAll(
-    "MonadState[WriterT[StateT[Option, String, ?], Int, ?]]",
-    SerializableTests.serializable(MonadState[WriterTIntOverStateTStringOverOption, String]))
+    "Stateful[WriterT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(Stateful[WriterTIntOverStateTStringOverOption, String]))
 
   // TODO: can't test StateT nested with StateT for now for some reason, investigate later
 
   checkAll(
     "EitherT[StateT[Option, String, ?], Int, String]",
-    MonadStateTests[EitherTIntOverStateTStringOverOption, String].monadState[String])
+    StatefulTests[EitherTIntOverStateTStringOverOption, String].stateful[String])
   checkAll(
-    "MonadState[EitherT[StateT[Option, String, ?], Int, ?]]",
-    SerializableTests.serializable(MonadState[EitherTIntOverStateTStringOverOption, String]))
+    "Stateful[EitherT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(Stateful[EitherTIntOverStateTStringOverOption, String]))
 
   checkAll(
     "OptionT[StateT[Option, String, ?], Int, String]",
-    MonadStateTests[OptionTOverStateTStringOverOption, String].monadState[String])
+    StatefulTests[OptionTOverStateTStringOverOption, String].stateful[String])
   checkAll(
-    "MonadState[OptionT[StateT[Option, String, ?], Int, ?]]",
-    SerializableTests.serializable(MonadState[OptionTOverStateTStringOverOption, String]))
+    "Stateful[OptionT[StateT[Option, String, ?], Int, ?]]",
+    SerializableTests.serializable(Stateful[OptionTOverStateTStringOverOption, String]))
 
 }

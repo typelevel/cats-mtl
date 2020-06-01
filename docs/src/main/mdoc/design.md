@@ -50,17 +50,17 @@ The motivation for cats-mtl's existence can be summed up in a few points:
   `Applicative` transformer stack in addition to that of a `Monad` transformer stack.
 - the most used operations on `MonadWriter` and `MonadReader` are `tell` and `ask`,
   and the other operations severely restrict the space of implementations despite being
-  used much less. To fix this `FunctorListen` and `ApplicativeLocal` are subclasses
-  of `FunctorTell` and `ApplicativeAsk`, which have only the essentials.
+  used much less. To fix this `Listen` and `Local` are subclasses
+  of `Tell` and `Ask`, which have only the essentials.
 
 The first point there means that it's impossible for cats-mtl type classes
-to expose their base class instances implicitly; for example `F[_]: MonadState[?[_], S]` isn't enough
-for a `Monad[F]` to be visible in implicit scope, despite `MonadState` containing a `Monad`
+to expose their base class instances implicitly; for example `F[_]: Stateful[?[_], S]` isn't enough
+for a `Monad[F]` to be visible in implicit scope, despite `Stateful` containing a `Monad`
 instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
 explicitly can't work with cats and cats-mtl separate, as the `Monad[F]` instance for the type 
 from cats will always conflict with a derived instance.
 
-Thus `F[_]: MonadState[?[_], S]`, translated, becomes `F[_]: Monad: MonadState[?[_], S]`.
+Thus `F[_]: Stateful[?[_], S]`, translated, becomes `F[_]: Monad: Stateful[?[_], S]`.
 
 For some historical info on the origins of cats-mtl, see:
 

@@ -25,14 +25,14 @@ trait HandleSyntax {
 }
 
 final class HandleOps[F[_], A](val fa: F[A]) extends AnyVal {
-  def attemptHandle[E](implicit applicativeHandle: ApplicativeHandle[F, E]): F[Either[E, A]] =
-    applicativeHandle.attempt(fa)
-  def attemptHandleT[E](implicit applicativeHandle: ApplicativeHandle[F, E]): EitherT[F, E, A] =
-    applicativeHandle.attemptT(fa)
-  def handle[E](f: E => A)(implicit applicativeHandle: ApplicativeHandle[F, E]): F[A] =
-    applicativeHandle.handle(fa)(f)
-  def handleWith[E](f: E => F[A])(implicit applicativeHandle: ApplicativeHandle[F, E]): F[A] =
-    applicativeHandle.handleWith(fa)(f)
+  def attemptHandle[E](implicit handle: Handle[F, E]): F[Either[E, A]] =
+    handle.attempt(fa)
+  def attemptHandleT[E](implicit handle: Handle[F, E]): EitherT[F, E, A] =
+    handle.attemptT(fa)
+  def handle[E](f: E => A)(implicit handle: Handle[F, E]): F[A] =
+    handle.handle(fa)(f)
+  def handleWith[E](f: E => F[A])(implicit handle: Handle[F, E]): F[A] =
+    handle.handleWith(fa)(f)
 }
 
 object handle extends HandleSyntax

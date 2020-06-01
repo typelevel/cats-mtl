@@ -48,42 +48,40 @@ class ReaderWriterStateTTests extends StateTTestsBase {
 
   checkAll(
     "ReaderWriterState[Boolean, Int, String, String]",
-    MonadStateTests[ReaderWriterState[Boolean, Int, String, ?], String].monadState[String])
+    StatefulTests[ReaderWriterState[Boolean, Int, String, ?], String].stateful[String])
   checkAll(
-    "MonadState[ReaderWriterState[Boolean, Int, String, ?]]",
+    "Stateful[ReaderWriterState[Boolean, Int, String, ?]]",
     SerializableTests.serializable(
-      MonadState[ReaderWriterState[Boolean, Int, String, ?], String]))
+      Stateful[ReaderWriterState[Boolean, Int, String, ?], String]))
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, String]",
-    MonadStateTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], String]
-      .monadState[String])
+    StatefulTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], String].stateful[String])
   checkAll(
-    "MonadState[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Stateful[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
     SerializableTests.serializable(
-      MonadState[ReaderWriterStateT[Option, Boolean, Int, String, ?], String])
+      Stateful[ReaderWriterStateT[Option, Boolean, Int, String, ?], String])
   )
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Int]",
-    ApplicativeCensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
-      .applicativeCensor[Int, String]
+    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int].censor[Int, String]
   )
   checkAll(
-    "ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
     SerializableTests.serializable(
-      ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int])
+      Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int])
   )
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Boolean]",
-    ApplicativeLocalTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]
-      .applicativeLocal[Boolean, String]
+    LocalTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]
+      .local[Boolean, String]
   )
   checkAll(
-    "ApplicativeLocal[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Local[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
     SerializableTests.serializable(
-      ApplicativeLocal[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean])
+      Local[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean])
   )
 
 }

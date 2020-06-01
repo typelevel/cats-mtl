@@ -27,21 +27,18 @@ class EitherTTests extends BaseSuite {
 
   {
 
-    checkAll(
-      "Either[String, *]",
-      ApplicativeHandleTests[Either[String, *], String].applicativeHandle[Int])
+    checkAll("Either[String, *]", HandleTests[Either[String, *], String].handle[Int])
     checkAll(
       "EitherT[Option, String, *]",
-      ApplicativeHandleTests[EitherT[Option, String, *], String].applicativeHandle[Int])
+      HandleTests[EitherT[Option, String, *], String].handle[Int])
 
     checkAll(
       "WriterT[Either[String, *], Int, *]",
-      ApplicativeHandleTests[WriterT[Either[String, *], Int, *], String].applicativeHandle[Int])
+      HandleTests[WriterT[Either[String, *], Int, *], String].handle[Int])
 
     checkAll(
       "WriterT[EitherT[Option, [String, *], Int, *]",
-      ApplicativeHandleTests[WriterT[EitherT[Option, String, *], Int, *], String]
-        .applicativeHandle[Int])
+      HandleTests[WriterT[EitherT[Option, String, *], Int, *], String].handle[Int])
 
   }
 

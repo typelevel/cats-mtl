@@ -23,7 +23,7 @@ trait AskSyntax {
 }
 
 final class ReaderOps[E, A](val fun: E => A) extends AnyVal {
-  def reader[F[_]](implicit ask: ApplicativeAsk[F, E]): F[A] =
+  def reader[F[_]](implicit ask: Ask[F, E]): F[A] =
     ask.reader(fun)
 }
 
