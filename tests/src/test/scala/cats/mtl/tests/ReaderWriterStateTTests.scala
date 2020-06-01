@@ -65,8 +65,7 @@ class ReaderWriterStateTTests extends StateTTestsBase {
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Int]",
-    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
-      .censor[Int, String]
+    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int].censor[Int, String]
   )
   checkAll(
     "Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",

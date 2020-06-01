@@ -49,10 +49,8 @@ object Censor extends CensorInstances {
 }
 
 private[mtl] trait LowPriorityCensorInstances {
-  implicit final def inductiveCensorWriterT[
-      M[_]: Applicative,
-      L0: Monoid,
-      L: Monoid](implicit A: Censor[M, L]): Censor[WriterT[M, L0, *], L] =
+  implicit final def inductiveCensorWriterT[M[_]: Applicative, L0: Monoid, L: Monoid](
+      implicit A: Censor[M, L]): Censor[WriterT[M, L0, *], L] =
     new ListenInductiveWriterT[M, L0, L] with Censor[WriterT[M, L0, *], L] {
       val applicative: Applicative[WriterT[M, L0, *]] = WriterT.catsDataApplicativeForWriterT
       val monoid: Monoid[L] = Monoid[L]

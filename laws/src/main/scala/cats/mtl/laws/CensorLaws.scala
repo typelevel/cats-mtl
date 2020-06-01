@@ -46,8 +46,7 @@ trait CensorLaws[F[_], L] extends ListenLaws[F, L] {
 }
 
 object CensorLaws {
-  def apply[F[_], L](
-      implicit instance0: Censor[F, L]): CensorLaws[F, L] = {
+  def apply[F[_], L](implicit instance0: Censor[F, L]): CensorLaws[F, L] = {
     new CensorLaws[F, L] {
       def F: Censor[F, L] = instance0
     }
