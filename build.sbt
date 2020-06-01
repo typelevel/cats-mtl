@@ -56,6 +56,8 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
 
 ThisBuild / githubWorkflowBuild := WorkflowStep.Sbt(List("ci"))
 
+ThisBuild / githubWorkflowPublishTargetBranches := Seq()
+
 lazy val commonJvmSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"))
 
