@@ -24,27 +24,27 @@ import cats.data.Ior
 import scala.annotation.implicitNotFound
 
 /**
-  * `Listen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
-  * that is contained in all `F[A]` values, and can be modified using `tell`.
-  *
+ * `Listen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
+ * that is contained in all `F[A]` values, and can be modified using `tell`.
+ *
  * `Listen` has two external laws:
-  * {{{
-  * def listenRespectsTell(l: L) = {
-  *   listen(tell(l)) <-> tell(l).as(((), l))
-  * }
-  *
+ * {{{
+ * def listenRespectsTell(l: L) = {
+ *   listen(tell(l)) <-> tell(l).as(((), l))
+ * }
+ *
  * def listenAddsNoEffects(fa: F[A]) = {
-  *   listen(fa).map(_._1) <-> fa
-  * }
-  * }}}
-  *
+ *   listen(fa).map(_._1) <-> fa
+ * }
+ * }}}
+ *
  * `Listen` has one internal law:
-  * {{{
-  * def listensIsListenThenMap(fa: F[A], f: L => B) = {
-  *   listens(fa)(f) <-> listen(fa).map { case (a, l) => (a, f(l)) }
-  * }
-  * }}}
-  */
+ * {{{
+ * def listensIsListenThenMap(fa: F[A], f: L => B) = {
+ *   listens(fa)(f) <-> listen(fa).map { case (a, l) => (a, f(l)) }
+ * }
+ * }}}
+ */
 @implicitNotFound(
   "Could not find an implicit instance of Listen[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit flisten: Listen[${F}, ${L}}])\n")
 trait Listen[F[_], L] extends Tell[F, L] with Serializable {

@@ -22,21 +22,21 @@ import cats.data.WriterT
 import scala.annotation.implicitNotFound
 
 /**
-  * `Tell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
-  *
+ * `Tell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
+ *
  * `Tell` has no external laws.
-  *
+ *
  * `Tell` has one internal law:
-  * {{{
-  * def writerIsTellAndMap(a: A, l: L) = {
-  *   (tell(l) as a) <-> writer(a, l)
-  * }
-  *
+ * {{{
+ * def writerIsTellAndMap(a: A, l: L) = {
+ *   (tell(l) as a) <-> writer(a, l)
+ * }
+ *
  * def tupleIsWriterFlipped(a: A, l: L) = {
-  *   writer(a, l) <-> tuple((l, a))
-  * }
-  * }}}
-  */
+ *   writer(a, l) <-> tuple((l, a))
+ * }
+ * }}}
+ */
 @implicitNotFound(
   "Could not find an implicit instance of Tell[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit ftell: Tell[${F}, ${L}}])\n")
 trait Tell[F[_], L] extends Serializable {
