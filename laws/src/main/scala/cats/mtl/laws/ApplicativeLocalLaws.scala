@@ -31,17 +31,17 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
 
   // external laws:
   def askReflectsLocal(f: E => E): IsEq[F[E]] =
-    local(f)(ask) <-> map(ask)(f)
+    local(ask)(f) <-> map(ask)(f)
 
   def localPureIsPure[A](a: A, f: E => E): IsEq[F[A]] =
-    local(f)(pure(a)) <-> pure(a)
+    local(pure(a))(f) <-> pure(a)
 
   def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E): IsEq[F[B]] =
-    local(f)(applicative.ap(ff)(fa)) <-> applicative.ap(local(f)(ff))(local(f)(fa))
+    local(applicative.ap(ff)(fa))(f) <-> applicative.ap(local(ff)(f))(local(fa)(f))
 
   // internal law:
   def scopeIsLocalConst[A](fa: F[A], e: E): IsEq[F[A]] =
-    scope(e)(fa) <-> local(_ => e)(fa)
+    scope(fa)(e) <-> local(fa)(_ => e)
 
 }
 
