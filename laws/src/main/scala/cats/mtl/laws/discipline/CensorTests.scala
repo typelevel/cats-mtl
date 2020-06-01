@@ -23,10 +23,10 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait ApplicativeCensorTests[F[_], L] extends ListenTests[F, L] {
-  def laws: ApplicativeCensorLaws[F, L]
+trait CensorTests[F[_], L] extends ListenTests[F, L] {
+  def laws: CensorLaws[F, L]
 
-  def applicativeCensor[A: Arbitrary, B: Arbitrary](
+  def censor[A: Arbitrary, B: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbL: Arbitrary[L],
       CogenA: Cogen[A],
@@ -36,7 +36,7 @@ trait ApplicativeCensorTests[F[_], L] extends ListenTests[F, L] {
       EqFAB: Eq[F[(A, B)]],
       EqFUL: Eq[F[(Unit, L)]]): RuleSet = {
     new DefaultRuleSet(
-      name = "applicativeCensor",
+      name = "censor",
       parent = Some(listen[A, B]),
       "tell leftProduct is tell combined" -> ∀(laws.tellLeftProductHomomorphism _),
       "tell rightProduct is tell combined" -> ∀(laws.tellRightProductHomomorphism _),
@@ -48,11 +48,11 @@ trait ApplicativeCensorTests[F[_], L] extends ListenTests[F, L] {
 
 }
 
-object ApplicativeCensorTests {
+object CensorTests {
   def apply[F[_], L](
-      implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorTests[F, L] = {
-    new ApplicativeCensorTests[F, L] {
-      override def laws: ApplicativeCensorLaws[F, L] = ApplicativeCensorLaws[F, L]
+      implicit instance0: Censor[F, L]): CensorTests[F, L] = {
+    new CensorTests[F, L] {
+      override def laws: CensorLaws[F, L] = CensorLaws[F, L]
     }
   }
 }

@@ -65,13 +65,13 @@ class ReaderWriterStateTTests extends StateTTestsBase {
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Int]",
-    ApplicativeCensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
-      .applicativeCensor[Int, String]
+    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int]
+      .censor[Int, String]
   )
   checkAll(
-    "ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
     SerializableTests.serializable(
-      ApplicativeCensor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int])
+      Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int])
   )
 
   checkAll(

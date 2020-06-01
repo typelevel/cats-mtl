@@ -60,35 +60,35 @@ class WriterTTests extends BaseSuite {
 
     checkAll(
       "WriterT[WriterTC[Option, String]#l, List[Int], String]",
-      ApplicativeCensorTests[WriterTStringOverWriterTStringOverOption, String]
-        .applicativeCensor[String, String]
+      CensorTests[WriterTStringOverWriterTStringOverOption, String]
+        .censor[String, String]
     )
     checkAll(
       "ApplicativePass[WriterT[WriterTC[Option, String]#l, List[Int], String]",
       SerializableTests.serializable(
-        ApplicativeCensor[WriterTStringOverWriterTStringOverOption, String])
+        Censor[WriterTStringOverWriterTStringOverOption, String])
     )
 
     checkAll(
       "ReaderT[WriterTC[Option, String]#l, List[Int], String]",
-      ApplicativeCensorTests[ReaderTStringOverWriterTStringOverOption, String]
-        .applicativeCensor[String, String]
+      CensorTests[ReaderTStringOverWriterTStringOverOption, String]
+        .censor[String, String]
     )
     checkAll(
       "ApplicativePass[ReaderT[WriterTC[Option, String]#l, List[Int], String]",
       SerializableTests.serializable(
-        ApplicativeCensor[ReaderTStringOverWriterTStringOverOption, String])
+        Censor[ReaderTStringOverWriterTStringOverOption, String])
     )
 
     checkAll(
       "StateT[WriterTC[Option, String]#l, List[Int], String]",
-      ApplicativeCensorTests[StateTStringOverWriterTStringOverOption, String]
-        .applicativeCensor[String, String]
+      CensorTests[StateTStringOverWriterTStringOverOption, String]
+        .censor[String, String]
     )
     checkAll(
       "ApplicativePass[StateT[WriterTC[Option, String]#l, List[Int], String]",
       SerializableTests.serializable(
-        ApplicativeCensor[StateTStringOverWriterTStringOverOption, String])
+        Censor[StateTStringOverWriterTStringOverOption, String])
     )
   }
 
@@ -97,8 +97,8 @@ class WriterTTests extends BaseSuite {
 
     checkAll(
       "WriterT[Option, String, String]",
-      ApplicativeCensorTests[WriterTC[Option, String]#l, String]
-        .applicativeCensor[String, String])
+      CensorTests[WriterTC[Option, String]#l, String]
+        .censor[String, String])
     checkAll(
       "Listen[WriterT[Option, String, *]]",
       SerializableTests.serializable(Listen[WriterTC[Option, String]#l, String]))

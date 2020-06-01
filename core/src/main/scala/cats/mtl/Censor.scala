@@ -30,7 +30,7 @@ import cats.data.{
 }
 import cats.implicits._
 
-trait ApplicativeCensor[F[_], L] extends Listen[F, L] {
+trait Censor[F[_], L] extends Listen[F, L] {
   val applicative: Applicative[F]
   val monoid: Monoid[L]
   override lazy val functor: Functor[F] = applicative
@@ -40,16 +40,16 @@ trait ApplicativeCensor[F[_], L] extends Listen[F, L] {
   def clear[A](fa: F[A]): F[A] = censor(fa)(_ => monoid.empty)
 }
 
-object ApplicativeCensor extends ApplicativeCensorInstances {
-  def apply[F[_], L](implicit ev: ApplicativeCensor[F, L]): ApplicativeCensor[F, L] = ev
+object Censor extends CensorInstances {
+  def apply[F[_], L](implicit ev: Censor[F, L]): Censor[F, L] = ev
 }
 
-private[mtl] trait LowPriorityApplicativeCensorInstances {
-  implicit final def inductiveApplicativeCensorWriterT[
+private[mtl] trait LowPriorityCensorInstances {
+  implicit final def inductiveCensorWriterT[
       M[_]: Applicative,
       L0: Monoid,
-      L: Monoid](implicit A: ApplicativeCensor[M, L]): ApplicativeCensor[WriterT[M, L0, *], L] =
-    new ListenInductiveWriterT[M, L0, L] with ApplicativeCensor[WriterT[M, L0, *], L] {
+      L: Monoid](implicit A: Censor[M, L]): Censor[WriterT[M, L0, *], L] =
+    new ListenInductiveWriterT[M, L0, L] with Censor[WriterT[M, L0, *], L] {
       val applicative: Applicative[WriterT[M, L0, *]] = WriterT.catsDataApplicativeForWriterT
       val monoid: Monoid[L] = Monoid[L]
 
@@ -57,9 +57,9 @@ private[mtl] trait LowPriorityApplicativeCensorInstances {
         WriterT(A.censor(fa.run)(f))
     }
 
-  implicit final def inductiveApplicativeCensorRWST[M[_]: Monad, R, L0: Monoid, L: Monoid, S](
-      implicit A: ApplicativeCensor[M, L]): ApplicativeCensor[RWST[M, R, L0, S, *], L] =
-    new ListenInductiveRWST[M, R, L0, L, S] with ApplicativeCensor[RWST[M, R, L0, S, *], L] {
+  implicit final def inductiveCensorRWST[M[_]: Monad, R, L0: Monoid, L: Monoid, S](
+      implicit A: Censor[M, L]): Censor[RWST[M, R, L0, S, *], L] =
+    new ListenInductiveRWST[M, R, L0, L, S] with Censor[RWST[M, R, L0, S, *], L] {
       val applicative: Applicative[RWST[M, R, L0, S, *]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
       val monoid: Monoid[L] = Monoid[L]
@@ -69,11 +69,11 @@ private[mtl] trait LowPriorityApplicativeCensorInstances {
     }
 }
 
-private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCensorInstances {
-  implicit final def applicativeCensorWriterT[M[_], L](
+private[mtl] trait CensorInstances extends LowPriorityCensorInstances {
+  implicit final def censorWriterT[M[_], L](
       implicit M: Applicative[M],
-      L: Monoid[L]): ApplicativeCensor[WriterT[M, L, *], L] =
-    new ListenWriterT[M, L] with ApplicativeCensor[WriterT[M, L, *], L] {
+      L: Monoid[L]): Censor[WriterT[M, L, *], L] =
+    new ListenWriterT[M, L] with Censor[WriterT[M, L, *], L] {
       val applicative: Applicative[WriterT[M, L, *]] =
         cats.data.WriterT.catsDataApplicativeForWriterT[M, L]
 
@@ -87,10 +87,10 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
 
     }
 
-  implicit final def applicativeCensorRWST[M[_], R, L, S](
+  implicit final def censorRWST[M[_], R, L, S](
       implicit L: Monoid[L],
-      M: Monad[M]): ApplicativeCensor[RWST[M, R, L, S, *], L] =
-    new ListenRWST[M, R, L, S] with ApplicativeCensor[RWST[M, R, L, S, *], L] {
+      M: Monad[M]): Censor[RWST[M, R, L, S, *], L] =
+    new ListenRWST[M, R, L, S] with Censor[RWST[M, R, L, S, *], L] {
       val applicative: Applicative[RWST[M, R, L, S, *]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
 
@@ -104,11 +104,11 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
 
     }
 
-  implicit final def applicativeCensorKleisli[F[_], R, L](
+  implicit final def censorKleisli[F[_], R, L](
       implicit L: Monoid[L],
-      A: ApplicativeCensor[F, L],
-      F: Applicative[F]): ApplicativeCensor[Kleisli[F, R, *], L] =
-    new ListenKleisli[F, R, L] with ApplicativeCensor[Kleisli[F, R, *], L] {
+      A: Censor[F, L],
+      F: Applicative[F]): Censor[Kleisli[F, R, *], L] =
+    new ListenKleisli[F, R, L] with Censor[Kleisli[F, R, *], L] {
       val applicative: Applicative[Kleisli[F, R, *]] = Kleisli.catsDataApplicativeForKleisli
       val monoid: cats.Monoid[L] = L
 
@@ -116,11 +116,11 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
         Kleisli(r => A.censor(fa.run(r))(f))
     }
 
-  implicit final def applicativeCensorStateT[F[_], S, L](
+  implicit final def censorStateT[F[_], S, L](
       implicit L: Monoid[L],
-      A: ApplicativeCensor[F, L],
-      F: Monad[F]): ApplicativeCensor[StateT[F, S, *], L] =
-    new ListenStateT[F, S, L] with ApplicativeCensor[StateT[F, S, *], L] {
+      A: Censor[F, L],
+      F: Monad[F]): Censor[StateT[F, S, *], L] =
+    new ListenStateT[F, S, L] with Censor[StateT[F, S, *], L] {
       val applicative: Applicative[StateT[F, S, *]] =
         IndexedStateT.catsDataMonadForIndexedStateT
       val monoid: cats.Monoid[L] = L
@@ -129,11 +129,11 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
         StateT(s => A.censor(fa.run(s))(f))
     }
 
-  implicit final def applicativeCensorEitherT[F[_], E, L](
+  implicit final def censorEitherT[F[_], E, L](
       implicit L: Monoid[L],
-      A: ApplicativeCensor[F, L],
-      F: Monad[F]): ApplicativeCensor[EitherT[F, E, *], L] =
-    new ListenEitherT[F, E, L] with ApplicativeCensor[EitherT[F, E, *], L] {
+      A: Censor[F, L],
+      F: Monad[F]): Censor[EitherT[F, E, *], L] =
+    new ListenEitherT[F, E, L] with Censor[EitherT[F, E, *], L] {
       val applicative: Applicative[EitherT[F, E, *]] = EitherT.catsDataMonadErrorForEitherT
       val monoid: cats.Monoid[L] = L
 
@@ -141,12 +141,12 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
         EitherT(A.censor(fa.value)(f))
     }
 
-  implicit final def applicativeCensorIorT[F[_], E, L](
+  implicit final def censorIorT[F[_], E, L](
       implicit L: Monoid[L],
-      A: ApplicativeCensor[F, L],
+      A: Censor[F, L],
       F: Monad[F],
-      E: Semigroup[E]): ApplicativeCensor[IorT[F, E, *], L] =
-    new ListenIorT[F, E, L] with ApplicativeCensor[IorT[F, E, *], L] {
+      E: Semigroup[E]): Censor[IorT[F, E, *], L] =
+    new ListenIorT[F, E, L] with Censor[IorT[F, E, *], L] {
       val applicative: Applicative[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT
       val monoid: cats.Monoid[L] = L
 
@@ -154,11 +154,11 @@ private[mtl] trait ApplicativeCensorInstances extends LowPriorityApplicativeCens
         IorT(A.censor(fa.value)(f))
     }
 
-  implicit final def applicativeCensorOptionT[F[_], L](
+  implicit final def censorOptionT[F[_], L](
       implicit L: Monoid[L],
-      A: ApplicativeCensor[F, L],
-      F: Monad[F]): ApplicativeCensor[OptionT[F, *], L] =
-    new ListenOptionT[F, L] with ApplicativeCensor[OptionT[F, *], L] {
+      A: Censor[F, L],
+      F: Monad[F]): Censor[OptionT[F, *], L] =
+    new ListenOptionT[F, L] with Censor[OptionT[F, *], L] {
       val applicative: Applicative[OptionT[F, *]] = OptionT.catsDataMonadForOptionT
       val monoid: cats.Monoid[L] = L
 

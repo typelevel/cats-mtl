@@ -22,8 +22,8 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 import cats.syntax.all._
 
-trait ApplicativeCensorLaws[F[_], L] extends ListenLaws[F, L] {
-  implicit def F: ApplicativeCensor[F, L]
+trait CensorLaws[F[_], L] extends ListenLaws[F, L] {
+  implicit def F: Censor[F, L]
 
   implicit def L: Monoid[L] = F.monoid
   implicit def A: Applicative[F] = F.applicative
@@ -45,11 +45,11 @@ trait ApplicativeCensorLaws[F[_], L] extends ListenLaws[F, L] {
 
 }
 
-object ApplicativeCensorLaws {
+object CensorLaws {
   def apply[F[_], L](
-      implicit instance0: ApplicativeCensor[F, L]): ApplicativeCensorLaws[F, L] = {
-    new ApplicativeCensorLaws[F, L] {
-      def F: ApplicativeCensor[F, L] = instance0
+      implicit instance0: Censor[F, L]): CensorLaws[F, L] = {
+    new CensorLaws[F, L] {
+      def F: Censor[F, L] = instance0
     }
   }
 }

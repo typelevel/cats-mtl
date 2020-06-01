@@ -127,12 +127,14 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 #### Available MTL classes
 
 cats-mtl provides the following "MTL classes":
+
  - [Ask](mtl-classes/ask.md)
  - [Local](mtl-classes/local.md)
  - [Raise](mtl-classes/raise.md)
  - [Handle](mtl-classes/handle.md)
  - [Tell](mtl-classes/tell.md)
  - [Listen](mtl-classes/listen.md)
+ - Censor
  - [Stateful](mtl-classes/stateful.md)
  - [Chronicle](mtl-classes/chronicle.md)
 
