@@ -19,7 +19,7 @@ package cats.mtl
 import cats.Id
 import cats.data.Writer
 
-private[mtl] trait LowPriorityFunctorListenInstancesCompat {
-  implicit def baseFunctorListenForWriter[L]: FunctorListen[Writer[L, *], L] =
-    new FunctorListenWriterT[Id, L] {}
+private[mtl] trait LowPriorityListenInstancesCompat {
+  implicit def baseListenForWriter[L]: Listen[Writer[L, *], L] =
+    new ListenWriterT[Id, L] {}
 }

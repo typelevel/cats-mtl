@@ -16,4 +16,4 @@
 
 package cats.mtl
 
-private[mtl] trait LowPriorityFunctorListenInstancesCompat
+private[mtl] trait LowPriorityListenInstancesCompat

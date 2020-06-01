@@ -16,4 +16,4 @@
 
 package cats.mtl
 
-private[mtl] trait LowPriorityApplicativeAskInstancesCompat
+private[mtl] trait LowPriorityAskInstancesCompat

@@ -24,11 +24,11 @@ trait TellSyntax {
 }
 
 final class TupleOps[L, A](val t: (L, A)) extends AnyVal {
-  def tuple[F[_]](implicit functorTell: FunctorTell[F, L]): F[A] = functorTell.tuple(t)
+  def tuple[F[_]](implicit tell: Tell[F, L]): F[A] = tell.tuple(t)
 }
 
 final class TellOps[L](val e: L) extends AnyVal {
-  def tell[F[_]](implicit functorTell: FunctorTell[F, L]): F[Unit] = functorTell.tell(e)
+  def tell[F[_]](implicit tell: Tell[F, L]): F[Unit] = tell.tell(e)
 }
 
 object tell extends TellSyntax

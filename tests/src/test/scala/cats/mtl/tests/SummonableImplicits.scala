@@ -25,57 +25,57 @@ final class SummonableImplicits extends BaseSuite {
   // test instances.all._
   //noinspection ScalaUnusedSymbol
   locally {
-    val ApplicativeAskTest: Unit = {
-      def _1 = ApplicativeAsk[ReaderStrId, String]
-      def _2 = ApplicativeAsk[ReaderStrInt, Int]
-      def _3 = ApplicativeAsk[ReaderStrInt, String]
+    val AskTest: Unit = {
+      def _1 = Ask[ReaderStrId, String]
+      def _2 = Ask[ReaderStrInt, Int]
+      def _3 = Ask[ReaderStrInt, String]
     }
 
-    val FunctorListenTest: Unit = {
-      def _1 = FunctorListen[WriterStrId, String]
-      def _2 = FunctorListen[WriterTStrWriterTInt, String]
-      def _3 = FunctorListen[WriterTStrWriterTInt, Vector[Int]]
+    val ListenTest: Unit = {
+      def _1 = Listen[WriterStrId, String]
+      def _2 = Listen[WriterTStrWriterTInt, String]
+      def _3 = Listen[WriterTStrWriterTInt, Vector[Int]]
     }
 
-    val FunctorRaiseTest: Unit = {
-      def _1 = FunctorRaise[EitherStrId, String]
-      //def _2 = FunctorRaise[EitherTStrEitherTInt, Int]
-      def _3 = FunctorRaise[EitherTStrEitherTInt, String]
+    val RaiseTest: Unit = {
+      def _1 = Raise[EitherStrId, String]
+      //def _2 = Raise[EitherTStrEitherTInt, Int]
+      def _3 = Raise[EitherTStrEitherTInt, String]
     }
 
-    val ApplicativeLocalTest: Unit = {
-      def _1 = ApplicativeLocal[ReaderStrId, String]
-      def _2 = ApplicativeLocal[ReaderStrInt, Int]
-      def _3 = ApplicativeLocal[ReaderStrInt, String]
+    val LocalTest: Unit = {
+      def _1 = Local[ReaderStrId, String]
+      def _2 = Local[ReaderStrInt, Int]
+      def _3 = Local[ReaderStrInt, String]
     }
 
-    val MonadStateTest: Unit = {
-      def _1 = MonadState[StateStrId, String]
-      def _2 = MonadState[StateTStrStateTInt, String]
-      def _3 = MonadState[StateTStrStateTInt, Int]
+    val StatefulTest: Unit = {
+      def _1 = Stateful[StateStrId, String]
+      def _2 = Stateful[StateTStrStateTInt, String]
+      def _3 = Stateful[StateTStrStateTInt, Int]
     }
 
-    val FunctorTellTest: Unit = {
-      def _1 = FunctorTell[WriterStrId, String]
-      def _2 = FunctorTell[WriterTStrWriterTInt, String]
-      def _3 = FunctorTell[WriterTStrWriterTInt, Vector[Int]]
+    val TellTest: Unit = {
+      def _1 = Tell[WriterStrId, String]
+      def _2 = Tell[WriterTStrWriterTInt, String]
+      def _3 = Tell[WriterTStrWriterTInt, Vector[Int]]
     }
   }
 
   // test hierarchy.base
   //noinspection ScalaUnusedSymbol
   locally {
-    def localToAsk[F[_]](implicit F: ApplicativeLocal[F, String]): ApplicativeAsk[F, String] =
-      ApplicativeAsk[F, String]
+    def localToAsk[F[_]](implicit F: Local[F, String]): Ask[F, String] =
+      Ask[F, String]
 
-    def listenToTell[F[_]](implicit F: FunctorListen[F, String]): FunctorTell[F, String] =
-      FunctorTell[F, String]
+    def listenToTell[F[_]](implicit F: Listen[F, String]): Tell[F, String] =
+      Tell[F, String]
 
-    def stateToTell[F[_]](implicit F: FunctorTell[F, String]): FunctorTell[F, String] =
-      FunctorTell[F, String]
+    def stateToTell[F[_]](implicit F: Tell[F, String]): Tell[F, String] =
+      Tell[F, String]
 
-    def stateToAsk[F[_]](implicit F: ApplicativeAsk[F, String]): ApplicativeAsk[F, String] =
-      ApplicativeAsk[F, String]
+    def stateToAsk[F[_]](implicit F: Ask[F, String]): Ask[F, String] =
+      Ask[F, String]
 
   }
 

@@ -24,11 +24,11 @@ trait StateSyntax {
 }
 
 final class SetOps[S](val s: S) extends AnyVal {
-  def set[F[_]](implicit monadState: MonadState[F, S]): F[Unit] = monadState.set(s)
+  def set[F[_]](implicit stateful: Stateful[F, S]): F[Unit] = stateful.set(s)
 }
 
 final class ModifyOps[S](val f: S => S) extends AnyVal {
-  def modify[F[_]](implicit monadState: MonadState[F, S]): F[Unit] = monadState.modify(f)
+  def modify[F[_]](implicit stateful: Stateful[F, S]): F[Unit] = stateful.modify(f)
 }
 
 object state extends StateSyntax
