@@ -19,6 +19,8 @@ package mtl
 
 import cats.data.{ReaderWriterStateT => RWST, _}
 
+import scala.annotation.implicitNotFound
+
 /**
   * `ApplicativeLocal[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
   * using `ask`; the modification can only be observed from within that `F[A]` value.
@@ -46,6 +48,7 @@ import cats.data.{ReaderWriterStateT => RWST, _}
   * }}}
   *
   */
+@implicitNotFound("Could not find an implicit instance of ApplicativeLocal[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit flocal: ApplicativeLocal[${F}, ${E}}])\n")
 trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] with Serializable {
   def local[A](f: E => E)(fa: F[A]): F[A]
 

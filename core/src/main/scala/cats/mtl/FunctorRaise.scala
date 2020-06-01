@@ -17,8 +17,10 @@
 package cats
 package mtl
 
-import scala.util.control.NonFatal
 import cats.data._
+
+import scala.annotation.implicitNotFound
+import scala.util.control.NonFatal
 
 /**
   * `FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
@@ -58,6 +60,7 @@ import cats.data._
   *   // QED.
   * }}}
   */
+@implicitNotFound("Could not find an implicit instance of FunctorRaise[${F}, ${E}]. If you have\na good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fraise: FunctorRaise[${F}, ${E}}])\n")
 trait FunctorRaise[F[_], E] extends Serializable {
   def functor: Functor[F]
 

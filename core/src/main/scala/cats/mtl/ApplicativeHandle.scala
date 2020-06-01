@@ -19,6 +19,9 @@ package mtl
 
 import cats.data._
 
+import scala.annotation.implicitNotFound
+
+@implicitNotFound("Could not find an implicit instance of ApplicativeHandle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fhandle: ApplicativeHandle[${F}, ${E}}])\n")
 trait ApplicativeHandle[F[_], E] extends FunctorRaise[F, E] with Serializable {
   def applicative: Applicative[F]
 

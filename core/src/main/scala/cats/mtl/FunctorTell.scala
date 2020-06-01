@@ -19,6 +19,8 @@ package mtl
 
 import cats.data.WriterT
 
+import scala.annotation.implicitNotFound
+
 /**
   * `FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
   *
@@ -35,6 +37,7 @@ import cats.data.WriterT
   * }
   * }}}
   */
+@implicitNotFound("Could not find an implicit instance of FunctorTell[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit ftell: FunctorTell[${F}, ${L}}])\n")
 trait FunctorTell[F[_], L] extends Serializable {
   def functor: Functor[F]
 
