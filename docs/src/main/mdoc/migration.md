@@ -8,25 +8,25 @@ position: 5
 ## Migration guide
 
 Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:
- - `MonadReader --> ApplicativeLocal`
- - `MonadWriter --> FunctorListen`
- - `MonadState --> MonadState`
+ - `MonadReader --> Local`
+ - `MonadWriter --> Listen`
+ - `Stateful --> Stateful`
 
 cats typeclass parameters and context bounds have to be rewritten, to include base classes.
 For example:
- - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `[F[_]: Monad: ApplicativeLocal[?[_], E]]`,
- - `[F[_]: MonadWriter[?[_], L]]` will have to be adjusted to `[F[_]: Monad: FunctorListen[?[_], L]]`,
- - `[F[_]: MonadState[?[_], S]]` will have to be adjusted to `[F[_]: Monad: MonadState[?[_], S]]`
+ - `[F[_]: MonadReader[?[_], E]]` will have to be adjusted to `[F[_]: Monad: Local[?[_], E]]`,
+ - `[F[_]: MonadWriter[?[_], L]]` will have to be adjusted to `[F[_]: Monad: Listen[?[_], L]]`,
+ - `[F[_]: Stateful[?[_], S]]` will have to be adjusted to `[F[_]: Monad: Stateful[?[_], S]]`
 
 The root cause for this is addressed in the motivation section.
 
 
-### ApplicativeAsk / ApplicativeLocal
-`MonadReader` from cats has been split into `ApplicativeAsk` and `ApplicativeLocal`;
+### Ask / Local
+`MonadReader` from cats has been split into `Ask` and `Local`;
 the `Monad` constraint has been weakened to `Applicative`, and the `local` method was split out
-into a subclass to widen the implementation space for `ApplicativeAsk`.
+into a subclass to widen the implementation space for `Ask`.
 
-### FunctorTell / FunctorListen
-Similarly to `MonadReader`, `MonadWriter` was split into `FunctorTell` and `FunctorListen`
-and the constraint weakened to `Functor`, and `FunctorListen` being `FunctorTell` with the `listen`
+### Tell / Listen
+Similarly to `MonadReader`, `MonadWriter` was split into `Tell` and `Listen`
+and the constraint weakened to `Functor`, and `Listen` being `Tell` with the `listen`
 method added.

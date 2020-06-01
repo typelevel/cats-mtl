@@ -19,9 +19,9 @@ package cats.mtl
 import cats.{Functor, Monoid}
 import cats.data.Writer
 
-private[mtl] trait LowPriorityFunctorTellInstancesCompat {
-  implicit def functorTellForWriter[L: Monoid]: FunctorTell[Writer[L, *], L] =
-    new FunctorTell[Writer[L, *], L] {
+private[mtl] trait LowPriorityTellInstancesCompat {
+  implicit def tellForWriter[L: Monoid]: Tell[Writer[L, *], L] =
+    new Tell[Writer[L, *], L] {
       val functor = Functor[Writer[L, *]]
       def tell(l: L) = Writer.tell[L](l)
     }

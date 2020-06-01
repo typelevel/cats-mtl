@@ -1,18 +1,18 @@
 ---
 layout: docs
-title:  "FunctorTell"
+title:  "Tell"
 section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/FunctorTell.scala"
-scaladoc: "#cats.mtl.FunctorTell"
+source: "core/src/main/scala/cats/mtl/Tell.scala"
+scaladoc: "#cats.mtl.Tell"
 ---
 
-## FunctorTell
+## Tell
 
-Data types that have instances of `FunctorTell[F, L]` are able to accumulate values of type `L` in the `F[_]` context.
+Data types that have instances of `Tell[F, L]` are able to accumulate values of type `L` in the `F[_]` context.
 This is done by adding values of `L` to the accumulated log by using the `tell` function:
 
 ```scala
-trait FunctorTell[F[_], L] {
+trait Tell[F[_], L] {
   def tell(l: L): F[Unit]
 }
 ```
@@ -20,7 +20,7 @@ trait FunctorTell[F[_], L] {
 This log is write-only and the only way to modify it is to add more `L` values.
 Usually most instances require a `Monoid[L]` in order to properly accumulate values of `L`.
 
-Let's have a look at an example how you could `FunctorTell` to log service calls.
+Let's have a look at an example how you could `Tell` to log service calls.
 First we'll add the actual service call with its parameters and result types:
 
 
@@ -28,7 +28,7 @@ First we'll add the actual service call with its parameters and result types:
 import cats._
 import cats.data._
 import cats.implicits._
-import cats.mtl.FunctorTell
+import cats.mtl.Tell
 
 case class ServiceParams(option1: String, option2: Int)
 
@@ -44,7 +44,7 @@ For the log, we'll be using a `Chain[String]`, as it supports very efficient con
 
 ```scala mdoc
 
-def serviceCallWithLog[F[_]: Monad](params: ServiceParams)(implicit F: FunctorTell[F, Chain[String]]): F[ServiceResult] =
+def serviceCallWithLog[F[_]: Monad](params: ServiceParams)(implicit F: Tell[F, Chain[String]]): F[ServiceResult] =
   for {
     _ <- F.tell(Chain.one(show"Call to service with ${params.option1} and ${params.option2}"))
     result <- serviceCall[F](params)
@@ -53,7 +53,7 @@ def serviceCallWithLog[F[_]: Monad](params: ServiceParams)(implicit F: FunctorTe
 ```
 
 Now let's materialize this to see if it worked.
-Instances for `FunctorTell` include `Writer` and `WriterT`, but also `Tuple2`:
+Instances for `Tell` include `Writer` and `WriterT`, but also `Tuple2`:
 
   
 ```scala mdoc
@@ -64,4 +64,4 @@ val (log, result): (Chain[String], ServiceResult) =
 
 And voila, it works as expected.
 We were using just a standard `Writer` for this example,
-  but remember that any monad transformer stack with `WriterT` in it somewhere will have an instance of `FunctorTell`.
+  but remember that any monad transformer stack with `WriterT` in it somewhere will have an instance of `Tell`.

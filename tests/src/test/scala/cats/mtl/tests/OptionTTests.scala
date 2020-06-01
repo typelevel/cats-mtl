@@ -37,19 +37,16 @@ class OptionTTests extends BaseSuite {
 
   {
 
-    checkAll("Option", ApplicativeHandleTests[Option, Unit].applicativeHandle[Int])
+    checkAll("Option", HandleTests[Option, Unit].handle[Int])
     checkAll(
       "OptionT[Either[String, *], *]",
-      ApplicativeHandleTests[OptionT[Either[String, *], *], Unit].applicativeHandle[Int])
+      HandleTests[OptionT[Either[String, *], *], Unit].handle[Int])
 
-    checkAll(
-      "WriterT[Option, Int, *]",
-      ApplicativeHandleTests[WriterT[Option, Int, *], Unit].applicativeHandle[Int])
+    checkAll("WriterT[Option, Int, *]", HandleTests[WriterT[Option, Int, *], Unit].handle[Int])
 
     checkAll(
       "WriterT[OptionT[Either[String, *], *], Int, *]",
-      ApplicativeHandleTests[WriterT[OptionT[Either[String, *], *], Int, *], Unit]
-        .applicativeHandle[Int])
+      HandleTests[WriterT[OptionT[Either[String, *], *], Int, *], Unit].handle[Int])
 
   }
 }

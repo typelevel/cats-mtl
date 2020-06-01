@@ -23,10 +23,10 @@ trait ListenSyntax {
 }
 
 final class ListenOps[F[_], A](val fa: F[A]) extends AnyVal {
-  def listen[L](implicit listen: FunctorListen[F, L]): F[(A, L)] =
+  def listen[L](implicit listen: Listen[F, L]): F[(A, L)] =
     listen.listen(fa)
 
-  def listens[L, B](f: L => B)(implicit listen: FunctorListen[F, L]): F[(A, B)] =
+  def listens[L, B](f: L => B)(implicit listen: Listen[F, L]): F[(A, B)] =
     listen.listens(fa)(f)
 
 }

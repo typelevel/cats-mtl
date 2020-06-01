@@ -22,9 +22,9 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
-trait FunctorTellLaws[F[_], L] {
-  implicit def F: FunctorTell[F, L]
-  implicit def functor(implicit F: FunctorTell[F, L]): Functor[F] = F.functor
+trait TellLaws[F[_], L] {
+  implicit def F: Tell[F, L]
+  implicit def functor(implicit F: Tell[F, L]): Functor[F] = F.functor
 
   // internal laws:
   def writerIsTellAndMap[A](a: A, l: L): IsEq[F[A]] =
@@ -35,10 +35,10 @@ trait FunctorTellLaws[F[_], L] {
 
 }
 
-object FunctorTellLaws {
-  def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellLaws[F, L] = {
-    new FunctorTellLaws[F, L] {
-      def F: FunctorTell[F, L] = instance0
+object TellLaws {
+  def apply[F[_], L](implicit instance0: Tell[F, L]): TellLaws[F, L] = {
+    new TellLaws[F, L] {
+      def F: Tell[F, L] = instance0
     }
   }
 }

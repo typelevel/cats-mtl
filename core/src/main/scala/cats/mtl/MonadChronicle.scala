@@ -24,8 +24,8 @@ import cats.data.Ior.Both
 import scala.annotation.implicitNotFound
 
 @implicitNotFound(
-  "Could not find an implicit instance of MonadChronicle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may\nwant to construct a value of type IorT for this call-site, rather than \n${F}. An example type:\n\n  IorT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The IorT will\n\"catch\" and accumulate the errors of type ${E}. Unlike try/catch, IorT\nmay produce errors alongside a valid result.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fchron: MonadChronicle[${F}, ${E}}])\n")
-trait MonadChronicle[F[_], E] extends Serializable {
+  "Could not find an implicit instance of Chronicle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may\nwant to construct a value of type IorT for this call-site, rather than \n${F}. An example type:\n\n  IorT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The IorT will\n\"catch\" and accumulate the errors of type ${E}. Unlike try/catch, IorT\nmay produce errors alongside a valid result.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fchron: Chronicle[${F}, ${E}}])\n")
+trait Chronicle[F[_], E] extends Serializable {
   val monad: Monad[F]
 
   def dictate(c: E): F[Unit]
@@ -72,11 +72,11 @@ trait MonadChronicle[F[_], E] extends Serializable {
     }
 }
 
-private[mtl] trait MonadChronicleInstances {
+private[mtl] trait ChronicleInstances {
 
-  implicit def monadChronicleForIorT[F[_], E: Semigroup](
-      implicit F: Monad[F]): MonadChronicle[IorT[F, E, *], E] =
-    new MonadChronicle[IorT[F, E, *], E] {
+  implicit def chronicleForIorT[F[_], E: Semigroup](
+      implicit F: Monad[F]): Chronicle[IorT[F, E, *], E] =
+    new Chronicle[IorT[F, E, *], E] {
       override val monad: Monad[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT
 
       override def dictate(c: E): IorT[F, E, Unit] = IorT.bothT[F](c, ())
@@ -93,8 +93,8 @@ private[mtl] trait MonadChronicleInstances {
         }
     }
 
-  implicit final def chronicleIor[E](implicit S: Semigroup[E]): MonadChronicle[Ior[E, *], E] =
-    new MonadChronicle[Ior[E, *], E] {
+  implicit final def chronicleIor[E](implicit S: Semigroup[E]): Chronicle[Ior[E, *], E] =
+    new Chronicle[Ior[E, *], E] {
       override val monad: Monad[Ior[E, *]] = Ior.catsDataMonadErrorForIor
 
       override def dictate(c: E): Ior[E, Unit] = Ior.both(c, ())
@@ -109,9 +109,9 @@ private[mtl] trait MonadChronicleInstances {
         }
     }
 
-  implicit def monadChronicleForWriterT[F[_]: Monad, E, L: Monoid](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[WriterT[F, L, *], E] =
-    new MonadChronicle[WriterT[F, L, *], E] {
+  implicit def chronicleForWriterT[F[_]: Monad, E, L: Monoid](
+      implicit F: Chronicle[F, E]): Chronicle[WriterT[F, L, *], E] =
+    new Chronicle[WriterT[F, L, *], E] {
       val monad: Monad[WriterT[F, L, *]] = WriterT.catsDataMonadForWriterT[F, L]
       def confess[A](c: E): WriterT[F, L, A] = WriterT.liftF(F.confess[A](c))
       def dictate(c: E): WriterT[F, L, Unit] = WriterT.liftF(F.dictate(c))
@@ -119,9 +119,9 @@ private[mtl] trait MonadChronicleInstances {
         WriterT(F.materialize(fa.run).map(_.sequence))
     }
 
-  implicit def monadChronicleForEitherT[F[_]: Monad, E, E2](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[EitherT[F, E2, *], E] =
-    new MonadChronicle[EitherT[F, E2, *], E] {
+  implicit def chronicleForEitherT[F[_]: Monad, E, E2](
+      implicit F: Chronicle[F, E]): Chronicle[EitherT[F, E2, *], E] =
+    new Chronicle[EitherT[F, E2, *], E] {
       val monad: Monad[EitherT[F, E2, *]] = EitherT.catsDataMonadErrorForEitherT[F, E2]
       def confess[A](c: E): EitherT[F, E2, A] = EitherT.liftF(F.confess[A](c))
       def dictate(c: E): EitherT[F, E2, Unit] = EitherT.liftF(F.dictate(c))
@@ -129,9 +129,9 @@ private[mtl] trait MonadChronicleInstances {
         EitherT(F.materialize(fa.value).map(_.sequence))
     }
 
-  implicit def monadChronicleForKleisli[F[_]: Monad, E, R](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[Kleisli[F, R, *], E] =
-    new MonadChronicle[Kleisli[F, R, *], E] {
+  implicit def chronicleForKleisli[F[_]: Monad, E, R](
+      implicit F: Chronicle[F, E]): Chronicle[Kleisli[F, R, *], E] =
+    new Chronicle[Kleisli[F, R, *], E] {
       val monad: Monad[Kleisli[F, R, *]] = Kleisli.catsDataMonadForKleisli[F, R]
       def confess[A](c: E): Kleisli[F, R, A] = Kleisli.liftF(F.confess[A](c))
       def dictate(c: E): Kleisli[F, R, Unit] = Kleisli.liftF(F.dictate(c))
@@ -139,9 +139,9 @@ private[mtl] trait MonadChronicleInstances {
         Kleisli(r => F.materialize(fa.run(r)))
     }
 
-  implicit def monadChronicleForStateT[F[_]: Monad, E, S](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[StateT[F, S, *], E] =
-    new MonadChronicle[StateT[F, S, *], E] {
+  implicit def chronicleForStateT[F[_]: Monad, E, S](
+      implicit F: Chronicle[F, E]): Chronicle[StateT[F, S, *], E] =
+    new Chronicle[StateT[F, S, *], E] {
       val monad: Monad[StateT[F, S, *]] = IndexedStateT.catsDataMonadForIndexedStateT[F, S]
       def confess[A](c: E): StateT[F, S, A] = StateT.liftF(F.confess[A](c))
       def dictate(c: E): StateT[F, S, Unit] = StateT.liftF(F.dictate(c))
@@ -154,9 +154,9 @@ private[mtl] trait MonadChronicleInstances {
           })
     }
 
-  implicit def monadChronicleForOptionT[F[_]: Monad, E](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[OptionT[F, *], E] =
-    new MonadChronicle[OptionT[F, *], E] {
+  implicit def chronicleForOptionT[F[_]: Monad, E](
+      implicit F: Chronicle[F, E]): Chronicle[OptionT[F, *], E] =
+    new Chronicle[OptionT[F, *], E] {
       val monad: Monad[OptionT[F, *]] = OptionT.catsDataMonadForOptionT[F]
       def confess[A](c: E): OptionT[F, A] = OptionT.liftF(F.confess[A](c))
       def dictate(c: E): OptionT[F, Unit] = OptionT.liftF(F.dictate(c))
@@ -164,9 +164,9 @@ private[mtl] trait MonadChronicleInstances {
         OptionT(F.materialize(fa.value).map(_.sequence))
     }
 
-  implicit def monadChronicleForRWST[F[_]: Monad, E, R, L: Monoid, S](
-      implicit F: MonadChronicle[F, E]): MonadChronicle[RWST[F, R, L, S, *], E] =
-    new MonadChronicle[RWST[F, R, L, S, *], E] {
+  implicit def chronicleForRWST[F[_]: Monad, E, R, L: Monoid, S](
+      implicit F: Chronicle[F, E]): Chronicle[RWST[F, R, L, S, *], E] =
+    new Chronicle[RWST[F, R, L, S, *], E] {
       val monad: Monad[RWST[F, R, L, S, *]] = IndexedRWST.catsDataMonadForRWST[F, R, L, S]
       def confess[A](c: E): RWST[F, R, L, S, A] = RWST.liftF(F.confess[A](c))
       def dictate(c: E): RWST[F, R, L, S, Unit] = RWST.liftF(F.dictate(c))
@@ -180,20 +180,20 @@ private[mtl] trait MonadChronicleInstances {
     }
 }
 
-object MonadChronicle extends MonadChronicleInstances {
-  def dictate[F[_], E](e: E)(implicit ev: MonadChronicle[F, E]): F[Unit] = ev.dictate(e)
+object Chronicle extends ChronicleInstances {
+  def dictate[F[_], E](e: E)(implicit ev: Chronicle[F, E]): F[Unit] = ev.dictate(e)
 
-  def disclose[F[_], A, E](c: E)(implicit ev: MonadChronicle[F, E], m: Monoid[A]): F[A] =
+  def disclose[F[_], A, E](c: E)(implicit ev: Chronicle[F, E], m: Monoid[A]): F[A] =
     ev.disclose(c)
 
-  def confess[F[_], E, A](c: E)(implicit ev: MonadChronicle[F, E]): F[A] = ev.confess(c)
+  def confess[F[_], E, A](c: E)(implicit ev: Chronicle[F, E]): F[A] = ev.confess(c)
 
-  def materialize[F[_], E, A](fa: F[A])(implicit ev: MonadChronicle[F, E]): F[E Ior A] =
+  def materialize[F[_], E, A](fa: F[A])(implicit ev: Chronicle[F, E]): F[E Ior A] =
     ev.materialize(fa)
 
-  def chronicle[F[_], E, A](ior: E Ior A)(implicit ev: MonadChronicle[F, E]): F[A] =
+  def chronicle[F[_], E, A](ior: E Ior A)(implicit ev: Chronicle[F, E]): F[A] =
     ev.chronicle(ior)
 
-  def apply[F[_], E](implicit ev: MonadChronicle[F, E]): MonadChronicle[F, E] =
+  def apply[F[_], E](implicit ev: Chronicle[F, E]): Chronicle[F, E] =
     ev
 }

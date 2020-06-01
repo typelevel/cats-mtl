@@ -23,8 +23,8 @@ import cats.laws.IsEqArrow
 
 import scala.util.control.NonFatal
 
-trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
-  implicit val handleInstance: ApplicativeHandle[F, E]
+trait HandleLaws[F[_], E] extends RaiseLaws[F, E] {
+  implicit val handleInstance: Handle[F, E]
   implicit val applicativeInstance: Applicative[F] = handleInstance.applicative
 
   import handleInstance.{attempt, handle, handleWith}
@@ -60,12 +60,11 @@ trait ApplicativeHandleLaws[F[_], E] extends FunctorRaiseLaws[F, E] {
 
 }
 
-object ApplicativeHandleLaws {
-  def apply[F[_], E](
-      implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleLaws[F, E] = {
-    new ApplicativeHandleLaws[F, E] {
-      lazy val handleInstance: ApplicativeHandle[F, E] = instance0
-      override lazy val raiseInstance: FunctorRaise[F, E] = instance0
+object HandleLaws {
+  def apply[F[_], E](implicit instance0: Handle[F, E]): HandleLaws[F, E] = {
+    new HandleLaws[F, E] {
+      lazy val handleInstance: Handle[F, E] = instance0
+      override lazy val raiseInstance: Raise[F, E] = instance0
     }
   }
 }

@@ -23,10 +23,10 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
-  def laws: FunctorListenLaws[F, L]
+trait ListenTests[F[_], L] extends TellTests[F, L] {
+  def laws: ListenLaws[F, L]
 
-  def functorListen[A: Arbitrary, B: Arbitrary](
+  def listen[A: Arbitrary, B: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbL: Arbitrary[L],
       CogenA: Cogen[A],
@@ -36,8 +36,8 @@ trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
       EqFAB: Eq[F[(A, B)]],
       EqFUL: Eq[F[(Unit, L)]]): RuleSet = {
     new DefaultRuleSet(
-      name = "functorListen",
-      parent = Some(functorTell[A]),
+      name = "listen",
+      parent = Some(tell[A]),
       "listen respects tell" -> ∀(laws.listenRespectsTell _),
       "listen adds no effects" -> ∀(laws.listenAddsNoEffects[A] _),
       "listens is listen then map" -> ∀(laws.listensIsListenThenMap[A, B] _)
@@ -46,10 +46,10 @@ trait FunctorListenTests[F[_], L] extends FunctorTellTests[F, L] {
 
 }
 
-object FunctorListenTests {
-  def apply[F[_], L](implicit instance0: FunctorListen[F, L]): FunctorListenTests[F, L] = {
-    new FunctorListenTests[F, L] {
-      override def laws: FunctorListenLaws[F, L] = FunctorListenLaws[F, L]
+object ListenTests {
+  def apply[F[_], L](implicit instance0: Listen[F, L]): ListenTests[F, L] = {
+    new ListenTests[F, L] {
+      override def laws: ListenLaws[F, L] = ListenLaws[F, L]
     }
   }
 }

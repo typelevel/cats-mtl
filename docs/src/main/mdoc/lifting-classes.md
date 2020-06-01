@@ -23,7 +23,7 @@ They form a hierarchy:
 
 It lets you lift monadic values into other monads which are "larger" than them,
 for example monads that are being used inside monad transformers.
-For example, `ApplicativeLocal` requires `MonadLayer` to lift through a transformer, because
+For example, `Local` requires `MonadLayer` to lift through a transformer, because
 all of its operations are invertible.
 
 `<X>LayerFunctor` is a `<X>Layer` but instead a variant of `cats.Functor`, which maps
@@ -35,7 +35,7 @@ Mapping natural transformations over the inner `Inner` inside `M`.
 `MonadLayerControl` allows you to lift operations that *consume* `M` using the `layerControl` method,
 which allows one the ability to "unravel" an `M[A]` to an `Inner[State[A]]` temporarily,
 as long as the value produced with it is already in the `M[_]` context.
-For example, `FunctorListen` requires this typeclass to lift through a transformer.
+For example, `Listen` requires this typeclass to lift through a transformer.
 
 
 #### Why not MonadTrans, etc?

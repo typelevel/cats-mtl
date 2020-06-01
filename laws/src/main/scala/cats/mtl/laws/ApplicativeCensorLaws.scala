@@ -22,7 +22,7 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 import cats.syntax.all._
 
-trait ApplicativeCensorLaws[F[_], L] extends FunctorListenLaws[F, L] {
+trait ApplicativeCensorLaws[F[_], L] extends ListenLaws[F, L] {
   implicit def F: ApplicativeCensor[F, L]
 
   implicit def L: Monoid[L] = F.monoid

@@ -3,7 +3,7 @@
 ### Adding a new transformer typeclass
 
 First thing is the set of operations, or the *signature*.
-For example `FunctorTell[F, E]` has the signature `def tell(e: E): F[Unit]`.
+For example `Tell[F, E]` has the signature `def tell(e: E): F[Unit]`.
 
 Once you've got this down, you need to come up with a set of laws and a base typeclass.
 These have to be worked out at the same time, because choosing base classes with more operations gives
@@ -17,8 +17,8 @@ To be continued.
 ### Adding a new transformer typeclass instance
 
 The characteristic which transformer typeclasses have in common is that instances of them are
-commonly lifted through transformer stacks. I.e., if you have an `ApplicativeAsk[E => ?]`, you can
-have an `ApplicativeAsk[EitherT[E => ?, String, ?]]`; a so-called *inductive* instance of `ApplicativeAsk`,
+commonly lifted through transformer stacks. I.e., if you have an `Ask[E => ?]`, you can
+have an `Ask[EitherT[E => ?, String, ?]]`; a so-called *inductive* instance of `Ask`,
 because the capability is not provided by `EitherT` itself but the "inner monad".
 
 Because of this, there's an argument to be made that there's only one transformer

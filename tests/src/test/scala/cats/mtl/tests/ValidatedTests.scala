@@ -25,8 +25,6 @@ import cats.mtl.laws.discipline._
 
 class ValidatedTests extends BaseSuite {
 
-  checkAll(
-    "Validated[String, *]",
-    ApplicativeHandleTests[Validated[String, *], String].applicativeHandle[Int])
+  checkAll("Validated[String, *]", HandleTests[Validated[String, *], String].handle[Int])
 
 }

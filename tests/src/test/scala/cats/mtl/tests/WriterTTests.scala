@@ -51,8 +51,8 @@ class WriterTTests extends BaseSuite {
     WriterT[WriterTC[Option, String]#l, List[Int], A]
 
   {
-    FunctorTell[Writer[Chain[String], *], Chain[String]]
-    FunctorListen[Writer[Chain[String], *], Chain[String]]
+    Tell[Writer[Chain[String], *], Chain[String]]
+    Listen[Writer[Chain[String], *], Chain[String]]
   }
 
   {
@@ -100,7 +100,7 @@ class WriterTTests extends BaseSuite {
       ApplicativeCensorTests[WriterTC[Option, String]#l, String]
         .applicativeCensor[String, String])
     checkAll(
-      "FunctorListen[WriterT[Option, String, *]]",
-      SerializableTests.serializable(FunctorListen[WriterTC[Option, String]#l, String]))
+      "Listen[WriterT[Option, String, *]]",
+      SerializableTests.serializable(Listen[WriterTC[Option, String]#l, String]))
   }
 }

@@ -27,8 +27,8 @@ import cats.syntax.semigroup._
 /**
   * Created by Yuval.Itzchakov on 20/07/2018.
   */
-trait MonadChronicleLaws[F[_], E] {
-  implicit val chronicleInstance: MonadChronicle[F, E]
+trait ChronicleLaws[F[_], E] {
+  implicit val chronicleInstance: Chronicle[F, E]
   implicit val monad: Monad[F] = chronicleInstance.monad
 
   import chronicleInstance._
@@ -73,9 +73,9 @@ trait MonadChronicleLaws[F[_], E] {
     dictate(e0) *> confess[A](e) <-> confess[A](e0 |+| e)
 }
 
-object MonadChronicleLaws {
-  def apply[F[_], E](implicit instance: MonadChronicle[F, E]): MonadChronicleLaws[F, E] =
-    new MonadChronicleLaws[F, E] {
-      override lazy implicit val chronicleInstance: MonadChronicle[F, E] = instance
+object ChronicleLaws {
+  def apply[F[_], E](implicit instance: Chronicle[F, E]): ChronicleLaws[F, E] =
+    new ChronicleLaws[F, E] {
+      override lazy implicit val chronicleInstance: Chronicle[F, E] = instance
     }
 }

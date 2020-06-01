@@ -23,7 +23,7 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait ApplicativeCensorTests[F[_], L] extends FunctorListenTests[F, L] {
+trait ApplicativeCensorTests[F[_], L] extends ListenTests[F, L] {
   def laws: ApplicativeCensorLaws[F, L]
 
   def applicativeCensor[A: Arbitrary, B: Arbitrary](
@@ -37,7 +37,7 @@ trait ApplicativeCensorTests[F[_], L] extends FunctorListenTests[F, L] {
       EqFUL: Eq[F[(Unit, L)]]): RuleSet = {
     new DefaultRuleSet(
       name = "applicativeCensor",
-      parent = Some(functorListen[A, B]),
+      parent = Some(listen[A, B]),
       "tell leftProduct is tell combined" -> ∀(laws.tellLeftProductHomomorphism _),
       "tell rightProduct is tell combined" -> ∀(laws.tellRightProductHomomorphism _),
       "censor with pure is tell with empty" -> ∀(laws.censorWithPurIsTellEmpty[A] _),

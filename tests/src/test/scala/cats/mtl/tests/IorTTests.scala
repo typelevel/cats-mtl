@@ -46,23 +46,22 @@ class IorTTests extends BaseSuite {
 
     checkAll(
       "IorT[Option, String, *]",
-      MonadChronicleTests[IorTC[Option, String]#l, String].monadChronicle[String]
+      ChronicleTests[IorTC[Option, String]#l, String].chronicle[String]
     )
 
     checkAll(
       "Ior[String, String]",
-      MonadChronicleTests[IorC[String]#l, String].monadChronicle[String]
+      ChronicleTests[IorC[String]#l, String].chronicle[String]
     )
 
     checkAll(
       "WriterT[Ior[String, *], Int]",
-      MonadChronicleTests[WriterTC[IorC[String]#l, Int]#l, String].monadChronicle[String]
+      ChronicleTests[WriterTC[IorC[String]#l, Int]#l, String].chronicle[String]
     )
 
     checkAll(
       "WriterT[IorT[Option, String, *], Int]",
-      MonadChronicleTests[WriterTC[IorTC[Option, String]#l, Int]#l, String]
-        .monadChronicle[String]
+      ChronicleTests[WriterTC[IorTC[Option, String]#l, Int]#l, String].chronicle[String]
     )
 
   }

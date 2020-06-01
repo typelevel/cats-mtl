@@ -23,8 +23,8 @@ import cats.laws.IsEqArrow
 import cats.syntax.apply._
 import cats.syntax.functor._
 
-trait ApplicativeAskLaws[F[_], E] {
-  implicit val askInstance: ApplicativeAsk[F, E]
+trait AskLaws[F[_], E] {
+  implicit val askInstance: Ask[F, E]
   import askInstance._
   implicit val applicative: Applicative[F] = askInstance.applicative
 
@@ -37,9 +37,9 @@ trait ApplicativeAskLaws[F[_], E] {
     ask.map(f) <-> reader(f)
 }
 
-object ApplicativeAskLaws {
-  def apply[F[_], E](implicit instance0: ApplicativeAsk[F, E]): ApplicativeAskLaws[F, E] = {
-    new ApplicativeAskLaws[F, E] {
+object AskLaws {
+  def apply[F[_], E](implicit instance0: Ask[F, E]): AskLaws[F, E] = {
+    new AskLaws[F, E] {
       override lazy val askInstance = instance0
     }
   }

@@ -22,11 +22,11 @@ import cats.data.WriterT
 import scala.annotation.implicitNotFound
 
 /**
-  * `FunctorTell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
+  * `Tell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.
   *
- * `FunctorTell` has no external laws.
+ * `Tell` has no external laws.
   *
- * `FunctorTell` has one internal law:
+ * `Tell` has one internal law:
   * {{{
   * def writerIsTellAndMap(a: A, l: L) = {
   *   (tell(l) as a) <-> writer(a, l)
@@ -38,8 +38,8 @@ import scala.annotation.implicitNotFound
   * }}}
   */
 @implicitNotFound(
-  "Could not find an implicit instance of FunctorTell[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit ftell: FunctorTell[${F}, ${L}}])\n")
-trait FunctorTell[F[_], L] extends Serializable {
+  "Could not find an implicit instance of Tell[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit ftell: Tell[${F}, ${L}}])\n")
+trait Tell[F[_], L] extends Serializable {
   def functor: Functor[F]
 
   def tell(l: L): F[Unit]
@@ -49,46 +49,45 @@ trait FunctorTell[F[_], L] extends Serializable {
   def tuple[A](ta: (L, A)): F[A] = writer(ta._2, ta._1)
 }
 
-private[mtl] trait FunctorTellMonadPartialOrder[F[_], G[_], L] extends FunctorTell[G, L] {
+private[mtl] trait TellMonadPartialOrder[F[_], G[_], L] extends Tell[G, L] {
   val lift: MonadPartialOrder[F, G]
-  val F: FunctorTell[F, L]
+  val F: Tell[F, L]
 
   override val functor = lift.monadG
   override def tell(l: L) = lift(F.tell(l))
 }
 
-private[mtl] trait LowPriorityFunctorTellInstances {
+private[mtl] trait LowPriorityTellInstances {
 
-  implicit def functorTellForPartialOrder[F[_], G[_], L](
+  implicit def tellForPartialOrder[F[_], G[_], L](
       implicit lift0: MonadPartialOrder[F, G],
-      F0: FunctorTell[F, L]): FunctorTell[G, L] =
-    new FunctorTellMonadPartialOrder[F, G, L] {
+      F0: Tell[F, L]): Tell[G, L] =
+    new TellMonadPartialOrder[F, G, L] {
       val lift: MonadPartialOrder[F, G] = lift0
-      val F: FunctorTell[F, L] = F0
+      val F: Tell[F, L] = F0
     }
 }
 
-private[mtl] trait FunctorTellInstances
-    extends LowPriorityFunctorTellInstances
-    with LowPriorityFunctorTellInstancesCompat {
+private[mtl] trait TellInstances
+    extends LowPriorityTellInstances
+    with LowPriorityTellInstancesCompat {
 
-  implicit def functorTellForWriterT[F[_]: Applicative, L: Monoid]
-      : FunctorTell[WriterT[F, L, *], L] =
-    new FunctorTell[WriterT[F, L, *], L] {
+  implicit def tellForWriterT[F[_]: Applicative, L: Monoid]: Tell[WriterT[F, L, *], L] =
+    new Tell[WriterT[F, L, *], L] {
       val functor = Functor[WriterT[F, L, *]]
       def tell(l: L) = WriterT.tell[F, L](l)
     }
 }
 
-object FunctorTell extends FunctorTellInstances {
-  def apply[F[_], L](implicit tell: FunctorTell[F, L]): FunctorTell[F, L] = tell
-  def tell[F[_], L](l: L)(implicit tell: FunctorTell[F, L]): F[Unit] = tell.tell(l)
+object Tell extends TellInstances {
+  def apply[F[_], L](implicit tell: Tell[F, L]): Tell[F, L] = tell
+  def tell[F[_], L](l: L)(implicit tell: Tell[F, L]): F[Unit] = tell.tell(l)
 
   def tellF[F[_]]: tellFPartiallyApplied[F] = new tellFPartiallyApplied[F]
 
   final private[mtl] class tellFPartiallyApplied[F[_]](val dummy: Boolean = false)
       extends AnyVal {
-    @inline def apply[L](l: L)(implicit tell: FunctorTell[F, L]): F[Unit] =
+    @inline def apply[L](l: L)(implicit tell: Tell[F, L]): F[Unit] =
       tell.tell(l)
   }
 }

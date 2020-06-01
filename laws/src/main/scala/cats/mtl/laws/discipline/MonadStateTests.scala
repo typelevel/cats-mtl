@@ -24,19 +24,19 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait MonadStateTests[F[_], S] extends Laws {
-  implicit val stateInstance: MonadState[F, S]
+trait StatefulTests[F[_], S] extends Laws {
+  implicit val stateInstance: Stateful[F, S]
 
-  def laws: MonadStateLaws[F, S] = MonadStateLaws[F, S]
+  def laws: StatefulLaws[F, S] = StatefulLaws[F, S]
 
-  def monadState[A: Arbitrary](
+  def stateful[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbS: Arbitrary[S],
       CogenS: Cogen[S],
       EqFU: Eq[F[Unit]],
       EqFS: Eq[F[S]]): RuleSet = {
     new DefaultRuleSet(
-      name = "monadState",
+      name = "stateful",
       parent = None,
       "get then set has does nothing" -> laws.getThenSetDoesNothing,
       "set then get returns the setted value" -> ∀(laws.setThenGetReturnsSetted _),
@@ -48,10 +48,10 @@ trait MonadStateTests[F[_], S] extends Laws {
 
 }
 
-object MonadStateTests {
-  def apply[F[_], S](implicit instance0: MonadState[F, S]): MonadStateTests[F, S] = {
-    new MonadStateTests[F, S] with Laws {
-      override implicit val stateInstance: MonadState[F, S] = instance0
+object StatefulTests {
+  def apply[F[_], S](implicit instance0: Stateful[F, S]): StatefulTests[F, S] = {
+    new StatefulTests[F, S] with Laws {
+      override implicit val stateInstance: Stateful[F, S] = instance0
     }
   }
 }

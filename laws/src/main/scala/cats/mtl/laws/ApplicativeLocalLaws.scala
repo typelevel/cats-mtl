@@ -21,8 +21,8 @@ package laws
 import cats.laws.IsEq
 import cats.laws.IsEqArrow
 
-trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
-  implicit val localInstance: ApplicativeLocal[F, E]
+trait LocalLaws[F[_], E] extends AskLaws[F, E] {
+  implicit val localInstance: Local[F, E]
   override implicit val applicative = localInstance.applicative
 
   import localInstance.{local, scope}
@@ -45,11 +45,11 @@ trait ApplicativeLocalLaws[F[_], E] extends ApplicativeAskLaws[F, E] {
 
 }
 
-object ApplicativeLocalLaws {
-  def apply[F[_], E](implicit instance0: ApplicativeLocal[F, E]): ApplicativeLocalLaws[F, E] = {
-    new ApplicativeLocalLaws[F, E] {
-      lazy val localInstance: ApplicativeLocal[F, E] = instance0
-      override lazy val askInstance: ApplicativeAsk[F, E] = instance0
+object LocalLaws {
+  def apply[F[_], E](implicit instance0: Local[F, E]): LocalLaws[F, E] = {
+    new LocalLaws[F, E] {
+      lazy val localInstance: Local[F, E] = instance0
+      override lazy val askInstance: Ask[F, E] = instance0
     }
   }
 }

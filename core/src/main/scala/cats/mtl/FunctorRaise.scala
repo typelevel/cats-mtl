@@ -23,13 +23,13 @@ import scala.annotation.implicitNotFound
 import scala.util.control.NonFatal
 
 /**
-  * `FunctorRaise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
+  * `Raise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
   * This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,
   * and further `map` calls will not have any values to execute the passed function on.
   *
-  * `FunctorRaise` has no external laws.
+  * `Raise` has no external laws.
   *
-  * `FunctorRaise` has two internal laws:
+  * `Raise` has two internal laws:
   * {{{
   * def catchNonFatalDefault[A](a: => A)(f: Throwable => E)(implicit A: Applicative[F]) = {
   *   catchNonFatal(a)(f) <-> try {
@@ -47,7 +47,7 @@ import scala.util.control.NonFatal
   * }
   * }}}
   *
-  * `FunctorRaise` has one free law, i.e. a law guaranteed by parametricity:
+  * `Raise` has one free law, i.e. a law guaranteed by parametricity:
   * {{{
   * def failThenFlatMapFails[A, B](ex: E, f: A => F[B]) = {
   *   fail(ex).flatMap(f) <-> fail(ex)
@@ -61,8 +61,8 @@ import scala.util.control.NonFatal
   * }}}
   */
 @implicitNotFound(
-  "Could not find an implicit instance of FunctorRaise[${F}, ${E}]. If you have\na good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fraise: FunctorRaise[${F}, ${E}}])\n")
-trait FunctorRaise[F[_], E] extends Serializable {
+  "Could not find an implicit instance of Raise[${F}, ${E}]. If you have\na good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fraise: Raise[${F}, ${E}}])\n")
+trait Raise[F[_], E] extends Serializable {
   def functor: Functor[F]
 
   def raise[A](e: E): F[A]
@@ -78,66 +78,63 @@ trait FunctorRaise[F[_], E] extends Serializable {
     A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
-private[mtl] trait FunctorRaiseMonadPartialOrder[F[_], G[_], E] extends FunctorRaise[G, E] {
+private[mtl] trait RaiseMonadPartialOrder[F[_], G[_], E] extends Raise[G, E] {
   val lift: MonadPartialOrder[F, G]
-  val F: FunctorRaise[F, E]
+  val F: Raise[F, E]
 
   override def functor = lift.monadG
   override def raise[A](e: E) = lift(F.raise(e))
 }
 
-private[mtl] trait LowPriorityFunctorRaiseInstances {
-  implicit def functorRaiseForMonadPartialOrder[F[_], G[_]: Functor, E](
-      implicit F: FunctorRaise[F, E],
+private[mtl] trait LowPriorityRaiseInstances {
+  implicit def raiseForMonadPartialOrder[F[_], G[_]: Functor, E](
+      implicit F: Raise[F, E],
       lift: MonadPartialOrder[F, G]
-  ): FunctorRaise[G, E] =
-    new FunctorRaise[G, E] {
+  ): Raise[G, E] =
+    new Raise[G, E] {
       val functor = Functor[G]
       def raise[A](e: E) = lift(F.raise(e))
     }
 }
 
-private[mtl] trait FunctorRaiseInstances extends LowPriorityFunctorRaiseInstances {
-  implicit final def raiseEitherT[M[_], E](
-      implicit M: Monad[M]): FunctorRaise[EitherTC[M, E]#l, E] =
-    ApplicativeHandle.handleEitherT
+private[mtl] trait RaiseInstances extends LowPriorityRaiseInstances {
+  implicit final def raiseEitherT[M[_], E](implicit M: Monad[M]): Raise[EitherTC[M, E]#l, E] =
+    Handle.handleEitherT
 
-  implicit final def raiseEither[E]: FunctorRaise[EitherC[E]#l, E] =
-    ApplicativeHandle.handleEither
+  implicit final def raiseEither[E]: Raise[EitherC[E]#l, E] =
+    Handle.handleEither
 
-  implicit final def raiseOptionT[M[_]](
-      implicit M: Monad[M]): FunctorRaise[OptionTC[M]#l, Unit] =
-    ApplicativeHandle.handleOptionT
+  implicit final def raiseOptionT[M[_]](implicit M: Monad[M]): Raise[OptionTC[M]#l, Unit] =
+    Handle.handleOptionT
 
-  implicit final def raiseOption[E]: FunctorRaise[Option, Unit] =
-    ApplicativeHandle.handleOption
+  implicit final def raiseOption[E]: Raise[Option, Unit] =
+    Handle.handleOption
 
-  implicit final def raiseValidated[E](
-      implicit E: Semigroup[E]): FunctorRaise[Validated[E, ?], E] =
-    ApplicativeHandle.handleValidated
+  implicit final def raiseValidated[E](implicit E: Semigroup[E]): Raise[Validated[E, ?], E] =
+    Handle.handleValidated
 
-  implicit final def raiseIor[E](implicit E: Semigroup[E]): FunctorRaise[Ior[E, *], E] =
-    ApplicativeHandle.handleIor[E]
+  implicit final def raiseIor[E](implicit E: Semigroup[E]): Raise[Ior[E, *], E] =
+    Handle.handleIor[E]
 
   implicit final def raiseIorT[F[_], E](
       implicit E: Semigroup[E],
-      F: Monad[F]): FunctorRaise[IorT[F, E, *], E] =
-    ApplicativeHandle.handleIorT[F, E]
+      F: Monad[F]): Raise[IorT[F, E, *], E] =
+    Handle.handleIorT[F, E]
 
 }
 
-object FunctorRaise extends FunctorRaiseInstances {
-  def apply[F[_], E](implicit functorRaise: FunctorRaise[F, E]): FunctorRaise[F, E] =
-    functorRaise
+object Raise extends RaiseInstances {
+  def apply[F[_], E](implicit raise: Raise[F, E]): Raise[F, E] =
+    raise
 
-  def raise[F[_], E, A](e: E)(implicit raise: FunctorRaise[F, _ >: E]): F[A] =
+  def raise[F[_], E, A](e: E)(implicit raise: Raise[F, _ >: E]): F[A] =
     raise.raise(e)
 
   def raiseF[F[_]]: raiseFPartiallyApplied[F] = new raiseFPartiallyApplied[F]()
 
   final private[mtl] class raiseFPartiallyApplied[F[_]](val dummy: Boolean = false)
       extends AnyVal {
-    @inline def apply[E, A](e: E)(implicit raise: FunctorRaise[F, _ >: E]): F[A] =
+    @inline def apply[E, A](e: E)(implicit raise: Raise[F, _ >: E]): F[A] =
       raise.raise(e)
   }
 

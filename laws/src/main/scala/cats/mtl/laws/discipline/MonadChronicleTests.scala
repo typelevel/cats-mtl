@@ -25,12 +25,12 @@ import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait MonadChronicleTests[F[_], E] extends Laws {
-  implicit val chronicleInstance: MonadChronicle[F, E]
+trait ChronicleTests[F[_], E] extends Laws {
+  implicit val chronicleInstance: Chronicle[F, E]
 
-  def laws: MonadChronicleLaws[F, E] = MonadChronicleLaws[F, E]
+  def laws: ChronicleLaws[F, E] = ChronicleLaws[F, E]
 
-  def monadChronicle[A: Arbitrary](
+  def chronicle[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbE: Arbitrary[E],
       CogenA: Cogen[A],
@@ -44,7 +44,7 @@ trait MonadChronicleTests[F[_], E] extends Laws {
       EqFEither: Eq[F[Either[E, A]]],
       SemigroupE: Semigroup[E]): RuleSet = {
     new DefaultRuleSet(
-      name = "monadChronicle",
+      name = "chronicle",
       parent = None,
       "confess then absolve is pure" -> ∀(laws.confessThenAbsolveIsPure[A] _),
       "confess then materialize is left" -> ∀(laws.confessThenMaterializeIsLeft[A] _),
@@ -65,10 +65,10 @@ trait MonadChronicleTests[F[_], E] extends Laws {
   }
 }
 
-object MonadChronicleTests {
-  def apply[F[_], E](implicit instance: MonadChronicle[F, E]): MonadChronicleTests[F, E] = {
-    new MonadChronicleTests[F, E] with Laws {
-      override implicit val chronicleInstance: MonadChronicle[F, E] = instance
+object ChronicleTests {
+  def apply[F[_], E](implicit instance: Chronicle[F, E]): ChronicleTests[F, E] = {
+    new ChronicleTests[F, E] with Laws {
+      override implicit val chronicleInstance: Chronicle[F, E] = instance
     }
   }
 }

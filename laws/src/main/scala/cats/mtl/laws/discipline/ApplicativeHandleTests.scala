@@ -23,12 +23,12 @@ import org.scalacheck.Prop.{forAll => ∀}
 import org.scalacheck.{Arbitrary, Cogen}
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
-  implicit val handleInstance: ApplicativeHandle[F, E]
+trait HandleTests[F[_], E] extends RaiseTests[F, E] {
+  implicit val handleInstance: Handle[F, E]
 
-  override def laws: ApplicativeHandleLaws[F, E] = ApplicativeHandleLaws[F, E]
+  override def laws: HandleLaws[F, E] = HandleLaws[F, E]
 
-  def applicativeHandle[A: Arbitrary](
+  def handle[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbEE: Arbitrary[E => E],
       ArbE: Arbitrary[E],
@@ -40,8 +40,8 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
       EqEitherA: Eq[F[Either[E, A]]],
       EqEitherUnit: Eq[F[Either[E, Unit]]]): RuleSet = {
     new DefaultRuleSet(
-      name = "applicativeHandle",
-      parent = Some(functorRaise[A]),
+      name = "handle",
+      parent = Some(raise[A]),
       "raise and handleWith is function application" -> ∀(
         laws.raiseAndHandleWithIsFunctionApplication[A] _),
       "raise and handle is pure and function application" -> ∀(laws.raiseAndHandleIsPure[A] _),
@@ -55,12 +55,11 @@ trait ApplicativeHandleTests[F[_], E] extends FunctorRaiseTests[F, E] {
 
 }
 
-object ApplicativeHandleTests {
-  def apply[F[_], E](
-      implicit instance0: ApplicativeHandle[F, E]): ApplicativeHandleTests[F, E] = {
-    new ApplicativeHandleTests[F, E] {
-      override lazy val handleInstance: ApplicativeHandle[F, E] = instance0
-      override lazy val raiseInstance: FunctorRaise[F, E] = instance0
+object HandleTests {
+  def apply[F[_], E](implicit instance0: Handle[F, E]): HandleTests[F, E] = {
+    new HandleTests[F, E] {
+      override lazy val handleInstance: Handle[F, E] = instance0
+      override lazy val raiseInstance: Raise[F, E] = instance0
     }
   }
 }

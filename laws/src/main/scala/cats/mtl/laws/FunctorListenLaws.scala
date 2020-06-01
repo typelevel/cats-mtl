@@ -22,8 +22,8 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
-trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
-  implicit def F: FunctorListen[F, L]
+trait ListenLaws[F[_], L] extends TellLaws[F, L] {
+  implicit def F: Listen[F, L]
 
   // external laws:
   def listenRespectsTell(l: L): IsEq[F[(Unit, L)]] =
@@ -37,10 +37,10 @@ trait FunctorListenLaws[F[_], L] extends FunctorTellLaws[F, L] {
     F.listens(fa)(f) <-> F.listen(fa).map { case (a, l) => (a, f(l)) }
 }
 
-object FunctorListenLaws {
-  def apply[F[_], E](implicit instance0: FunctorListen[F, E]): FunctorListenLaws[F, E] = {
-    new FunctorListenLaws[F, E] {
-      def F: FunctorListen[F, E] = instance0
+object ListenLaws {
+  def apply[F[_], E](implicit instance0: Listen[F, E]): ListenLaws[F, E] = {
+    new ListenLaws[F, E] {
+      def F: Listen[F, E] = instance0
     }
   }
 }

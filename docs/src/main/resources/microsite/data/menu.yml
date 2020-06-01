@@ -9,43 +9,43 @@ options:
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: FunctorTell
-    url: mtl-classes/functortell.html
+  - title: Tell
+    url: mtl-classes/tell.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: ApplicativeAsk
-    url: mtl-classes/applicativeask.html
+  - title: Ask
+    url: mtl-classes/ask.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: MonadState
-    url: mtl-classes/monadstate.html
+  - title: Stateful
+    url: mtl-classes/stateful.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: MonadChronicle
-    url: mtl-classes/monadchronicle.html
+  - title: Chronicle
+    url: mtl-classes/chronicle.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: FunctorListen
-    url: mtl-classes/functorlisten.html
+  - title: Listen
+    url: mtl-classes/listen.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: ApplicativeLocal
-    url: mtl-classes/applicativelocal.html
+  - title: Local
+    url: mtl-classes/local.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: FunctorRaise
-    url: mtl-classes/functorraise.html
+  - title: Raise
+    url: mtl-classes/raise.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 
-  - title: ApplicativeHandle
-    url: mtl-classes/applicativehandle.html
+  - title: Handle
+    url: mtl-classes/handle.html
     menu_type: mtlclasses
     menu_section: mtlclasses
 

@@ -24,12 +24,12 @@ import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait ApplicativeAskTests[F[_], E] extends Laws {
-  implicit val askInstance: ApplicativeAsk[F, E]
+trait AskTests[F[_], E] extends Laws {
+  implicit val askInstance: Ask[F, E]
 
-  def laws: ApplicativeAskLaws[F, E] = ApplicativeAskLaws[F, E]
+  def laws: AskLaws[F, E] = AskLaws[F, E]
 
-  def applicativeAsk[A: Arbitrary](
+  def ask[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbE: Arbitrary[E],
       CogenA: Cogen[A],
@@ -37,7 +37,7 @@ trait ApplicativeAskTests[F[_], E] extends Laws {
       EqFU: Eq[F[E]],
       EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
-      name = "applicativeAsk",
+      name = "ask",
       parent = None,
       "ask adds no effects" -> ∀(laws.askAddsNoEffects[A] _),
       "reader is ask and map" -> ∀(laws.readerIsAskAndMap[A] _)
@@ -46,9 +46,9 @@ trait ApplicativeAskTests[F[_], E] extends Laws {
 
 }
 
-object ApplicativeAskTests {
-  def apply[F[_], E](implicit instance: ApplicativeAsk[F, E]): ApplicativeAskTests[F, E] = {
-    new ApplicativeAskTests[F, E] {
+object AskTests {
+  def apply[F[_], E](implicit instance: Ask[F, E]): AskTests[F, E] = {
+    new AskTests[F, E] {
       val askInstance = instance
     }
   }

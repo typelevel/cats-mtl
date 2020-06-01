@@ -1,21 +1,21 @@
 ---
 layout: docs
-title:  "ApplicativeLocal"
+title:  "Local"
 section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/ApplicativeLocal.scala"
-scaladoc: "#cats.mtl.ApplicativeLocal"
+source: "core/src/main/scala/cats/mtl/Local.scala"
+scaladoc: "#cats.mtl.Local"
 ---
 
-## ApplicativeLocal
+## Local
 
-`ApplicativeLocal[F, E]` extends `ApplicativeAsk` and allows to us express local modifications of the environment.
+`Local[F, E]` extends `Ask` and allows to us express local modifications of the environment.
 In practice, this means, that whenever we use `local` on a value of `ask`, we can locally modify the environment with a function `E => E`.
 In this case, locally modifying means that the only place we can actually observe the modification is in the `F[A]` value passed to the `local` function.
 
 The `local` function has the following signature: 
 
 ```scala
-trait ApplicativeLocal[F[_], E] extends ApplicativeAsk[F, E] {
+trait Local[F[_], E] extends Ask[F, E] {
   def local(f: E => E)(fa: F[A]): F[A]
 }
 ```
@@ -29,10 +29,10 @@ import cats.data._
 import cats.implicits._
 import cats.mtl._
 
-def calculateContentLength[F[_]: Applicative](implicit F: ApplicativeAsk[F, String]): F[Int] =
+def calculateContentLength[F[_]: Applicative](implicit F: Ask[F, String]): F[Int] =
   F.ask.map(_.length)
   
-def calculateModifiedContentLength[F[_]: Applicative](implicit F: ApplicativeLocal[F, String]): F[Int] =
+def calculateModifiedContentLength[F[_]: Applicative](implicit F: Local[F, String]): F[Int] =
   F.local("Prefix " + _)(calculateContentLength[F])
 
 val result = calculateModifiedContentLength[Reader[String, ?]].run("Hello")
@@ -44,7 +44,7 @@ To see that `local` only applies to the passed parameter we can run both `calcul
  `calculateModifiedContentLength` in one for-expression:
 
 ```scala mdoc
-def both[F[_]: Monad](implicit F: ApplicativeLocal[F, String]): F[(Int, Int)] = for {
+def both[F[_]: Monad](implicit F: Local[F, String]): F[(Int, Int)] = for {
   length <- calculateContentLength[F]
   modifiedLength <- calculateModifiedContentLength[F]
 } yield (length, modifiedLength)

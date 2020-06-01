@@ -24,17 +24,17 @@ import org.scalacheck.{Arbitrary, Cogen}
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
-trait FunctorTellTests[F[_], L] extends Laws {
-  def laws: FunctorTellLaws[F, L]
+trait TellTests[F[_], L] extends Laws {
+  def laws: TellLaws[F, L]
 
-  def functorTell[A: Arbitrary](
+  def tell[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbL: Arbitrary[L],
       CogenA: Cogen[A],
       EqFU: Eq[F[Unit]],
       EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
-      name = "functorTell",
+      name = "tell",
       parent = None,
       "tuple is (flip writer)" -> ∀(laws.tupleIsWriterFlipped[A] _),
       "writer is tell and map" -> ∀(laws.writerIsTellAndMap[A] _)
@@ -43,10 +43,10 @@ trait FunctorTellTests[F[_], L] extends Laws {
 
 }
 
-object FunctorTellTests {
-  def apply[F[_], L](implicit instance0: FunctorTell[F, L]): FunctorTellTests[F, L] = {
-    new FunctorTellTests[F, L] {
-      override def laws: FunctorTellLaws[F, L] = FunctorTellLaws[F, L]
+object TellTests {
+  def apply[F[_], L](implicit instance0: Tell[F, L]): TellTests[F, L] = {
+    new TellTests[F, L] {
+      override def laws: TellLaws[F, L] = TellLaws[F, L]
     }
   }
 }

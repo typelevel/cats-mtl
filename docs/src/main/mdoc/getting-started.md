@@ -47,24 +47,24 @@ Thankfully, Cats-mtl is here to help.
 All of these monad transformers encode their effects as data structures, but there's another way to achieve the same result: Type classes!
 
 For example take `ReaderT.ask` function, what would it look like if we used a type class here instead?
-Well, Cats-mtl has an answer and it's called `ApplicativeAsk`.
+Well, Cats-mtl has an answer and it's called `Ask`.
 You can think of it as `ReaderT` encoded as a type class:
 
 ```scala
-trait ApplicativeAsk[F[_], E] {
+trait Ask[F[_], E] {
   val applicative: Applicative[F]
 
   def ask: F[E]
 }
 ```
 
-At its core `ApplicativeAsk` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
+At its core `Ask` just encodes the fact that we can ask for a value from the environment, exactly like `ReaderT` does.
 Exactly like `ReaderT`, it also includes another type parameter `E`, that represents that environment.
 
-If you're wondering why `ApplicativeAsk` has an `Applicative` field instead of just extending from `Applicative`, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here `Applicative`) in scope implicitly.
-So in this case we favor composition over inheritance as otherwise, we could not e.g. use `Monad` together with `ApplicativeAsk`.
+If you're wondering why `Ask` has an `Applicative` field instead of just extending from `Applicative`, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here `Applicative`) in scope implicitly.
+So in this case we favor composition over inheritance as otherwise, we could not e.g. use `Monad` together with `Ask`.
 
-`ApplicativeAsk` is an example for what is at the core of Cats-mtl.
+`Ask` is an example for what is at the core of Cats-mtl.
 Cats-mtl provides type classes for most common effects which let you choose what kind of effects you need without commiting to a specific monad transformer stack.
 
 Ideally, you'd write all your code using only an abstract type constructor `F[_]` with different type class constraints and then at the end run that code with a specific data type that is able to fulfill those constraints.
@@ -90,9 +90,9 @@ And now the mtl version:
 ```scala mdoc:reset
 import cats.MonadError
 import cats.implicits._
-import cats.mtl.MonadState
+import cats.mtl.Stateful
 
-def checkState[F[_]](implicit S: MonadState[F, Int], E: MonadError[F, Exception]): F[String] = for {
+def checkState[F[_]](implicit S: Stateful[F, Int], E: MonadError[F, Exception]): F[String] = for {
   currentState <- S.get
   result <- if (currentState > 10) E.raiseError(new Exception("Too large"))
             else E.pure("All good")
@@ -103,10 +103,10 @@ We've reduced the boilerplate immensly!
 Now our small program actually looks just like control flow and we didn't need to annotate any types.
 
 This is great so far, but `checkState` now returns an abstract `F[String]`.
-We need some `F` that has an instance of both `MonadState` and `MonadError`.
-We know that `EitherT` can have a `MonadError` instance and `StateT` can have a `MonadState` instance, but how do we get both?
+We need some `F` that has an instance of both `Stateful` and `MonadError`.
+We know that `EitherT` can have a `MonadError` instance and `StateT` can have a `Stateful` instance, but how do we get both?
 Fortunately, cats-mtl allows us to lift instances of mtl classes through our monad transformer stack.
-That means, that e.g. `EitherT[StateT[List, Int, ?], Exception, A]` has both the `MonadError` and `MonadState` instances we need, neat!
+That means, that e.g. `EitherT[StateT[List, Int, ?], Exception, A]` has both the `MonadError` and `Stateful` instances we need, neat!
 
 So let's try turning our abstract `F[String]` into an actual value:
 
@@ -127,14 +127,14 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 #### Available MTL classes
 
 cats-mtl provides the following "MTL classes":
- - [ApplicativeAsk](mtl-classes/applicativeask.md)
- - [ApplicativeLocal](mtl-classes/applicativelocal.md)
- - [FunctorRaise](mtl-classes/functorraise.md)
- - [ApplicativeHandle](mtl-classes/applicativehandle.md)
- - [FunctorTell](mtl-classes/functortell.md)
- - [FunctorListen](mtl-classes/functorlisten.md)
- - [MonadState](mtl-classes/monadstate.md)
- - [MonadChronicle](mtl-classes/monadchronicle.md)
+ - [Ask](mtl-classes/ask.md)
+ - [Local](mtl-classes/local.md)
+ - [Raise](mtl-classes/raise.md)
+ - [Handle](mtl-classes/handle.md)
+ - [Tell](mtl-classes/tell.md)
+ - [Listen](mtl-classes/listen.md)
+ - [Stateful](mtl-classes/stateful.md)
+ - [Chronicle](mtl-classes/chronicle.md)
 
 If you're wondering why some of these are based on `Monad` and others on `Functor` or `Applicative`, 
  it is because these are the smallest superclass dependencies practically possible with which you can define their laws.
@@ -143,5 +143,5 @@ This is in contrast to Haskell's `mtl` library and earlier versions of Cats as w
 
 Because these type classes are commonly combined, the base typeclasses are ambiguous in implicit scope using
 the typical cats subclass encoding via inheritance.
-Thus in cats-mtl, the ambiguity is avoided by using the composition approach that we saw with `ApplicativeAsk` earlier.
+Thus in cats-mtl, the ambiguity is avoided by using the composition approach that we saw with `Ask` earlier.
 In a future version of Scala we might be able to avoid this and have the same type class encoding everywhere.

@@ -24,8 +24,8 @@ import cats.syntax.functor._
 import cats.syntax.flatMap._
 import cats.syntax.apply._
 
-trait MonadStateLaws[F[_], S] {
-  implicit val stateInstance: MonadState[F, S]
+trait StatefulLaws[F[_], S] {
+  implicit val stateInstance: Stateful[F, S]
   implicit val monad: Monad[F] = stateInstance.monad
 
   import stateInstance._
@@ -49,9 +49,9 @@ trait MonadStateLaws[F[_], S] {
     modify(f) <-> ((get map f) flatMap set)
 }
 
-object MonadStateLaws {
-  def apply[F[_], S](implicit instance0: MonadState[F, S]): MonadStateLaws[F, S] =
-    new MonadStateLaws[F, S] {
-      override lazy val stateInstance: MonadState[F, S] = instance0
+object StatefulLaws {
+  def apply[F[_], S](implicit instance0: Stateful[F, S]): StatefulLaws[F, S] =
+    new StatefulLaws[F, S] {
+      override lazy val stateInstance: Stateful[F, S] = instance0
     }
 }

@@ -22,8 +22,8 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
-trait FunctorRaiseLaws[F[_], E] {
-  implicit val raiseInstance: FunctorRaise[F, E]
+trait RaiseLaws[F[_], E] {
+  implicit val raiseInstance: Raise[F, E]
   implicit val functor: Functor[F] = raiseInstance.functor
 
   import raiseInstance._
@@ -34,10 +34,10 @@ trait FunctorRaiseLaws[F[_], E] {
 
 }
 
-object FunctorRaiseLaws {
-  def apply[F[_], E](implicit instance0: FunctorRaise[F, E]): FunctorRaiseLaws[F, E] = {
-    new FunctorRaiseLaws[F, E] {
-      override lazy val raiseInstance: FunctorRaise[F, E] = instance0
+object RaiseLaws {
+  def apply[F[_], E](implicit instance0: Raise[F, E]): RaiseLaws[F, E] = {
+    new RaiseLaws[F, E] {
+      override lazy val raiseInstance: Raise[F, E] = instance0
     }
   }
 }
