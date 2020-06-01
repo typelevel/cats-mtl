@@ -45,7 +45,8 @@ import scala.annotation.implicitNotFound
   * }
   * }}}
   */
-@implicitNotFound("Could not find an implicit instance of FunctorListen[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit flisten: FunctorListen[${F}, ${L}}])\n")
+@implicitNotFound(
+  "Could not find an implicit instance of FunctorListen[${F}, ${L}]. If you wish\nto capture side-channel output of type ${L} at this location, you may want\nto construct a value of type WriterT for this call-site, rather than ${F}.\nAn example type:\n\n  WriterT[${F}, ${L}, *]\n\nOne use-case for this would be if ${L} represents an accumulation of values\nwhich are produced by this function *in addition to* its normal results.\nThis can be used to implement some forms of pure logging.\n\nIf you do not wish to capture a side-channel of type ${L} at this location,\nyou should add an implicit parameter of this type to your function. For\nexample:\n\n  (implicit flisten: FunctorListen[${F}, ${L}}])\n")
 trait FunctorListen[F[_], L] extends FunctorTell[F, L] with Serializable {
 
   def listen[A](fa: F[A]): F[(A, L)]
