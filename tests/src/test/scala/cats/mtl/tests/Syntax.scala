@@ -50,8 +50,8 @@ final class Syntax extends BaseSuite {
       val local = fa.local[String](s => s + "!").value("ha")
       val scope = fa.scope[String]("state").value("ha")
       val localC: String =
-        Local.local((s: String) => s + "!")(Ask.askF[Reader[String, *]]()).apply("ha")
-      val scopeC: Option[Int] = Local.scope("state")(fa).value.apply("ha")
+        Local.local(Ask.askF[Reader[String, *]]())((s: String) => s + "!").apply("ha")
+      val scopeC: Option[Int] = Local.scope(fa)("state").value.apply("ha")
     }
     test("Raise") {
       val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]

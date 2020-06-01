@@ -24,9 +24,9 @@ trait LocalSyntax {
 
 final class LocalOps[F[_], A](val fa: F[A]) extends AnyVal {
   def local[E](f: E => E)(implicit local: Local[F, E]): F[A] =
-    local.local(f)(fa)
+    local.local(fa)(f)
   def scope[E](e: E)(implicit local: Local[F, E]): F[A] =
-    local.scope(e)(fa)
+    local.scope(fa)(e)
 }
 
 object local extends LocalSyntax

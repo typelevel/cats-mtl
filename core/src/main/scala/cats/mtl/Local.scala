@@ -51,17 +51,17 @@ import scala.annotation.implicitNotFound
 @implicitNotFound(
   "Could not find an implicit instance of Local[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit flocal: Local[${F}, ${E}}])\n")
 trait Local[F[_], E] extends Ask[F, E] with Serializable {
-  def local[A](f: E => E)(fa: F[A]): F[A]
+  def local[A](fa: F[A])(f: E => E): F[A]
 
-  def scope[A](e: E)(fa: F[A]): F[A] = local(_ => e)(fa)
+  def scope[A](fa: F[A])(e: E): F[A] = local(fa)(_ => e)
 }
 
 private[mtl] trait LowPriorityLocalInstances extends LowPriorityLocalInstancesCompat {
   implicit def localForKleisli[F[_]: Monad, E, R](
       implicit F0: Local[F, E]): Local[Kleisli[F, R, *], E] =
     new Local[Kleisli[F, R, *], E] with AskForMonadPartialOrder[F, Kleisli[F, R, *], E] {
-      def local[A](f: E => E)(fa: Kleisli[F, R, A]): Kleisli[F, R, A] =
-        Kleisli(r => F0.local(f)(fa.run(r)))
+      def local[A](fa: Kleisli[F, R, A])(f: E => E): Kleisli[F, R, A] =
+        Kleisli(r => F0.local(fa.run(r))(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, Kleisli[F, R, *]] =
         MonadPartialOrder.monadPartialOrderForKleisli[F, R]
@@ -73,7 +73,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def baseLocalForKleisli[F[_], E](
       implicit F: Applicative[F]): Local[Kleisli[F, E, *], E] =
     new Local[Kleisli[F, E, *], E] {
-      def local[A](f: E => E)(fa: Kleisli[F, E, A]) = fa.local(f)
+      def local[A](fa: Kleisli[F, E, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[Kleisli[F, E, *]]
       def ask = Kleisli.ask[F, E]
     }
@@ -82,7 +82,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
       implicit F: Monad[F],
       L: Monoid[L]): Local[RWST[F, E, L, S, *], E] =
     new Local[RWST[F, E, L, S, *], E] {
-      def local[A](f: E => E)(fa: RWST[F, E, L, S, A]) = fa.local(f)
+      def local[A](fa: RWST[F, E, L, S, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[RWST[F, E, L, S, *]]
       def ask = RWST.ask[F, E, L, S]
     }
@@ -90,8 +90,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForWriterT[F[_]: Monad, E, L: Monoid](
       implicit F0: Local[F, E]): Local[WriterT[F, L, *], E] =
     new Local[WriterT[F, L, *], E] with AskForMonadPartialOrder[F, WriterT[F, L, *], E] {
-      def local[A](f: E => E)(fa: WriterT[F, L, A]): WriterT[F, L, A] =
-        WriterT(F0.local(f)(fa.run))
+      def local[A](fa: WriterT[F, L, A])(f: E => E): WriterT[F, L, A] =
+        WriterT(F0.local(fa.run)(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, WriterT[F, L, *]] =
         MonadPartialOrder.monadPartialOrderForWriterT[F, L]
@@ -100,8 +100,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForRWST[F[_]: Monad, E, R, L: Monoid, S](
       implicit F0: Local[F, E]): Local[RWST[F, R, L, S, *], E] =
     new Local[RWST[F, R, L, S, *], E] with AskForMonadPartialOrder[F, RWST[F, R, L, S, *], E] {
-      def local[A](f: E => E)(fa: RWST[F, R, L, S, A]): RWST[F, R, L, S, A] =
-        RWST((r, s) => F0.local(f)(fa.run(r, s)))
+      def local[A](fa: RWST[F, R, L, S, A])(f: E => E): RWST[F, R, L, S, A] =
+        RWST((r, s) => F0.local(fa.run(r, s))(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, RWST[F, R, L, S, *]] =
         MonadPartialOrder.monadPartialOrderForRWST[F, R, L, S]
@@ -110,8 +110,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForStateT[F[_]: Monad, E, S](
       implicit F0: Local[F, E]): Local[StateT[F, S, *], E] =
     new Local[StateT[F, S, *], E] with AskForMonadPartialOrder[F, StateT[F, S, *], E] {
-      def local[A](f: E => E)(fa: StateT[F, S, A]): StateT[F, S, A] =
-        StateT(s => F0.local(f)(fa.run(s)))
+      def local[A](fa: StateT[F, S, A])(f: E => E): StateT[F, S, A] =
+        StateT(s => F0.local(fa.run(s))(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, StateT[F, S, *]] =
         MonadPartialOrder.monadPartialOrderForStateT[F, S]
@@ -120,8 +120,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForEitherT[F[_]: Monad, E, E2](
       implicit F0: Local[F, E]): Local[EitherT[F, E2, *], E] =
     new Local[EitherT[F, E2, *], E] with AskForMonadPartialOrder[F, EitherT[F, E2, *], E] {
-      def local[A](f: E => E)(fa: EitherT[F, E2, A]): EitherT[F, E2, A] =
-        EitherT(F0.local(f)(fa.value))
+      def local[A](fa: EitherT[F, E2, A])(f: E => E): EitherT[F, E2, A] =
+        EitherT(F0.local(fa.value)(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, EitherT[F, E2, *]] =
         MonadPartialOrder.monadPartialOrderForEitherT[F, E2]
@@ -130,8 +130,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForOptionT[F[_]: Monad, E](
       implicit F0: Local[F, E]): Local[OptionT[F, *], E] =
     new Local[OptionT[F, *], E] with AskForMonadPartialOrder[F, OptionT[F, *], E] {
-      def local[A](f: E => E)(fa: OptionT[F, A]): OptionT[F, A] =
-        OptionT(F0.local(f)(fa.value))
+      def local[A](fa: OptionT[F, A])(f: E => E): OptionT[F, A] =
+        OptionT(F0.local(fa.value)(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, OptionT[F, *]] =
         MonadPartialOrder.monadPartialOrderForOptionT[F]
@@ -140,8 +140,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForIorT[F[_]: Monad, E, E2: Semigroup](
       implicit F0: Local[F, E]): Local[IorT[F, E2, *], E] =
     new Local[IorT[F, E2, *], E] with AskForMonadPartialOrder[F, IorT[F, E2, *], E] {
-      def local[A](f: E => E)(fa: IorT[F, E2, A]): IorT[F, E2, A] =
-        IorT(F0.local(f)(fa.value))
+      def local[A](fa: IorT[F, E2, A])(f: E => E): IorT[F, E2, A] =
+        IorT(F0.local(fa.value)(f))
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, IorT[F, E2, *]] =
         MonadPartialOrder.monadPartialOrderForIorT[F, E2]
@@ -151,9 +151,9 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
 object Local extends LocalInstances {
   def apply[F[_], A](implicit local: Local[F, A]): Local[F, A] = local
 
-  def local[F[_], E, A](f: E => E)(fa: F[A])(implicit local: Local[F, E]): F[A] =
-    local.local(f)(fa)
+  def local[F[_], E, A](fa: F[A])(f: E => E)(implicit local: Local[F, E]): F[A] =
+    local.local(fa)(f)
 
-  def scope[F[_], E, A](e: E)(fa: F[A])(implicit local: Local[F, E]): F[A] =
-    local.scope(e)(fa)
+  def scope[F[_], E, A](fa: F[A])(e: E)(implicit local: Local[F, E]): F[A] =
+    local.scope(fa)(e)
 }

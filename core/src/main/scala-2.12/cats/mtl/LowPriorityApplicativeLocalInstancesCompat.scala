@@ -22,7 +22,7 @@ import cats.data.{Kleisli, Reader}
 private[mtl] trait LowPriorityLocalInstancesCompat {
   implicit def localForReader[E]: Local[Reader[E, *], E] =
     new Local[Reader[E, *], E] {
-      def local[A](f: E => E)(fa: Reader[E, A]) = fa.local(f)
+      def local[A](fa: Reader[E, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[Reader[E, *]]
       def ask = Kleisli.ask[Id, E]
     }
