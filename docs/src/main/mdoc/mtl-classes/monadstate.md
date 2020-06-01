@@ -33,7 +33,6 @@ import cats._
 import cats.data._
 import cats.implicits._
 import cats.mtl.MonadState
-import cats.mtl.implicits._
 
 case class ServiceResult(id: Int, companies: List[String])
 

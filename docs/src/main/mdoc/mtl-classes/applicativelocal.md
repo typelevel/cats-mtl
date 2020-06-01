@@ -28,8 +28,6 @@ import cats._
 import cats.data._
 import cats.implicits._
 import cats.mtl._
-import cats.mtl.implicits._
-
 
 def calculateContentLength[F[_]: Applicative](implicit F: ApplicativeAsk[F, String]): F[Int] =
   F.ask.map(_.length)
