@@ -25,8 +25,8 @@ import cats.syntax.apply._
 import cats.syntax.semigroup._
 
 /**
-  * Created by Yuval.Itzchakov on 20/07/2018.
-  */
+ * Created by Yuval.Itzchakov on 20/07/2018.
+ */
 trait ChronicleLaws[F[_], E] {
   implicit val chronicleInstance: Chronicle[F, E]
   implicit val monad: Monad[F] = chronicleInstance.monad
