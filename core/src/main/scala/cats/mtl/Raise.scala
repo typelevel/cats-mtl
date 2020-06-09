@@ -62,19 +62,21 @@ import scala.util.control.NonFatal
  */
 @implicitNotFound(
   "Could not find an implicit instance of Raise[${F}, ${E}]. If you have\na good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fraise: Raise[${F}, ${E}}])\n")
-trait Raise[F[_], E] extends Serializable {
+trait Raise[F[_], -E] extends Serializable {
   def functor: Functor[F]
 
-  def raise[A](e: E): F[A]
+  def raise[E2 <: E, A](e: E2): F[A]
 
-  def catchNonFatal[A](a: => A)(f: Throwable => E)(implicit A: Applicative[F]): F[A] = {
+  def catchNonFatal[E2 <: E, A](a: => A)(f: Throwable => E2)(
+      implicit A: Applicative[F]): F[A] = {
     try A.pure(a)
     catch {
       case NonFatal(ex) => raise(f(ex))
     }
   }
 
-  def ensure[A](fa: F[A])(error: => E)(predicate: A => Boolean)(implicit A: Monad[F]): F[A] =
+  def ensure[E2 <: E, A](fa: F[A])(error: => E2)(predicate: A => Boolean)(
+      implicit A: Monad[F]): F[A] =
     A.flatMap(fa)(a => if (predicate(a)) A.pure(a) else raise(error))
 }
 
@@ -83,17 +85,17 @@ private[mtl] trait RaiseMonadPartialOrder[F[_], G[_], E] extends Raise[G, E] {
   val F: Raise[F, E]
 
   override def functor = lift.monadG
-  override def raise[A](e: E) = lift(F.raise(e))
+  override def raise[E2 <: E, A](e: E2) = lift(F.raise(e))
 }
 
 private[mtl] trait LowPriorityRaiseInstances {
-  implicit def raiseForMonadPartialOrder[F[_], G[_]: Functor, E](
-      implicit F: Raise[F, E],
-      lift: MonadPartialOrder[F, G]
+  def raiseForMonadPartialOrder[F[_], G[_]: Functor, E](
+      implicit F0: Raise[F, E],
+      lift0: MonadPartialOrder[F, G]
   ): Raise[G, E] =
-    new Raise[G, E] {
-      val functor = Functor[G]
-      def raise[A](e: E) = lift(F.raise(e))
+    new RaiseMonadPartialOrder[F, G, E] {
+      val lift = lift0
+      val F = F0
     }
 }
 
@@ -134,8 +136,8 @@ object Raise extends RaiseInstances {
 
   final private[mtl] class raiseFPartiallyApplied[F[_]](val dummy: Boolean = false)
       extends AnyVal {
-    @inline def apply[E, A](e: E)(implicit raise: Raise[F, _ >: E]): F[A] =
-      raise.raise(e)
+    @inline def apply[E, A](e: E)(implicit raise: Raise[F, E]): F[A] =
+      raise.raise[E, A](e)
   }
 
 }

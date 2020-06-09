@@ -26,6 +26,8 @@ import scala.annotation.implicitNotFound
 trait Handle[F[_], E] extends Raise[F, E] with Serializable {
   def applicative: Applicative[F]
 
+  override def functor: Functor[F] = applicative
+
   def handleWith[A](fa: F[A])(f: E => F[A]): F[A]
 
   def attempt[A](fa: F[A]): F[Either[E, A]] =
@@ -45,9 +47,7 @@ private[mtl] trait HandleInstances {
     new Handle[EitherTC[M, E]#l, E] {
       val applicative: Applicative[EitherTC[M, E]#l] = EitherT.catsDataMonadErrorForEitherT(M)
 
-      val functor: Functor[EitherTC[M, E]#l] = EitherT.catsDataFunctorForEitherT(M)
-
-      def raise[A](e: E): EitherT[M, E, A] = EitherT(M.pure(Left(e)))
+      def raise[E2 <: E, A](e: E2): EitherT[M, E, A] = EitherT(M.pure(Left(e)))
 
       def handleWith[A](fa: EitherT[M, E, A])(f: E => EitherT[M, E, A]): EitherT[M, E, A] =
         EitherT(M.flatMap(fa.value) {
@@ -62,9 +62,7 @@ private[mtl] trait HandleInstances {
       val applicative: Applicative[EitherC[E]#l] =
         cats.instances.either.catsStdInstancesForEither[E]
 
-      val functor: Functor[EitherC[E]#l] = cats.instances.either.catsStdInstancesForEither
-
-      def raise[A](e: E): Either[E, A] = Left(e)
+      def raise[E2 <: E, A](e: E2): Either[E, A] = Left(e)
 
       def handleWith[A](fa: Either[E, A])(f: E => Either[E, A]): Either[E, A] =
         fa match {
@@ -78,9 +76,7 @@ private[mtl] trait HandleInstances {
     new Handle[OptionTC[M]#l, Unit] {
       val applicative: Applicative[OptionTC[M]#l] = OptionT.catsDataMonadForOptionT(M)
 
-      val functor: Functor[OptionTC[M]#l] = OptionT.catsDataFunctorForOptionT(M)
-
-      def raise[A](e: Unit): OptionT[M, A] = OptionT(M.pure(None))
+      def raise[E <: Unit, A](e: E): OptionT[M, A] = OptionT(M.pure(None))
 
       def handleWith[A](fa: OptionT[M, A])(f: Unit => OptionT[M, A]): OptionT[M, A] =
         OptionT(M.flatMap(fa.value) {
@@ -90,13 +86,11 @@ private[mtl] trait HandleInstances {
     }
   }
 
-  implicit final def handleOption[E]: Handle[Option, Unit] = {
+  implicit final def handleOption: Handle[Option, Unit] = {
     new Handle[Option, Unit] {
       val applicative: Applicative[Option] = cats.instances.option.catsStdInstancesForOption
 
-      val functor: Functor[Option] = cats.instances.option.catsStdInstancesForOption
-
-      def raise[A](e: Unit): Option[A] = None
+      def raise[E <: Unit, A](e: E): Option[A] = None
 
       def handleWith[A](fa: Option[A])(f: Unit => Option[A]): Option[A] =
         fa match {
@@ -111,9 +105,7 @@ private[mtl] trait HandleInstances {
       val applicative: Applicative[Validated[E, ?]] =
         Validated.catsDataApplicativeErrorForValidated[E]
 
-      val functor: Functor[Validated[E, ?]] = Validated.catsDataApplicativeErrorForValidated[E]
-
-      def raise[A](e: E): Validated[E, A] = Validated.Invalid(e)
+      def raise[E2 <: E, A](e: E2): Validated[E, A] = Validated.Invalid(e)
 
       def handleWith[A](fa: Validated[E, A])(f: E => Validated[E, A]): Validated[E, A] =
         fa match {
@@ -128,9 +120,7 @@ private[mtl] trait HandleInstances {
     new Handle[IorT[F, E, *], E] {
       val applicative: Applicative[IorT[F, E, ?]] = IorT.catsDataMonadErrorForIorT[F, E]
 
-      val functor: Functor[IorT[F, E, ?]] = IorT.catsDataMonadErrorForIorT[F, E]
-
-      def raise[A](e: E): IorT[F, E, A] = IorT.leftT(e)
+      def raise[E2 <: E, A](e: E2): IorT[F, E, A] = IorT.leftT(e)
 
       def handleWith[A](fa: IorT[F, E, A])(f: E => IorT[F, E, A]): IorT[F, E, A] =
         IorT(F.flatMap(fa.value) {
@@ -143,9 +133,7 @@ private[mtl] trait HandleInstances {
     new Handle[Ior[E, *], E] {
       val applicative: Applicative[Ior[E, ?]] = Ior.catsDataMonadErrorForIor[E]
 
-      val functor: Functor[Ior[E, ?]] = Ior.catsDataMonadErrorForIor[E]
-
-      def raise[A](e: E): Ior[E, A] = Ior.Left(e)
+      def raise[E2 <: E, A](e: E2): Ior[E, A] = Ior.Left(e)
 
       def handleWith[A](fa: Ior[E, A])(f: E => Ior[E, A]): Ior[E, A] =
         fa match {

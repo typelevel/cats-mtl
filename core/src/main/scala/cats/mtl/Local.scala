@@ -75,7 +75,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
     new Local[Kleisli[F, E, *], E] {
       def local[A](fa: Kleisli[F, E, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[Kleisli[F, E, *]]
-      def ask = Kleisli.ask[F, E]
+      def ask[E2 >: E] = Kleisli.ask[F, E2]
     }
 
   implicit def baseLocalForRWST[F[_], E, L, S](
@@ -84,7 +84,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
     new Local[RWST[F, E, L, S, *], E] {
       def local[A](fa: RWST[F, E, L, S, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[RWST[F, E, L, S, *]]
-      def ask = RWST.ask[F, E, L, S]
+      def ask[E2 >: E] = IndexedReaderWriterStateT((e, s) => F.pure((L.empty, s, e)))
     }
 
   implicit def localForWriterT[F[_]: Monad, E, L: Monoid](
