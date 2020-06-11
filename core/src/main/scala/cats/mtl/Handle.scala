@@ -26,7 +26,7 @@ import scala.annotation.implicitNotFound
 trait Handle[F[_], E] extends Raise[F, E] with Serializable {
   def applicative: Applicative[F]
 
-  override def functor: Functor[F] = applicative
+  override final def functor: Functor[F] = applicative
 
   def handleWith[A](fa: F[A])(f: E => F[A]): F[A]
 
@@ -145,7 +145,7 @@ private[mtl] trait HandleInstances {
   implicit final def handleKleisli[F[_], E, R](
       implicit F0: Handle[F, E],
       M: Monad[F]): Handle[Kleisli[F, R, *], E] =
-    new Handle[Kleisli[F, R, *], E] with RaiseMonadPartialOrder[F, Kleisli[F, R, *], E] {
+    new RaiseMonadPartialOrder[F, Kleisli[F, R, *], E] with Handle[Kleisli[F, R, *], E] {
       val applicative: Applicative[Kleisli[F, R, *]] = Kleisli.catsDataMonadForKleisli[F, R]
 
       val F: Raise[F, E] = F0
@@ -160,7 +160,7 @@ private[mtl] trait HandleInstances {
       implicit F0: Handle[F, E],
       M: Monad[F],
       L: Monoid[L]): Handle[WriterT[F, L, *], E] =
-    new Handle[WriterT[F, L, *], E] with RaiseMonadPartialOrder[F, WriterT[F, L, *], E] {
+    new RaiseMonadPartialOrder[F, WriterT[F, L, *], E] with Handle[WriterT[F, L, *], E] {
       val applicative: Applicative[WriterT[F, L, *]] =
         WriterT.catsDataApplicativeForWriterT[F, L]
 
@@ -175,7 +175,7 @@ private[mtl] trait HandleInstances {
   implicit final def handleStateT[F[_], E, S](
       implicit F0: Handle[F, E],
       M: Monad[F]): Handle[StateT[F, S, *], E] =
-    new Handle[StateT[F, S, *], E] with RaiseMonadPartialOrder[F, StateT[F, S, *], E] {
+    new RaiseMonadPartialOrder[F, StateT[F, S, *], E] with Handle[StateT[F, S, *], E] {
       val applicative: Applicative[StateT[F, S, *]] =
         IndexedStateT.catsDataMonadForIndexedStateT[F, S]
 
@@ -191,7 +191,7 @@ private[mtl] trait HandleInstances {
       implicit F0: Handle[F, E],
       M: Monad[F],
       L: Monoid[L]): Handle[RWST[F, R, L, S, *], E] =
-    new Handle[RWST[F, R, L, S, *], E] with RaiseMonadPartialOrder[F, RWST[F, R, L, S, *], E] {
+    new RaiseMonadPartialOrder[F, RWST[F, R, L, S, *], E] with Handle[RWST[F, R, L, S, *], E] {
       val applicative: Applicative[RWST[F, R, L, S, *]] =
         IndexedReaderWriterStateT.catsDataMonadForRWST
 

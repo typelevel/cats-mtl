@@ -37,7 +37,7 @@ import scala.annotation.implicitNotFound
 trait Censor[F[_], L] extends Listen[F, L] {
   val applicative: Applicative[F]
   val monoid: Monoid[L]
-  override lazy val functor: Functor[F] = applicative
+  override final def functor: Functor[F] = applicative
 
   def censor[A](fa: F[A])(f: L => L): F[A]
 

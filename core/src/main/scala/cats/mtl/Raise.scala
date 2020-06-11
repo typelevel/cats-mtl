@@ -84,7 +84,7 @@ private[mtl] trait RaiseMonadPartialOrder[F[_], G[_], E] extends Raise[G, E] {
   val lift: MonadPartialOrder[F, G]
   val F: Raise[F, E]
 
-  override def functor = lift.monadG
+  def functor: Functor[G] = lift.monadG
   override def raise[E2 <: E, A](e: E2) = lift(F.raise(e))
 }
 
