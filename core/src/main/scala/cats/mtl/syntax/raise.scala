@@ -23,7 +23,7 @@ trait RaiseSyntax {
 }
 
 final class RaiseOps[E](val e: E) extends AnyVal {
-  def raise[F[_], A](implicit raise: Raise[F, _ >: E]): F[A] =
+  def raise[F[_], A](implicit raise: Raise[F, E]): F[A] =
     raise.raise(e)
 }
 

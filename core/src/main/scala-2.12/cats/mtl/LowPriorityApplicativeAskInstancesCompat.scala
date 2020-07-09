@@ -23,6 +23,6 @@ private[mtl] trait LowPriorityAskInstancesCompat {
   implicit def askForReader[E]: Ask[Reader[E, *], E] =
     new Ask[Reader[E, *], E] {
       val applicative = Applicative[Reader[E, *]]
-      def ask = Kleisli.ask[Id, E]
+      def ask[E2 >: E] = Kleisli.ask[Id, E2]
     }
 }

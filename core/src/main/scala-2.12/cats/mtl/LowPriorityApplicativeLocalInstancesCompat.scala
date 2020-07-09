@@ -24,6 +24,6 @@ private[mtl] trait LowPriorityLocalInstancesCompat {
     new Local[Reader[E, *], E] {
       def local[A](fa: Reader[E, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[Reader[E, *]]
-      def ask = Kleisli.ask[Id, E]
+      def ask[E2 >: E] = Kleisli.ask[Id, E2]
     }
 }

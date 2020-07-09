@@ -20,10 +20,14 @@ package tests
 
 final class Syntax extends BaseSuite {
 
+  sealed trait Foo
+  case class Bar(n: Int) extends Foo
+
   // test instances.all._
   //noinspection ScalaUnusedSymbol
   {
     import cats.instances.all._
+    import cats.syntax.apply._
     import cats.mtl.implicits._
     import cats.data._
     test("Ask") {
@@ -34,6 +38,12 @@ final class Syntax extends BaseSuite {
         Ask.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
       val readerC: Id[String] =
         Ask.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
+
+      def foo[F[_]](implicit F: Ask[F, Foo]) =
+        F.ask
+
+      def bar[F[_]](implicit F: Ask[F, Bar]) =
+        foo[F]
     }
     test("Listen") {
       val lift: WriterT[Option, String, Int] =
@@ -59,6 +69,12 @@ final class Syntax extends BaseSuite {
       def fb[F[_]: Raise[?[_], EE], E <: EE, EE](e: E): F[E] = e.raise[F, E]
       val faC: Either[String, Int] = Raise.raise[EitherC[String]#l, String, Int]("ha")
       val faeC: Either[String, Nothing] = Raise.raiseF[EitherC[String]#l]("ha")
+
+      def bar[F[_]](implicit F: Raise[F, Bar]): F[Unit] =
+        Bar(404).raise
+
+      def foo[F[_]: Apply](implicit F: Raise[F, Foo]): F[Int] =
+        bar[F] *> Bar(42).raise
     }
     test("Handle") {
       val fa: Option[Either[Unit, Int]] = Option.empty[Int].attemptHandle
@@ -82,6 +98,12 @@ final class Syntax extends BaseSuite {
       val tupled: WriterT[Option, String, Unit] = ("ha", ()).tuple[WriterTC[Option, String]#l]
       val toldC = Tell.tell[WriterTC[Option, String]#l, String]("ha")
       val toldFC = Tell.tellF[WriterTC[Option, String]#l]("ha")
+
+      def bar[F[_]](implicit F: Tell[F, Bar]): F[Unit] =
+        Bar(404).tell
+
+      def foo[F[_]: Apply](implicit F: Tell[F, Foo]): F[Unit] =
+        bar[F] *> Bar(42).tell
     }
     test("Chronicle") {
       val chronicleC: Ior[Int, String] =

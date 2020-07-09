@@ -34,10 +34,10 @@ trait HandleLaws[F[_], E] extends RaiseLaws[F, E] {
 
   // external laws:
   def raiseAndHandleWithIsFunctionApplication[A](e: E, f: E => F[A]): IsEq[F[A]] =
-    handleWith(raise[A](e))(f) <-> f(e)
+    handleWith(raise[E, A](e))(f) <-> f(e)
 
   def raiseAndHandleIsPure[A](e: E, f: E => A): IsEq[F[A]] =
-    handle(raise[A](e))(f) <-> pure(f(e))
+    handle(raise[E, A](e))(f) <-> pure(f(e))
 
   def handleWithPureIsPure[A](a: A, f: E => F[A]): IsEq[F[A]] =
     handleWith(pure(a))(f) <-> pure(a)
@@ -46,7 +46,7 @@ trait HandleLaws[F[_], E] extends RaiseLaws[F, E] {
     handle(pure(a))(f) <-> pure(a)
 
   def raiseAttemptIsPureLeft(e: E): IsEq[F[Either[E, Unit]]] =
-    attempt(raise[Unit](e)) <-> pure(Left(e))
+    attempt(raise[E, Unit](e)) <-> pure(Left(e))
 
   def pureAttemptIsPureRight[A](a: A): IsEq[F[Either[E, A]]] =
     attempt(pure(a)) <-> pure(Right(a))

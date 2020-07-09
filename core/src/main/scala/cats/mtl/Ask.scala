@@ -43,10 +43,10 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound(
   "Could not find an implicit instance of Ask[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit fask: Ask[${F}, ${E}}])\n")
-trait Ask[F[_], E] extends Serializable {
+trait Ask[F[_], +E] extends Serializable {
   def applicative: Applicative[F]
 
-  def ask: F[E]
+  def ask[E2 >: E]: F[E2]
 
   def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
 }
@@ -56,7 +56,7 @@ private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
   val F: Ask[F, E]
 
   override def applicative = lift.monadG
-  override def ask = lift(F.ask)
+  override def ask[E2 >: E] = lift(F.ask)
 }
 
 private[mtl] trait LowPriorityAskInstances extends LowPriorityAskInstancesCompat {
@@ -89,7 +89,7 @@ object Ask extends AskInstances {
   def const[F[_]: Applicative, E](e: E): Ask[F, E] =
     new Ask[F, E] {
       val applicative: Applicative[F] = Applicative[F]
-      val ask: F[E] = applicative.pure(e)
+      def ask[E2 >: E]: F[E2] = applicative.pure(e)
     }
 
   def ask[F[_], E](implicit ask: Ask[F, E]): F[E] =
