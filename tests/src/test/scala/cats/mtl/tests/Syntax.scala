@@ -27,6 +27,7 @@ final class Syntax extends BaseSuite {
   //noinspection ScalaUnusedSymbol
   {
     import cats.instances.all._
+    import cats.syntax.apply._
     import cats.mtl.implicits._
     import cats.data._
     test("Ask") {
@@ -69,11 +70,11 @@ final class Syntax extends BaseSuite {
       val faC: Either[String, Int] = Raise.raise[EitherC[String]#l, String, Int]("ha")
       val faeC: Either[String, Nothing] = Raise.raiseF[EitherC[String]#l]("ha")
 
-      def bar[F[_]](implicit F: Raise[F, Bar]) =
-        F.raise(Bar(404))
+      def bar[F[_]](implicit F: Raise[F, Bar]): F[Unit] =
+        Bar(404).raise
 
-      def foo[F[_]](implicit F: Raise[F, Foo]): F[Nothing] =
-        bar[F]
+      def foo[F[_]: Apply](implicit F: Raise[F, Foo]): F[Int] =
+        bar[F] *> Bar(42).raise
     }
     test("Handle") {
       val fa: Option[Either[Unit, Int]] = Option.empty[Int].attemptHandle
@@ -98,11 +99,11 @@ final class Syntax extends BaseSuite {
       val toldC = Tell.tell[WriterTC[Option, String]#l, String]("ha")
       val toldFC = Tell.tellF[WriterTC[Option, String]#l]("ha")
 
-      def bar[F[_]](implicit F: Tell[F, Bar]) =
-        F.tell(Bar(404))
+      def bar[F[_]](implicit F: Tell[F, Bar]): F[Unit] =
+        Bar(404).tell
 
-      def foo[F[_]](implicit F: Tell[F, Foo]): F[Unit] =
-        bar[F]
+      def foo[F[_]: Apply](implicit F: Tell[F, Foo]): F[Unit] =
+        bar[F] *> Bar(42).tell
     }
     test("Chronicle") {
       val chronicleC: Ior[Int, String] =
