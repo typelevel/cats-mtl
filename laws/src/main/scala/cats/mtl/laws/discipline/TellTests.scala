@@ -27,9 +27,7 @@ import cats.kernel.laws.discipline.catsLawsIsEqToProp
 trait TellTests[F[_], L] extends Laws {
   def laws: TellLaws[F, L]
 
-  def tell[A: Arbitrary](
-      implicit ArbL: Arbitrary[L],
-      EqFA: Eq[F[A]]): RuleSet = {
+  def tell[A: Arbitrary](implicit ArbL: Arbitrary[L], EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "tell",
       parent = None,
