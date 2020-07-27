@@ -29,10 +29,8 @@ trait RaiseTests[F[_], E] extends Laws {
   def laws: RaiseLaws[F, E] = RaiseLaws[F, E]
 
   def raise[A: Arbitrary](
-      implicit ArbFA: Arbitrary[F[A]],
-      ArbE: Arbitrary[E],
+      implicit ArbE: Arbitrary[E],
       CogenA: Cogen[A],
-      EqFU: Eq[F[Unit]],
       EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "raise",

@@ -29,7 +29,6 @@ trait CensorTests[F[_], L] extends ListenTests[F, L] {
   def censor[A: Arbitrary, B: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
       ArbL: Arbitrary[L],
-      CogenA: Cogen[A],
       CogenL: Cogen[L],
       EqFU: Eq[F[Unit]],
       EqFA: Eq[F[A]],
