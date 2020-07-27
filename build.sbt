@@ -54,7 +54,7 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
     List("gem install jekyll -v 4.0.0"),
     name = Some("Install Jekyll")))
 
-ThisBuild / githubWorkflowBuild := WorkflowStep.Sbt(List("ci"))
+ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("ci")))
 
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
