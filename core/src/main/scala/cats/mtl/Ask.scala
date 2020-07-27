@@ -24,23 +24,22 @@ import scala.annotation.implicitNotFound
 /**
  * `Ask[F, E]` lets you access an `E` value in the `F[_]` context.
  *
-  * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
+ * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
  *
-  * `Ask[F, E]` has one external law:
+ * `Ask[F, E]` has one external law:
  * {{{
  * def askAddsNoEffects[A](fa: F[A]) = {
  *   (ask *> fa) <-> fa
  * }
  * }}}
  *
-  * `Ask[F, E]` has one internal law:
+ * `Ask[F, E]` has one internal law:
  * {{{
  * def readerIsAskAndMap[A](f: E => A) = {
  *   ask.map(f) <-> reader(f)
  * }
  * }}}
- *
-  */
+ */
 @implicitNotFound(
   "Could not find an implicit instance of Ask[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit fask: Ask[${F}, ${E}}])\n")
 trait Ask[F[_], +E] extends Serializable {

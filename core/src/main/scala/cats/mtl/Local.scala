@@ -25,29 +25,28 @@ import scala.annotation.implicitNotFound
  * `Local[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
  * using `ask`; the modification can only be observed from within that `F[A]` value.
  *
-  * `Local[F, E]` has three external laws:
+ * `Local[F, E]` has three external laws:
  * {{{
  * def askReflectsLocal(f: E => E) = {
  *   local(f)(ask) <-> ask map f
  * }
  *
-  * def localPureIsPure[A](a: A, f: E => E) = {
+ * def localPureIsPure[A](a: A, f: E => E) = {
  *   local(f)(pure(a)) <-> pure(a)
  * }
  *
-  * def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E) = {
+ * def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E) = {
  *   local(f)(ff ap fa) <-> local(f)(ff) ap local(f)(fa)
  * }
  * }}}
  *
-  * `Local` has one internal law:
+ * `Local` has one internal law:
  * {{{
  * def scopeIsLocalConst(fa: F[A], e: E) = {
  *   scope(e)(fa) <-> local(_ => e)(fa)
  * }
  * }}}
- *
-  */
+ */
 @implicitNotFound(
   "Could not find an implicit instance of Local[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit flocal: Local[${F}, ${E}}])\n")
 trait Local[F[_], E] extends Ask[F, E] with Serializable {
