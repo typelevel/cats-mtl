@@ -27,9 +27,9 @@ import scala.util.control.NonFatal
  * This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,
  * and further `map` calls will not have any values to execute the passed function on.
  *
-  * `Raise` has no external laws.
+ * `Raise` has no external laws.
  *
-  * `Raise` has two internal laws:
+ * `Raise` has two internal laws:
  * {{{
  * def catchNonFatalDefault[A](a: => A)(f: Throwable => E)(implicit A: Applicative[F]) = {
  *   catchNonFatal(a)(f) <-> try {
@@ -39,7 +39,7 @@ import scala.util.control.NonFatal
  *   }
  * }
  *
-  * def ensureDefault[A](fa: F[A])(error: => E)(predicate: A => Boolean)(implicit A: Monad[F]) = {
+ * def ensureDefault[A](fa: F[A])(error: => E)(predicate: A => Boolean)(implicit A: Monad[F]) = {
  *   ensure(fa)(error)(predicate) <-> for {
  *     a <- fa
  *     _ <- if (predicate(a)) pure(()) else raise(error)
@@ -47,7 +47,7 @@ import scala.util.control.NonFatal
  * }
  * }}}
  *
-  * `Raise` has one free law, i.e. a law guaranteed by parametricity:
+ * `Raise` has one free law, i.e. a law guaranteed by parametricity:
  * {{{
  * def failThenFlatMapFails[A, B](ex: E, f: A => F[B]) = {
  *   fail(ex).flatMap(f) <-> fail(ex)
