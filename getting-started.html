@@ -1,4 +1,4 @@
-<html><head><title>Cats MTL: Getting Started</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Typelevel contributors" /><meta name="description" content="Monad Transformers made easy" /><meta name="og:image" content="/cats-mtl/img/poster.png" /><meta name="image" property="og:image" content="/cats-mtl/img/poster.png" /><meta name="og:title" content="Cats MTL: Getting Started" /><meta name="title" property="og:title" content="Cats MTL: Getting Started" /><meta name="og:site_name" content="Cats MTL" /><meta name="og:url" content="https://github.com/typelevel/cats-mtl" /><meta name="og:type" content="website" /><meta name="og:description" content="Monad Transformers made easy" /><link rel="icon" type="image/png" href="/cats-mtl/img/favicon.png" /><meta name="twitter:title" content="Cats MTL: Getting Started" /><meta name="twitter:image" content="/cats-mtl/img/poster.png" /><meta name="twitter:description" content="Monad Transformers made easy" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/cats-mtl/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/cats-mtl/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/cats-mtl/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/cats-mtl/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/cats-mtl/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/cats-mtl/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/cats-mtl/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/cats-mtl/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/cats-mtl/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/cats-mtl/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/cats-mtl/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/cats-mtl/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/cats-mtl/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/cats-mtl/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/cats-mtl/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/cats-mtl/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/cats-mtl/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/cats-mtl/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/cats-mtl/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/cats-mtl/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cats-mtl/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cats-mtl/css/style.css" /><link rel="stylesheet" href="/cats-mtl/css/palette.css" /><link rel="stylesheet" href="/cats-mtl/css/codemirror.css" /></head><body><header id="site-header"><div class="navbar-wrapper navbar-inverse"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/cats-mtl/" class="brand"><div class="icon-wrapper"><span>Cats MTL</span></div></a></div><nav class="text-right"><ul class=""><li><a href="https://github.com/typelevel/cats-mtl"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li><li><a href="api"><i class="fa fa-file-text"></i><span class="hidden-xs">Scaladoc</span></a></li></ul></nav></div></div><div class="jumbotron" style="background-image:url('/cats-mtl/img/jumbotron_pattern.png')"></div><div><ul class="horizontalNav">                     <li><a class="" href="/cats-mtl/">Home</a></li>  <li><a class=" active " href="/cats-mtl/getting-started.html">Getting Started</a></li>  <li><a class="" href="/cats-mtl/mtl-classes.html">MTL Type Classes</a></li>  <li><a class="" href="/cats-mtl/lifting-classes.html">Lifting Classes</a></li>  <li><a class="" href="/cats-mtl/migration.html">Migration Guide</a></li>  <li><a class="" href="/cats-mtl/design.html">Design</a></li>  <li><a class="" href="/cats-mtl/contributing.html">Contributing</a></li> </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h2 id="what-is-mtl">What is MTL?</h2>
+<!DOCTYPE html><html><head><title>Cats MTL: Getting Started</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Typelevel contributors" /><meta name="description" content="Monad Transformers made easy" /><meta name="og:image" content="/cats-mtl/img/poster.png" /><meta name="image" property="og:image" content="/cats-mtl/img/poster.png" /><meta name="og:title" content="Cats MTL: Getting Started" /><meta name="title" property="og:title" content="Cats MTL: Getting Started" /><meta name="og:site_name" content="Cats MTL" /><meta name="og:url" content="https://typelevel.org/cats-mtl/" /><meta name="og:type" content="website" /><meta name="og:description" content="Monad Transformers made easy" /><link rel="icon" type="image/png" href="/cats-mtl/img/favicon.png" /><meta name="twitter:title" content="Cats MTL: Getting Started" /><meta name="twitter:image" content="/cats-mtl/img/poster.png" /><meta name="twitter:description" content="Monad Transformers made easy" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/cats-mtl/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/cats-mtl/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/cats-mtl/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/cats-mtl/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/cats-mtl/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/cats-mtl/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/cats-mtl/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/cats-mtl/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/cats-mtl/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/cats-mtl/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/cats-mtl/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/cats-mtl/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/cats-mtl/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/cats-mtl/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/cats-mtl/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/cats-mtl/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/cats-mtl/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/cats-mtl/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/cats-mtl/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/cats-mtl/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cats-mtl/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cats-mtl/css/light-style.css" /></head><body class="page"><nav id="navigation" aria-labelledby="main-navigation"><div class="navbar-wrapper container"><div class="navigation-brand"><a href="/cats-mtl/" class="brand background-mask"><div class="page-icon-wrapper"></div><span class="brand-title">Cats MTL</span></a></div><div class="navigation-menu"><ul><li><a href="https://github.com/typelevel/cats-mtl" target="_blank" rel="noopener noreferrer"><i class="nav-item-icon fa fa-lg fa-github" hidden="true"></i><span class="nav-item-text">GitHub</span></a></li><li><a href="api"><i class="nav-item-icon fa fa-lg fa-file-text" hidden="true"></i><span class="nav-item-text">Scaladoc</span></a></li></ul></div></div></nav><nav class="menu-container" aria-labelledby="section-navigation"><div id="horizontal-menu"><ul class="horizontal-nav"><li><a class="" href="/cats-mtl/extra_md/">Home</a></li><li><a class=" active " href="/cats-mtl/getting-started.html">Getting Started</a></li><li><a class="" href="/cats-mtl/mtl-classes.html">MTL Type Classes</a></li><li><a class="" href="/cats-mtl/lifting-classes.html">Lifting Classes</a></li><li><a class="" href="/cats-mtl/migration.html">Migration Guide</a></li><li><a class="" href="/cats-mtl/design.html">Design</a></li><li><a class="" href="/cats-mtl/extra_md/contributing.html">Contributing</a></li></ul></div></nav><main id="site-main" class="page-site-main"><section class="use"><div class="container"><div id="content"><h2 id="what-is-mtl">What is MTL?</h2>
 
 <p>MTL is an acronym and stands for Monad Transformer Library. 
 Its main purpose is to make it easier to work with nested monad transformers. 
@@ -9,23 +9,19 @@ It achieves this by encoding the effects of most common monad transformers as ty
 <p>Have you ever worked with two or more monad transformers nested inside each other?
 If you haven’t, working with what some call <strong>monad transformer stacks</strong> can be incredibly painful.
 This is because, the more monad transformers you add to your stack the more type parameters the type system has to deal with and the worse type inference gets.
-For example, here’s a small example of a method that modifies reads the current state in <code class="highlighter-rouge">StateT</code> and raises an error using <code class="highlighter-rouge">EitherT</code>:</p>
+For example, here’s a small example of a method that reads the current state in <code class="highlighter-rouge">StateT</code> and raises an error using <code class="highlighter-rouge">EitherT</code>:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.data._</span>
-<span class="c1">// import cats.data._
-</span>
 <span class="k">import</span> <span class="nn">cats.implicits._</span>
-<span class="c1">// import cats.implicits._
-</span>
-<span class="k">def</span> <span class="n">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
-  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nc">EitherT</span><span class="o">.</span><span class="n">liftF</span><span class="o">(</span><span class="nc">StateT</span><span class="o">.</span><span class="n">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
-  <span class="n">result</span> <span class="k">&lt;-</span> <span class="k">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> 
-              <span class="nc">EitherT</span><span class="o">.</span><span class="n">leftT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">String</span><span class="o">](</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">)</span>
+
+<span class="k">def</span> <span class="nf">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
+  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nv">EitherT</span><span class="o">.</span><span class="py">liftF</span><span class="o">(</span><span class="nv">StateT</span><span class="o">.</span><span class="py">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nf">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> 
+              <span class="nv">EitherT</span><span class="o">.</span><span class="py">leftT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">String</span><span class="o">](</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">)</span>
             <span class="k">else</span> 
-              <span class="nc">EitherT</span><span class="o">.</span><span class="n">rightT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span><span class="o">](</span><span class="s">"All good"</span><span class="o">)</span>
+              <span class="nv">EitherT</span><span class="o">.</span><span class="py">rightT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span><span class="o">](</span><span class="s">"All good"</span><span class="o">)</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
-<span class="c1">// checkState: cats.data.EitherT[[γ$0$]cats.data.IndexedStateT[[+A]List[A],Int,Int,γ$0$],Exception,String]
-</span></code></pre></div></div>
+</code></pre></div></div>
 
 <p>There’s a bunch of type annotations and extra machinery that really has nothing to do with the actual program and this problem only gets worse as you add more expressions to your for-comprehension or add an additional monad transformer to the stack.</p>
 
@@ -42,23 +38,23 @@ For example, here’s a small example of a method that modifies reads the curren
 <p>All of these monad transformers encode their effects as data structures, but there’s another way to achieve the same result: Type classes!</p>
 
 <p>For example take <code class="highlighter-rouge">ReaderT.ask</code> function, what would it look like if we used a type class here instead?
-Well, Cats-mtl has an answer and it’s called <code class="highlighter-rouge">ApplicativeAsk</code>.
+Well, Cats-mtl has an answer and it’s called <code class="highlighter-rouge">Ask</code>.
 You can think of it as <code class="highlighter-rouge">ReaderT</code> encoded as a type class:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">trait</span> <span class="nc">ApplicativeAsk</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">E</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">val</span> <span class="n">applicative</span><span class="k">:</span> <span class="kt">Applicative</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">trait</span> <span class="nc">Ask</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">E</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">applicative</span><span class="k">:</span> <span class="kt">Applicative</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span>
 
-  <span class="k">def</span> <span class="n">ask</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">E</span><span class="o">]</span>
+  <span class="k">def</span> <span class="nf">ask</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">E</span><span class="o">]</span>
 <span class="o">}</span>
 </code></pre></div></div>
 
-<p>At it’s core <code class="highlighter-rouge">ApplicativeAsk</code> just encodes the fact that we can ask for a value from the environment, exactly like <code class="highlighter-rouge">ReaderT</code> does.
+<p>At its core <code class="highlighter-rouge">Ask</code> just encodes the fact that we can ask for a value from the environment, exactly like <code class="highlighter-rouge">ReaderT</code> does.
 Exactly like <code class="highlighter-rouge">ReaderT</code>, it also includes another type parameter <code class="highlighter-rouge">E</code>, that represents that environment.</p>
 
-<p>If you’re wondering why <code class="highlighter-rouge">ApplicativeAsk</code> has an <code class="highlighter-rouge">Applicative</code> field instead of just extending from <code class="highlighter-rouge">Applicative</code>, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here <code class="highlighter-rouge">Applicative</code>) in scope implicitly.
-So in this case we favor composition over inheritance as otherwise, we could not e.g. use <code class="highlighter-rouge">Monad</code> together with <code class="highlighter-rouge">ApplicativeAsk</code>.</p>
+<p>If you’re wondering why <code class="highlighter-rouge">Ask</code> has an <code class="highlighter-rouge">Applicative</code> field instead of just extending from <code class="highlighter-rouge">Applicative</code>, that is to avoid implicit ambiguities that arise from having multiple subclasses of a given type (here <code class="highlighter-rouge">Applicative</code>) in scope implicitly.
+So in this case we favor composition over inheritance as otherwise, we could not e.g. use <code class="highlighter-rouge">Monad</code> together with <code class="highlighter-rouge">Ask</code>.</p>
 
-<p><code class="highlighter-rouge">ApplicativeAsk</code> is an example for what is at the core of Cats-mtl.
+<p><code class="highlighter-rouge">Ask</code> is an example for what is at the core of Cats-mtl.
 Cats-mtl provides type classes for most common effects which let you choose what kind of effects you need without commiting to a specific monad transformer stack.</p>
 
 <p>Ideally, you’d write all your code using only an abstract type constructor <code class="highlighter-rouge">F[_]</code> with different type class constraints and then at the end run that code with a specific data type that is able to fulfill those constraints.
@@ -67,55 +63,43 @@ So without further ado, let’s look at what the program from earlier looks when
 <p>First, the original program again:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.data._</span>
-<span class="c1">// import cats.data._
-</span>
 <span class="k">import</span> <span class="nn">cats.implicits._</span>
-<span class="c1">// import cats.implicits._
-</span>
-<span class="k">def</span> <span class="n">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
-  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nc">EitherT</span><span class="o">.</span><span class="n">liftF</span><span class="o">(</span><span class="nc">StateT</span><span class="o">.</span><span class="n">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
-  <span class="n">result</span> <span class="k">&lt;-</span> <span class="k">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> 
-              <span class="nc">EitherT</span><span class="o">.</span><span class="n">leftT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">String</span><span class="o">](</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">(</span><span class="s">"Too large"</span><span class="o">))</span>
+
+<span class="k">def</span> <span class="nf">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
+  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nv">EitherT</span><span class="o">.</span><span class="py">liftF</span><span class="o">(</span><span class="nv">StateT</span><span class="o">.</span><span class="py">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nf">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> 
+              <span class="nv">EitherT</span><span class="o">.</span><span class="py">leftT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">String</span><span class="o">](</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">(</span><span class="s">"Too large"</span><span class="o">))</span>
             <span class="k">else</span> 
-              <span class="nc">EitherT</span><span class="o">.</span><span class="n">rightT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span><span class="o">](</span><span class="s">"All good"</span><span class="o">)</span>
+              <span class="nv">EitherT</span><span class="o">.</span><span class="py">rightT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span><span class="o">](</span><span class="s">"All good"</span><span class="o">)</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
-<span class="c1">// checkState: cats.data.EitherT[[γ$0$]cats.data.IndexedStateT[[+A]List[A],Int,Int,γ$0$],Exception,String]
-</span></code></pre></div></div>
+</code></pre></div></div>
 
 <p>And now the mtl version:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.MonadError</span>
-<span class="c1">// import cats.MonadError
-</span>
 <span class="k">import</span> <span class="nn">cats.implicits._</span>
-<span class="c1">// import cats.implicits._
-</span>
-<span class="k">import</span> <span class="nn">cats.mtl.implicits._</span>
-<span class="c1">// import cats.mtl.implicits._
-</span>
-<span class="k">import</span> <span class="nn">cats.mtl.MonadState</span>
-<span class="c1">// import cats.mtl.MonadState
-</span>
-<span class="k">def</span> <span class="n">checkState</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]](</span><span class="k">implicit</span> <span class="n">S</span><span class="k">:</span> <span class="kt">MonadState</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Int</span><span class="o">],</span> <span class="n">E</span><span class="k">:</span> <span class="kt">MonadError</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Exception</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
-  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="n">S</span><span class="o">.</span><span class="n">get</span>
-  <span class="n">result</span> <span class="k">&lt;-</span> <span class="k">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> <span class="n">E</span><span class="o">.</span><span class="n">raiseError</span><span class="o">(</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">(</span><span class="s">"Too large"</span><span class="o">))</span>
-            <span class="k">else</span> <span class="n">E</span><span class="o">.</span><span class="n">pure</span><span class="o">(</span><span class="s">"All good"</span><span class="o">)</span>
+<span class="k">import</span> <span class="nn">cats.mtl.Stateful</span>
+
+<span class="k">def</span> <span class="nf">checkState</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]](</span><span class="k">implicit</span> <span class="n">S</span><span class="k">:</span> <span class="kt">Stateful</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Int</span><span class="o">],</span> <span class="n">E</span><span class="k">:</span> <span class="kt">MonadError</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Exception</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
+  <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nv">S</span><span class="o">.</span><span class="py">get</span>
+  <span class="n">result</span> <span class="k">&lt;-</span> <span class="nf">if</span> <span class="o">(</span><span class="n">currentState</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="o">)</span> <span class="nv">E</span><span class="o">.</span><span class="py">raiseError</span><span class="o">(</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">(</span><span class="s">"Too large"</span><span class="o">))</span>
+            <span class="k">else</span> <span class="nv">E</span><span class="o">.</span><span class="py">pure</span><span class="o">(</span><span class="s">"All good"</span><span class="o">)</span>
 <span class="o">}</span> <span class="k">yield</span> <span class="n">result</span>
-<span class="c1">// checkState: [F[_]](implicit S: cats.mtl.MonadState[F,Int], implicit E: cats.MonadError[F,Exception])F[String]
-</span></code></pre></div></div>
+</code></pre></div></div>
 
 <p>We’ve reduced the boilerplate immensly!
 Now our small program actually looks just like control flow and we didn’t need to annotate any types.</p>
 
 <p>This is great so far, but <code class="highlighter-rouge">checkState</code> now returns an abstract <code class="highlighter-rouge">F[String]</code>.
-We need some <code class="highlighter-rouge">F</code> that has an instance of both <code class="highlighter-rouge">MonadState</code> and <code class="highlighter-rouge">MonadError</code>.
-We know that <code class="highlighter-rouge">EitherT</code> can have a <code class="highlighter-rouge">MonadError</code> instance and <code class="highlighter-rouge">StateT</code> can have a <code class="highlighter-rouge">MonadState</code> instance, but how do we get both?
+We need some <code class="highlighter-rouge">F</code> that has an instance of both <code class="highlighter-rouge">Stateful</code> and <code class="highlighter-rouge">MonadError</code>.
+We know that <code class="highlighter-rouge">EitherT</code> can have a <code class="highlighter-rouge">MonadError</code> instance and <code class="highlighter-rouge">StateT</code> can have a <code class="highlighter-rouge">Stateful</code> instance, but how do we get both?
 Fortunately, cats-mtl allows us to lift instances of mtl classes through our monad transformer stack.
-That means, that e.g. <code class="highlighter-rouge">EitherT[StateT[List, Int, ?], Exception, A]</code> has both the <code class="highlighter-rouge">MonadError</code> and <code class="highlighter-rouge">MonadState</code> instances we need, neat!</p>
+That means, that e.g. <code class="highlighter-rouge">EitherT[StateT[List, Int, ?], Exception, A]</code> has both the <code class="highlighter-rouge">MonadError</code> and <code class="highlighter-rouge">Stateful</code> instances we need, neat!</p>
 
 <p>So let’s try turning our abstract <code class="highlighter-rouge">F[String]</code> into an actual value:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="n">materializedProgram</span> <span class="k">=</span>
+<!-- TODO make this back into an mdoc:silent; I had to remove it because of the deprecation of any2stringadd -->
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">materializedProgram</span> <span class="k">=</span>
   <span class="n">checkState</span><span class="o">[</span><span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">?</span><span class="o">]]</span>
 </code></pre></div></div>
 
@@ -130,15 +114,17 @@ MTL type classes representing effects and a way to lift instances of these class
 <h4 id="available-mtl-classes">Available MTL classes</h4>
 
 <p>cats-mtl provides the following “MTL classes”:</p>
+
 <ul>
-  <li><a href="mtl-classes/applicativeask.html">ApplicativeAsk</a></li>
-  <li><a href="mtl-classes/applicativelocal.html">ApplicativeLocal</a></li>
-  <li><a href="mtl-classes/functorraise.html">FunctorRaise</a></li>
-  <li><a href="mtl-classes/applicativehandle.html">ApplicativeHandle</a></li>
-  <li><a href="mtl-classes/functortell.html">FunctorTell</a></li>
-  <li><a href="mtl-classes/functorlisten.html">FunctorListen</a></li>
-  <li><a href="mtl-classes/monadstate.html">MonadState</a></li>
-  <li><a href="mtl-classes/monadchronicle.html">MonadChronicle</a></li>
+  <li><a href="mtl-classes/ask.md">Ask</a></li>
+  <li><a href="mtl-classes/local.md">Local</a></li>
+  <li><a href="mtl-classes/raise.md">Raise</a></li>
+  <li><a href="mtl-classes/handle.md">Handle</a></li>
+  <li><a href="mtl-classes/tell.md">Tell</a></li>
+  <li><a href="mtl-classes/listen.md">Listen</a></li>
+  <li>Censor</li>
+  <li><a href="mtl-classes/stateful.md">Stateful</a></li>
+  <li><a href="mtl-classes/chronicle.md">Chronicle</a></li>
 </ul>
 
 <p>If you’re wondering why some of these are based on <code class="highlighter-rouge">Monad</code> and others on <code class="highlighter-rouge">Functor</code> or <code class="highlighter-rouge">Applicative</code>, 
@@ -148,10 +134,24 @@ This is in contrast to Haskell’s <code class="highlighter-rouge">mtl</code> li
 
 <p>Because these type classes are commonly combined, the base typeclasses are ambiguous in implicit scope using
 the typical cats subclass encoding via inheritance.
-Thus in cats-mtl, the ambiguity is avoided by using the composition approach that we saw with <code class="highlighter-rouge">ApplicativeAsk</code> earlier.
+Thus in cats-mtl, the ambiguity is avoided by using the composition approach that we saw with <code class="highlighter-rouge">Ask</code> earlier.
 In a future version of Scala we might be able to avoid this and have the same type class encoding everywhere.</p>
-</div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Cats MTL is designed and developed by <a href="https://github.com/typelevel/cats-mtl" target="_blank">Typelevel contributors</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/typelevel/cats-mtl"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6"><p>Website built with <a href="https://47deg.github.io/sbt-microsites/" target="_blank">Sbt-microsites</a> - © 2016 <a href="https://www.47deg.com/" target="_blank">47 Degrees</a></p></div></div><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>hljs.initHighlighting();
-              </script></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
-hljs.initHighlighting();
-              </script><script>((window.gitter = {}).chat = {}).options = {
-room: 'typelevel/cats-mtl'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script></body></html>
+</div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><p>Cats MTL is designed and developed by <a href="https://typelevel.org/cats-mtl/" target="_blank" rel="noopener noreferrer">Typelevel contributors</a></p></div><div class="row"><div><p>Website built with <a href="https://47degrees.github.io/sbt-microsites/" target="_blank" rel="noopener noreferrer">sbt-microsites</a> - © 2019 <a href="https://www.47deg.com/" target="_blank" rel="noopener noreferrer">47 Degrees</a></p></div></div></div></footer><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script>((window.gitter = {}).chat = {}).options = {
+room: 'typelevel/cats-mtl'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/cats-mtl/js/version-selector.js"></script></body></html>
