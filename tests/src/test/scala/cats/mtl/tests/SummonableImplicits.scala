@@ -22,61 +22,41 @@ import cats.implicits._
 
 final class SummonableImplicits extends BaseSuite {
 
-  // test instances.all._
-  //noinspection ScalaUnusedSymbol
   locally {
-    val AskTest: Unit = {
-      def _1 = Ask[ReaderStrId, String]
-      def _2 = Ask[ReaderStrInt, Int]
-      def _3 = Ask[ReaderStrInt, String]
+    {
+      Ask[ReaderStrId, String]
+      Ask[ReaderStrInt, Int]
+      Ask[ReaderStrInt, String]
     }
 
-    val ListenTest: Unit = {
-      def _1 = Listen[WriterStrId, String]
-      def _2 = Listen[WriterTStrWriterTInt, String]
-      def _3 = Listen[WriterTStrWriterTInt, Vector[Int]]
+    {
+      Listen[WriterStrId, String]
+      Listen[WriterTStrWriterTInt, String]
+      Listen[WriterTStrWriterTInt, Vector[Int]]
     }
 
-    val RaiseTest: Unit = {
-      def _1 = Raise[EitherStrId, String]
-      //def _2 = Raise[EitherTStrEitherTInt, Int]
-      def _3 = Raise[EitherTStrEitherTInt, String]
+    {
+      Raise[EitherStrId, String]
+      //Raise[EitherTStrEitherTInt, Int]
+      Raise[EitherTStrEitherTInt, String]
     }
 
-    val LocalTest: Unit = {
-      def _1 = Local[ReaderStrId, String]
-      def _2 = Local[ReaderStrInt, Int]
-      def _3 = Local[ReaderStrInt, String]
+    {
+      Local[ReaderStrId, String]
+      Local[ReaderStrInt, Int]
+      Local[ReaderStrInt, String]
     }
 
-    val StatefulTest: Unit = {
-      def _1 = Stateful[StateStrId, String]
-      def _2 = Stateful[StateTStrStateTInt, String]
-      def _3 = Stateful[StateTStrStateTInt, Int]
+    {
+      Stateful[StateStrId, String]
+      Stateful[StateTStrStateTInt, String]
+      Stateful[StateTStrStateTInt, Int]
     }
 
-    val TellTest: Unit = {
-      def _1 = Tell[WriterStrId, String]
-      def _2 = Tell[WriterTStrWriterTInt, String]
-      def _3 = Tell[WriterTStrWriterTInt, Vector[Int]]
+    {
+      Tell[WriterStrId, String]
+      Tell[WriterTStrWriterTInt, String]
+      Tell[WriterTStrWriterTInt, Vector[Int]]
     }
   }
-
-  // test hierarchy.base
-  //noinspection ScalaUnusedSymbol
-  locally {
-    def localToAsk[F[_]](implicit F: Local[F, String]): Ask[F, String] =
-      Ask[F, String]
-
-    def listenToTell[F[_]](implicit F: Listen[F, String]): Tell[F, String] =
-      Tell[F, String]
-
-    def stateToTell[F[_]](implicit F: Tell[F, String]): Tell[F, String] =
-      Tell[F, String]
-
-    def stateToAsk[F[_]](implicit F: Ask[F, String]): Ask[F, String] =
-      Ask[F, String]
-
-  }
-
 }

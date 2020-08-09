@@ -18,6 +18,8 @@ package cats
 package mtl
 package tests
 
+import cats.syntax.semigroup._ // TODO we can't do all here because MTL syntax conflicts
+
 final class Syntax extends BaseSuite {
 
   sealed trait Foo
@@ -32,101 +34,106 @@ final class Syntax extends BaseSuite {
     import cats.data._
     test("Ask") {
       ((i: Int) => "$" + i.toString).reader[ReaderIntId]
-      val askedC: Id[Int] = Ask.ask[ReaderIntId, Int].run(1)
-      val askedFC: Id[Int] = Ask.askF[ReaderIntId]().run(1)
-      val readerFEC: Id[String] =
-        Ask.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1)
-      val readerC: Id[String] =
-        Ask.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1)
-
-      def foo[F[_]](implicit F: Ask[F, Foo]) =
-        F.ask
-
-      def bar[F[_]](implicit F: Ask[F, Bar]) =
-        foo[F]
+      Ask.ask[ReaderIntId, Int].run(1): Id[Int]
+      Ask.askF[ReaderIntId]().run(1): Id[Int]
+      Ask.readerFE[ReaderIntId, Int](i => "$" + i.toString).run(1): Id[String]
+      Ask.reader[ReaderIntId, Int, String](i => "$" + i.toString).run(1): Id[String]
     }
+
     test("Listen") {
       val lift: WriterT[Option, String, Int] =
         WriterT.liftF[Option, String, Int](Option.empty[Int])
-      val listen: WriterT[Option, String, (Int, String)] = lift.listen
-      val listens: WriterT[Option, String, (Int, String)] = lift.listens((_: String) + "suffix")
-      val listenC: WriterT[Option, String, (Int, String)] = Listen.listen(lift)
-      val listensC: WriterT[Option, String, (Int, String)] =
-        Listen.listens(lift)((_: String) + "suffix")
+      lift.listen: WriterT[Option, String, (Int, String)]
+      lift.listens((_: String) + "suffix"): WriterT[Option, String, (Int, String)]
+      Listen.listen(lift): WriterT[Option, String, (Int, String)]
+      Listen.listens(lift)((_: String) + "suffix"): WriterT[Option, String, (Int, String)]
     }
+
     test("Local") {
       val fa: OptionT[Reader[String, *], Int] =
         OptionT.liftF[Reader[String, *], Int](Reader(_.length))
-      val local = fa.local[String](s => s + "!").value("ha")
-      val scope = fa.scope[String]("state").value("ha")
-      val localC: String =
-        Local.local(Ask.askF[Reader[String, *]]())((s: String) => s + "!").apply("ha")
-      val scopeC: Option[Int] = Local.scope(fa)("state").value.apply("ha")
+      fa.local[String](s => s + "!").value("ha")
+      fa.scope[String]("state").value("ha")
+      Local.local(Ask.askF[Reader[String, *]]())((s: String) => s + "!").apply("ha"): String
+      Local.scope(fa)("state").value.apply("ha"): Option[Int]
     }
+
     test("Raise") {
-      val fa: Either[String, Int] = "ha".raise[EitherC[String]#l, Int]
-      val fat: EitherT[Option, String, Int] = "ha".raise[EitherTC[Option, String]#l, Int]
-      def fb[F[_]: Raise[?[_], EE], E <: EE, EE](e: E): F[E] = e.raise[F, E]
-      val faC: Either[String, Int] = Raise.raise[EitherC[String]#l, String, Int]("ha")
-      val faeC: Either[String, Nothing] = Raise.raiseF[EitherC[String]#l]("ha")
+      "ha".raise[EitherC[String]#l, Int]: Either[String, Int]
+      "ha".raise[EitherTC[Option, String]#l, Int]: EitherT[Option, String, Int]
+      Raise.raise[EitherC[String]#l, String, Int]("ha"): Either[String, Int]
+      Raise.raiseF[EitherC[String]#l]("ha"): Either[String, Nothing]
 
       def bar[F[_]](implicit F: Raise[F, Bar]): F[Unit] =
         Bar(404).raise
 
       def foo[F[_]: Apply](implicit F: Raise[F, Foo]): F[Int] =
         bar[F] *> Bar(42).raise
+
+      val _ = foo[Either[Foo, *]]
     }
+
     test("Handle") {
-      val fa: Option[Either[Unit, Int]] = Option.empty[Int].attemptHandle
-      val fb: EitherT[Option, Unit, Int] = Option.empty[Int].attemptHandleT
-      val fc: Option[Int] = Option.empty[Int].handle((_: Unit) => 42)
-      val fd: Option[Int] = Option.empty[Int].handleWith((_: Unit) => Some(22))
+      Option.empty[Int].attemptHandle: Option[Either[Unit, Int]]
+      Option.empty[Int].attemptHandleT: EitherT[Option, Unit, Int]
+      Option.empty[Int].handle((_: Unit) => 42): Option[Int]
+      Option.empty[Int].handleWith((_: Unit) => Some(22)): Option[Int]
     }
+
     test("Stateful") {
-      val mod: Eval[(String, Unit)] = ((s: String) => s + "!").modify[StateC[String]#l].run("")
-      val set: Eval[(String, Unit)] = "ha".set[StateC[String]#l].run("")
-      val getC: Eval[(String, String)] = Stateful.get[StateC[String]#l, String].run("")
-      val setFC: Eval[(String, Unit)] = Stateful.setF[StateC[String]#l]("ha").run("")
-      val setC: Eval[(String, Unit)] = Stateful.set[StateC[String]#l, String]("ha").run("")
-      val modC: State[String, Unit] =
-        Stateful.modify[StateC[String]#l, String]((s: String) => s + "!")
-      val inspectC: State[String, String] =
-        Stateful.inspect[StateC[String]#l, String, String]((s: String) => s + "!")
+      ((s: String) => s + "!").modify[StateC[String]#l].run(""): Eval[(String, Unit)]
+      "ha".set[StateC[String]#l].run(""): Eval[(String, Unit)]
+      Stateful.get[StateC[String]#l, String].run(""): Eval[(String, String)]
+      Stateful.setF[StateC[String]#l]("ha").run(""): Eval[(String, Unit)]
+      Stateful.set[StateC[String]#l, String]("ha").run(""): Eval[(String, Unit)]
+      Stateful.modify[StateC[String]#l, String]((s: String) => s + "!"): State[String, Unit]
+      Stateful.inspect[StateC[String]#l, String, String]((s: String) => s + "!"): State[
+        String,
+        String]
     }
+
     test("Tell") {
-      val told: WriterT[Option, String, Unit] = "ha".tell[WriterTC[Option, String]#l]
-      val tupled: WriterT[Option, String, Unit] = ("ha", ()).tuple[WriterTC[Option, String]#l]
-      val toldC = Tell.tell[WriterTC[Option, String]#l, String]("ha")
-      val toldFC = Tell.tellF[WriterTC[Option, String]#l]("ha")
+      "ha".tell[WriterTC[Option, String]#l]: WriterT[Option, String, Unit]
+      ("ha", ()).tuple[WriterTC[Option, String]#l]: WriterT[Option, String, Unit]
+      Tell.tell[WriterTC[Option, String]#l, String]("ha")
+      Tell.tellF[WriterTC[Option, String]#l]("ha")
 
       def bar[F[_]](implicit F: Tell[F, Bar]): F[Unit] =
         Bar(404).tell
 
       def foo[F[_]: Apply](implicit F: Tell[F, Foo]): F[Unit] =
         bar[F] *> Bar(42).tell
+
+      implicit val mf: Monoid[Foo] =
+        Monoid.instance(
+          Bar(Monoid.empty[Int]),
+          {
+            case (Bar(a), Bar(b)) => Bar(a |+| b)
+          })
+
+      val _ = foo[WriterT[Option, Foo, *]]
     }
+
     test("Chronicle") {
-      val chronicleC: Ior[Int, String] =
-        Chronicle.chronicle[IorC[Int]#l, Int, String](Ior.right[Int, String]("w00t"))
-      val confessC: Ior[String, Int] =
-        Chronicle.confess[IorC[String]#l, String, Int]("error")
-      val discloseTC: IorT[Option, String, String] =
-        Chronicle.disclose[IorTC[Option, String]#l, String, String]("w00t")
-      val dictateC: Ior[Int, Unit] = Chronicle.dictate[IorC[Int]#l, Int](42)
-      val materializeTC: IorT[Option, String, Ior[String, Int]] =
-        Chronicle.materialize[IorTC[Option, String]#l, String, Int](
-          IorT.pure[Option, String](42))
+      Chronicle
+        .chronicle[IorC[Int]#l, Int, String](Ior.right[Int, String]("w00t")): Ior[Int, String]
+      Chronicle.confess[IorC[String]#l, String, Int]("error"): Ior[String, Int]
+      Chronicle
+        .disclose[IorTC[Option, String]#l, String, String]("w00t"): IorT[Option, String, String]
+      Chronicle.dictate[IorC[Int]#l, Int](42): Ior[Int, Unit]
+      Chronicle.materialize[IorTC[Option, String]#l, String, Int](
+        IorT.pure[Option, String](42)): IorT[Option, String, Ior[String, Int]]
 
       val fa: IorT[Option, String, Int] = IorT.pure(42)
-      val dictate: IorT[Option, String, Unit] = "err".dictate[IorTC[Option, String]#l]
-      val disclose: IorT[Option, String, Int] = "err".disclose[IorTC[Option, String]#l, Int]
-      val confess: IorT[Option, String, Int] = "err".confess[IorTC[Option, String]#l, Int]
-      val memento: IorT[Option, String, Either[String, Int]] = fa.memento
-      val absolve: IorT[Option, String, Int] = fa.absolve(42)
-      val condemn: IorT[Option, String, Int] = fa.condemn
-      val retcon: IorT[Option, String, Int] = fa.retcon((str: String) => str + "err")
-      val chronicle: IorT[Option, String, Int] =
-        Ior.both("hello", 42).chronicle[IorTC[Option, String]#l]
+
+      "err".dictate[IorTC[Option, String]#l]: IorT[Option, String, Unit]
+      "err".disclose[IorTC[Option, String]#l, Int]: IorT[Option, String, Int]
+      "err".confess[IorTC[Option, String]#l, Int]: IorT[Option, String, Int]
+      fa.memento: IorT[Option, String, Either[String, Int]]
+      fa.absolve(42): IorT[Option, String, Int]
+      fa.condemn: IorT[Option, String, Int]
+      fa.retcon((str: String) => str + "err"): IorT[Option, String, Int]
+      Ior.both("hello", 42).chronicle[IorTC[Option, String]#l]: IorT[Option, String, Int]
     }
   }
 }

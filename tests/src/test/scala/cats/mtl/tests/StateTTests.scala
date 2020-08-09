@@ -22,8 +22,6 @@ import cats.arrow.FunctionK
 import cats.data.{Kleisli, State, StateT}
 import cats.laws.discipline.SerializableTests
 import cats.mtl.laws.discipline.StatefulTests
-import cats.laws.discipline.arbitrary._
-import cats.laws.discipline._
 import cats.laws.discipline.eq._
 import org.scalacheck.{Arbitrary, Gen}
 import cats.instances.all._
@@ -65,9 +63,6 @@ class StateTTests extends StateTTestsBase {
   Stateful[State[Int, *], Int]
 
   {
-    implicit def slowCatsLawsEqForFn1[A, B](implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] =
-      tweakableCatsLawsEqForFn1[A, B](20)
-
     checkAll(
       "ReaderT[StateT[Option, String, ?], Int, String]",
       StatefulTests[ReaderTIntOverStateTStringOverOption, String].stateful[String])

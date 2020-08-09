@@ -53,7 +53,7 @@ private[mtl] trait TellMonadPartialOrder[F[_], G[_], L] extends Tell[G, L] {
   val lift: MonadPartialOrder[F, G]
   val F: Tell[F, L]
 
-  override val functor = lift.monadG
+  override def functor = lift.monadG
   override def tell(l: L) = lift(F.tell(l))
 }
 
