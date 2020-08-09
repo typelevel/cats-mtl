@@ -142,6 +142,7 @@ lazy val docs = project
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(coreJVM, lawsJVM),
     docsMappingsAPIDir := "api",
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
+    scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
     mdoc / fork:= true,
     ScalaUnidoc / unidoc / fork := true,
