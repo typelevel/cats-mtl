@@ -176,7 +176,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-testkit"         % CatsVersion,
-      "org.typelevel" %%% "discipline-scalatest" % "2.0.0"))
+      "org.typelevel" %%% "discipline-scalatest" % "2.0.1"))
   .settings(noPublishSettings)
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
