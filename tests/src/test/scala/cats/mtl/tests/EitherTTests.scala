@@ -19,7 +19,6 @@ package mtl
 package tests
 
 import cats.data._
-import cats.instances.all._
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
 

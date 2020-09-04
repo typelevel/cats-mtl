@@ -18,8 +18,6 @@ package cats
 package mtl
 package tests
 
-import cats.implicits._
-
 final class SummonableImplicits extends BaseSuite {
 
   // test instances.all._
