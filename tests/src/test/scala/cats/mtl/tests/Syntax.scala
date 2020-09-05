@@ -26,7 +26,6 @@ final class Syntax extends BaseSuite {
   // test instances.all._
   //noinspection ScalaUnusedSymbol
   {
-    import cats.instances.all._
     import cats.syntax.apply._
     import cats.mtl.implicits._
     import cats.data._

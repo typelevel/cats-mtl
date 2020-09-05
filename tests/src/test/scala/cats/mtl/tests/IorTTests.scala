@@ -20,7 +20,6 @@ package tests
 
 import cats.arrow.FunctionK
 import cats.data.Ior
-import cats.instances.all._
 import cats.laws.discipline.arbitrary._
 import cats.mtl.laws.discipline._
 import org.scalacheck._

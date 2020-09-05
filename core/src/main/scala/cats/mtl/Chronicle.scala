@@ -18,7 +18,7 @@ package cats
 package mtl
 
 import cats.data.{ReaderWriterStateT => RWST, IndexedReaderWriterStateT => IndexedRWST, _}
-import cats.implicits._
+import cats.syntax.all._
 import cats.data.Ior.Both
 
 import scala.annotation.implicitNotFound

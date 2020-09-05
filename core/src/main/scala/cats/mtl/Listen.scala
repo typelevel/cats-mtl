@@ -18,7 +18,7 @@ package cats
 package mtl
 
 import cats.data.{EitherT, StateT, IorT, Kleisli, OptionT, ReaderWriterStateT => RWST, WriterT}
-import cats.implicits._
+import cats.syntax.all._
 import cats.data.Ior
 
 import scala.annotation.implicitNotFound
