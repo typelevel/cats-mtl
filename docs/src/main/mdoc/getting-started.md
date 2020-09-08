@@ -128,15 +128,15 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 
 cats-mtl provides the following "MTL classes":
 
- - [Ask](mtl-classes/ask.md)
- - [Local](mtl-classes/local.md)
- - [Raise](mtl-classes/raise.md)
- - [Handle](mtl-classes/handle.md)
- - [Tell](mtl-classes/tell.md)
- - [Listen](mtl-classes/listen.md)
+ - [Ask](mtl-classes/ask.html)
+ - [Local](mtl-classes/local.html)
+ - [Raise](mtl-classes/raise.html)
+ - [Handle](mtl-classes/handle.html)
+ - [Tell](mtl-classes/tell.html)
+ - [Listen](mtl-classes/listen.html)
  - Censor
- - [Stateful](mtl-classes/stateful.md)
- - [Chronicle](mtl-classes/chronicle.md)
+ - [Stateful](mtl-classes/stateful.html)
+ - [Chronicle](mtl-classes/chronicle.html)
 
 If you're wondering why some of these are based on `Monad` and others on `Functor` or `Applicative`, 
  it is because these are the smallest superclass dependencies practically possible with which you can define their laws.
