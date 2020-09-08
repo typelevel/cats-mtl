@@ -144,7 +144,8 @@ lazy val docs = project
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
     scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
-    mdoc / fork:= true,
+    mdoc / fork := true,
+    fatalWarningsInCI := false,
     ScalaUnidoc / unidoc / fork := true,
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
