@@ -125,6 +125,7 @@ lazy val docs = project
         Map("title" -> "Home", "section" -> "home", "position" -> "0")
       )
     ),
+    micrositeExtraMdFilesOutput := resourceManaged.value / "jekyll",
     micrositeGithubRepo := "cats-mtl",
     micrositePalette := Map(
       "brand-primary" -> "#7B7998",
