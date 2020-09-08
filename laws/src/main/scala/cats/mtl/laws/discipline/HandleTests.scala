@@ -30,13 +30,10 @@ trait HandleTests[F[_], E] extends RaiseTests[F, E] {
 
   def handle[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
-      ArbEE: Arbitrary[E => E],
       ArbE: Arbitrary[E],
       CogenA: Cogen[A],
       CogenE: Cogen[E],
-      EqFU: Eq[F[E]],
       EqFA: Eq[F[A]],
-      EqFUnit: Eq[F[Unit]],
       EqEitherA: Eq[F[Either[E, A]]],
       EqEitherUnit: Eq[F[Either[E, Unit]]]): RuleSet = {
     new DefaultRuleSet(

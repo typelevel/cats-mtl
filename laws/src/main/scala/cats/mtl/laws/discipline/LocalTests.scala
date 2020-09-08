@@ -33,7 +33,6 @@ trait LocalTests[F[_], E] extends AskTests[F, E] {
       ArbFAB: Arbitrary[F[A => B]],
       ArbEE: Arbitrary[E => E],
       ArbE: Arbitrary[E],
-      CogenA: Cogen[A],
       CogenE: Cogen[E],
       EqFU: Eq[F[E]],
       EqFA: Eq[F[A]],

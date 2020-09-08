@@ -31,11 +31,8 @@ trait ChronicleTests[F[_], E] extends Laws {
   def laws: ChronicleLaws[F, E] = ChronicleLaws[F, E]
 
   def chronicle[A: Arbitrary](
-      implicit ArbFA: Arbitrary[F[A]],
-      ArbE: Arbitrary[E],
-      CogenA: Cogen[A],
+      implicit ArbE: Arbitrary[E],
       CogenE: Cogen[E],
-      EqFU: Eq[F[E]],
       EqFA: Eq[F[A]],
       EqFUnit: Eq[F[Unit]],
       EqFEIorUnit: Eq[F[E Ior Unit]],

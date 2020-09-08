@@ -31,10 +31,7 @@ trait AskTests[F[_], E] extends Laws {
 
   def ask[A: Arbitrary](
       implicit ArbFA: Arbitrary[F[A]],
-      ArbE: Arbitrary[E],
-      CogenA: Cogen[A],
       CogenE: Cogen[E],
-      EqFU: Eq[F[E]],
       EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "ask",
