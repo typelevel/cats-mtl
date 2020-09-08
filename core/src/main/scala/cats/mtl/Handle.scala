@@ -40,7 +40,19 @@ trait Handle[F[_], E] extends Raise[F, E] with Serializable {
     handleWith(fa)(e => applicative.pure(f(e)))
 }
 
-private[mtl] trait HandleInstances {
+private[mtl] trait HandleLowPriorityInstances {
+  implicit final def handleForApplicativeError[F[_], E](
+      implicit F: ApplicativeError[F, E]): Handle[F, E] =
+    new Handle[F, E] {
+      def applicative: Applicative[F] = F
+
+      def raise[E2 <: E, A](e: E2): F[A] = F.raiseError(e)
+
+      def handleWith[A](fa: F[A])(f: E => F[A]): F[A] = F.handleErrorWith(fa)(f)
+    }
+}
+
+private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
 
   implicit final def handleEitherT[M[_], E](
       implicit M: Monad[M]): Handle[EitherTC[M, E]#l, E] = {
