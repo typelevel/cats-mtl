@@ -24,7 +24,6 @@ import cats.laws.discipline.SerializableTests
 import cats.mtl.laws.discipline.StatefulTests
 import cats.laws.discipline.eq._
 import org.scalacheck.{Arbitrary, Gen}
-import cats.instances.all._
 
 class StateTTestsBase extends BaseSuite {
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =

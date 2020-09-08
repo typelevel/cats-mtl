@@ -19,7 +19,6 @@ package cats.mtl.tests
 import cats.arrow.FunctionK
 import cats.{~>, Eq, Monad, Monoid}
 import cats.data.{ReaderWriterState, ReaderWriterStateT}
-import cats.implicits._
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline._
 import cats.laws.discipline.eq._
