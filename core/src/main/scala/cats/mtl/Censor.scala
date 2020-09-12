@@ -99,10 +99,7 @@ private[mtl] trait CensorInstances extends LowPriorityCensorInstances {
       val monoid: Monoid[L] = L
 
       def censor[A](faf: RWST[M, R, L, S, A])(f: L => L): RWST[M, R, L, S, A] =
-        RWST((e, s) =>
-          faf.run(e, s).map {
-            case (l, s, a) => (f(l), s, a)
-          })
+        RWST((e, s) => faf.run(e, s).map { case (l, s, a) => (f(l), s, a) })
 
     }
 

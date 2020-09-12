@@ -52,9 +52,7 @@ trait Listen[F[_], L] extends Tell[F, L] with Serializable {
   def listen[A](fa: F[A]): F[(A, L)]
 
   def listens[A, B](fa: F[A])(f: L => B): F[(A, B)] =
-    functor.map(listen[A](fa)) {
-      case (a, l) => (a, f(l))
-    }
+    functor.map(listen[A](fa)) { case (a, l) => (a, f(l)) }
 }
 
 private[mtl] abstract class ListenWriterT[F[_]: Applicative, L]
@@ -87,9 +85,8 @@ private[mtl] abstract class ListenStateT[F[_]: Applicative, S, L](implicit F: Li
   def listen[A](fa: StateT[F, S, A]) =
     StateT applyF {
       fa.runF map { f => (s: S) =>
-        F.listen(f(s)) map {
-          case ((s, a), l) =>
-            (s, (a, l))
+        F.listen(f(s)) map { case ((s, a), l) =>
+          (s, (a, l))
         }
       }
     }
@@ -121,11 +118,7 @@ private[mtl] abstract class ListenRWST[F[_]: Applicative, E, L, S]
   def tell(l: L) = RWST.tell(l)
   def listen[A](fa: RWST[F, E, L, S, A]) =
     RWST applyF {
-      fa.runF map { f => (e: E, s: S) =>
-        f(e, s) map {
-          case (l, s, a) => (l, s, (a, l))
-        }
-      }
+      fa.runF map { f => (e: E, s: S) => f(e, s) map { case (l, s, a) => (l, s, (a, l)) } }
     }
 }
 
@@ -148,9 +141,8 @@ private[mtl] abstract class ListenInductiveRWST[F[_]: Applicative, E, L0: Monoid
   def listen[A](fa: RWST[F, E, L0, S, A]) =
     RWST applyF {
       fa.runF map { f => (e: E, s: S) =>
-        F.listen(f(e, s)) map {
-          case ((l0, s, a), l) =>
-            (l0, s, (a, l))
+        F.listen(f(e, s)) map { case ((l0, s, a), l) =>
+          (l0, s, (a, l))
         }
       }
     }
