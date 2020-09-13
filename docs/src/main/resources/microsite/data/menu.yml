@@ -48,12 +48,3 @@ options:
     url: mtl-classes/handle.html
     menu_type: mtlclasses
     menu_section: mtlclasses
-
-  #############################
-  # MTL Classes Menu Options #
-  #############################
-
-  - title: Lifting Classes
-    url: lifting-classes.html
-    menu_type: lifting
-    menu_section: lifting

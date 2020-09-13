@@ -1,17 +1,8 @@
 <img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo-microsite.png" width="200px" height="231px" align="right">
 
-
-## cats-mtl
-
-[![Build Status](https://api.travis-ci.org/typelevel/cats-mtl.svg)](https://travis-ci.org/typelevel/cats-mtl)
-[![codecov.io](http://codecov.io/github/typelevel/cats-mtl/coverage.svg?branch=master)](http://codecov.io/github/typelevel/cats-mtl?branch=master) [![Join the chat at https://gitter.im/typelevel/cats-mtl](https://badges.gitter.im/typelevel/cats-mtl.svg)](https://gitter.im/typelevel/cats-mtl)
-
-Transformer typeclasses for cats.
+## Cats MTL
 
 Provides transformer typeclasses for cats' Monads, Applicatives and Functors.
-
-As well, there are some abstractions thrown in that allow you
-to generically lift MTL typeclasses through transformers.
 
 You can have multiple cats-mtl transformer typeclasses in scope at once
 without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
@@ -19,14 +10,14 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 ## Usage
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
+libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.0.0"
 ```
 
 If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
 
-Cross-builds are available for Scala 2.11–2.13, Scala.js major version 0.6.x.
+Cross-builds are available for Scala 2.12 and 2.13, Scala.js major version 1.x.
 
-If you're not sure where to start or what Cats-mtl even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
+If you're not sure where to start or what Cats MTL even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
 
 ### Supported Classes
 
@@ -43,7 +34,7 @@ If you're not sure where to start or what Cats-mtl even is, please refer to the 
 The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws) for more.
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "0.7.0" % Test
+libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.0.0" % Test
 ```
 
 These laws are compatible with both Specs2 and ScalaTest.
@@ -60,11 +51,6 @@ Related Cats links (the core):
 1. Website: [typelevel.org/cats/](https://typelevel.org/cats/)
 2. ScalaDoc: [typelevel.org/cats/api/](https://typelevel.org/cats/api/)
 
-
-## Migrating from Cats pre-1.0.0
-
-cats-core used to provide various mtl-classes which were moved to cats-mtl and split up.
-You can find the migration guide [here](https://typelevel.org/cats-mtl/migration)
 
 ### Community
 

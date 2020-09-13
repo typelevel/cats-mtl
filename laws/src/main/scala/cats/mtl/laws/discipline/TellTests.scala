@@ -20,19 +20,14 @@ package laws
 package discipline
 
 import org.scalacheck.Prop.{forAll => ∀}
-import org.scalacheck.{Arbitrary, Cogen}
+import org.scalacheck.Arbitrary
 import org.typelevel.discipline.Laws
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait TellTests[F[_], L] extends Laws {
   def laws: TellLaws[F, L]
 
-  def tell[A: Arbitrary](
-      implicit ArbFA: Arbitrary[F[A]],
-      ArbL: Arbitrary[L],
-      CogenA: Cogen[A],
-      EqFU: Eq[F[Unit]],
-      EqFA: Eq[F[A]]): RuleSet = {
+  def tell[A: Arbitrary](implicit ArbL: Arbitrary[L], EqFA: Eq[F[A]]): RuleSet = {
     new DefaultRuleSet(
       name = "tell",
       parent = None,

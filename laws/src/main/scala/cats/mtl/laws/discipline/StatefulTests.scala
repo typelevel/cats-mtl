@@ -30,8 +30,7 @@ trait StatefulTests[F[_], S] extends Laws {
   def laws: StatefulLaws[F, S] = StatefulLaws[F, S]
 
   def stateful[A: Arbitrary](
-      implicit ArbFA: Arbitrary[F[A]],
-      ArbS: Arbitrary[S],
+      implicit ArbS: Arbitrary[S],
       CogenS: Cogen[S],
       EqFU: Eq[F[Unit]],
       EqFS: Eq[F[S]]): RuleSet = {

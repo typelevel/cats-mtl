@@ -71,9 +71,6 @@ class ReaderTTests extends BaseSuite {
   {
 
     {
-      implicit def slowCatsLawsEqForFn1[A, B](implicit A: Arbitrary[A], B: Eq[B]): Eq[A => B] =
-        tweakableCatsLawsEqForFn1[A, B](20)
-
       checkAll(
         "ReaderT[ReaderT[Option, String, *], Int, *]",
         LocalTests[ReaderTIntOverReaderTStringOverOption, String].local[String, String])

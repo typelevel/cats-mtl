@@ -54,7 +54,7 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
     List("gem install jekyll -v 4.0.0"),
     name = Some("Install Jekyll")))
 
-ThisBuild / githubWorkflowBuild := WorkflowStep.Sbt(List("ci"))
+ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("ci")))
 
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
@@ -125,6 +125,7 @@ lazy val docs = project
         Map("title" -> "Home", "section" -> "home", "position" -> "0")
       )
     ),
+    micrositeExtraMdFilesOutput := resourceManaged.value / "main" / "jekyll",
     micrositeGithubRepo := "cats-mtl",
     micrositePalette := Map(
       "brand-primary" -> "#7B7998",
@@ -142,8 +143,10 @@ lazy val docs = project
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(coreJVM, lawsJVM),
     docsMappingsAPIDir := "api",
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
+    scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
-    mdoc / fork:= true,
+    mdoc / fork := true,
+    fatalWarningsInCI := false,
     ScalaUnidoc / unidoc / fork := true,
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
