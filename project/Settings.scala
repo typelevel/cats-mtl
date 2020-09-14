@@ -10,9 +10,9 @@ object Settings extends AutoPlugin {
 
   override def projectSettings = Seq(
     homepage := Some(url("https://typelevel.org/cats-mtl/")),
-
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/typelevel/cats-mtl"),
-        "git@github.com:typelevel/cats-mtl.git")))
+        "git@github.com:typelevel/cats-mtl.git"))
+  )
 }

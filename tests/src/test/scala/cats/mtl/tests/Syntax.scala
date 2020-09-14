@@ -104,11 +104,7 @@ final class Syntax extends BaseSuite {
         bar[F] *> Bar(42).tell
 
       implicit val mf: Monoid[Foo] =
-        Monoid.instance(
-          Bar(Monoid.empty[Int]),
-          {
-            case (Bar(a), Bar(b)) => Bar(a |+| b)
-          })
+        Monoid.instance(Bar(Monoid.empty[Int]), { case (Bar(a), Bar(b)) => Bar(a |+| b) })
 
       val _ = foo[WriterT[Option, Foo, *]]
     }
