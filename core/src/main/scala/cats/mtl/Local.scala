@@ -77,6 +77,13 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
       def ask[E2 >: E] = Kleisli.ask[F, E2]
     }
 
+  implicit def localForFunction[E]: Local[E => *, E] =
+    new Local[E => *, E] {
+      def local[A](fa: E => A)(f: E => E): E => A = fa compose f
+      val applicative: Applicative[E => *] = Applicative[E => *]
+      def ask[E2 >: E]: E => E2 = identity[E]
+    }
+
   implicit def baseLocalForRWST[F[_], E, L, S](
       implicit F: Monad[F],
       L: Monoid[L]): Local[RWST[F, E, L, S, *], E] =
@@ -104,6 +111,13 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
       val F: Ask[F, E] = F0
       val lift: MonadPartialOrder[F, RWST[F, R, L, S, *]] =
         MonadPartialOrder.monadPartialOrderForRWST[F, R, L, S]
+    }
+
+  implicit def localForStateId[E]: Local[StateT[Id, E, *], E] =
+    new Local[StateT[Id, E, *], E] {
+      def local[A](fa: StateT[Id, E, A])(f: E => E): StateT[Id, E, A] = fa.modify(f)
+      val applicative: Applicative[StateT[Id, E, *]] = Applicative[StateT[Id, E, *]]
+      def ask[E2 >: E]: StateT[Id, E, E2] = StateT.get[Id, E].asInstanceOf[StateT[Id, E, E2]]
     }
 
   implicit def localForStateT[F[_]: Monad, E, S](
