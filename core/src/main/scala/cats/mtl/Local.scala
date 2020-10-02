@@ -116,7 +116,8 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
   implicit def localForStateId[E]: Local[StateT[Id, E, *], E] =
     new Local[StateT[Id, E, *], E] {
       def local[A](fa: StateT[Id, E, A])(f: E => E): StateT[Id, E, A] = fa.modify(f)
-      val applicative: Applicative[StateT[Id, E, *]] = Applicative[StateT[Id, E, *]]
+      val applicative: Applicative[StateT[Id, E, *]] =
+        IndexedStateT.catsDataMonadForIndexedStateT[Id, E]
       def ask[E2 >: E]: StateT[Id, E, E2] = StateT.get[Id, E].asInstanceOf[StateT[Id, E, E2]]
     }
 
