@@ -26,10 +26,10 @@ In general, however, <code class="highlighter-rouge">raiseError</code> from <cod
 <span class="o">}</span>
 
 <span class="k">val</span> <span class="nv">valid</span> <span class="k">=</span> <span class="n">parseNumber</span><span class="o">[</span><span class="kt">Either</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"123"</span><span class="o">)</span>
-<span class="c1">// valid: Either[String, Int] = Right(123)</span>
+<span class="c1">// valid: Either[String, Int] = Right(value = 123)</span>
 <span class="k">val</span> <span class="nv">invalid</span> <span class="k">=</span> <span class="n">parseNumber</span><span class="o">[</span><span class="kt">Either</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"123abc"</span><span class="o">)</span>
 <span class="c1">// invalid: Either[String, Int] = Left(</span>
-<span class="c1">//   "'123abc' could not be parsed as a number"</span>
+<span class="c1">//   value = "'123abc' could not be parsed as a number"</span>
 <span class="c1">// )</span>
 </code></pre></div></div>
 </section></div></div></div></div><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>

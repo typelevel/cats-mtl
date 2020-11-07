@@ -45,10 +45,15 @@ Instances for <code class="highlighter-rouge">Tell</code> include <code class="h
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">val</span> <span class="o">(</span><span class="n">log</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span><span class="k">:</span> <span class="o">(</span><span class="kt">Chain</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="nc">ServiceResult</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">serviceCallWithLog</span><span class="o">[</span><span class="kt">Writer</span><span class="o">[</span><span class="kt">Chain</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>, <span class="kt">?</span><span class="o">]](</span><span class="nc">ServiceParams</span><span class="o">(</span><span class="s">"business"</span><span class="o">,</span> <span class="mi">42</span><span class="o">)).</span><span class="py">run</span>
 <span class="c1">// log: Chain[String] = Append(</span>
-<span class="c1">//   Singleton("Call to service with business and 42"),</span>
-<span class="c1">//   Singleton("Service returned: userId: 0; companies: List(Raven Enterprises)")</span>
+<span class="c1">//   leftNE = Singleton(a = "Call to service with business and 42"),</span>
+<span class="c1">//   rightNE = Singleton(</span>
+<span class="c1">//     a = "Service returned: userId: 0; companies: List(Raven Enterprises)"</span>
+<span class="c1">//   )</span>
 <span class="c1">// )</span>
-<span class="c1">// result: ServiceResult = ServiceResult(0, List("Raven Enterprises"))</span>
+<span class="c1">// result: ServiceResult = ServiceResult(</span>
+<span class="c1">//   userId = 0,</span>
+<span class="c1">//   companies = List("Raven Enterprises")</span>
+<span class="c1">// )</span>
 </code></pre></div></div>
 
 <p>And voila, it works as expected.

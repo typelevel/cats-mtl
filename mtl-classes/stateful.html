@@ -82,7 +82,10 @@ As the name suggests, <code class="highlighter-rouge">State</code> and <code cla
 <span class="c1">// Called service with ab94d2</span>
 <span class="c1">// Called service with ab94d2</span>
 <span class="c1">// result: Map[String, ServiceResult] = Map()</span>
-<span class="c1">// cache: ServiceResult = ServiceResult(0, List("Raven Enterprises"))</span>
+<span class="c1">// cache: ServiceResult = ServiceResult(</span>
+<span class="c1">//   id = 0,</span>
+<span class="c1">//   companies = List("Raven Enterprises")</span>
+<span class="c1">// )</span>
 </code></pre></div></div>
 
 <p>As per usual, Cats-mtl provides <code class="highlighter-rouge">Stateful</code> instances for all monad transformer stacks where <code class="highlighter-rouge">StateT</code> appears.</p>

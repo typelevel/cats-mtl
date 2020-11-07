@@ -36,9 +36,11 @@ It adds the <code class="highlighter-rouge">handleWith</code> function, which ca
 <span class="o">}</span>
 
 <span class="k">val</span> <span class="nv">err</span> <span class="k">=</span> <span class="n">notRecovered</span><span class="o">[</span><span class="kt">Either</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">?</span><span class="o">]]</span>
-<span class="c1">// err: Either[String, Boolean] = Left("'foo' could not be parsed as a number")</span>
+<span class="c1">// err: Either[String, Boolean] = Left(</span>
+<span class="c1">//   value = "'foo' could not be parsed as a number"</span>
+<span class="c1">// )</span>
 <span class="k">val</span> <span class="nv">result</span> <span class="k">=</span> <span class="n">recovered</span><span class="o">[</span><span class="kt">Either</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">?</span><span class="o">]]</span>
-<span class="c1">// result: Either[String, Boolean] = Right(false)</span>
+<span class="c1">// result: Either[String, Boolean] = Right(value = false)</span>
 </code></pre></div></div>
 </section></div></div></div></div><script src="/cats-mtl/highlight/highlight.pack.js"></script><script>
 // For all code blocks, copy the language from the containing div

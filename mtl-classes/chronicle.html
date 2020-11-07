@@ -82,19 +82,25 @@ We can do that with <code class="highlighter-rouge">Ior</code>:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">luka</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"Luka"</span><span class="o">,</span> <span class="s">"secret"</span><span class="o">)</span>
 <span class="c1">// luka: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Left(</span>
-<span class="c1">//   Singleton("Password too short")</span>
+<span class="c1">//   a = Singleton(a = "Password too short")</span>
 <span class="c1">// )</span>
 <span class="k">val</span> <span class="nv">john</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"john.doe"</span><span class="o">,</span> <span class="s">"secret123"</span><span class="o">)</span>
 <span class="c1">// john: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Both(</span>
-<span class="c1">//   Append(</span>
-<span class="c1">//     Singleton("Dot in name is deprecated"),</span>
-<span class="c1">//     Singleton("Password should be longer")</span>
+<span class="c1">//   a = Append(</span>
+<span class="c1">//     leftNE = Singleton(a = "Dot in name is deprecated"),</span>
+<span class="c1">//     rightNE = Singleton(a = "Password should be longer")</span>
 <span class="c1">//   ),</span>
-<span class="c1">//   User(Username("john.doe"), Password("secret123"))</span>
+<span class="c1">//   b = User(</span>
+<span class="c1">//     name = Username(value = "john.doe"),</span>
+<span class="c1">//     pw = Password(value = "secret123")</span>
+<span class="c1">//   )</span>
 <span class="c1">// )</span>
 <span class="k">val</span> <span class="nv">jane</span> <span class="k">=</span> <span class="n">validateUser</span><span class="o">[</span><span class="kt">Ior</span><span class="o">[</span><span class="kt">Failures</span>, <span class="kt">?</span><span class="o">]](</span><span class="s">"jane"</span><span class="o">,</span> <span class="s">"reallysecurepassword"</span><span class="o">)</span>
 <span class="c1">// jane: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Right(</span>
-<span class="c1">//   User(Username("jane"), Password("reallysecurepassword"))</span>
+<span class="c1">//   b = User(</span>
+<span class="c1">//     name = Username(value = "jane"),</span>
+<span class="c1">//     pw = Password(value = "reallysecurepassword")</span>
+<span class="c1">//   )</span>
 <span class="c1">// )</span>
 </code></pre></div></div>
 

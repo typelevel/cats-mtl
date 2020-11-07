@@ -12,7 +12,6 @@ This is because, the more monad transformers you add to your stack the more type
 For example, here’s a small example of a method that reads the current state in <code class="highlighter-rouge">StateT</code> and raises an error using <code class="highlighter-rouge">EitherT</code>:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.data._</span>
-<span class="k">import</span> <span class="nn">cats.implicits._</span>
 
 <span class="k">def</span> <span class="nf">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
   <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nv">EitherT</span><span class="o">.</span><span class="py">liftF</span><span class="o">(</span><span class="nv">StateT</span><span class="o">.</span><span class="py">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
@@ -63,7 +62,6 @@ So without further ado, let’s look at what the program from earlier looks when
 <p>First, the original program again:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.data._</span>
-<span class="k">import</span> <span class="nn">cats.implicits._</span>
 
 <span class="k">def</span> <span class="nf">checkState</span><span class="k">:</span> <span class="kt">EitherT</span><span class="o">[</span><span class="kt">StateT</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span>, <span class="kt">?</span><span class="o">]</span>, <span class="kt">Exception</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
   <span class="n">currentState</span> <span class="k">&lt;-</span> <span class="nv">EitherT</span><span class="o">.</span><span class="py">liftF</span><span class="o">(</span><span class="nv">StateT</span><span class="o">.</span><span class="py">get</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">Int</span><span class="o">])</span>
@@ -77,7 +75,7 @@ So without further ado, let’s look at what the program from earlier looks when
 <p>And now the mtl version:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.MonadError</span>
-<span class="k">import</span> <span class="nn">cats.implicits._</span>
+<span class="k">import</span> <span class="nn">cats.syntax.all._</span>
 <span class="k">import</span> <span class="nn">cats.mtl.Stateful</span>
 
 <span class="k">def</span> <span class="nf">checkState</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]](</span><span class="k">implicit</span> <span class="n">S</span><span class="k">:</span> <span class="kt">Stateful</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Int</span><span class="o">],</span> <span class="n">E</span><span class="k">:</span> <span class="kt">MonadError</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Exception</span><span class="o">])</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="k">for</span> <span class="o">{</span>
@@ -116,15 +114,15 @@ MTL type classes representing effects and a way to lift instances of these class
 <p>cats-mtl provides the following “MTL classes”:</p>
 
 <ul>
-  <li><a href="mtl-classes/ask.html">Ask</a></li>
-  <li><a href="mtl-classes/local.html">Local</a></li>
-  <li><a href="mtl-classes/raise.html">Raise</a></li>
-  <li><a href="mtl-classes/handle.html">Handle</a></li>
-  <li><a href="mtl-classes/tell.html">Tell</a></li>
-  <li><a href="mtl-classes/listen.html">Listen</a></li>
+  <li><a href="mtl-classes/ask.md">Ask</a></li>
+  <li><a href="mtl-classes/local.md">Local</a></li>
+  <li><a href="mtl-classes/raise.md">Raise</a></li>
+  <li><a href="mtl-classes/handle.md">Handle</a></li>
+  <li><a href="mtl-classes/tell.md">Tell</a></li>
+  <li><a href="mtl-classes/listen.md">Listen</a></li>
   <li>Censor</li>
-  <li><a href="mtl-classes/stateful.html">Stateful</a></li>
-  <li><a href="mtl-classes/chronicle.html">Chronicle</a></li>
+  <li><a href="mtl-classes/stateful.md">Stateful</a></li>
+  <li><a href="mtl-classes/chronicle.md">Chronicle</a></li>
 </ul>
 
 <p>If you’re wondering why some of these are based on <code class="highlighter-rouge">Monad</code> and others on <code class="highlighter-rouge">Functor</code> or <code class="highlighter-rouge">Applicative</code>, 
