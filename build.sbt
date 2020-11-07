@@ -3,7 +3,7 @@ import sbtcrossproject.{crossProject, CrossType}
 
 replaceCommandAlias(
   "ci",
-  "; project /; headerCheck; scalafmtCheckAll; clean; testIfRelevant; mimaReportBinaryIssues; makeMicrosite")
+  "; project /; headerCheck; scalafmtCheckAll; clean; testIfRelevant; mimaReportBinaryIssues")
 replaceCommandAlias(
   "release",
   "; reload; project /; +mimaReportBinaryIssues; +publishIfRelevant; sonatypeBundleRelease; publishMicrosite")
@@ -22,8 +22,10 @@ ThisBuild / developers := List(
   Developer("edmundnoble", "Edmund Noble", "", url("https://github.com/edmundnoble/"))
 )
 
+val Scala213 = "2.13.3"
+
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("0.27.0-RC1", "3.0.0-M1", "2.12.12", "2.13.3")
+ThisBuild / crossScalaVersions := Seq("0.27.0-RC1", "3.0.0-M1", "2.12.12", Scala213)
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -35,7 +37,12 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Run(List("gem install jekyll -v 4.0.0"), name = Some("Install Jekyll"))
 )
 
-ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("ci")))
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(List("ci")),
+  WorkflowStep.Sbt(
+    List("makeMicrosite"),
+    name = Some("Make microsite"),
+    cond = Some(s"matrix.scala == '$Scala213'")))
 
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
@@ -76,7 +83,8 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     Compile / packageSrc / mappings ++= {
       val base = (Compile / sourceManaged).value
       (Compile / managedSources).value.map(file => file -> file.relativeTo(base).get.getPath)
-    })
+    }
+  )
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
 
@@ -92,7 +100,6 @@ lazy val docs = project
   .settings(noPublishSettings)
   .settings(
     crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2.")),
-
     micrositeName := "Cats MTL",
     micrositeDescription := "Monad Transformers made easy",
     micrositeAuthor := "Typelevel contributors",
@@ -163,10 +170,9 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, laws)
   .settings(name := "cats-mtl-tests")
-  .settings(
-    libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-testkit"     % CatsVersion,
-      "org.typelevel" %%% "discipline-munit" % "1.0.1"))
+  .settings(libraryDependencies ++= Seq(
+    "org.typelevel" %%% "cats-testkit" % CatsVersion,
+    "org.typelevel" %%% "discipline-munit" % "1.0.1"))
   .settings(noPublishSettings)
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
