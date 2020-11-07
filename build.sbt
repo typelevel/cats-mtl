@@ -42,7 +42,13 @@ ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
 lazy val commonJvmSettings = Seq(
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"))
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+  mimaPreviousArtifacts := {
+    if (isDotty.value)
+      Set()
+    else
+      mimaPreviousArtifacts.value
+  })
 
 lazy val commonJsSettings = Seq(
   scalacOptions += {
