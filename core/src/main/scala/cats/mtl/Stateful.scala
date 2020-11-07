@@ -53,7 +53,7 @@ import scala.annotation.implicitNotFound
  * }}}
  */
 @implicitNotFound(
-  "Could not find an implicit instance of Stateful[${F}, ${S}]. If you wish\nto ensure that the statefulness of this function is confined within this\nscope, you may want to construct a value of type StateT for this call-site,\nrather than ${F}. An example type:\n\n  StateT[${F}, ${S}, *]\n\nIf you wish the state of ${S} to be threaded *through* this location, rather\nthan being scoped entirely within it, you should add an implicit parameter\nof this type to your function. For example:\n\n  (implicit fstate: Stateful[${F}, ${S}}])\n")
+  "Could not find an implicit instance of Stateful[${F}, ${S}]. If you wish\nto ensure that the statefulness of this function is confined within this\nscope, you may want to construct a value of type StateT for this call-site,\nrather than ${F}. An example type:\n\n  StateT[${F}, ${S}, *]\n\nIf you wish the state of ${S} to be threaded *through* this location, rather\nthan being scoped entirely within it, you should add an implicit parameter\nof this type to your function. For example:\n\n  (implicit fstate: Stateful[${F}, ${S}])\n")
 trait Stateful[F[_], S] extends Serializable {
   def monad: Monad[F]
 

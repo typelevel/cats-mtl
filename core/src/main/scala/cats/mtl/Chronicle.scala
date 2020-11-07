@@ -24,7 +24,7 @@ import cats.data.Ior.Both
 import scala.annotation.implicitNotFound
 
 @implicitNotFound(
-  "Could not find an implicit instance of Chronicle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may\nwant to construct a value of type IorT for this call-site, rather than \n${F}. An example type:\n\n  IorT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The IorT will\n\"catch\" and accumulate the errors of type ${E}. Unlike try/catch, IorT\nmay produce errors alongside a valid result.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fchron: Chronicle[${F}, ${E}}])\n")
+  "Could not find an implicit instance of Chronicle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may\nwant to construct a value of type IorT for this call-site, rather than \n${F}. An example type:\n\n  IorT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The IorT will\n\"catch\" and accumulate the errors of type ${E}. Unlike try/catch, IorT\nmay produce errors alongside a valid result.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fchron: Chronicle[${F}, ${E}])\n")
 trait Chronicle[F[_], E] extends Serializable {
   val monad: Monad[F]
 
