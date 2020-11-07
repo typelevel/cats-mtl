@@ -24,7 +24,7 @@ import org.scalacheck.{Arbitrary, Cogen}
 import cats.kernel.laws.discipline.catsLawsIsEqToProp
 
 trait LocalTests[F[_], E] extends AskTests[F, E] {
-  implicit val localInstance: Local[F, E]
+  implicit def localInstance: Local[F, E]
 
   override def laws: LocalLaws[F, E] = LocalLaws[F, E]
 
@@ -52,8 +52,8 @@ trait LocalTests[F[_], E] extends AskTests[F, E] {
 object LocalTests {
   def apply[F[_], E](implicit instance0: Local[F, E]): LocalTests[F, E] = {
     new LocalTests[F, E] {
-      override lazy val localInstance: Local[F, E] = instance0
-      override lazy val askInstance: Ask[F, E] = instance0
+      override val localInstance: Local[F, E] = instance0
+      override val askInstance: Ask[F, E] = instance0
     }
   }
 }

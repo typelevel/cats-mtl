@@ -24,23 +24,24 @@ import cats.syntax.apply._
 import cats.syntax.functor._
 
 trait AskLaws[F[_], E] {
-  implicit val askInstance: Ask[F, E]
-  import askInstance._
-  implicit val applicative: Applicative[F] = askInstance.applicative
+
+  implicit def askInstance: Ask[F, E]
+
+  implicit def applicative: Applicative[F] = askInstance.applicative
 
   // external law:
   def askAddsNoEffects[A](fa: F[A]): IsEq[F[A]] =
-    ask *> fa <-> fa
+    askInstance.ask *> fa <-> fa
 
   // internal law:
   def readerIsAskAndMap[A](f: E => A): IsEq[F[A]] =
-    ask.map(f) <-> reader(f)
+    askInstance.ask.map(f) <-> askInstance.reader(f)
 }
 
 object AskLaws {
   def apply[F[_], E](implicit instance0: Ask[F, E]): AskLaws[F, E] = {
     new AskLaws[F, E] {
-      override lazy val askInstance = instance0
+      override val askInstance = instance0
     }
   }
 }

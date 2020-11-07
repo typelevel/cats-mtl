@@ -24,7 +24,7 @@ class HandleTests extends BaseSuite {
   test("handleForApplicativeError") {
     case class Foo[A](bar: A)
 
-    implicit def fooApplicativeError =
+    implicit def fooApplicativeError: ApplicativeError[Foo, String] =
       new ApplicativeError[Foo, String] {
         def ap[A, B](ff: Foo[A => B])(fa: Foo[A]): Foo[B] = ???
 

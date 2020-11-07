@@ -3,15 +3,15 @@ import sbtcrossproject.{crossProject, CrossType}
 
 replaceCommandAlias(
   "ci",
-  "; project /; headerCheck; scalafmtCheckAll; clean; test; mimaReportBinaryIssues; makeMicrosite")
+  "; project /; headerCheck; scalafmtCheckAll; clean; testIfRelevant; mimaReportBinaryIssues; makeMicrosite")
 replaceCommandAlias(
   "release",
-  "; reload; project /; +mimaReportBinaryIssues; +publish; sonatypeBundleRelease; publishMicrosite")
+  "; reload; project /; +mimaReportBinaryIssues; +publishIfRelevant; sonatypeBundleRelease; publishMicrosite")
 
 ThisBuild / organization := "org.typelevel"
 ThisBuild / organizationName := "Typelevel"
 
-ThisBuild / baseVersion := "1.0"
+ThisBuild / baseVersion := "1.1"
 
 ThisBuild / developers := List(
   Developer("SystemFw", "Fabio Labella", "", url("https://github.com/SystemFw/")),
@@ -23,7 +23,7 @@ ThisBuild / developers := List(
 )
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("2.12.11", "2.13.2")
+ThisBuild / crossScalaVersions := Seq("3.0.0-M1", "2.12.12", "2.13.3")
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -39,6 +39,8 @@ ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("ci")))
 
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
+ThisBuild / testFrameworks += new TestFramework("munit.Framework")
+
 lazy val commonJvmSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"))
 
@@ -48,10 +50,11 @@ lazy val commonJsSettings = Seq(
     val g = s"https://raw.githubusercontent.com/typelevel/cats/v${version.value}"
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
-  doctestGenTests := Seq.empty
+  doctestGenTests := Seq.empty,
+  crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2."))
 )
 
-val CatsVersion = "2.2.0"
+val CatsVersion = "2.3.0-M2"
 
 lazy val root = project
   .in(file("."))
@@ -67,8 +70,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     Compile / packageSrc / mappings ++= {
       val base = (Compile / sourceManaged).value
       (Compile / managedSources).value.map(file => file -> file.relativeTo(base).get.getPath)
-    }
-  )
+    })
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
 
@@ -83,6 +85,8 @@ lazy val docs = project
   .settings(name := "cats-mtl-docs")
   .settings(noPublishSettings)
   .settings(
+    crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2.")),
+
     micrositeName := "Cats MTL",
     micrositeDescription := "Monad Transformers made easy",
     micrositeAuthor := "Typelevel contributors",
@@ -123,9 +127,7 @@ lazy val docs = project
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
     scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
-    mdoc / fork := true,
     fatalWarningsInCI := false,
-    ScalaUnidoc / unidoc / fork := true,
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-doc-source-url",
@@ -155,12 +157,14 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, laws)
   .settings(name := "cats-mtl-tests")
-  .settings(libraryDependencies ++= Seq(
-    "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-scalatest" % "2.0.1"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %%% "cats-testkit"     % CatsVersion,
+      "org.typelevel" %%% "discipline-munit" % "1.0.1"))
   .settings(noPublishSettings)
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
+  .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
 lazy val testsJVM = tests.jvm
 lazy val testsJS = tests.js

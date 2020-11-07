@@ -22,34 +22,32 @@ import cats.laws.IsEq
 import cats.laws.IsEqArrow
 
 trait LocalLaws[F[_], E] extends AskLaws[F, E] {
-  implicit val localInstance: Local[F, E]
-  override implicit val applicative = localInstance.applicative
 
-  import localInstance.{local, scope}
-  import askInstance.ask
-  import applicative._
+  implicit def localInstance: Local[F, E]
+  override implicit def applicative = localInstance.applicative
 
   // external laws:
   def askReflectsLocal(f: E => E): IsEq[F[E]] =
-    local(ask)(f) <-> map(ask)(f)
+    localInstance.local(localInstance.ask)(f) <-> applicative.map(localInstance.ask)(f)
 
   def localPureIsPure[A](a: A, f: E => E): IsEq[F[A]] =
-    local(pure(a))(f) <-> pure(a)
+    localInstance.local(applicative.pure(a))(f) <-> applicative.pure(a)
 
   def localDistributesOverAp[A, B](fa: F[A], ff: F[A => B], f: E => E): IsEq[F[B]] =
-    local(applicative.ap(ff)(fa))(f) <-> applicative.ap(local(ff)(f))(local(fa)(f))
+    localInstance.local(applicative.ap(ff)(fa))(f) <-> applicative.ap(
+      localInstance.local(ff)(f))(localInstance.local(fa)(f))
 
   // internal law:
   def scopeIsLocalConst[A](fa: F[A], e: E): IsEq[F[A]] =
-    scope(fa)(e) <-> local(fa)(_ => e)
+    localInstance.scope(fa)(e) <-> localInstance.local(fa)(_ => e)
 
 }
 
 object LocalLaws {
   def apply[F[_], E](implicit instance0: Local[F, E]): LocalLaws[F, E] = {
     new LocalLaws[F, E] {
-      lazy val localInstance: Local[F, E] = instance0
-      override lazy val askInstance: Ask[F, E] = instance0
+      val localInstance: Local[F, E] = instance0
+      override val askInstance: Ask[F, E] = instance0
     }
   }
 }

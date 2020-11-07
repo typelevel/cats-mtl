@@ -25,33 +25,30 @@ import cats.syntax.flatMap._
 import cats.syntax.apply._
 
 trait StatefulLaws[F[_], S] {
-  implicit val stateInstance: Stateful[F, S]
-  implicit val monad: Monad[F] = stateInstance.monad
-
-  import stateInstance._
-  import monad.pure
+  implicit def stateInstance: Stateful[F, S]
+  implicit def monad: Monad[F] = stateInstance.monad
 
   // external laws:
   def getThenSetDoesNothing: IsEq[F[Unit]] =
-    (get >>= set) <-> pure(())
+    (stateInstance.get >>= stateInstance.set) <-> monad.pure(())
 
   def setThenGetReturnsSetted(s: S): IsEq[F[S]] =
-    (set(s) *> get) <-> (set(s) *> pure(s))
+    (stateInstance.set(s) *> stateInstance.get) <-> (stateInstance.set(s) *> monad.pure(s))
 
   def setThenSetSetsLast(s1: S, s2: S): IsEq[F[Unit]] =
-    set(s1) *> set(s2) <-> set(s2)
+    stateInstance.set(s1) *> stateInstance.set(s2) <-> stateInstance.set(s2)
 
   def getThenGetGetsOnce: IsEq[F[S]] =
-    get *> get <-> get
+    stateInstance.get *> stateInstance.get <-> stateInstance.get
 
   // internal law:
   def modifyIsGetThenSet(f: S => S): IsEq[F[Unit]] =
-    modify(f) <-> ((get map f) flatMap set)
+    stateInstance.modify(f) <-> ((stateInstance.get map f) flatMap stateInstance.set)
 }
 
 object StatefulLaws {
   def apply[F[_], S](implicit instance0: Stateful[F, S]): StatefulLaws[F, S] =
     new StatefulLaws[F, S] {
-      override lazy val stateInstance: Stateful[F, S] = instance0
+      override val stateInstance: Stateful[F, S] = instance0
     }
 }

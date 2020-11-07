@@ -37,50 +37,50 @@ class ReaderWriterStateTTests extends StateTTestsBase {
       state.run(e, s)
     }
 
-  implicit def arbFunctionKTupled[L: Monoid, S]: Arbitrary[(L, S, ?) ~> (L, S, ?)] =
+  implicit def arbFunctionKTupled[L: Monoid, S]: Arbitrary[(L, S, *) ~> (L, S, *)] =
     Arbitrary(
       Gen.oneOf(
-        new ((L, S, ?) ~> (L, S, ?)) {
+        new ((L, S, *) ~> (L, S, *)) {
           def apply[A](fa: (L, S, A)): (L, S, A) = (Monoid[L].empty, fa._2, fa._3)
         },
-        FunctionK.id[(L, S, ?)]))
+        FunctionK.id[(L, S, *)]))
 
   checkAll(
     "ReaderWriterState[Boolean, Int, String, String]",
-    StatefulTests[ReaderWriterState[Boolean, Int, String, ?], String].stateful[String])
+    StatefulTests[ReaderWriterState[Boolean, Int, String, *], String].stateful[String])
   checkAll(
-    "Stateful[ReaderWriterState[Boolean, Int, String, ?]]",
+    "Stateful[ReaderWriterState[Boolean, Int, String, *]]",
     SerializableTests.serializable(
-      Stateful[ReaderWriterState[Boolean, Int, String, ?], String]))
+      Stateful[ReaderWriterState[Boolean, Int, String, *], String]))
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, String]",
-    StatefulTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], String].stateful[String])
+    StatefulTests[ReaderWriterStateT[Option, Boolean, Int, String, *], String].stateful[String])
   checkAll(
-    "Stateful[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Stateful[ReaderWriterStateT[Option, Boolean, Int, String, *]]",
     SerializableTests.serializable(
-      Stateful[ReaderWriterStateT[Option, Boolean, Int, String, ?], String])
+      Stateful[ReaderWriterStateT[Option, Boolean, Int, String, *], String])
   )
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Int]",
-    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int].censor[Int, String]
+    CensorTests[ReaderWriterStateT[Option, Boolean, Int, String, *], Int].censor[Int, String]
   )
   checkAll(
-    "Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Censor[ReaderWriterStateT[Option, Boolean, Int, String, *]]",
     SerializableTests.serializable(
-      Censor[ReaderWriterStateT[Option, Boolean, Int, String, ?], Int])
+      Censor[ReaderWriterStateT[Option, Boolean, Int, String, *], Int])
   )
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, Boolean]",
-    LocalTests[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean]
+    LocalTests[ReaderWriterStateT[Option, Boolean, Int, String, *], Boolean]
       .local[Boolean, String]
   )
   checkAll(
-    "Local[ReaderWriterStateT[Option, Boolean, Int, String, ?]]",
+    "Local[ReaderWriterStateT[Option, Boolean, Int, String, *]]",
     SerializableTests.serializable(
-      Local[ReaderWriterStateT[Option, Boolean, Int, String, ?], Boolean])
+      Local[ReaderWriterStateT[Option, Boolean, Int, String, *], Boolean])
   )
 
 }
