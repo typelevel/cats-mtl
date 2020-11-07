@@ -23,7 +23,7 @@ ThisBuild / developers := List(
 )
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("3.0.0-M1", "2.12.12", "2.13.3")
+ThisBuild / crossScalaVersions := Seq("0.27.0-RC1", "3.0.0-M1", "2.12.12", "2.13.3")
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
