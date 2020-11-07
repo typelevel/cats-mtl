@@ -23,21 +23,20 @@ import cats.laws.IsEqArrow
 import cats.syntax.functor._
 
 trait RaiseLaws[F[_], E] {
-  implicit val raiseInstance: Raise[F, E]
-  implicit val functor: Functor[F] = raiseInstance.functor
 
-  import raiseInstance._
+  implicit def raiseInstance: Raise[F, E]
+  implicit def functor: Functor[F] = raiseInstance.functor
 
   // free law:
   def failThenFlatMapFails[A](ex: E, f: A => A): IsEq[F[A]] =
-    raise(ex).map(f) <-> raise(ex)
+    raiseInstance.raise(ex).map(f) <-> raiseInstance.raise(ex)
 
 }
 
 object RaiseLaws {
   def apply[F[_], E](implicit instance0: Raise[F, E]): RaiseLaws[F, E] = {
     new RaiseLaws[F, E] {
-      override lazy val raiseInstance: Raise[F, E] = instance0
+      override val raiseInstance: Raise[F, E] = instance0
     }
   }
 }

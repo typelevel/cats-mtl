@@ -3,15 +3,15 @@ import sbtcrossproject.{crossProject, CrossType}
 
 replaceCommandAlias(
   "ci",
-  "; project /; headerCheck; scalafmtCheckAll; clean; test; mimaReportBinaryIssues; makeMicrosite")
+  "; project /; headerCheck; scalafmtCheckAll; clean; testIfRelevant; mimaReportBinaryIssues")
 replaceCommandAlias(
   "release",
-  "; reload; project /; +mimaReportBinaryIssues; +publish; sonatypeBundleRelease; publishMicrosite")
+  "; reload; project /; +mimaReportBinaryIssues; +publishIfRelevant; sonatypeBundleRelease; publishMicrosite")
 
 ThisBuild / organization := "org.typelevel"
 ThisBuild / organizationName := "Typelevel"
 
-ThisBuild / baseVersion := "1.0"
+ThisBuild / baseVersion := "1.1"
 
 ThisBuild / developers := List(
   Developer("SystemFw", "Fabio Labella", "", url("https://github.com/SystemFw/")),
@@ -22,8 +22,10 @@ ThisBuild / developers := List(
   Developer("edmundnoble", "Edmund Noble", "", url("https://github.com/edmundnoble/"))
 )
 
+val Scala213 = "2.13.3"
+
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("2.12.11", "2.13.2")
+ThisBuild / crossScalaVersions := Seq("0.27.0-RC1", "3.0.0-M1", "2.12.12", Scala213)
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -35,12 +37,25 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Run(List("gem install jekyll -v 4.0.0"), name = Some("Install Jekyll"))
 )
 
-ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("ci")))
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(List("ci")),
+  WorkflowStep.Sbt(
+    List("makeMicrosite"),
+    name = Some("Make microsite"),
+    cond = Some(s"matrix.scala == '$Scala213'")))
 
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()
 
+ThisBuild / testFrameworks += new TestFramework("munit.Framework")
+
 lazy val commonJvmSettings = Seq(
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"))
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+  mimaPreviousArtifacts := {
+    if (isDotty.value)
+      Set()
+    else
+      mimaPreviousArtifacts.value
+  })
 
 lazy val commonJsSettings = Seq(
   scalacOptions += {
@@ -48,10 +63,11 @@ lazy val commonJsSettings = Seq(
     val g = s"https://raw.githubusercontent.com/typelevel/cats/v${version.value}"
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
-  doctestGenTests := Seq.empty
+  doctestGenTests := Seq.empty,
+  crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2."))
 )
 
-val CatsVersion = "2.2.0"
+val CatsVersion = "2.3.0-M2"
 
 lazy val root = project
   .in(file("."))
@@ -83,6 +99,7 @@ lazy val docs = project
   .settings(name := "cats-mtl-docs")
   .settings(noPublishSettings)
   .settings(
+    crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2.")),
     micrositeName := "Cats MTL",
     micrositeDescription := "Monad Transformers made easy",
     micrositeAuthor := "Typelevel contributors",
@@ -123,9 +140,7 @@ lazy val docs = project
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
     scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
-    mdoc / fork := true,
     fatalWarningsInCI := false,
-    ScalaUnidoc / unidoc / fork := true,
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-doc-source-url",
@@ -157,10 +172,11 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-scalatest" % "2.0.1"))
+    "org.typelevel" %%% "discipline-munit" % "1.0.1"))
   .settings(noPublishSettings)
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
+  .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
 
 lazy val testsJVM = tests.jvm
 lazy val testsJS = tests.js

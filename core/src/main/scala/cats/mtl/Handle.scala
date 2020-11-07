@@ -112,9 +112,9 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
     }
   }
 
-  implicit final def handleValidated[E](implicit E: Semigroup[E]): Handle[Validated[E, ?], E] =
-    new Handle[Validated[E, ?], E] {
-      val applicative: Applicative[Validated[E, ?]] =
+  implicit final def handleValidated[E](implicit E: Semigroup[E]): Handle[Validated[E, *], E] =
+    new Handle[Validated[E, *], E] {
+      val applicative: Applicative[Validated[E, *]] =
         Validated.catsDataApplicativeErrorForValidated[E]
 
       def raise[E2 <: E, A](e: E2): Validated[E, A] = Validated.Invalid(e)
@@ -130,7 +130,7 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
       implicit E: Semigroup[E],
       F: Monad[F]): Handle[IorT[F, E, *], E] =
     new Handle[IorT[F, E, *], E] {
-      val applicative: Applicative[IorT[F, E, ?]] = IorT.catsDataMonadErrorForIorT[F, E]
+      val applicative: Applicative[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT[F, E]
 
       def raise[E2 <: E, A](e: E2): IorT[F, E, A] = IorT.leftT(e)
 
@@ -143,7 +143,7 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
 
   implicit final def handleIor[E](implicit E: Semigroup[E]): Handle[Ior[E, *], E] =
     new Handle[Ior[E, *], E] {
-      val applicative: Applicative[Ior[E, ?]] = Ior.catsDataMonadErrorForIor[E]
+      val applicative: Applicative[Ior[E, *]] = Ior.catsDataMonadErrorForIor[E]
 
       def raise[E2 <: E, A](e: E2): Ior[E, A] = Ior.Left(e)
 

@@ -55,8 +55,8 @@ trait HandleTests[F[_], E] extends RaiseTests[F, E] {
 object HandleTests {
   def apply[F[_], E](implicit instance0: Handle[F, E]): HandleTests[F, E] = {
     new HandleTests[F, E] {
-      override lazy val handleInstance: Handle[F, E] = instance0
-      override lazy val raiseInstance: Raise[F, E] = instance0
+      override val handleInstance: Handle[F, E] = instance0
+      override val raiseInstance: Raise[F, E] = instance0
     }
   }
 }

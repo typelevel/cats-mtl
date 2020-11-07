@@ -23,19 +23,10 @@ import cats.data._
 import cats.laws.discipline.ExhaustiveCheck
 import cats.syntax.{EqOps, EqSyntax}
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalactic.anyvals.{PosInt, PosZDouble, PosZInt}
-import org.scalatest.prop.Configuration
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.funsuite.AnyFunSuite
-import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
-abstract class BaseSuite
-    extends AnyFunSuite
-    with Matchers
-    with Configuration
-    with StrictCatsEquality
-    with EqSyntax
-    with FunSuiteDiscipline {
+import munit.{DisciplineSuite, FunSuite}
+
+abstract class BaseSuite extends FunSuite with EqSyntax with DisciplineSuite {
 
   implicit def catsMtlLawsExhaustiveCheckForArbitrary[A: Arbitrary]: ExhaustiveCheck[A] =
     ExhaustiveCheck.instance(Gen.resize(30, Arbitrary.arbitrary[List[A]]).sample.get)
@@ -151,20 +142,11 @@ abstract class BaseSuite
     }
   }
 
-  implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
-    checkConfiguration
-
-  lazy val checkConfiguration: PropertyCheckConfiguration =
-    PropertyCheckConfiguration(
-      minSuccessful = if (Platform.isJvm) PosInt(35) else PosInt(5),
-      maxDiscardedFactor = if (Platform.isJvm) PosZDouble(5.0) else PosZDouble(50.0),
-      minSize = PosZInt(0),
-      sizeRange = if (Platform.isJvm) PosZInt(10) else PosZInt(5),
-      workers = PosInt(1)
-    )
-
-  lazy val slowCheckConfiguration: PropertyCheckConfiguration =
-    if (Platform.isJvm) checkConfiguration
-    else PropertyCheckConfiguration(minSuccessful = 1, sizeRange = 1)
-
+  override def scalaCheckTestParameters =
+    super
+      .scalaCheckTestParameters
+      .withMinSuccessfulTests(if (Platform.isJvm) 35 else 5)
+      .withMaxDiscardRatio(if (Platform.isJvm) 5f else 50f)
+      .withMinSize(0)
+      .withWorkers(1)
 }

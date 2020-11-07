@@ -21,7 +21,6 @@ For example, here's a small example of a method that reads the current state in 
 
 ```scala mdoc
 import cats.data._
-import cats.implicits._
 
 def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
   currentState <- EitherT.liftF(StateT.get[List, Int])
@@ -74,7 +73,6 @@ First, the original program again:
 
 ```scala mdoc:reset
 import cats.data._
-import cats.implicits._
 
 def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
   currentState <- EitherT.liftF(StateT.get[List, Int])
@@ -89,7 +87,7 @@ And now the mtl version:
 
 ```scala mdoc:reset
 import cats.MonadError
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl.Stateful
 
 def checkState[F[_]](implicit S: Stateful[F, Int], E: MonadError[F, Exception]): F[String] = for {
@@ -128,15 +126,15 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 
 cats-mtl provides the following "MTL classes":
 
- - [Ask](mtl-classes/ask.html)
- - [Local](mtl-classes/local.html)
- - [Raise](mtl-classes/raise.html)
- - [Handle](mtl-classes/handle.html)
- - [Tell](mtl-classes/tell.html)
- - [Listen](mtl-classes/listen.html)
+ - [Ask](mtl-classes/ask.md)
+ - [Local](mtl-classes/local.md)
+ - [Raise](mtl-classes/raise.md)
+ - [Handle](mtl-classes/handle.md)
+ - [Tell](mtl-classes/tell.md)
+ - [Listen](mtl-classes/listen.md)
  - Censor
- - [Stateful](mtl-classes/stateful.html)
- - [Chronicle](mtl-classes/chronicle.html)
+ - [Stateful](mtl-classes/stateful.md)
+ - [Chronicle](mtl-classes/chronicle.md)
 
 If you're wondering why some of these are based on `Monad` and others on `Functor` or `Applicative`, 
  it is because these are the smallest superclass dependencies practically possible with which you can define their laws.

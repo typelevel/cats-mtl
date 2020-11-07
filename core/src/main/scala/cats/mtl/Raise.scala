@@ -112,7 +112,7 @@ private[mtl] trait RaiseInstances extends LowPriorityRaiseInstances {
   implicit final def raiseOption[E]: Raise[Option, Unit] =
     Handle.handleOption
 
-  implicit final def raiseValidated[E](implicit E: Semigroup[E]): Raise[Validated[E, ?], E] =
+  implicit final def raiseValidated[E](implicit E: Semigroup[E]): Raise[Validated[E, *], E] =
     Handle.handleValidated
 
   implicit final def raiseIor[E](implicit E: Semigroup[E]): Raise[Ior[E, *], E] =
