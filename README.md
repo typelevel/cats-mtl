@@ -13,9 +13,11 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.0.0"
 ```
 
-If your project uses Scala.js, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
+If your project uses ScalaJS, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
 
-Cross-builds are available for Scala 2.12 and 2.13, Scala.js major version 1.x.
+Cross-builds are available for Scala 2.12 and 2.13, ScalaJS major version 1.x.
+
+Version `1.1.0-M1` has also been released for Dotty 0.27.0-RC1 and Scala 3.0.0-M1 (without ScalaJS support), as well as Scala 2.13 and 2.13 (with ScalaJS support).
 
 If you're not sure where to start or what Cats MTL even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
 
