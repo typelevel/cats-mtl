@@ -60,7 +60,7 @@ private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
 
 private[mtl] trait LowPriorityAskInstances extends LowPriorityAskInstancesCompat {
 
-  implicit def askForMonadPartialOrder[F[_], G[_], E](
+  def askForMonadPartialOrder[F[_], G[_], E](
       implicit lift0: MonadPartialOrder[F, G],
       F0: Ask[F, E]): Ask[G, E] =
     new AskForMonadPartialOrder[F, G, E] {
@@ -69,15 +69,15 @@ private[mtl] trait LowPriorityAskInstances extends LowPriorityAskInstancesCompat
     }
 }
 
-private[mtl] trait AskInstances extends LowPriorityAskInstances {
+private[mtl] trait AskInstances extends LocalInstances with LowPriorityAskInstances {
 
-  implicit def askForKleisli[F[_], E](implicit F: Applicative[F]): Ask[Kleisli[F, E, *], E] =
-    Local.baseLocalForKleisli[F, E]
+  def askForKleisli[F[_], E](implicit F: Applicative[F]): Ask[Kleisli[F, E, *], E] =
+    baseLocalForKleisli[F, E]
 
-  implicit def askForRWST[F[_], E, L, S](
+  def askForRWST[F[_], E, L, S](
       implicit F: Monad[F],
       L: Monoid[L]): Ask[RWST[F, E, L, S, *], E] =
-    Local.baseLocalForRWST[F, E, L, S]
+    baseLocalForRWST[F, E, L, S]
 }
 
 object Ask extends AskInstances {

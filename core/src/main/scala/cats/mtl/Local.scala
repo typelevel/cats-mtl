@@ -162,7 +162,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
     }
 }
 
-object Local extends LocalInstances {
+object Local {
   def apply[F[_], A](implicit local: Local[F, A]): Local[F, A] = local
 
   def local[F[_], E, A](fa: F[A])(f: E => E)(implicit local: Local[F, E]): F[A] =
