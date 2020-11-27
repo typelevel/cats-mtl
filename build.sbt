@@ -25,7 +25,7 @@ ThisBuild / developers := List(
 val Scala213 = "2.13.3"
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("0.27.0-RC1", "3.0.0-M1", "2.12.12", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.0.0-M1", "3.0.0-M2", "2.12.12", Scala213)
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -58,22 +58,16 @@ lazy val commonJvmSettings = Seq(
   })
 
 lazy val commonJsSettings = Seq(
-  scalacOptions += {
-    val a = (LocalRootProject / baseDirectory).value.toURI.toString
-    val g = s"https://raw.githubusercontent.com/typelevel/cats/v${version.value}"
-    s"-P:scalajs:mapSourceURI:$a->$g/"
-  },
-  doctestGenTests := Seq.empty,
-  crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2."))
+  doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.3.0-M2"
+val CatsVersion = "2.3.0"
 
 lazy val root = project
   .in(file("."))
   .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
   .settings(name := "root")
-  .settings(noPublishSettings)
+  .enablePlugins(NoPublishPlugin)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
@@ -95,9 +89,8 @@ lazy val docsMappingsAPIDir =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docs = project
-  .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, MdocPlugin)
+  .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, MdocPlugin, NoPublishPlugin)
   .settings(name := "cats-mtl-docs")
-  .settings(noPublishSettings)
   .settings(
     crossScalaVersions := (ThisBuild / crossScalaVersions).value.filter(_.startsWith("2.")),
     micrositeName := "Cats MTL",
@@ -169,11 +162,11 @@ lazy val lawsJS = laws.js
 lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core, laws)
+  .enablePlugins(NoPublishPlugin)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-munit" % "1.0.2"))
-  .settings(noPublishSettings)
+    "org.typelevel" %%% "discipline-munit" % "1.0.3"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
