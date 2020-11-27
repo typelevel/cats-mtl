@@ -10,14 +10,12 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 ## Usage
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.0.0"
+libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.1.0"
 ```
 
 If your project uses ScalaJS, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
 
-Cross-builds are available for Scala 2.12 and 2.13, ScalaJS major version 1.x.
-
-Version `1.1.0-M1` has also been released for Dotty 0.27.0-RC1 and Scala 3.0.0-M1 (without ScalaJS support), as well as Scala 2.13 and 2.13 (with ScalaJS support).
+Cross-builds are available for Scala 2.12, 2.13, 3.0.0-M1, 3.0.0-M2, and ScalaJS major version 1.x.
 
 If you're not sure where to start or what Cats MTL even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
 
@@ -36,7 +34,7 @@ If you're not sure where to start or what Cats MTL even is, please refer to the 
 The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws) for more.
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.0.0" % Test
+libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.1.0" % Test
 ```
 
 These laws are compatible with both Specs2 and ScalaTest.
