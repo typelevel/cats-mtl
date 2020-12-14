@@ -26,6 +26,8 @@ import cats.mtl.laws.discipline._
 import org.scalacheck._
 
 class OptionTTests extends BaseSuite {
+  import cats.mtl.laws.discipline.HandleTests
+
   implicit val arbFunctionK: Arbitrary[Option ~> Option] =
     Arbitrary(
       Gen.oneOf(
