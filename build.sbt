@@ -25,7 +25,7 @@ ThisBuild / developers := List(
 val Scala213 = "2.13.3"
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("3.0.0-M1", "3.0.0-M2", "2.12.12", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.0.0-M2", "3.0.0-M3", "2.12.12", Scala213)
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -61,7 +61,7 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.3.0"
+val CatsVersion = "2.3.1"
 
 lazy val root = project
   .in(file("."))
@@ -74,6 +74,12 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl")
   .settings(
     libraryDependencies += "org.typelevel" %%% "cats-core" % CatsVersion,
+    Compile / unmanagedSourceDirectories ++= {
+      val major = if (isDotty.value) "-3" else "-2"
+      List(CrossType.Pure, CrossType.Full).flatMap(
+        _.sharedSrcDir(baseDirectory.value, "main").toList.map(f => file(f.getPath + major))
+      )
+    },
     Compile / packageSrc / mappings ++= {
       val base = (Compile / sourceManaged).value
       (Compile / managedSources).value.map(file => file -> file.relativeTo(base).get.getPath)
@@ -166,7 +172,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-munit" % "1.0.3"))
+    "org.typelevel" %%% "discipline-munit" % "1.0.4"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
