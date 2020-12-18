@@ -9,14 +9,12 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.</p>
 
 <h2 id="usage">Usage</h2>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.typelevel"</span> <span class="o">%%</span> <span class="s">"cats-mtl"</span> <span class="o">%</span> <span class="s">"1.0.0"</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.typelevel"</span> <span class="o">%%</span> <span class="s">"cats-mtl"</span> <span class="o">%</span> <span class="s">"1.1.1"</span>
 </code></pre></div></div>
 
 <p>If your project uses ScalaJS, replace the double-<code class="highlighter-rouge">%</code> with a triple.  Note that <strong>cats-mtl</strong> has an upstream dependency on <strong>cats-core</strong> version 2.x.</p>
 
-<p>Cross-builds are available for Scala 2.12 and 2.13, ScalaJS major version 1.x.</p>
-
-<p>Version <code class="highlighter-rouge">1.1.0-M1</code> has also been released for Dotty 0.27.0-RC1 and Scala 3.0.0-M1 (without ScalaJS support), as well as Scala 2.13 and 2.13 (with ScalaJS support).</p>
+<p>Cross-builds are available for Scala 2.12, 2.13, 3.0.0-M2, 3.0.0-M3, and ScalaJS major version 1.x.</p>
 
 <p>If you’re not sure where to start or what Cats MTL even is, please refer to the <a href="https://typelevel.org/cats-mtl/getting-started.html">getting started guide</a>.</p>
 
@@ -36,7 +34,7 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.</p>
 
 <p>The <strong>cats-mtl-laws</strong> artifact provides <a href="https://github.com/typelevel/discipline">Discipline-style</a> laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look <a href="https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws">here</a> for more.</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.typelevel"</span> <span class="o">%%</span> <span class="s">"cats-mtl-laws"</span> <span class="o">%</span> <span class="s">"1.0.0"</span> <span class="o">%</span> <span class="nc">Test</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.typelevel"</span> <span class="o">%%</span> <span class="s">"cats-mtl-laws"</span> <span class="o">%</span> <span class="s">"1.1.1"</span> <span class="o">%</span> <span class="nc">Test</span>
 </code></pre></div></div>
 
 <p>These laws are compatible with both Specs2 and ScalaTest.</p>
