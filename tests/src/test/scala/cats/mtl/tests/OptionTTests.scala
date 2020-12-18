@@ -22,7 +22,6 @@ import cats._
 import cats.arrow.FunctionK
 import cats.data._
 import cats.laws.discipline.arbitrary._
-import cats.mtl.laws.discipline._
 import org.scalacheck._
 
 class OptionTTests extends BaseSuite {

@@ -20,7 +20,6 @@ package tests
 
 import cats.data._
 import cats.laws.discipline.arbitrary._
-import cats.mtl.laws.discipline._
 
 class ValidatedTests extends BaseSuite {
   import cats.mtl.laws.discipline.HandleTests
