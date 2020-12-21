@@ -16,7 +16,7 @@ The `local` function has the following signature:
 
 ```scala
 trait Local[F[_], E] extends Ask[F, E] {
-  def local(f: E => E)(fa: F[A]): F[A]
+  def local(fa: F[A])(f: E => E): F[A]
 }
 ```
 
