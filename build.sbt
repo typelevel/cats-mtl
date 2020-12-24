@@ -131,7 +131,6 @@ lazy val docs = project
       "gray-lighter" -> "#F4F3F4",
       "white-color" -> "#FFFFFF"
     ),
-    micrositeCompilingDocsTool := WithMdoc,
     mdocIn := (Compile / sourceDirectory).value / "mdoc",
     autoAPIMappings := true,
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(coreJVM, lawsJVM),
