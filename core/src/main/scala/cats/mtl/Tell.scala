@@ -77,6 +77,17 @@ private[mtl] trait TellInstances
       val functor = Functor[WriterT[F, L, *]]
       def tell(l: L) = WriterT.tell[F, L](l)
     }
+
+  implicit def catsContravariantForTell[F[_]]: Contravariant[Tell[F, *]] =
+    new Contravariant[Tell[F, *]] {
+      def contramap[A, B](fa: Tell[F, A])(f: B => A): Tell[F, B] =
+        new Tell[F, B] {
+          val functor: Functor[F] = fa.functor
+
+          def tell(l: B): F[Unit] = fa.tell(f(l))
+        }
+    }
+
 }
 
 object Tell extends TellInstances {

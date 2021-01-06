@@ -100,6 +100,20 @@ private[mtl] trait StatefulInstances extends LowPriorityStatefulInstances {
 
       def set(s: S) = RWST.set[F, E, L, S](s)
     }
+
+  implicit def catsInvariantForStateful[F[_]]: Invariant[Stateful[F, *]] =
+    new Invariant[Stateful[F, *]] {
+      def imap[A, B](fa: Stateful[F, A])(f: A => B)(g: B => A): Stateful[F, B] =
+        new Stateful[F, B] {
+          val monad: Monad[F] = fa.monad
+          val get: F[B] = monad.map(fa.get)(f)
+
+          def set(s: B): F[Unit] = fa.set(g(s))
+
+          override def modify(f2: B => B): F[Unit] = fa.modify(f.andThen(f2).andThen(g))
+        }
+    }
+
 }
 
 object Stateful extends StatefulInstances {

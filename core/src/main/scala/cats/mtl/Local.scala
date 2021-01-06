@@ -160,6 +160,17 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
       val lift: MonadPartialOrder[F, IorT[F, E2, *]] =
         MonadPartialOrder.monadPartialOrderForIorT[F, E2]
     }
+
+  implicit def catsInvariantForLocal[F[_]]: Invariant[Local[F, *]] =
+    new Invariant[Local[F, *]] {
+      def imap[A, B](fa: Local[F, A])(f: A => B)(g: B => A): Local[F, B] = new Local[F, B] {
+        def applicative: Applicative[F] = fa.applicative
+
+        def ask[E2 >: B]: F[E2] = applicative.map(fa.ask)(f)
+
+        def local[A](fa2: F[A])(f2: B => B): F[A] = fa.local(fa2)(f andThen f2 andThen g)
+      }
+    }
 }
 
 object Local extends LocalInstances {

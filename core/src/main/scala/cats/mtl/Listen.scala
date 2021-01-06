@@ -188,6 +188,19 @@ private[mtl] trait ListenInstances
 
   implicit def baseListenForRWST[F[_]: Applicative, E, L, S]: Listen[RWST[F, E, L, S, *], L] =
     new ListenRWST[F, E, L, S] {}
+
+  implicit def catsInvariantForListen[F[_]]: Invariant[Listen[F, *]] =
+    new Invariant[Listen[F, *]] {
+      def imap[A, B](fa: Listen[F, A])(f: A => B)(g: B => A): Listen[F, B] = new Listen[F, B] {
+        def functor: Functor[F] = fa.functor
+
+        def tell(l: B): F[Unit] = fa.tell(g(l))
+
+        def listen[E](fe: F[E]): F[(E, B)] = functor.map(fa.listen(fe)) { case (e, a) =>
+          (e, f(a))
+        }
+      }
+    }
 }
 
 object Listen extends ListenInstances {

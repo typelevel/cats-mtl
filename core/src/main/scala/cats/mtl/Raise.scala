@@ -123,6 +123,14 @@ private[mtl] trait RaiseInstances extends LowPriorityRaiseInstances {
       F: Monad[F]): Raise[IorT[F, E, *], E] =
     Handle.handleIorT[F, E]
 
+  implicit def catsContravariantForRaise[F[_]]: Contravariant[Raise[F, *]] =
+    new Contravariant[Raise[F, *]] {
+      def contramap[A, B](fa: Raise[F, A])(f: B => A): Raise[F, B] = new Raise[F, B] {
+        def functor: Functor[F] = fa.functor
+
+        def raise[E2 <: B, C](e: E2): F[C] = fa.raise(f(e))
+      }
+    }
 }
 
 object Raise extends RaiseInstances {
