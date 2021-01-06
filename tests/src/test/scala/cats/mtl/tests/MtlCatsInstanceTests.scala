@@ -1,14 +1,13 @@
 package cats.mtl.tests
 
-import cats.laws.ContravariantLaws
-import cats.mtl.Tell
 import cats.data.Writer
-import cats.laws.discipline.ContravariantTests
-import org.scalacheck.Arbitrary
 import cats.kernel.Eq
-import cats.mtl.Listen
+import cats.laws.discipline.ContravariantTests
 import cats.laws.discipline.InvariantTests
 import cats.laws.discipline.arbitrary._
+import cats.mtl.Listen
+import cats.mtl.Tell
+import org.scalacheck.Arbitrary
 
 class MtlCatsInstanceTests extends BaseSuite {
 
