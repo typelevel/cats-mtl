@@ -168,7 +168,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
 
         def ask[E2 >: B]: F[E2] = applicative.map(fa.ask)(f)
 
-        def local[A](fa2: F[A])(f2: B => B): F[A] = fa.local(fa2)(f andThen f2 andThen g)
+        def local[E](fa2: F[E])(f2: B => B): F[E] = fa.local(fa2)(f andThen f2 andThen g)
       }
     }
 }

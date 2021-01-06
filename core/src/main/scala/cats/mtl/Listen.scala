@@ -201,6 +201,17 @@ private[mtl] trait ListenInstances
         }
       }
     }
+
+  implicit def catsEqForListen[F[_], A, E](
+      implicit eqTell: Eq[A => F[Unit]],
+      eqListen: Eq[F[E] => F[(E, A)]]): Eq[Listen[F, A]] = {
+    Eq.by { instance =>
+      (
+        instance.tell _,
+        instance.listen[E] _
+      )
+    }
+  }
 }
 
 object Listen extends ListenInstances {

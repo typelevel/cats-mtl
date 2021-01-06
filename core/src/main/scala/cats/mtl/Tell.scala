@@ -88,6 +88,9 @@ private[mtl] trait TellInstances
         }
     }
 
+  implicit def catsEqForTell[F[_], A](implicit eqTell: Eq[A => F[Unit]]): Eq[Tell[F, A]] =
+    Eq.by(_.tell _)
+
 }
 
 object Tell extends TellInstances {
