@@ -178,6 +178,21 @@ private[mtl] trait ChronicleInstances {
             case Ior.Right((l, s2, a)) => (l, s2, Ior.Right(a))
           })
     }
+
+  implicit def catsInvariantForChronicle[F[_]]: Invariant[Chronicle[F, *]] =
+    new Invariant[Chronicle[F, *]] {
+      def imap[A, B](fa: Chronicle[F, A])(f: A => B)(g: B => A): Chronicle[F, B] =
+        new Chronicle[F, B] {
+          val monad: Monad[F] = fa.monad
+
+          def dictate(c: B): F[Unit] = fa.dictate(g(c))
+
+          def confess[C](c: B): F[C] = fa.confess(g(c))
+
+          def materialize[C](fc: F[C]): F[Ior[B, C]] =
+            monad.map(fa.materialize(fc))(_.leftMap(f))
+        }
+    }
 }
 
 object Chronicle extends ChronicleInstances {

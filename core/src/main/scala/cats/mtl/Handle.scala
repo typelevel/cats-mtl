@@ -215,6 +215,19 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
           f: E => RWST[F, R, L, S, A]): RWST[F, R, L, S, A] =
         RWST { case (r, s) => F0.handleWith(fa.run(r, s))(e => f(e).run(r, s)) }
     }
+
+  implicit def catsInvariantForHandle[F[_]]: Invariant[Handle[F, *]] =
+    new Invariant[Handle[F, *]] {
+      def imap[A, B](fa: Handle[F, A])(f: A => B)(g: B => A): Handle[F, B] = new Handle[F, B] {
+        def applicative: Applicative[F] = fa.applicative
+
+        def raise[E2 <: B, C](e: E2): F[C] = fa.raise(g(e))
+
+        def handleWith[E](fe: F[E])(f2: B => F[E]): F[E] =
+          fa.handleWith(fe)(f andThen f2)
+
+      }
+    }
 }
 
 object Handle extends HandleInstances {

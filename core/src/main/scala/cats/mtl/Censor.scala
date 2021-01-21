@@ -165,4 +165,21 @@ private[mtl] trait CensorInstances extends LowPriorityCensorInstances {
         OptionT(A.censor(fa.value)(f))
     }
 
+  implicit def catsInvariantForCensor[F[_]]: Invariant[Censor[F, *]] =
+    new Invariant[Censor[F, *]] {
+      def imap[A, B](fa: Censor[F, A])(f: A => B)(g: B => A): Censor[F, B] = new Censor[F, B] {
+        val applicative: Applicative[F] = fa.applicative
+
+        val monoid: cats.Monoid[B] = fa.monoid.imap(f)(g)
+
+        def tell(l: B): F[Unit] = fa.tell(g(l))
+
+        def listen[E](fe: F[E]): F[(E, B)] = functor.map(fa.listen(fe)) { case (e, a) =>
+          (e, f(a))
+        }
+
+        def censor[E](fe: F[E])(f2: B => B): F[E] = fa.censor(fe)(f andThen f2 andThen g)
+
+      }
+    }
 }

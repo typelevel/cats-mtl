@@ -78,6 +78,15 @@ private[mtl] trait AskInstances extends LowPriorityAskInstances {
       implicit F: Monad[F],
       L: Monoid[L]): Ask[RWST[F, E, L, S, *], E] =
     Local.baseLocalForRWST[F, E, L, S]
+
+  implicit def catsFunctorForAsk[F[_]]: Functor[Ask[F, *]] =
+    new Functor[Ask[F, *]] {
+      def map[A, B](fa: Ask[F, A])(f: A => B): Ask[F, B] =
+        new Ask[F, B] {
+          val applicative: Applicative[F] = fa.applicative
+          def ask[E2 >: B]: F[E2] = applicative.map(fa.ask)(f)
+        }
+    }
 }
 
 object Ask extends AskInstances {
