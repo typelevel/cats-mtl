@@ -17,7 +17,7 @@
 package cats
 package mtl
 
-import cats.data.WriterT
+import cats.data.{ReaderWriterStateT => RWST, WriterT}
 
 import scala.annotation.implicitNotFound
 
@@ -76,6 +76,12 @@ private[mtl] trait TellInstances
     new Tell[WriterT[F, L, *], L] {
       val functor = Functor[WriterT[F, L, *]]
       def tell(l: L) = WriterT.tell[F, L](l)
+    }
+
+  implicit def tellForRWST[F[_]: Applicative, E, L: Monoid, S]: Tell[RWST[F, E, L, S, *], L] =
+    new Tell[RWST[F, E, L, S, *], L] {
+      val functor = Functor[RWST[F, E, L, S, *]]
+      def tell(l: L) = RWST.tell[F, E, L, S](l)
     }
 }
 
