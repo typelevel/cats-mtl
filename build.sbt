@@ -171,7 +171,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-munit" % "1.0.4"))
+    "org.typelevel" %%% "discipline-munit" % "1.0.5"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
