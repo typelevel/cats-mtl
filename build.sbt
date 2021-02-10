@@ -61,7 +61,7 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.3.1"
+val CatsVersion = "2.4.1"
 
 lazy val root = project
   .in(file("."))
