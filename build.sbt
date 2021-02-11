@@ -29,7 +29,7 @@ ThisBuild / crossScalaVersions := Seq("3.0.0-M2", "3.0.0-M3", "2.12.12", Scala21
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
-    "actions",
+    "ruby",
     "setup-ruby",
     "v1",
     name = Some("Setup Ruby"),
