@@ -25,7 +25,7 @@ ThisBuild / developers := List(
 val Scala213 = "2.13.3"
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
-ThisBuild / crossScalaVersions := Seq("3.0.0-M2", "3.0.0-M3", "2.12.12", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.0.0-M3", "3.0.0-RC1", "2.12.12", Scala213)
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -59,7 +59,7 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.4.1"
+val CatsVersion = "2.4.2"
 
 lazy val root = project
   .in(file("."))
@@ -169,7 +169,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
-    "org.typelevel" %%% "discipline-munit" % "1.0.5"))
+    "org.typelevel" %%% "discipline-munit" % "1.0.6"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
