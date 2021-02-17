@@ -29,9 +29,7 @@ ThisBuild / crossScalaVersions := Seq("3.0.0-M2", "3.0.0-M3", "2.12.12", Scala21
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
-    "ruby",
-    "setup-ruby",
-    "v1",
+    UseRef.Public("ruby", "setup-ruby", "v1"),
     name = Some("Setup Ruby"),
     params = Map("ruby-version" -> "2.7")),
   WorkflowStep.Run(List("gem install jekyll -v 4.0.0"), name = Some("Install Jekyll"))
