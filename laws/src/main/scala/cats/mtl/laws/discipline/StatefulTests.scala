@@ -45,7 +45,9 @@ trait StatefulTests[F[_], S] extends Laws {
     )
   }
 
-  @deprecated("Remove the type parameter at the end of the call to .stateful, it is unneeded", "1.1.2")
+  @deprecated(
+    "Remove the type parameter at the end of the call to .stateful, it is unneeded",
+    "1.1.2")
   private[laws] def stateful[A: Arbitrary](
       implicit ArbS: Arbitrary[S],
       CogenS: Cogen[S],
