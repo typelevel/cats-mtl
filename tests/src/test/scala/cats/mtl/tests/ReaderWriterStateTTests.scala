@@ -47,7 +47,7 @@ class ReaderWriterStateTTests extends StateTTestsBase {
 
   checkAll(
     "ReaderWriterState[Boolean, Int, String, String]",
-    StatefulTests[ReaderWriterState[Boolean, Int, String, *], String].stateful[String])
+    StatefulTests[ReaderWriterState[Boolean, Int, String, *], String].stateful)
   checkAll(
     "Stateful[ReaderWriterState[Boolean, Int, String, *]]",
     SerializableTests.serializable(
@@ -55,7 +55,7 @@ class ReaderWriterStateTTests extends StateTTestsBase {
 
   checkAll(
     "ReaderWriterStateT[Option, Boolean, Int, String, String]",
-    StatefulTests[ReaderWriterStateT[Option, Boolean, Int, String, *], String].stateful[String])
+    StatefulTests[ReaderWriterStateT[Option, Boolean, Int, String, *], String].stateful)
   checkAll(
     "Stateful[ReaderWriterStateT[Option, Boolean, Int, String, *]]",
     SerializableTests.serializable(

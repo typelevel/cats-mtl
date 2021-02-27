@@ -47,14 +47,14 @@ class StateTTestsBase extends BaseSuite {
 }
 
 class StateTTests extends StateTTestsBase {
-  checkAll("State[String, String]", StatefulTests[StateC[String]#l, String].stateful[String])
+  checkAll("State[String, String]", StatefulTests[StateC[String]#l, String].stateful)
   checkAll(
     "Stateful[State[String, ?]]",
     SerializableTests.serializable(Stateful[StateC[String]#l, String]))
 
   checkAll(
     "StateT[Option, String, String]",
-    StatefulTests[StateTC[Option, String]#l, String].stateful[String])
+    StatefulTests[StateTC[Option, String]#l, String].stateful)
   checkAll(
     "Stateful[StateT[Option, String, ?]]",
     SerializableTests.serializable(Stateful[StateTC[Option, String]#l, String]))
@@ -64,7 +64,7 @@ class StateTTests extends StateTTestsBase {
   {
     checkAll(
       "ReaderT[StateT[Option, String, ?], Int, String]",
-      StatefulTests[ReaderTIntOverStateTStringOverOption, String].stateful[String])
+      StatefulTests[ReaderTIntOverStateTStringOverOption, String].stateful)
     checkAll(
       "Stateful[ReaderT[StateT[Option, String, ?], Int, ?]]",
       SerializableTests.serializable(Stateful[ReaderTIntOverStateTStringOverOption, String]))
@@ -72,7 +72,7 @@ class StateTTests extends StateTTestsBase {
 
   checkAll(
     "WriterT[StateT[Option, String, ?], Int, String]",
-    StatefulTests[WriterTIntOverStateTStringOverOption, String].stateful[String])
+    StatefulTests[WriterTIntOverStateTStringOverOption, String].stateful)
   checkAll(
     "Stateful[WriterT[StateT[Option, String, ?], Int, ?]]",
     SerializableTests.serializable(Stateful[WriterTIntOverStateTStringOverOption, String]))
@@ -81,14 +81,14 @@ class StateTTests extends StateTTestsBase {
 
   checkAll(
     "EitherT[StateT[Option, String, ?], Int, String]",
-    StatefulTests[EitherTIntOverStateTStringOverOption, String].stateful[String])
+    StatefulTests[EitherTIntOverStateTStringOverOption, String].stateful)
   checkAll(
     "Stateful[EitherT[StateT[Option, String, ?], Int, ?]]",
     SerializableTests.serializable(Stateful[EitherTIntOverStateTStringOverOption, String]))
 
   checkAll(
     "OptionT[StateT[Option, String, ?], Int, String]",
-    StatefulTests[OptionTOverStateTStringOverOption, String].stateful[String])
+    StatefulTests[OptionTOverStateTStringOverOption, String].stateful)
   checkAll(
     "Stateful[OptionT[StateT[Option, String, ?], Int, ?]]",
     SerializableTests.serializable(Stateful[OptionTOverStateTStringOverOption, String]))
