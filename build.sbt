@@ -22,7 +22,7 @@ ThisBuild / developers := List(
   Developer("edmundnoble", "Edmund Noble", "", url("https://github.com/edmundnoble/"))
 )
 
-val Scala213 = "2.13.3"
+val Scala213 = "2.13.5"
 
 ThisBuild / scalaVersion := crossScalaVersions.value.last
 ThisBuild / crossScalaVersions := Seq("3.0.0-M3", "3.0.0-RC1", "2.12.12", Scala213)
