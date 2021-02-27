@@ -78,7 +78,14 @@ private[mtl] trait TellInstances
       def tell(l: L) = WriterT.tell[F, L](l)
     }
 
-  implicit def tellForRWST[F[_]: Applicative, E, L: Monoid, S]: Tell[RWST[F, E, L, S, *], L] =
+  @deprecated("use tellForRWST2, it drops an unneeded constraint", "1.1.2")
+  def tellForRWST[F[_]: Applicative, E, L: Monoid, S]: Tell[RWST[F, E, L, S, *], L] =
+    new Tell[RWST[F, E, L, S, *], L] {
+      val functor = Functor[RWST[F, E, L, S, *]]
+      def tell(l: L) = RWST.tell[F, E, L, S](l)
+    }
+
+  implicit def tellForRWST2[F[_]: Applicative, E, L, S]: Tell[RWST[F, E, L, S, *], L] =
     new Tell[RWST[F, E, L, S, *], L] {
       val functor = Functor[RWST[F, E, L, S, *]]
       def tell(l: L) = RWST.tell[F, E, L, S](l)

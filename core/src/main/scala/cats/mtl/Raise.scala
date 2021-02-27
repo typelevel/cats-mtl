@@ -89,6 +89,7 @@ private[mtl] trait RaiseMonadPartialOrder[F[_], G[_], E] extends Raise[G, E] {
 }
 
 private[mtl] trait LowPriorityRaiseInstances {
+  @deprecated("This method was never used anywhere", "1.1.2")
   def raiseForMonadPartialOrder[F[_], G[_]: Functor, E](
       implicit F0: Raise[F, E],
       lift0: MonadPartialOrder[F, G]

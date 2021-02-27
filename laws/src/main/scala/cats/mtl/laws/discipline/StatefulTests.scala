@@ -29,7 +29,7 @@ trait StatefulTests[F[_], S] extends Laws {
 
   def laws: StatefulLaws[F, S] = StatefulLaws[F, S]
 
-  def stateful[A: Arbitrary](
+  def stateful(
       implicit ArbS: Arbitrary[S],
       CogenS: Cogen[S],
       EqFU: Eq[F[Unit]],
@@ -44,6 +44,16 @@ trait StatefulTests[F[_], S] extends Laws {
       "modify is get then set" -> ∀(laws.modifyIsGetThenSet _)
     )
   }
+
+  @deprecated(
+    "Remove the type parameter at the end of the call to .stateful, it is unneeded",
+    "1.1.2")
+  private[laws] def stateful[A: Arbitrary](
+      implicit ArbS: Arbitrary[S],
+      CogenS: Cogen[S],
+      EqFU: Eq[F[Unit]],
+      EqFS: Eq[F[S]]): RuleSet =
+    this.stateful(ArbS, CogenS, EqFU, EqFS)
 
 }
 
