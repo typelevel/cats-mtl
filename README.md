@@ -10,7 +10,7 @@ without implicit ambiguity, unlike in pre-1.0.0 cats or Scalaz 7.
 ## Usage
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.1.1"
+libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.2.0"
 ```
 
 If your project uses ScalaJS, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
@@ -34,7 +34,7 @@ If you're not sure where to start or what Cats MTL even is, please refer to the 
 The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws) for more.
 
 ```scala
-libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.1.1" % Test
+libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.2.0" % Test
 ```
 
 These laws are compatible with both Specs2 and ScalaTest.
