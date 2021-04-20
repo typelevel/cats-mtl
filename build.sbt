@@ -11,7 +11,7 @@ replaceCommandAlias(
 ThisBuild / organization := "org.typelevel"
 ThisBuild / organizationName := "Typelevel"
 
-ThisBuild / baseVersion := "1.1"
+ThisBuild / baseVersion := "1.2"
 
 ThisBuild / developers := List(
   Developer("SystemFw", "Fabio Labella", "", url("https://github.com/SystemFw/")),
