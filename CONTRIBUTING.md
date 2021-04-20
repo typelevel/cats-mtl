@@ -24,3 +24,35 @@ because the capability is not provided by `EitherT` itself but the "inner monad"
 Because of this, there's an argument to be made that there's only one transformer
 typeclass instance you should need to provide: that of the "innermost" monad, the one
 that is actually implementing the typeclass operations.
+
+
+### Running Documentation Site
+
+The cats-mtl website runs on [SBT-Microsite](https://47degrees.github.io/sbt-microsites/). 
+To generate the website locally, run `sbt`
+
+```
+$ sbt
+```
+
+This will take you to the `root` project. 
+
+Next, run `makeMicrosite` within sbt
+
+```
+sbt:root> makeMicrosite
+```
+
+Once complete, this will create a _docs/target/site_ directory. Ensure that you have 
+[jekyll](https://jekyllrb.com/) installed. In another terminal, go to the
+_cats-mtl/docs/target/site_ directory, and run in your shell (not sbt):
+
+```
+$ jekyll serve -b /cats-mtl
+```
+
+Browse to `http://127.0.0.1:4000/cats-mtl/` as directed by `jekyll`. The `-b /cats-mtl` is 
+required so that context-path is correct and all resources are resolved correctly.
+
+Keep in mind that you can keep `jekyll` running while you make continuing calls to `makeMicrosite` in sbt. 
+`jekyll` will watch and rebuild continually as you make changes.
