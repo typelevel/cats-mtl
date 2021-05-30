@@ -92,9 +92,9 @@ Pretty neat, next let's actually run this program to see if what we did was corr
 We can do that with `Ior`:
 
 ```scala mdoc
-val luka = validateUser[Ior[Failures, ?]]("Luka", "secret")
-val john = validateUser[Ior[Failures, ?]]("john.doe", "secret123")
-val jane = validateUser[Ior[Failures, ?]]("jane", "reallysecurepassword")
+val luka = validateUser[Ior[Failures, *]]("Luka", "secret")
+val john = validateUser[Ior[Failures, *]]("john.doe", "secret123")
+val jane = validateUser[Ior[Failures, *]]("jane", "reallysecurepassword")
 ```
 
 

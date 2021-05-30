@@ -22,12 +22,12 @@ For example, here's a small example of a method that reads the current state in 
 ```scala mdoc
 import cats.data._
 
-def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
+def checkState: EitherT[StateT[List, Int, *], Exception, String] = for {
   currentState <- EitherT.liftF(StateT.get[List, Int])
   result <- if (currentState > 10) 
-              EitherT.leftT[StateT[List, Int, ?], String](new Exception)
+              EitherT.leftT[StateT[List, Int, *], String](new Exception)
             else 
-              EitherT.rightT[StateT[List, Int, ?], Exception]("All good")
+              EitherT.rightT[StateT[List, Int, *], Exception]("All good")
 } yield result
 ```
 
@@ -74,12 +74,12 @@ First, the original program again:
 ```scala mdoc:reset
 import cats.data._
 
-def checkState: EitherT[StateT[List, Int, ?], Exception, String] = for {
+def checkState: EitherT[StateT[List, Int, *], Exception, String] = for {
   currentState <- EitherT.liftF(StateT.get[List, Int])
   result <- if (currentState > 10) 
-              EitherT.leftT[StateT[List, Int, ?], String](new Exception("Too large"))
+              EitherT.leftT[StateT[List, Int, *], String](new Exception("Too large"))
             else 
-              EitherT.rightT[StateT[List, Int, ?], Exception]("All good")
+              EitherT.rightT[StateT[List, Int, *], Exception]("All good")
 } yield result
 ```
 
@@ -104,14 +104,14 @@ This is great so far, but `checkState` now returns an abstract `F[String]`.
 We need some `F` that has an instance of both `Stateful` and `MonadError`.
 We know that `EitherT` can have a `MonadError` instance and `StateT` can have a `Stateful` instance, but how do we get both?
 Fortunately, cats-mtl allows us to lift instances of mtl classes through our monad transformer stack.
-That means, that e.g. `EitherT[StateT[List, Int, ?], Exception, A]` has both the `MonadError` and `Stateful` instances we need, neat!
+That means, that e.g. `EitherT[StateT[List, Int, *], Exception, A]` has both the `MonadError` and `Stateful` instances we need, neat!
 
 So let's try turning our abstract `F[String]` into an actual value:
 
 <!-- TODO make this back into an mdoc:silent; I had to remove it because of the deprecation of any2stringadd -->
 ```scala
 val materializedProgram =
-  checkState[EitherT[StateT[List, Int, ?], Exception, ?]]
+  checkState[EitherT[StateT[List, Int, *], Exception, *]]
 ```
 
 This process of turning a program defined by an abstract type constructor with additional type class constraints into an actual concrete data type is sometimes called *interpreting* or *materializing*  a program.

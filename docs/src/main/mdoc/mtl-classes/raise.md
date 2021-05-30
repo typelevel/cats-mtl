@@ -35,6 +35,6 @@ def parseNumber[F[_]: Applicative](in: String)(implicit F: Raise[F, String]): F[
   else F.raise(show"'$in' could not be parsed as a number")
 }
 
-val valid = parseNumber[Either[String, ?]]("123")
-val invalid = parseNumber[Either[String, ?]]("123abc")
+val valid = parseNumber[Either[String, *]]("123")
+val invalid = parseNumber[Either[String, *]]("123abc")
 ```

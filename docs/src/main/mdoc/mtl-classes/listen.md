@@ -45,7 +45,7 @@ def logging[F[_]: Monad](implicit F: Tell[F, Chain[String]]): F[Unit] =
     _ <- F.tell(Chain.one("Second log"))
   } yield ()
 
-val result = sendLogsToServer(logging[Writer[Chain[String], ?]]).value
+val result = sendLogsToServer(logging[Writer[Chain[String], *]]).value
 ```
 
 And there, we can see it prints out the log.
