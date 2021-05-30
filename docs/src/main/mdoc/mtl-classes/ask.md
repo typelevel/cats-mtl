@@ -28,7 +28,7 @@ This typeclass comes in handy whenever we want to be able to request a value fro
 A trivial instance for `Ask` can be just a plain function:
 
 ```scala mdoc
-def functionAsk[E]: Ask[E => ?, E] = new Ask[E => ?, E] {
+def functionAsk[E]: Ask[E => *, E] = new Ask[E => *, E] {
   def ask: E => E = identity
 }
 ```
@@ -37,6 +37,6 @@ Other instances include `Reader` and `ReaderT`/`Kleisli`.
 In fact the implementation for `ask` is just `ReaderT.ask`, so it's a perfect fit.
 
 Cats-mtl is able to lift `Ask` instances through a monad transformer stack, so for example,
-`StateT[Reader[E, ?], S, A]` and `EitherT[ReaderT[List, E, ?], Error, A]` will both have `Ask` instances whenever you import from  `cats.mtl.instances._`.
+`StateT[Reader[E, *], S, A]` and `EitherT[ReaderT[List, E, *], Error, A]` will both have `Ask` instances whenever you import from  `cats.mtl.instances._`.
 
 In general every monad transformer stack where `Reader` appears once, will have an instance of `Ask`.

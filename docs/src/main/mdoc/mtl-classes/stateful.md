@@ -94,7 +94,7 @@ As the name suggests, `State` and `StateT` both allow us to use `Stateful`:
 ```scala mdoc
 val initialCache: Cache = Map.empty
 
-val (result, cache) = program[State[Cache, ?]].run(initialCache).value
+val (result, cache) = program[State[Cache, *]].run(initialCache).value
 ```
 
 As per usual, Cats-mtl provides `Stateful` instances for all monad transformer stacks where `StateT` appears.
