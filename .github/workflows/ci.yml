@@ -62,5 +62,5 @@ jobs:
       - run: sbt --client '++${{ matrix.scala }}; ci'
 
       - name: Make microsite
-        if: matrix.scala == '2.13.5'
+        if: matrix.scala == '2.13.6'
         run: sbt --client '++${{ matrix.scala }}; makeMicrosite'
