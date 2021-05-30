@@ -35,7 +35,7 @@ def calculateContentLength[F[_]: Applicative](implicit F: Ask[F, String]): F[Int
 def calculateModifiedContentLength[F[_]: Applicative](implicit F: Local[F, String]): F[Int] =
   F.local(calculateContentLength[F])("Prefix " + _)
 
-val result = calculateModifiedContentLength[Reader[String, ?]].run("Hello")
+val result = calculateModifiedContentLength[Reader[String, *]].run("Hello")
 
 ```
 
@@ -49,5 +49,5 @@ def both[F[_]: Monad](implicit F: Local[F, String]): F[(Int, Int)] = for {
   modifiedLength <- calculateModifiedContentLength[F]
 } yield (length, modifiedLength)
 
-val res = both[Reader[String, ?]].run("Hello")
+val res = both[Reader[String, *]].run("Hello")
 ```

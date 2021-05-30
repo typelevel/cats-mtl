@@ -59,7 +59,7 @@ Instances for `Tell` include `Writer` and `WriterT`, but also `Tuple2`:
 ```scala mdoc
 
 val (log, result): (Chain[String], ServiceResult) =
-  serviceCallWithLog[Writer[Chain[String], ?]](ServiceParams("business", 42)).run
+  serviceCallWithLog[Writer[Chain[String], *]](ServiceParams("business", 42)).run
 ```
 
 And voila, it works as expected.
