@@ -46,6 +46,6 @@ def recovered[F[_]: Applicative](implicit F: Handle[F, String]): F[Boolean] = {
     .map(n => if (n > 5) true else false)
 }
 
-val err = notRecovered[Either[String, ?]]
-val result = recovered[Either[String, ?]]
+val err = notRecovered[Either[String, *]]
+val result = recovered[Either[String, *]]
 ```

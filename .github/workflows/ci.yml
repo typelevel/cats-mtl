@@ -9,9 +9,9 @@ name: Continuous Integration
 
 on:
   pull_request:
-    branches: ['*']
+    branches: ['**']
   push:
-    branches: ['*']
+    branches: ['**']
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [3.0.0, 2.12.14, 2.13.5]
+        scala: [3.0.0, 2.12.13, 2.13.6]
         java: [adopt@1.8]
     runs-on: ${{ matrix.os }}
     steps:
@@ -57,10 +57,10 @@ jobs:
         run: gem install jekyll -v 4.0.0
 
       - name: Check that workflows are up to date
-        run: sbt ++${{ matrix.scala }} githubWorkflowCheck
+        run: sbt --client '++${{ matrix.scala }}; githubWorkflowCheck'
 
-      - run: sbt ++${{ matrix.scala }} ci
+      - run: sbt --client '++${{ matrix.scala }}; ci'
 
       - name: Make microsite
-        if: matrix.scala == '2.13.5'
-        run: sbt ++${{ matrix.scala }} makeMicrosite
+        if: matrix.scala == '2.13.6'
+        run: sbt --client '++${{ matrix.scala }}; makeMicrosite'
