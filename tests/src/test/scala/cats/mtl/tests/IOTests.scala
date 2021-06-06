@@ -18,13 +18,14 @@ package cats.mtl.tests
 
 import cats.effect.testkit.TestInstances
 import cats.mtl.effect.instances.io._
-import cats.mtl.laws.discipline.{HandleTests, StatefulTests}
 import cats.effect.IO
 import cats.effect.IOLocal
 import munit.CatsEffectSuite
 import munit.DisciplineSuite
 
 class IOTests extends CatsEffectSuite with DisciplineSuite with TestInstances {
+  import cats.mtl.laws.discipline.{HandleTests, StatefulTests}
+
   implicit val ticker: Ticker = Ticker()
 
   // Terrible hack!
