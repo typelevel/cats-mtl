@@ -60,10 +60,11 @@ lazy val commonJsSettings = Seq(
 )
 
 val CatsVersion = "2.6.1"
+val CatsEffectVersion = "3.1.1"
 
 lazy val root = project
   .in(file("."))
-  .aggregate(coreJVM, coreJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
+  .aggregate(coreJVM, coreJS, effectJVM, effectJS, lawsJVM, lawsJS, docs, testsJVM, testsJS)
   .settings(name := "root")
   .enablePlugins(NoPublishPlugin)
 
@@ -88,6 +89,29 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
 
 lazy val coreJVM = core.jvm
 lazy val coreJS = core.js
+
+lazy val effect = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .dependsOn(core)
+  .settings(name := "cats-effect-mtl")
+  .settings(
+    libraryDependencies += "org.typelevel" %%% "cats-effect" % CatsEffectVersion,
+    Compile / unmanagedSourceDirectories ++= {
+      val major = if (isDotty.value) "-3" else "-2"
+      List(CrossType.Pure, CrossType.Full).flatMap(
+        _.sharedSrcDir(baseDirectory.value, "main").toList.map(f => file(f.getPath + major))
+      )
+    },
+    Compile / packageSrc / mappings ++= {
+      val base = (Compile / sourceManaged).value
+      (Compile / managedSources).value.map(file => file -> file.relativeTo(base).get.getPath)
+    }
+  )
+  .jsSettings(commonJsSettings)
+  .jvmSettings(commonJvmSettings)
+
+lazy val effectJVM = effect.jvm
+lazy val effectJS = effect.js
 
 lazy val docsMappingsAPIDir =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -164,11 +188,12 @@ lazy val lawsJS = laws.js
 
 lazy val tests = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
-  .dependsOn(core, laws)
+  .dependsOn(core, effect, laws)
   .enablePlugins(NoPublishPlugin)
   .settings(name := "cats-mtl-tests")
   .settings(libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
+    "org.typelevel" %%% "cats-effect-testkit" % CatsEffectVersion,
     "org.typelevel" %%% "discipline-munit" % "1.0.9"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
