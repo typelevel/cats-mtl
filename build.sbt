@@ -195,7 +195,8 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
     "org.typelevel" %%% "cats-testkit" % CatsVersion,
     "org.typelevel" %%% "cats-effect-testkit" % CatsEffectVersion,
     "org.typelevel" %%% "discipline-munit" % "1.0.9",
-    "org.typelevel" %%% "munit-cats-effect-3" % "1.0.3"))
+    "org.typelevel" %%% "munit-cats-effect-3" % "1.0.3"
+  ))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .jsSettings(Test / scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule)))
