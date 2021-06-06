@@ -21,17 +21,15 @@ import cats.mtl.effect.instances.io._
 import cats.mtl.laws.discipline.{HandleTests, StatefulTests}
 import cats.effect.IO
 import cats.effect.IOLocal
+import munit.CatsEffectSuite
+import munit.DisciplineSuite
 
-class IOTests extends BaseSuite with TestInstances {
-
+class IOTests extends CatsEffectSuite with DisciplineSuite with TestInstances {
   implicit val ticker: Ticker = Ticker()
 
-  IOLocal(0)
-    .flatMap { implicit local =>
-      IO.delay(checkAll("Stateful[IO]", StatefulTests[IO, Int].stateful))
-    }
-    .unsafeRunAndForget()
-
+  // Terrible hack!
+  implicit val local: IOLocal[Int] = IOLocal(0).unsafeRunSync()(ioRuntime)
+  checkAll("Stateful[IO]", StatefulTests[IO, Int].stateful)
   checkAll("Handle[IO]", HandleTests[IO, Throwable].handle[Int])
-
+  
 }
