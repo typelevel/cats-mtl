@@ -97,7 +97,7 @@ def checkState[F[_]](implicit S: Stateful[F, Int], E: MonadError[F, Exception]):
 } yield result
 ```
 
-We've reduced the boilerplate immensly!
+We've reduced the boilerplate immensely!
 Now our small program actually looks just like control flow and we didn't need to annotate any types.
 
 This is great so far, but `checkState` now returns an abstract `F[String]`.
