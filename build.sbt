@@ -140,7 +140,7 @@ lazy val docs = project
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-doc-source-url",
-      scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+      scmInfo.value.get.browseUrl + "/tree/main€{FILE_PATH}.scala",
       "-sourcepath",
       (LocalRootProject / baseDirectory).value.getAbsolutePath,
       "-diagrams"

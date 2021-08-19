@@ -1,4 +1,4 @@
-<img src="https://github.com/typelevel/cats-mtl/raw/master/docs/src/main/resources/microsite/img/cats-mtl-logo-microsite.png" width="200px" height="231px" align="right">
+<img src="https://github.com/typelevel/cats-mtl/raw/main/docs/src/main/resources/microsite/img/cats-mtl-logo-microsite.png" width="200px" height="231px" align="right">
 
 ## Cats MTL
 
@@ -31,7 +31,7 @@ If you're not sure where to start or what Cats MTL even is, please refer to the 
 
 ### Laws
 
-The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/master/laws/src/main/scala/cats/mtl/laws) for more.
+The **cats-mtl-laws** artifact provides [Discipline-style](https://github.com/typelevel/discipline) laws for all of the type classes defined in cats-mtl. It is relatively easy to use these laws to test your own implementations of these typeclasses. Take a look [here](https://github.com/typelevel/cats-mtl/tree/main/laws/src/main/scala/cats/mtl/laws) for more.
 
 ```scala
 libraryDependencies += "org.typelevel" %% "cats-mtl-laws" % "1.2.0" % Test
