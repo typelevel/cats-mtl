@@ -18,15 +18,15 @@ package cats
 package mtl
 
 import cats.data.{
-  IndexedStateT,
-  IndexedReaderWriterStateT,
-  WriterT,
-  Kleisli,
-  StateT,
-  OptionT,
   EitherT,
+  IndexedReaderWriterStateT,
+  IndexedStateT,
   IorT,
-  ReaderWriterStateT => RWST
+  Kleisli,
+  OptionT,
+  ReaderWriterStateT => RWST,
+  StateT,
+  WriterT
 }
 import cats.syntax.all._
 
