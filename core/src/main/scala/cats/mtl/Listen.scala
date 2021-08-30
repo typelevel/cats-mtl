@@ -17,15 +17,15 @@
 package cats
 package mtl
 
-import cats.data.{EitherT, StateT, IorT, Kleisli, OptionT, ReaderWriterStateT => RWST, WriterT}
+import cats.data.{EitherT, IorT, Kleisli, OptionT, ReaderWriterStateT => RWST, StateT, WriterT}
 import cats.syntax.all._
 import cats.data.Ior
 
 import scala.annotation.implicitNotFound
 
 /**
- * `Listen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state
- * that is contained in all `F[A]` values, and can be modified using `tell`.
+ * `Listen[F, L]` is a function `F[A] => F[(A, L)]` which exposes some state that is contained
+ * in all `F[A]` values, and can be modified using `tell`.
  *
  * `Listen` has two external laws:
  * {{{
