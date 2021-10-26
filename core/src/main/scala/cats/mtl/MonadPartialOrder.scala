@@ -89,6 +89,13 @@ private[mtl] trait MonadPartialOrderInstances {
       val monadF: Monad[F] = F
       val monadG: Monad[IorT[F, E, *]] = IorT.catsDataMonadErrorForIorT[F, E]
     }
+
+  implicit def monadPartialOrderForContT[F[_]: Defer, C](implicit F: Monad[F]): MonadPartialOrder[F, ContT[F, C, *]] =
+    new MonadPartialOrder[F, ContT[F, C, *]] {
+      def apply[A](fa: F[A]): ContT[F, C, A] = ContT.liftF(fa)
+      val monadF: Monad[F] = F
+      val monadG: Monad[ContT[F, C, *]] = ContT.catsDataContTMonad[F, C]
+    }
 }
 
 object MonadPartialOrder extends MonadPartialOrderInstances {

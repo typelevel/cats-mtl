@@ -178,6 +178,16 @@ private[mtl] trait ChronicleInstances {
             case Ior.Right((l, s2, a)) => (l, s2, Ior.Right(a))
           })
     }
+
+  implicit def chronicleForContT[F[_]: Defer: Monad, E, C: Monoid](
+      implicit F: Chronicle[F, E]): Chronicle[ContT[F, C, *], E] =
+    new Chronicle[ContT[F, C, *], E] {
+      val monad: Monad[ContT[F, C, *]] =
+        MonadPartialOrder.monadPartialOrderForContT[F, C].monadG
+      def dictate(c: E): ContT[F, C, Unit] = ContT.liftF(F.dictate(c))
+      def confess[A](c: E): ContT[F, C, A] = ContT.liftF(F.confess[A](c))
+      def materialize[A](fa: ContT[F, C, A]): ContT[F, C, Ior[E, A]] = ???
+    }
 }
 
 object Chronicle extends ChronicleInstances {
