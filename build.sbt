@@ -2,7 +2,7 @@ import microsites._
 
 ThisBuild / tlBaseVersion := "1.2"
 ThisBuild / startYear := Some(2021)
-
+ThisBuild / homepage := Some(url("https://typelevel.org/cats-mtl/"))
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
   tlGitHubDev("andyscott", "Andy Scott"),
