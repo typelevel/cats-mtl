@@ -1,31 +1,21 @@
 import microsites._
-import sbtcrossproject.{crossProject, CrossType}
 
-replaceCommandAlias(
-  "ci",
-  "; project /; headerCheck; scalafmtCheckAll; clean; testIfRelevant; mimaReportBinaryIssues")
-replaceCommandAlias(
-  "release",
-  "; reload; project /; +mimaReportBinaryIssues; +publishIfRelevant; sonatypeBundleRelease; publishMicrosite")
-
-ThisBuild / organization := "org.typelevel"
-ThisBuild / organizationName := "Typelevel"
-
-ThisBuild / baseVersion := "1.2"
-
+ThisBuild / tlBaseVersion := "1.2"
+ThisBuild / startYear := Some(2021)
+ThisBuild / homepage := Some(url("https://typelevel.org/cats-mtl/"))
 ThisBuild / developers := List(
-  Developer("SystemFw", "Fabio Labella", "", url("https://github.com/SystemFw/")),
-  Developer("andyscott", "Andy Scott", "", url("https://github.com/andyscott/")),
-  Developer("kailuowang", "Kailuo Wang", "", url("https://github.com/kailuowang/")),
-  Developer("djspiewak", "Daniel Spiewak", "", url("https://github.com/djspiewak/")),
-  Developer("LukaJCB", "Luka Jacobowitz", "", url("https://github.com/LukaJCB/")),
-  Developer("edmundnoble", "Edmund Noble", "", url("https://github.com/edmundnoble/"))
+  tlGitHubDev("SystemFw", "Fabio Labella"),
+  tlGitHubDev("andyscott", "Andy Scott"),
+  tlGitHubDev("kailuowang", "Kailuo Wang"),
+  tlGitHubDev("djspiewak", "Daniel Spiewak"),
+  tlGitHubDev("LukaJCB", "Luka Jacobowitz"),
+  tlGitHubDev("edmundnoble", "Edmund Noble")
 )
 
 val Scala213 = "2.13.8"
 
-ThisBuild / scalaVersion := crossScalaVersions.value.last
 ThisBuild / crossScalaVersions := Seq("3.1.1", "2.12.14", Scala213)
+ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Use(
@@ -35,25 +25,19 @@ ThisBuild / githubWorkflowBuildPreamble ++= Seq(
   WorkflowStep.Run(List("gem install jekyll -v 4.0.0"), name = Some("Install Jekyll"))
 )
 
-ThisBuild / githubWorkflowBuild := Seq(
-  WorkflowStep.Sbt(List("ci")),
+ThisBuild / githubWorkflowBuild +=
   WorkflowStep.Sbt(
     List("makeMicrosite"),
     name = Some("Make microsite"),
-    cond = Some(s"matrix.scala == '$Scala213'")))
+    cond = Some(s"matrix.scala == '$Scala213'"))
 
-ThisBuild / githubWorkflowPublishTargetBranches := Seq()
+ThisBuild / githubWorkflowPublishPostamble += WorkflowStep.Sbt(List("publishMicrosite"))
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
 lazy val commonJvmSettings = Seq(
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
-  mimaPreviousArtifacts := {
-    if (isDotty.value)
-      Set()
-    else
-      mimaPreviousArtifacts.value
-  })
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oDF")
+)
 
 lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
@@ -72,12 +56,6 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(name := "cats-mtl")
   .settings(
     libraryDependencies += "org.typelevel" %%% "cats-core" % CatsVersion,
-    Compile / unmanagedSourceDirectories ++= {
-      val major = if (isDotty.value) "-3" else "-2"
-      List(CrossType.Pure, CrossType.Full).flatMap(
-        _.sharedSrcDir(baseDirectory.value, "main").toList.map(f => file(f.getPath + major))
-      )
-    },
     Compile / packageSrc / mappings ++= {
       val base = (Compile / sourceManaged).value
       (Compile / managedSources).value.map(file => file -> file.relativeTo(base).get.getPath)
@@ -136,7 +114,7 @@ lazy val docs = project
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
     scalacOptions := scalacOptions.value.filterNot(_ == "-Werror"),
     ghpagesNoJekyll := false,
-    fatalWarningsInCI := false,
+    tlFatalWarningsInCi := false,
     ScalaUnidoc / unidoc / scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-doc-source-url",
