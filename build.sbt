@@ -14,7 +14,7 @@ ThisBuild / developers := List(
 
 val Scala213 = "2.13.6"
 
-ThisBuild / crossScalaVersions := Seq("3.1.1", "2.12.14", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.1.1", "2.12.15", Scala213)
 ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
 
 ThisBuild / githubWorkflowBuildPreamble ++= Seq(
