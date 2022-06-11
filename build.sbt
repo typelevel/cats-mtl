@@ -1,6 +1,5 @@
 ThisBuild / tlBaseVersion := "1.2"
 ThisBuild / startYear := Some(2021)
-ThisBuild / licenses := List(License.MIT)
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
   tlGitHubDev("andyscott", "Andy Scott"),
