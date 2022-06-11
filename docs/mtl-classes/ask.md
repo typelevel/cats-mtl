@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Ask"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Ask.scala"
-scaladoc: "#cats.mtl.Ask"
----
-
 ## Ask
 
 `Ask[F, E]` allows us to read a value of type `E` from a shared environment into a context `F[_]`.

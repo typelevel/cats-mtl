@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Tell"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Tell.scala"
-scaladoc: "#cats.mtl.Tell"
----
-
 ## Tell
 
 Data types that have instances of `Tell[F, L]` are able to accumulate values of type `L` in the `F[_]` context.

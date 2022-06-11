@@ -1,11 +1,3 @@
----
-layout: page
-title:  "Getting Started"
-section: "gettingstarted"
-position: 2
----
-
-
 ## What is MTL?
 
 MTL is an acronym and stands for Monad Transformer Library. 
@@ -126,15 +118,15 @@ We suggest you start learning the MTL classes first and learn how lifting works 
 
 cats-mtl provides the following "MTL classes":
 
- - [Ask](mtl-classes/ask.html)
- - [Local](mtl-classes/local.html)
- - [Raise](mtl-classes/raise.html)
- - [Handle](mtl-classes/handle.html)
- - [Tell](mtl-classes/tell.html)
- - [Listen](mtl-classes/listen.html)
+ - [Ask](mtl-classes/ask.md)
+ - [Local](mtl-classes/local.md)
+ - [Raise](mtl-classes/raise.md)
+ - [Handle](mtl-classes/handle.md)
+ - [Tell](mtl-classes/tell.md)
+ - [Listen](mtl-classes/listen.md)
  - Censor
- - [Stateful](mtl-classes/stateful.html)
- - [Chronicle](mtl-classes/chronicle.html)
+ - [Stateful](mtl-classes/stateful.md)
+ - [Chronicle](mtl-classes/chronicle.md)
 
 If you're wondering why some of these are based on `Monad` and others on `Functor` or `Applicative`, 
  it is because these are the smallest superclass dependencies practically possible with which you can define their laws.
