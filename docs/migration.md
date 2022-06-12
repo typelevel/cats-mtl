@@ -1,10 +1,3 @@
----
-layout: page
-title:  "Migration Guide"
-section: "migration"
-position: 5
----
-
 ## Migration guide
 
 Here's a map from pre-1.x cats typeclasses to cats-mtl typeclasses:

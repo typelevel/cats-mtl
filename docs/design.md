@@ -1,10 +1,3 @@
----
-layout: page
-title:  "Design"
-section: "design"
-position: 6
----
-
 cats-mtl Design
 ===============
 Overall, cats-mtl has similar design to cats: 

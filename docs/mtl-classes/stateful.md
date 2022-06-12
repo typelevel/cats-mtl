@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Stateful"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Stateful.scala"
-scaladoc: "#cats.mtl.Stateful"
----
-
 ## Stateful
 
 `Stateful[F, S]` describes the capability to read and write state values of type `S` inside the `F[_]` context.
