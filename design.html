@@ -1,97 +1,193 @@
-<!DOCTYPE html><html><head><title>Cats MTL: Design</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Typelevel contributors" /><meta name="description" content="Monad Transformers made easy" /><meta name="og:image" content="/cats-mtl/img/poster.png" /><meta name="image" property="og:image" content="/cats-mtl/img/poster.png" /><meta name="og:title" content="Cats MTL: Design" /><meta name="title" property="og:title" content="Cats MTL: Design" /><meta name="og:site_name" content="Cats MTL" /><meta name="og:url" content="https://typelevel.org/cats-mtl/" /><meta name="og:type" content="website" /><meta name="og:description" content="Monad Transformers made easy" /><link rel="icon" type="image/png" href="/cats-mtl/img/favicon.png" /><meta name="twitter:title" content="Cats MTL: Design" /><meta name="twitter:image" content="/cats-mtl/img/poster.png" /><meta name="twitter:description" content="Monad Transformers made easy" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/cats-mtl/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/cats-mtl/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/cats-mtl/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/cats-mtl/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/cats-mtl/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/cats-mtl/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/cats-mtl/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/cats-mtl/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/cats-mtl/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/cats-mtl/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/cats-mtl/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/cats-mtl/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/cats-mtl/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/cats-mtl/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/cats-mtl/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/cats-mtl/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/cats-mtl/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/cats-mtl/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/cats-mtl/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/cats-mtl/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cats-mtl/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cats-mtl/css/light-style.css" /></head><body class="page"><nav id="navigation" aria-labelledby="main-navigation"><div class="navbar-wrapper container"><div class="navigation-brand"><a href="/cats-mtl/" class="brand background-mask"><div class="page-icon-wrapper"></div><span class="brand-title">Cats MTL</span></a></div><div class="navigation-menu"><ul><li class="search-nav"><div id="search-dropdown"><label><i class="fa fa-search"></i>Search</label><input id="search-bar" type="text" placeholder="Enter keywords here..." onclick="displayToggleSearch(event)" /><ul id="search-dropdown-content" class="dropdown dropdown-content"></ul></div></li><li><a href="https://github.com/typelevel/cats-mtl" target="_blank" rel="noopener noreferrer"><i class="nav-item-icon fa fa-lg fa-github" hidden="true"></i><span class="nav-item-text">GitHub</span></a></li><li><a href="api"><i class="nav-item-icon fa fa-lg fa-file-text" hidden="true"></i><span class="nav-item-text">Scaladoc</span></a></li></ul></div></div></nav><nav class="menu-container" aria-labelledby="section-navigation"><div id="horizontal-menu"><ul class="horizontal-nav"><li><a class="" href="/cats-mtl/">Home</a></li><li><a class="" href="/cats-mtl/getting-started.html">Getting Started</a></li><li><a class="" href="/cats-mtl/mtl-classes.html">MTL Type Classes</a></li><li><a class="" href="/cats-mtl/migration.html">Migration Guide</a></li><li><a class=" active " href="/cats-mtl/design.html">Design</a></li><li><a class="" href="/cats-mtl/contributing.html">Contributing</a></li></ul></div></nav><main id="site-main" class="page-site-main"><section class="use"><div class="container"><div id="content"><h1 id="cats-mtl-design">cats-mtl Design</h1>
-<p>Overall, cats-mtl has similar design to cats: 
-instances package, syntax package, implicits package.</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 0.18.1 + Helium Theme" />
+    <title>cats-mtl Design</title>
+    
+      <meta name="author" content="Fabio Labella"/>
+    
+      <meta name="author" content="Andy Scott"/>
+    
+      <meta name="author" content="Kailuo Wang"/>
+    
+      <meta name="author" content="Daniel Spiewak"/>
+    
+      <meta name="author" content="Luka Jacobowitz"/>
+    
+      <meta name="author" content="Edmund Noble"/>
+    
+    
+      <meta name="description" content="docs"/>
+    
+    
+      <link rel="icon" sizes="32x32" type="image/png" href="https://typelevel.org/img/favicon.png"/>
+    
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.207/distr/fira_code.css">
+    
+    <link rel="stylesheet" type="text/css" href="helium/icofont.min.css" />
+    <link rel="stylesheet" type="text/css" href="helium/laika-helium.css" />
+    <link rel="stylesheet" type="text/css" href="site/styles.css" />
+    <script src="helium/laika-helium.js"></script>
+    
+    
+    <script> /* for avoiding page load transitions */ </script>
+  </head>
 
-<p>There’s also a hierarchy package, because 
-cats-mtl uses a different typeclass encoding
-than cats to avoid implicit ambiguity.</p>
+  <body>
 
-<p>The problem looks like this:</p>
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats._</span>
+    <header id="top-bar">
 
-<span class="k">type</span> <span class="kt">Err</span>
-<span class="k">type</span> <span class="kt">Log</span>
+      <div class="row">
+        <a id="nav-icon">
+          <i class="icofont-laika" title="Navigation">&#xefa2;</i>
+        </a>
+        
+      </div>
 
-<span class="k">def</span> <span class="nf">f</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span><span class="kt">:</span> <span class="kt">MonadError</span><span class="o">[</span><span class="kt">?</span>, <span class="kt">Err</span><span class="o">]</span><span class="kt">:</span> <span class="kt">MonadWriter</span><span class="o">[</span><span class="kt">?</span>, <span class="kt">Log</span><span class="o">]]</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-      <span class="c1">// implicitly[Monad[F]] // ambiguity between derived monads from MonadError and MonadWriter</span>
-      <span class="c1">// 1.pure[F].flatMap(_ =&gt; 1.raise) // same ambiguity affects MonadSyntax</span>
-      <span class="o">()</span>
-<span class="o">}</span>
-</code></pre></div></div>
+      <a class="image-link" href="https://typelevel.org"><img src="https://typelevel.org/img/logo.svg"></a>
 
-<p>The cause is that the implicit conversions <code class="language-plaintext highlighter-rouge">MonadError[F, Err] =&gt; Monad[F]</code> and 
-<code class="language-plaintext highlighter-rouge">MonadWriter[F, Log] =&gt; Monad[F]</code> are the same priority. If those conversions 
-were different priorities, the issue would be fixed, and that’s exactly what cats-mtl’s encoding does.</p>
+      <span class="row links"><a class="icon-link svg-link" href="https://www.javadoc.io/doc/org.typelevel/cats-mtl-docs_2.13/1.2.1/"><span title="API"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M75,47.5c13.246,0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm-50,-0c13.246,-0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,-0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm2.705,16.735l7.239,0l0.622,-4.904l-21.833,0l-0,4.904l7.589,0l0,22.067l6.383,0l-0,-22.067Zm58.076,7.265c-0,-8.757 -3.698,-14.166 -10.781,-14.166c-7.083,-0 -10.781,5.604 -10.781,14.166c0,8.757 3.698,14.166 10.781,14.166c7.083,0 10.781,-5.604 10.781,-14.166Zm-6.539,0c0,6.538 -1.128,9.496 -4.242,9.496c-2.997,0 -4.242,-2.88 -4.242,-9.496c-0,-6.616 1.206,-9.496 4.242,-9.496c3.036,-0 4.242,2.88 4.242,9.496Zm-29.242,-67c13.246,0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm0.512,9.834c-7.122,-0 -12.609,5.098 -12.609,14.127c-0,9.263 5.215,14.205 12.532,14.205c4.164,0 7.083,-1.634 9.068,-3.658l-2.88,-3.697c-1.518,1.206 -3.153,2.413 -5.838,2.413c-3.697,-0 -6.266,-2.763 -6.266,-9.263c-0,-6.616 2.724,-9.379 6.149,-9.379c2.102,-0 3.892,0.778 5.371,1.984l3.113,-3.775c-2.257,-1.868 -4.748,-2.957 -8.64,-2.957Z"/>
+  </g>
+</svg></span></a><a class="icon-link svg-link" href="https://github.com/typelevel/cats-mtl"><span title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a><a class="icon-link" href="https://discord.gg/XF3CXcMzqD"><i class="icofont-laika" title="Chat">&#xeed5;</i></a><a class="icon-link" href="https://twitter.com/typelevel"><i class="icofont-laika" title="Twitter">&#xed7a;</i></a></span>
 
-<p>Similarly to the <a href="https://github.com/aloiscochard/scato">Scato</a> project, instead of inheritance
-the transformer classes in cats-mtl use aggregation. Mtl classes thus contain instances
-of their superclasses.</p>
+    </header>
 
-<h2 id="motivation">Motivation</h2>
+    <nav id="sidebar">
 
-<p>The motivation for cats-mtl’s existence can be summed up in a few points:</p>
-<ul>
-  <li>using subtyping to express typeclass subclassing results in implicit ambiguities,
-and doing it another way would result in a massive inconsistency inside cats if only done for MTL classes.
-for a detailed explanation, see Adelbert Chang’s article
-<a href="http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html">here</a>.</li>
-  <li>most MTL classes do not actually require <code class="language-plaintext highlighter-rouge">Monad</code> as a constraint for their laws.
-cats-mtl weakens this constraint to <code class="language-plaintext highlighter-rouge">Functor</code> or <code class="language-plaintext highlighter-rouge">Applicative</code> whenever possible,
-with the result that there’s now a notion of a <code class="language-plaintext highlighter-rouge">Functor</code> transformer stack and 
-<code class="language-plaintext highlighter-rouge">Applicative</code> transformer stack in addition to that of a <code class="language-plaintext highlighter-rouge">Monad</code> transformer stack.</li>
-  <li>the most used operations on <code class="language-plaintext highlighter-rouge">MonadWriter</code> and <code class="language-plaintext highlighter-rouge">MonadReader</code> are <code class="language-plaintext highlighter-rouge">tell</code> and <code class="language-plaintext highlighter-rouge">ask</code>,
-and the other operations severely restrict the space of implementations despite being
-used much less. To fix this <code class="language-plaintext highlighter-rouge">Listen</code> and <code class="language-plaintext highlighter-rouge">Local</code> are subclasses
-of <code class="language-plaintext highlighter-rouge">Tell</code> and <code class="language-plaintext highlighter-rouge">Ask</code>, which have only the essentials.</li>
-</ul>
+      <div class="row">
+        <a class="icon-link svg-link" href="https://www.javadoc.io/doc/org.typelevel/cats-mtl-docs_2.13/1.2.1/"><span title="API"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M75,47.5c13.246,0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm-50,-0c13.246,-0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,-0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm2.705,16.735l7.239,0l0.622,-4.904l-21.833,0l-0,4.904l7.589,0l0,22.067l6.383,0l-0,-22.067Zm58.076,7.265c-0,-8.757 -3.698,-14.166 -10.781,-14.166c-7.083,-0 -10.781,5.604 -10.781,14.166c0,8.757 3.698,14.166 10.781,14.166c7.083,0 10.781,-5.604 10.781,-14.166Zm-6.539,0c0,6.538 -1.128,9.496 -4.242,9.496c-2.997,0 -4.242,-2.88 -4.242,-9.496c-0,-6.616 1.206,-9.496 4.242,-9.496c3.036,-0 4.242,2.88 4.242,9.496Zm-29.242,-67c13.246,0 24,10.754 24,24c0,13.246 -10.754,24 -24,24c-13.246,0 -24,-10.754 -24,-24c0,-13.246 10.754,-24 24,-24Zm0.512,9.834c-7.122,-0 -12.609,5.098 -12.609,14.127c-0,9.263 5.215,14.205 12.532,14.205c4.164,0 7.083,-1.634 9.068,-3.658l-2.88,-3.697c-1.518,1.206 -3.153,2.413 -5.838,2.413c-3.697,-0 -6.266,-2.763 -6.266,-9.263c-0,-6.616 2.724,-9.379 6.149,-9.379c2.102,-0 3.892,0.778 5.371,1.984l3.113,-3.775c-2.257,-1.868 -4.748,-2.957 -8.64,-2.957Z"/>
+  </g>
+</svg></span></a><a class="icon-link svg-link" href="https://github.com/typelevel/cats-mtl"><span title="Source Code"><svg class="svg-icon" width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g class="svg-shape">
+    <path d="M49.995,1c-27.609,-0 -49.995,22.386 -49.995,50.002c-0,22.09 14.325,40.83 34.194,47.444c2.501,0.458 3.413,-1.086 3.413,-2.412c0,-1.185 -0.043,-4.331 -0.067,-8.503c-13.908,3.021 -16.843,-6.704 -16.843,-6.704c-2.274,-5.773 -5.552,-7.311 -5.552,-7.311c-4.54,-3.103 0.344,-3.042 0.344,-3.042c5.018,0.356 7.658,5.154 7.658,5.154c4.46,7.64 11.704,5.433 14.552,4.156c0.454,-3.232 1.744,-5.436 3.174,-6.685c-11.102,-1.262 -22.775,-5.553 -22.775,-24.713c-0,-5.457 1.949,-9.92 5.147,-13.416c-0.516,-1.265 -2.231,-6.348 0.488,-13.233c0,0 4.199,-1.344 13.751,5.126c3.988,-1.108 8.266,-1.663 12.518,-1.682c4.245,0.019 8.523,0.574 12.517,1.682c9.546,-6.47 13.736,-5.126 13.736,-5.126c2.728,6.885 1.013,11.968 0.497,13.233c3.204,3.496 5.141,7.959 5.141,13.416c0,19.209 -11.691,23.436 -22.83,24.673c1.795,1.544 3.394,4.595 3.394,9.26c0,6.682 -0.061,12.076 -0.061,13.715c0,1.338 0.899,2.894 3.438,2.406c19.853,-6.627 34.166,-25.354 34.166,-47.438c-0,-27.616 -22.389,-50.002 -50.005,-50.002"/>
+  </g>
+</svg></span></a><a class="icon-link" href="https://discord.gg/XF3CXcMzqD"><i class="icofont-laika" title="Chat">&#xeed5;</i></a><a class="icon-link" href="https://twitter.com/typelevel"><i class="icofont-laika" title="Twitter">&#xed7a;</i></a>
+      </div>
 
-<p>The first point there means that it’s impossible for cats-mtl type classes
-to expose their base class instances implicitly; for example <code class="language-plaintext highlighter-rouge">F[_]: Stateful[?[_], S]</code> isn’t enough
-for a <code class="language-plaintext highlighter-rouge">Monad[F]</code> to be visible in implicit scope, despite <code class="language-plaintext highlighter-rouge">Stateful</code> containing a <code class="language-plaintext highlighter-rouge">Monad</code>
-instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
-explicitly can’t work with cats and cats-mtl separate, as the <code class="language-plaintext highlighter-rouge">Monad[F]</code> instance for the type 
-from cats will always conflict with a derived instance.</p>
+      <ul class="nav-list">
+        <li class="level1"><a href="index.html">Cats MTL</a></li>
+        <li class="level1"><a href="getting-started.html">What is MTL?</a></li>
+        <li class="level1"><a href="mtl-classes.html">MTL classes summary</a></li>
+        <li class="level1"><a href="migration.html">Migration guide</a></li>
+        <li class="level1 active"><a href="#">cats-mtl Design</a></li>
+        <li class="level1"><a href="contributing.html">Contributing</a></li>
+        <li class="level1 nav-header">mtl-classes</li>
+        <li class="level2"><a href="mtl-classes/listen.html">Listen</a></li>
+        <li class="level2"><a href="mtl-classes/tell.html">Tell</a></li>
+        <li class="level2"><a href="mtl-classes/raise.html">Raise</a></li>
+        <li class="level2"><a href="mtl-classes/ask.html">Ask</a></li>
+        <li class="level2"><a href="mtl-classes/local.html">Local</a></li>
+        <li class="level2"><a href="mtl-classes/stateful.html">Stateful</a></li>
+        <li class="level2"><a href="mtl-classes/chronicle.html">Chronicle</a></li>
+        <li class="level2"><a href="mtl-classes/handle.html">Handle</a></li>
+      </ul>
 
-<p>Thus <code class="language-plaintext highlighter-rouge">F[_]: Stateful[?[_], S]</code>, translated, becomes <code class="language-plaintext highlighter-rouge">F[_]: Monad: Stateful[?[_], S]</code>.</p>
+      <ul class="nav-list">
+        <li class="level1 nav-header">Related Projects</li>
+        
+          <li class="level2"><a href="https://typelevel.org/cats/">cats</a></li>
+        
+      </ul>
 
-<p>For some historical info on the origins of cats-mtl, see:</p>
+    </nav>
 
-<p><a href="https://github.com/typelevel/cats/issues/1210">https://github.com/typelevel/cats/issues/1210</a></p>
+    <div id="container">
 
-<p><a href="https://github.com/typelevel/cats/pull/1379">https://github.com/typelevel/cats/pull/1379</a></p>
+      <nav id="page-nav">
+        <p class="header"><a href="#">cats-mtl Design</a></p>
 
-<p><a href="https://github.com/typelevel/cats/pull/1751">https://github.com/typelevel/cats/pull/1751</a></p>
+        <ul class="nav-list">
+          <li class="level1"><a href="#motivation">Motivation</a></li>
+          <li class="level1"><a href="#laws">Laws</a></li>
+        </ul>
 
-<h2 id="laws">Laws</h2>
+        <p class="footer"></p>
+      </nav>
 
-<p>Type class laws come in a few varieties in cats-mtl: internal, external, and free.</p>
+      <main class="content">
 
-<p>Internal laws dictate how multiple operations inter-relate.
-One side of the equation can always be reduced to a single function application of an operation.
-These express “default” implementations that should be indistinguishable in result from the actual implementation.</p>
+        <h1 id="cats-mtl-design" class="title">cats-mtl Design</h1>
+        <p>Overall, cats-mtl has similar design to cats: 
+        instances package, syntax package, implicits package.</p>
+        <p>There&#39;s also a hierarchy package, because 
+        cats-mtl uses a different typeclass encoding
+        than cats to avoid implicit ambiguity.</p>
+        <p>The problem looks like this:</p>
+        <pre class="keep-together pdf epub"><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">_</span><span>
 
-<p>External laws are laws that still need to be tested but don’t fall into the internal laws.</p>
+</span><span class="keyword">type</span><span> </span><span class="type-name">Err</span><span>
+</span><span class="keyword">type</span><span> </span><span class="type-name">Log</span><span>
 
-<p>Free laws are (in theory) unnecessary to test, because they are implied by other laws and the 
-types of the operations in question. There will usually be rudimentary proofs 
-or some justification attached to make sure these aren’t just made up.</p>
+</span><span class="keyword">def</span><span> </span><span class="declaration-name">f</span><span>[</span><span class="type-name">F</span><span>[</span><span class="identifier">_</span><span>]: </span><span class="type-name">MonadError</span><span>[?, </span><span class="type-name">Err</span><span>]: </span><span class="type-name">MonadWriter</span><span>[?, </span><span class="type-name">Log</span><span>]]: </span><span class="type-name">Unit</span><span> = {
+      </span><span class="comment">// implicitly[Monad[F]] // ambiguity between derived monads from MonadError and MonadWriter
+</span><span>      </span><span class="comment">// 1.pure[F].flatMap(_ =&gt; 1.raise) // same ambiguity affects MonadSyntax
+</span><span>      ()
+}</span></code></pre>
+        <p>The cause is that the implicit conversions <code>MonadError[F, Err] =&gt; Monad[F]</code> and 
+        <code>MonadWriter[F, Log] =&gt; Monad[F]</code> are the same priority. If those conversions 
+        were different priorities, the issue would be fixed, and that&#39;s exactly what cats-mtl&#39;s encoding does.</p>
+        <p>Similarly to the <a href="https://github.com/aloiscochard/scato">Scato</a> project, instead of inheritance
+        the transformer classes in cats-mtl use aggregation. Mtl classes thus contain instances
+        of their superclasses.</p>
+        
+        <h2 id="motivation" class="section">Motivation<a class="anchor-link right" href="#motivation"><i class="icofont-laika">&#xef71;</i></a></h2>
+        <p>The motivation for cats-mtl&#39;s existence can be summed up in a few points:
+        - using subtyping to express typeclass subclassing results in implicit ambiguities,
+          and doing it another way would result in a massive inconsistency inside cats if only done for MTL classes.
+          for a detailed explanation, see Adelbert Chang&#39;s article
+          <a href="http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html">here</a>.
+        - most MTL classes do not actually require <code>Monad</code> as a constraint for their laws.
+          cats-mtl weakens this constraint to <code>Functor</code> or <code>Applicative</code> whenever possible,
+          with the result that there&#39;s now a notion of a <code>Functor</code> transformer stack and 
+          <code>Applicative</code> transformer stack in addition to that of a <code>Monad</code> transformer stack.
+        - the most used operations on <code>MonadWriter</code> and <code>MonadReader</code> are <code>tell</code> and <code>ask</code>,
+          and the other operations severely restrict the space of implementations despite being
+          used much less. To fix this <code>Listen</code> and <code>Local</code> are subclasses
+          of <code>Tell</code> and <code>Ask</code>, which have only the essentials.</p>
+        <p>The first point there means that it&#39;s impossible for cats-mtl type classes
+        to expose their base class instances implicitly; for example <code>F[_]: Stateful[?[_], S]</code> isn&#39;t enough
+        for a <code>Monad[F]</code> to be visible in implicit scope, despite <code>Stateful</code> containing a <code>Monad</code>
+        instance as a member. The root cause here is that prioritizing implicit conversions with subtyping
+        explicitly can&#39;t work with cats and cats-mtl separate, as the <code>Monad[F]</code> instance for the type 
+        from cats will always conflict with a derived instance.</p>
+        <p>Thus <code>F[_]: Stateful[?[_], S]</code>, translated, becomes <code>F[_]: Monad: Stateful[?[_], S]</code>.</p>
+        <p>For some historical info on the origins of cats-mtl, see:</p>
+        <p><a href="https://github.com/typelevel/cats/issues/1210"><a href="https://github.com/typelevel/cats/issues/1210">https://github.com/typelevel/cats/issues/1210</a></a></p>
+        <p><a href="https://github.com/typelevel/cats/pull/1379"><a href="https://github.com/typelevel/cats/pull/1379">https://github.com/typelevel/cats/pull/1379</a></a></p>
+        <p><a href="https://github.com/typelevel/cats/pull/1751"><a href="https://github.com/typelevel/cats/pull/1751">https://github.com/typelevel/cats/pull/1751</a></a></p>
+        
+        <h2 id="laws" class="section">Laws<a class="anchor-link right" href="#laws"><i class="icofont-laika">&#xef71;</i></a></h2>
+        <p>Type class laws come in a few varieties in cats-mtl: internal, external, and free.</p>
+        <p>Internal laws dictate how multiple operations inter-relate.
+        One side of the equation can always be reduced to a single function application of an operation.
+        These express &quot;default&quot; implementations that should be indistinguishable in result from the actual implementation.</p>
+        <p>External laws are laws that still need to be tested but don&#39;t fall into the internal laws.</p>
+        <p>Free laws are (in theory) unnecessary to test, because they are implied by other laws and the 
+        types of the operations in question. There will usually be rudimentary proofs 
+        or some justification attached to make sure these aren&#39;t just made up.</p>
 
-</div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><p>Cats MTL is designed and developed by <a href="https://typelevel.org/cats-mtl/" target="_blank" rel="noopener noreferrer">Typelevel contributors</a></p></div><div class="row"><div><p>Website built with <a href="https://47degrees.github.io/sbt-microsites/" target="_blank" rel="noopener noreferrer">sbt-microsites</a> - © 2019 <a href="https://www.47deg.com/" target="_blank" rel="noopener noreferrer">47 Degrees</a></p></div></div></div></footer><script src="/cats-mtl/highlight/highlight.pack.js"></script><script src="/cats-mtl/lunr/lunr.js"></script><script>
-// For all code blocks, copy the language from the containing div
-// to the inner code tag (where hljs expects it to be)
-const langPrefix = 'language-';
-document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
-  div.classList.forEach(function(cssClass) {
-    if (cssClass.startsWith(langPrefix)) {
-      const lang = cssClass.substring(langPrefix.length);
-      div.querySelectorAll('pre code').forEach(function(code) {
-        code.classList.add(lang);
-      });
-    }
-  });
-});
+        <hr style="margin-top: 30px"/>
+        <footer style="font-size: 90%; text-align: center">
+          cats-mtl is a <a href="https://typelevel.org/">Typelevel</a> project distributed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache-2.0</a> license.
+        </footer>
 
-hljs.configure({languages:['scala','java','bash']});
-hljs.initHighlightingOnLoad();
-      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script>((window.gitter = {}).chat = {}).options = {
-room: 'typelevel/cats-mtl'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/cats-mtl/js/version-selector.js"></script><script src="/cats-mtl/js/search.js"></script></body></html>
+      </main>
+
+    </div>
+
+  </body>
+</html>
