@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Listen"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Listen.scala"
-scaladoc: "#cats.mtl.Listen"
----
-
 ## Listen
 
 `Listen` extends `Tell` and expands upon its ability to write to a log, by also providing a way to access the log when given a value `F[A]`. 

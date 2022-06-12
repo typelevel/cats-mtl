@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Chronicle"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Chronicle.scala"
-scaladoc: "#cats.mtl.Chronicle"
----
-
 ## Chronicle
 
 `Chronicle[F, E]` allows us to both accumulate values and also short-circuit computations with a final output.

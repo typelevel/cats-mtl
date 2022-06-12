@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Local"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Local.scala"
-scaladoc: "#cats.mtl.Local"
----
-
 ## Local
 
 `Local[F, E]` extends `Ask` and allows to us express local modifications of the environment.

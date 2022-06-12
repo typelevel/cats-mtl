@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "MTL Type Classes"
-section: "mtlclasses"
-position: 3
----
-
-
 ## MTL classes summary
 
 `Tell[F, L]` is the ability to "log" values `L` inside a context `F[_]`, as an effect.

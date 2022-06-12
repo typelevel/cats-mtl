@@ -1,12 +1,4 @@
----
-layout: docs
-title:  "Raise"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Raise.scala"
-scaladoc: "#cats.mtl.Raise"
----
-
-## Raise
+# Raise
 
 `Raise[F, E]` expresses the ability to raise errors of type `E` in a functorial `F[_]` context.
 This means that a value of type `F[A]` may contain no `A` values but instead an `E` error value,

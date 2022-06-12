@@ -1,11 +1,3 @@
----
-layout: docs
-title:  "Handle"
-section: "mtlclasses"
-source: "core/src/main/scala/cats/mtl/Handle.scala"
-scaladoc: "#cats.mtl.Handle"
----
-
 ## Handle
 
 `Handle[F, E]` extends `Raise` with the ability to also handle raised errors.
