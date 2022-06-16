@@ -1,4 +1,4 @@
-ThisBuild / tlBaseVersion := "1.2"
+ThisBuild / tlBaseVersion := "1.3"
 ThisBuild / startYear := Some(2021)
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
@@ -11,7 +11,7 @@ ThisBuild / developers := List(
 
 val Scala213 = "2.13.8"
 
-ThisBuild / crossScalaVersions := Seq("3.1.1", "2.12.15", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.1.2", "2.12.16", Scala213)
 ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
 
 lazy val commonJvmSettings = Seq(
@@ -22,11 +22,16 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.7.0"
+lazy val commonNativeSettings = Seq(
+  doctestGenTests := Seq.empty,
+  tlVersionIntroduced := List("2.12", "2.13", "3").map(_ -> "1.3.0").toMap
+)
+
+val CatsVersion = "2.8.0"
 
 lazy val root = tlCrossRootProject.aggregate(core, laws, tests)
 
-lazy val core = crossProject(JSPlatform, JVMPlatform)
+lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .settings(name := "cats-mtl")
   .settings(
@@ -34,17 +39,18 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   )
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
+  .nativeSettings(commonNativeSettings)
 
-lazy val laws = crossProject(JSPlatform, JVMPlatform)
+lazy val laws = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .dependsOn(core)
   .settings(name := "cats-mtl-laws")
   .settings(libraryDependencies += "org.typelevel" %%% "cats-laws" % CatsVersion)
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
+  .nativeSettings(commonNativeSettings)
 
-lazy val tests = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
+lazy val tests = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .dependsOn(core, laws)
   .enablePlugins(NoPublishPlugin)
   .settings(name := "cats-mtl-tests")
@@ -55,6 +61,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform)
       "org.typelevel" %%% "discipline-munit" % "1.0.9"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
+  .nativeSettings(commonNativeSettings)
 
 lazy val unidocs = project
   .in(file("unidocs"))
