@@ -22,7 +22,7 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
-val CatsVersion = "2.7.0"
+val CatsVersion = "2.8.0"
 
 lazy val root = tlCrossRootProject.aggregate(core, laws, tests)
 
