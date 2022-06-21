@@ -86,14 +86,14 @@
         <li class="level1"><a href="../design.html">cats-mtl Design</a></li>
         <li class="level1"><a href="../contributing.html">Contributing</a></li>
         <li class="level1 nav-header">mtl-classes</li>
-        <li class="level2"><a href="listen.html">Listen</a></li>
-        <li class="level2"><a href="tell.html">Tell</a></li>
         <li class="level2"><a href="raise.html">Raise</a></li>
+        <li class="level2"><a href="tell.html">Tell</a></li>
         <li class="level2"><a href="ask.html">Ask</a></li>
+        <li class="level2"><a href="listen.html">Listen</a></li>
         <li class="level2"><a href="local.html">Local</a></li>
+        <li class="level2"><a href="handle.html">Handle</a></li>
         <li class="level2"><a href="stateful.html">Stateful</a></li>
         <li class="level2 active"><a href="#">Chronicle</a></li>
-        <li class="level2"><a href="handle.html">Handle</a></li>
       </ul>
 
       <ul class="nav-list">
@@ -187,11 +187,11 @@
         Pretty neat, next let&#39;s actually run this program to see if what we did was correct.
         We can do that with <code>Ior</code>:</p>
         <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">luka</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;Luka&quot;</span><span>, </span><span class="string-literal">&quot;secret&quot;</span><span>)
-</span><span class="comment">// luka: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Left(
+</span><span class="comment">// luka: Ior[NonEmptyChainImpl.Type[String], User] = Left(
 //   a = Singleton(a = &quot;Password too short&quot;)
 // )
 </span><span class="keyword">val</span><span> </span><span class="identifier">john</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;john.doe&quot;</span><span>, </span><span class="string-literal">&quot;secret123&quot;</span><span>)
-</span><span class="comment">// john: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Both(
+</span><span class="comment">// john: Ior[NonEmptyChainImpl.Type[String], User] = Both(
 //   a = Append(
 //     leftNE = Singleton(a = &quot;Dot in name is deprecated&quot;),
 //     rightNE = Singleton(a = &quot;Password should be longer&quot;)
@@ -202,7 +202,7 @@
 //   )
 // )
 </span><span class="keyword">val</span><span> </span><span class="identifier">jane</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;jane&quot;</span><span>, </span><span class="string-literal">&quot;reallysecurepassword&quot;</span><span>)
-</span><span class="comment">// jane: Ior[cats.data.NonEmptyChainImpl.Type[String], User] = Right(
+</span><span class="comment">// jane: Ior[NonEmptyChainImpl.Type[String], User] = Right(
 //   b = User(
 //     name = Username(value = &quot;jane&quot;),
 //     pw = Password(value = &quot;reallysecurepassword&quot;)
