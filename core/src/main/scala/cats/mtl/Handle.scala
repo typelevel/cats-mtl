@@ -215,6 +215,21 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
           f: E => RWST[F, R, L, S, A]): RWST[F, R, L, S, A] =
         RWST { case (r, s) => F0.handleWith(fa.run(r, s))(e => f(e).run(r, s)) }
     }
+
+  implicit def handleContT[F[_]: Defer, E, C](
+      implicit F0: Handle[F, E],
+      M: Monad[F]): Handle[ContT[F, C, *], E] =
+    new RaiseMonadPartialOrder[F, ContT[F, C, *], E] with Handle[ContT[F, C, *], E] {
+
+      val applicative: Applicative[ContT[F, C, *]] = ContT.catsDataContTMonad
+
+      val F: Raise[F, E] = F0
+      val lift: MonadPartialOrder[F, ContT[F, C, *]] =
+        MonadPartialOrder.monadPartialOrderForContT
+
+      def handleWith[A](fa: ContT[F, C, A])(f: E => ContT[F, C, A]): ContT[F, C, A] =
+        ContT(c => F0.handleWith(fa.run(c))(e => f(e).run(c)))
+    }
 }
 
 object Handle extends HandleInstances {

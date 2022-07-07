@@ -17,9 +17,18 @@
 package cats
 package mtl
 
-import cats.data.{EitherT, StateT, IorT, Kleisli, OptionT, ReaderWriterStateT => RWST, WriterT}
+import cats.data.{
+  ContT,
+  EitherT,
+  Ior,
+  IorT,
+  Kleisli,
+  OptionT,
+  StateT,
+  WriterT,
+  ReaderWriterStateT => RWST
+}
 import cats.syntax.all._
-import cats.data.Ior
 
 import scala.annotation.implicitNotFound
 
@@ -75,7 +84,7 @@ private[mtl] abstract class ListenKleisli[F[_]: Functor, R, L](implicit F: Liste
   def functor = Functor[Kleisli[F, R, *]]
   def tell(l: L) = Kleisli.liftF(F.tell(l))
   def listen[A](fa: Kleisli[F, R, A]) =
-    Kleisli(a => F.listen(fa.run(a)))
+    Kleisli((a: R) => F.listen(fa.run(a)))
 }
 
 private[mtl] abstract class ListenStateT[F[_]: Applicative, S, L](implicit F: Listen[F, L])
@@ -146,6 +155,13 @@ private[mtl] abstract class ListenInductiveRWST[F[_]: Applicative, E, L0: Monoid
         }
       }
     }
+}
+
+private[mtl] abstract class ListenContT[F[_]: FlatMap, R, L](implicit F: Listen[F, L])
+    extends Listen[ContT[F, R, *], L] {
+  def functor: Functor[ContT[F, R, *]] = Functor.asInstanceOf[Functor[ContT[F, R, *]]]
+  def tell(l: L): ContT[F, R, Unit] = ContT.liftF[F, R, Unit](F.tell(l))
+  def listen[A](fa: ContT[F, R, A]): ContT[F, R, (A, L)] = ???
 }
 
 private[mtl] trait LowPriorityListenInstances {
