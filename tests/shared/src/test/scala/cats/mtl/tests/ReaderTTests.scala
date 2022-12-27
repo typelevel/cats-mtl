@@ -55,7 +55,7 @@ class ReaderTTests extends BaseSuite {
       "Reader[String, *]",
       LocalTests[Kleisli[Id, String, *], String].local[String, String])
     checkAll(
-      "FunctorLocal[Reader[String, *], String]",
+      "Local[Kleisli[Id, String, *], String]",
       SerializableTests.serializable(Local[Kleisli[Id, String, *], String]))
   }
 
@@ -64,7 +64,7 @@ class ReaderTTests extends BaseSuite {
       "ReaderT[Option, String, *]",
       LocalTests[ReaderTC[Option, String]#l, String].local[String, String])
     checkAll(
-      "FunctorLocal[ReaderT[Option, String, *], String]",
+      "Local[ReaderTC[Option, String]#l, String]",
       SerializableTests.serializable(Local[ReaderTC[Option, String]#l, String]))
   }
 
@@ -75,7 +75,7 @@ class ReaderTTests extends BaseSuite {
         "ReaderT[ReaderT[Option, String, *], Int, *]",
         LocalTests[ReaderTIntOverReaderTStringOverOption, String].local[String, String])
       checkAll(
-        "FunctorLocal[ReaderT[ReaderT[Option, String, *], Int, *], String]",
+        "Local[ReaderTIntOverReaderTStringOverOption, String]",
         SerializableTests.serializable(Local[ReaderTIntOverReaderTStringOverOption, String])
       )
 
@@ -83,7 +83,7 @@ class ReaderTTests extends BaseSuite {
         "StateT[ReaderT[Option, String, *], Int, *]",
         LocalTests[StateTIntOverReaderTStringOverOption, String].local[String, String])
       checkAll(
-        "FunctorLocal[StateT[ReaderT[Option, String, *], Int, *], String]",
+        "Local[StateTIntOverReaderTStringOverOption, String]",
         SerializableTests.serializable(Local[StateTIntOverReaderTStringOverOption, String])
       )
     }
@@ -92,7 +92,7 @@ class ReaderTTests extends BaseSuite {
       "WriterT[ReaderT[Option, String, *], Int, *]",
       LocalTests[WriterTIntOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[WriterT[ReaderT[Option, String, *], Int, *], String]",
+      "Local[WriterTIntOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[WriterTIntOverReaderTStringOverOption, String])
     )
 
@@ -100,7 +100,7 @@ class ReaderTTests extends BaseSuite {
       "OptionT[ReaderT[Option, String, *], *]",
       LocalTests[OptionTOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[OptionT[ReaderT[Option, String, *], *], String]",
+      "Local[OptionTOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[OptionTOverReaderTStringOverOption, String])
     )
 
@@ -108,7 +108,7 @@ class ReaderTTests extends BaseSuite {
       "EitherT[ReaderT[Option, String, *], String, *]",
       LocalTests[EitherTIntOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[EitherT[ReaderT[Option, String, *], Int, *], String]",
+      "Local[EitherTIntOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[EitherTIntOverReaderTStringOverOption, String])
     )
 
