@@ -35,7 +35,7 @@ final class SummonableImplicits extends BaseSuite {
 
     {
       Raise[EitherStrId, String]
-      //Raise[EitherTStrEitherTInt, Int]
+      // Raise[EitherTStrEitherTInt, Int]
       Raise[EitherTStrEitherTInt, String]
     }
 
