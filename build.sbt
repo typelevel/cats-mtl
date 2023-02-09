@@ -11,7 +11,7 @@ ThisBuild / developers := List(
 
 val Scala213 = "2.13.10"
 
-ThisBuild / crossScalaVersions := Seq("3.2.1", "2.12.17", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.2.2", "2.12.17", Scala213)
 ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
 
 lazy val commonJvmSettings = Seq(
@@ -29,7 +29,7 @@ lazy val commonNativeSettings = Seq(
 
 val CatsVersion = "2.9.0"
 
-lazy val root = tlCrossRootProject.aggregate(core, laws, tests)
+lazy val root = tlCrossRootProject.aggregate(core, laws, tests, unidocs)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
