@@ -29,7 +29,7 @@ lazy val commonNativeSettings = Seq(
 
 val CatsVersion = "2.9.0"
 
-lazy val root = tlCrossRootProject.aggregate(core, laws, tests)
+lazy val root = tlCrossRootProject.aggregate(core, laws, tests, unidocs)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
