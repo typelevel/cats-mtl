@@ -15,7 +15,7 @@ libraryDependencies += "org.typelevel" %% "cats-mtl" % "1.3.0"
 
 If your project uses ScalaJS, replace the double-`%` with a triple.  Note that **cats-mtl** has an upstream dependency on **cats-core** version 2.x.
 
-Cross-builds are available for Scala 2.12, 2.13, 3.1.3, Scala Native, and ScalaJS major version 1.x.
+Cross-builds are available for Scala 2.12, 2.13, 3, Scala Native, and ScalaJS major version 1.x.
 
 If you're not sure where to start or what Cats MTL even is, please refer to the [getting started guide](https://typelevel.org/cats-mtl/getting-started.html).
 
