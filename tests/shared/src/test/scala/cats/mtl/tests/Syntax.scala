@@ -26,7 +26,7 @@ final class Syntax extends BaseSuite {
   case class Bar(n: Int) extends Foo
 
   // test instances.all._
-  //noinspection ScalaUnusedSymbol
+  // noinspection ScalaUnusedSymbol
   {
     import cats.syntax.apply._
     import cats.mtl.implicits._
