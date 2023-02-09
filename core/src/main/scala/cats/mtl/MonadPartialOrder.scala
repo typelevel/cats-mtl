@@ -20,10 +20,9 @@ package mtl
 import cats.data._
 
 /**
- * Encapsulates the notion of a monad, G, which contains all of
- * the effects of some other monad, F. This means that any effect
- * of type F[A] can be lifted to G[A], such that both F and G
- * form monads and the lifting distributes over flatMap and pure.
+ * Encapsulates the notion of a monad, G, which contains all of the effects of some other monad,
+ * F. This means that any effect of type F[A] can be lifted to G[A], such that both F and G form
+ * monads and the lifting distributes over flatMap and pure.
  *
  * Original idea by Kris Nuttycombe.
  */

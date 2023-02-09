@@ -24,7 +24,8 @@ import scala.annotation.implicitNotFound
 /**
  * `Ask[F, E]` lets you access an `E` value in the `F[_]` context.
  *
- * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]` context.
+ * Intuitively, this means that an `E` value is required as an input to get "out" of the `F[_]`
+ * context.
  *
  * `Ask[F, E]` has one external law:
  * {{{

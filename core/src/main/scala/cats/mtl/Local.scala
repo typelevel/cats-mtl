@@ -22,8 +22,8 @@ import cats.data.{ReaderWriterStateT => RWST, _}
 import scala.annotation.implicitNotFound
 
 /**
- * `Local[F, E]` lets you alter the `E` value that is observed by an `F[A]` value
- * using `ask`; the modification can only be observed from within that `F[A]` value.
+ * `Local[F, E]` lets you alter the `E` value that is observed by an `F[A]` value using `ask`;
+ * the modification can only be observed from within that `F[A]` value.
  *
  * `Local[F, E]` has three external laws:
  * {{{

@@ -22,8 +22,8 @@ import cats.data.{ReaderWriterStateT => RWST, StateT}
 import scala.annotation.implicitNotFound
 
 /**
- * `Stateful[F, S]` is the capability to access and modify a state value
- * from inside the `F[_]` context, using `set(s: S): F[Unit]` and `get: F[S]`.
+ * `Stateful[F, S]` is the capability to access and modify a state value from inside the `F[_]`
+ * context, using `set(s: S): F[Unit]` and `get: F[S]`.
  *
  * Stateful has four external laws:
  * {{{

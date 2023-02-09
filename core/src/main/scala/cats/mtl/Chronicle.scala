@@ -17,7 +17,7 @@
 package cats
 package mtl
 
-import cats.data.{ReaderWriterStateT => RWST, IndexedReaderWriterStateT => IndexedRWST, _}
+import cats.data.{IndexedReaderWriterStateT => IndexedRWST, ReaderWriterStateT => RWST, _}
 import cats.syntax.all._
 import cats.data.Ior.Both
 
