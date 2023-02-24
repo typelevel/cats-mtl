@@ -38,7 +38,7 @@ class ReaderTTests extends BaseSuite {
   implicit def eqKleisli[F[_], A, B](
       implicit arb: Arbitrary[A],
       ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] =
-    Eq.by((x: (Kleisli[F, A, B])) => x.run)
+    Eq.by((x: Kleisli[F, A, B]) => x.run)
 
   implicit def eqKleisliId[A, B](implicit arb: Arbitrary[A], ev: Eq[B]): Eq[Kleisli[Id, A, B]] =
     eqKleisli[Id, A, B]
