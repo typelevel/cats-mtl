@@ -38,7 +38,7 @@ class WriterTTests extends BaseSuite {
   implicit def eqKleisli[F[_], A, B](
       implicit arb: ExhaustiveCheck[A],
       ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] =
-    Eq.by((x: (Kleisli[F, A, B])) => x.run)
+    Eq.by((x: Kleisli[F, A, B]) => x.run)
 
   implicit def stateTEq[F[_], S, A](
       implicit S: ExhaustiveCheck[S],
