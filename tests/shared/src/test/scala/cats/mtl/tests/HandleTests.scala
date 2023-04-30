@@ -79,8 +79,8 @@ class HandleTests extends BaseSuite {
 
     val test = Handle.ensure[F, Error1] { implicit h1 =>
       Handle.ensure[F, Error2] { implicit h2 =>
-        val _ =
-          h2 // it's helpful to test the raise syntax infers even when multiple handles are present
+        // it's helpful to test the raise syntax infers even when multiple handles are present
+        val _ = h2 
         Error1.Third.raise.as("nope")
       } recover { e => e.toString.pure[F] }
     } recover {
