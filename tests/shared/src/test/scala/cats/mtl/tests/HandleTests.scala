@@ -63,7 +63,7 @@ class HandleTests extends BaseSuite {
         case Error.Third => "2".pure[F]
       }
 
-    assert(test.value.value.toOption == Some("1"))
+    assertEquals(test.value.value.toOption, Some("1"))
   }
 
   test("submerge two independent errors") {
