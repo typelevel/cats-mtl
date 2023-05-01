@@ -89,7 +89,7 @@ class HandleTests extends BaseSuite {
       case Error1.Third => "third1".pure[F]
     }
 
-    assert(test.value.value.toOption == Some("third1"))
+    assertEquals(test.value.value.toOption, Some("third1"))
   }
 
   {
