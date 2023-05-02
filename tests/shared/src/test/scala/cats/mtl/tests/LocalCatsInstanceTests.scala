@@ -21,7 +21,7 @@ package tests
 import cats.data._
 import cats.laws.discipline.InvariantTests
 import cats.laws.discipline.eq._
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary._
 
 class LocalCatsInstanceTests extends BaseSuite {
@@ -29,17 +29,9 @@ class LocalCatsInstanceTests extends BaseSuite {
       implicit ev: Eq[F[B]]): Eq[Kleisli[F, A, B]] =
     Eq.by((x: Kleisli[F, A, B]) => x.run)
 
-  private implicit def arbLocalReader[F[_]: Monad, AA: Arbitrary]
-      : Arbitrary[Local[Kleisli[F, AA, *], AA]] = Arbitrary {
-    arbitrary[AA].map { a =>
-      new Local[Kleisli[F, AA, *], AA] {
-        override def local[A](fa: Kleisli[F, AA, A])(f: AA => AA): Kleisli[F, AA, A] =
-          fa.local(f)
-        override def applicative: Applicative[Kleisli[F, AA, *]] = implicitly
-        override def ask[E2 >: AA]: Kleisli[F, AA, E2] = Kleisli.pure(a)
-      }
-    }
-  }
+  private implicit def arbLocalReader[F[_]: Monad, AA]
+      : Arbitrary[Local[Kleisli[F, AA, *], AA]] =
+    Arbitrary(Gen.const(Local.baseLocalForKleisli))
 
   private implicit def eqLocal[F[_], A](implicit E: Eq[F[A]]): Eq[Local[F, A]] = Eq.by(_.ask)
 
