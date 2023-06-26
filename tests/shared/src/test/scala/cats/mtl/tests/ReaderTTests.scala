@@ -24,6 +24,8 @@ import cats.laws.discipline.SerializableTests
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline._
+import cats.syntax.all._
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck._
 
 class ReaderTTests extends BaseSuite {
@@ -49,14 +51,30 @@ class ReaderTTests extends BaseSuite {
       F: FlatMap[F]): Eq[StateT[F, S, A]] =
     Eq.by[StateT[F, S, A], S => F[(S, A)]](state => s => state.run(s))
 
+  private implicit def stringToStringWrapper[F[_]](
+      implicit L: Local[F, String]): Local[F, StringWrapper] =
+    L.imap(StringWrapper(_))(_.value)
+
+  private implicit def stringWrapperToString[F[_]](
+      implicit L: Local[F, StringWrapper]): Local[F, String] =
+    L.imap(_.value)(StringWrapper(_))
+
   {
     Applicative[Reader[String, *]]
     checkAll(
       "Reader[String, *]",
       LocalTests[Kleisli[Id, String, *], String].local[String, String])
     checkAll(
-      "FunctorLocal[Reader[String, *], String]",
+      "Local[Kleisli[Id, String, *], String]",
       SerializableTests.serializable(Local[Kleisli[Id, String, *], String]))
+
+    checkAll(
+      "Local[Reader[String, *], String].imap",
+      LocalTests[Reader[String, *], StringWrapper].local[String, String]
+    )
+    checkAll(
+      "Local[Reader[String, *], StringWrapper]",
+      SerializableTests.serializable(Local[Reader[String, *], StringWrapper]))
   }
 
   {
@@ -64,8 +82,16 @@ class ReaderTTests extends BaseSuite {
       "ReaderT[Option, String, *]",
       LocalTests[ReaderTC[Option, String]#l, String].local[String, String])
     checkAll(
-      "FunctorLocal[ReaderT[Option, String, *], String]",
+      "Local[ReaderTC[Option, String]#l, String]",
       SerializableTests.serializable(Local[ReaderTC[Option, String]#l, String]))
+
+    checkAll(
+      "LocalReaderT[Option, String, *].imap",
+      LocalTests[ReaderTC[Option, String]#l, StringWrapper].local[String, String]
+    )
+    checkAll(
+      "Local[ReaderTC[Option, String]#l, StringWrapper]",
+      SerializableTests.serializable(Local[ReaderTC[Option, String]#l, StringWrapper]))
   }
 
   {
@@ -75,16 +101,36 @@ class ReaderTTests extends BaseSuite {
         "ReaderT[ReaderT[Option, String, *], Int, *]",
         LocalTests[ReaderTIntOverReaderTStringOverOption, String].local[String, String])
       checkAll(
-        "FunctorLocal[ReaderT[ReaderT[Option, String, *], Int, *], String]",
+        "Local[ReaderTIntOverReaderTStringOverOption, String]",
         SerializableTests.serializable(Local[ReaderTIntOverReaderTStringOverOption, String])
+      )
+
+      checkAll(
+        "ReaderT[ReaderT[Option, StringWrapper, *], Int, String].imap",
+        LocalTests[ReaderT[ReaderT[Option, StringWrapper, *], Int, *], String]
+          .local[String, String])
+      checkAll(
+        "Local[ReaderT[ReaderT[Option, StringWrapper, *], Int, *], StringWrapper]",
+        SerializableTests.serializable(
+          Local[ReaderT[ReaderT[Option, StringWrapper, *], Int, *], String])
       )
 
       checkAll(
         "StateT[ReaderT[Option, String, *], Int, *]",
         LocalTests[StateTIntOverReaderTStringOverOption, String].local[String, String])
       checkAll(
-        "FunctorLocal[StateT[ReaderT[Option, String, *], Int, *], String]",
+        "Local[StateT[ReaderT[Option, String, *], Int, *], String]",
         SerializableTests.serializable(Local[StateTIntOverReaderTStringOverOption, String])
+      )
+
+      checkAll(
+        "StateT[ReaderT[Option, String, *], Int, *].imap",
+        LocalTests[StateT[ReaderT[Option, StringWrapper, *], Int, *], String]
+          .local[String, String])
+      checkAll(
+        "Local[StateT[ReaderT[Option, StringWrapper, *], Int, *], String].imap",
+        SerializableTests.serializable(
+          Local[StateT[ReaderT[Option, StringWrapper, *], Int, *], String])
       )
     }
 
@@ -92,26 +138,66 @@ class ReaderTTests extends BaseSuite {
       "WriterT[ReaderT[Option, String, *], Int, *]",
       LocalTests[WriterTIntOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[WriterT[ReaderT[Option, String, *], Int, *], String]",
+      "Local[WriterTIntOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[WriterTIntOverReaderTStringOverOption, String])
+    )
+
+    checkAll(
+      "WriterT[ReaderT[Option, String, *], Int, *].imap",
+      LocalTests[WriterT[ReaderT[Option, StringWrapper, *], Int, *], String]
+        .local[String, String])
+    checkAll(
+      "Local[WriterTIntOverReaderTStringOverOption, StringWrapper].imap",
+      SerializableTests.serializable(
+        Local[WriterT[ReaderT[Option, StringWrapper, *], Int, *], String])
     )
 
     checkAll(
       "OptionT[ReaderT[Option, String, *], *]",
       LocalTests[OptionTOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[OptionT[ReaderT[Option, String, *], *], String]",
+      "Local[OptionTOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[OptionTOverReaderTStringOverOption, String])
+    )
+
+    checkAll(
+      "OptionT[ReaderT[Option, StringWrapper, *], *]",
+      LocalTests[OptionT[ReaderT[Option, StringWrapper, *], *], String].local[String, String])
+    checkAll(
+      "Local[OptionT[ReaderT[Option, StringWrapper, *], *], String]",
+      SerializableTests.serializable(
+        Local[OptionT[ReaderT[Option, StringWrapper, *], *], String])
     )
 
     checkAll(
       "EitherT[ReaderT[Option, String, *], String, *]",
       LocalTests[EitherTIntOverReaderTStringOverOption, String].local[String, String])
     checkAll(
-      "FunctorLocal[EitherT[ReaderT[Option, String, *], Int, *], String]",
+      "Local[EitherTIntOverReaderTStringOverOption, String]",
       SerializableTests.serializable(Local[EitherTIntOverReaderTStringOverOption, String])
+    )
+
+    checkAll(
+      "EitherT[ReaderT[Option, StringWrapper, *], String, *]",
+      LocalTests[EitherT[ReaderT[Option, StringWrapper, *], String, *], String]
+        .local[String, String])
+    checkAll(
+      "Local[EitherT[ReaderT[Option, StringWrapper, *], String, *], String]",
+      SerializableTests.serializable(
+        Local[EitherT[ReaderT[Option, StringWrapper, *], String, *], String])
     )
 
   }
 
+}
+
+/**
+ * Only exists as a type that is trivially isomorphic to `String`
+ */
+case class StringWrapper(value: String)
+object StringWrapper {
+  implicit val stringWrapperEq: Eq[StringWrapper] = Eq.by(_.value)
+  implicit val arbStringWrapper: Arbitrary[StringWrapper] = Arbitrary(
+    arbitrary[String].map(StringWrapper(_)))
+  implicit val cogenStringWrapper: Cogen[StringWrapper] = Cogen[String].contramap(_.value)
 }
