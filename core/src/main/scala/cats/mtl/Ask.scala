@@ -17,7 +17,7 @@
 package cats
 package mtl
 
-import cats.data.{Kleisli, ReaderWriterStateT => RWST}
+import cats.data.{Kleisli, Reader, ReaderWriterStateT => RWST}
 import cats.mtl.Ask.{const, AskImpl}
 import cats.syntax.all._
 
@@ -51,6 +51,8 @@ trait Ask[F[_], +E] extends Serializable {
   def ask[E2 >: E]: F[E2]
 
   def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
+
+  def fromReader[A](ra: Reader[E, A]): F[A] = reader(ra.run)
 }
 
 private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
