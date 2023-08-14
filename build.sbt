@@ -27,7 +27,7 @@ lazy val commonNativeSettings = Seq(
   tlVersionIntroduced := List("2.12", "2.13", "3").map(_ -> "1.3.0").toMap
 )
 
-val CatsVersion = "2.9.0"
+val CatsVersion = "2.10.0"
 
 lazy val root = tlCrossRootProject.aggregate(core, laws, tests, unidocs)
 
