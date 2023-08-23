@@ -18,7 +18,5 @@ package cats
 package mtl
 package implicits
 
-import org.typelevel.scalaccompat.annotation._
-
-@nowarn213("msg=package object inheritance is deprecated")
+@org.typelevel.scalaccompat.annotation.nowarn213("msg=package object inheritance is deprecated")
 object `package` extends syntax.AllSyntax
