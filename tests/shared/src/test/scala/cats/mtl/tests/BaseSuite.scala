@@ -126,7 +126,7 @@ abstract class BaseSuite extends FunSuite with EqSyntax with DisciplineSuite {
             .arbitrary
             .map(e =>
               new (EitherC[E]#l ~> EitherC[E]#l) {
-                def apply[A](unused: E Either A) = Left(e)
+                def apply[A](unused: E Either A): Either[E, A] = Left(e)
               })
     } yield res)
   }
@@ -135,7 +135,7 @@ abstract class BaseSuite extends FunSuite with EqSyntax with DisciplineSuite {
     Arbitrary {
       Arbitrary.arbBool.arbitrary.map { no =>
         if (no) new (Option ~> Option) {
-          def apply[A](o: Option[A]) = None
+          def apply[A](o: Option[A]): Option[A] = None
         }
         else FunctionK.id[Option]
       }

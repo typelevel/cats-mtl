@@ -74,7 +74,7 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
     new Local[Kleisli[F, E, *], E] {
       def local[A](fa: Kleisli[F, E, A])(f: E => E) = fa.local(f)
       val applicative = Applicative[Kleisli[F, E, *]]
-      def ask[E2 >: E] = Kleisli.ask[F, E2]
+      def ask[E2 >: E]: Kleisli[F, E2, E2] = Kleisli.ask[F, E2]
     }
 
   implicit def localForFunction[E]: Local[E => *, E] =
