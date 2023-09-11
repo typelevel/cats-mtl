@@ -57,7 +57,7 @@ private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
   val lift: MonadPartialOrder[F, G]
   val F: Ask[F, E]
 
-  override def applicative = lift.monadG
+  override def applicative: Applicative[G] = lift.monadG
   override def ask[E2 >: E] = lift(F.ask)
 }
 

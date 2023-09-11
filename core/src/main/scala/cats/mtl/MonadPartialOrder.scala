@@ -53,7 +53,7 @@ private[mtl] trait MonadPartialOrderInstances {
       implicit F: Monad[F]): MonadPartialOrder[F, EitherT[F, E, *]] =
     new MonadPartialOrder[F, EitherT[F, E, *]] {
       val monadF = F
-      val monadG = EitherT.catsDataMonadErrorForEitherT[F, E]
+      val monadG: Monad[EitherT[F, E, *]] = EitherT.catsDataMonadErrorForEitherT[F, E]
       def apply[A](fa: F[A]) = EitherT.liftF(fa)
     }
 
