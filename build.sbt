@@ -57,7 +57,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-testkit" % CatsVersion,
-      "org.scalameta" %%% "munit" % "1.0.0-M8",
+      "org.scalameta" %%% "munit" % "1.0.0-M9",
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
