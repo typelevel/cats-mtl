@@ -34,7 +34,9 @@
   
   <link rel="stylesheet" type="text/css" href="helium/icofont.min.css" />
     <link rel="stylesheet" type="text/css" href="helium/laika-helium.css" />
+  
   <script src="helium/laika-helium.js"></script>
+  
   
   
   <script> /* for avoiding page load transitions */ </script>
@@ -114,14 +116,14 @@
     <li class="level1 active nav-leaf"><a href="#">cats-mtl Design</a></li>
     <li class="level1 nav-leaf"><a href="contributing.html">Contributing</a></li>
     <li class="level1 nav-header">mtl-classes</li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/tell.html">Tell</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/handle.html">Handle</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/chronicle.html">Chronicle</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/listen.html">Listen</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/raise.html">Raise</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/ask.html">Ask</a></li>
-    <li class="level2 nav-leaf"><a href="mtl-classes/local.html">Local</a></li>
     <li class="level2 nav-leaf"><a href="mtl-classes/stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/local.html">Local</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/ask.html">Ask</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/raise.html">Raise</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/listen.html">Listen</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/chronicle.html">Chronicle</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/handle.html">Handle</a></li>
+    <li class="level2 nav-leaf"><a href="mtl-classes/tell.html">Tell</a></li>
   </ul>
 
 </nav>
@@ -168,19 +170,21 @@
         of their superclasses.</p>
         
         <h2 id="motivation" class="section"><a class="anchor-link left" href="#motivation"><i class="icofont-laika link">&#xef71;</i></a>Motivation</h2>
-        <p>The motivation for cats-mtl&#39;s existence can be summed up in a few points:
-        - using subtyping to express typeclass subclassing results in implicit ambiguities,
+        <p>The motivation for cats-mtl&#39;s existence can be summed up in a few points:</p>
+        <ul>
+          <li>using subtyping to express typeclass subclassing results in implicit ambiguities,
           and doing it another way would result in a massive inconsistency inside cats if only done for MTL classes.
           for a detailed explanation, see Adelbert Chang&#39;s article
-          <a href="http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html">here</a>.
-        - most MTL classes do not actually require <code>Monad</code> as a constraint for their laws.
+          <a href="http://typelevel.org/blog/2016/09/30/subtype-typeclasses.html">here</a>.</li>
+          <li>most MTL classes do not actually require <code>Monad</code> as a constraint for their laws.
           cats-mtl weakens this constraint to <code>Functor</code> or <code>Applicative</code> whenever possible,
           with the result that there&#39;s now a notion of a <code>Functor</code> transformer stack and 
-          <code>Applicative</code> transformer stack in addition to that of a <code>Monad</code> transformer stack.
-        - the most used operations on <code>MonadWriter</code> and <code>MonadReader</code> are <code>tell</code> and <code>ask</code>,
+          <code>Applicative</code> transformer stack in addition to that of a <code>Monad</code> transformer stack.</li>
+          <li>the most used operations on <code>MonadWriter</code> and <code>MonadReader</code> are <code>tell</code> and <code>ask</code>,
           and the other operations severely restrict the space of implementations despite being
           used much less. To fix this <code>Listen</code> and <code>Local</code> are subclasses
-          of <code>Tell</code> and <code>Ask</code>, which have only the essentials.</p>
+          of <code>Tell</code> and <code>Ask</code>, which have only the essentials.</li>
+        </ul>
         <p>The first point there means that it&#39;s impossible for cats-mtl type classes
         to expose their base class instances implicitly; for example <code>F[_]: Stateful[?[_], S]</code> isn&#39;t enough
         for a <code>Monad[F]</code> to be visible in implicit scope, despite <code>Stateful</code> containing a <code>Monad</code>
