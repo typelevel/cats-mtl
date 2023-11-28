@@ -53,6 +53,9 @@ trait Ask[F[_], +E] extends Serializable {
   def reader[A](f: E => A): F[A] = applicative.map(ask)(f)
 
   def fromReader[A](ra: Reader[E, A]): F[A] = reader(ra.run)
+
+  def fromKleisli[A](ka: Kleisli[F, E, A])(implicit F: FlatMap[F]): F[A] =
+    ask.flatMap(ka.run(_))
 }
 
 private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {

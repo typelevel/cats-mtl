@@ -70,6 +70,13 @@ trait Stateful[F[_], S] extends Serializable {
       val (s1, a) = state.run(s0).value
       monad.as(set(s1), a)
     }
+
+  def fromStateT[A](state: StateT[F, S, A]): F[A] =
+    monad.flatMap(get) { s0 =>
+      monad.flatMap(state.run(s0)(monad)) { case (s1, a) =>
+        monad.as(set(s1), a)
+      }
+    }
 }
 
 private[mtl] trait LowPriorityStatefulInstances {

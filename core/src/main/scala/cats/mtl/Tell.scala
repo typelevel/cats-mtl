@@ -49,6 +49,9 @@ trait Tell[F[_], -L] extends Serializable {
   def tuple[A](ta: (L, A)): F[A] = writer(ta._2, ta._1)
 
   def fromWriter[L2 <: L, A](wa: Writer[L2, A]): F[A] = tuple(wa.run)
+
+  def fromWriterT[L2 <: L, A](wa: WriterT[F, L2, A])(implicit F: FlatMap[F]): F[A] =
+    F.flatMap(wa.run)(tuple(_))
 }
 
 private[mtl] trait TellMonadPartialOrder[F[_], G[_], L] extends Tell[G, L] {
