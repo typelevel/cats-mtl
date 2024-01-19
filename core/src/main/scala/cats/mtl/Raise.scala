@@ -86,6 +86,12 @@ trait Raise[F[_], -E] extends Serializable {
   def fromEitherT[E2 <: E, A](ea: EitherT[F, E2, A])(implicit F: Monad[F]): F[A] =
     F.flatMap(ea.value)(fromEither(_))
 
+  def fromOption[E2 <: E, A](oa: Option[A])(e: => E2)(implicit F: Applicative[F]): F[A] =
+    oa.fold[F[A]](raise(e))(F.pure)
+
+  def fromOptionT[E2 <: E, A](ota: OptionT[F, A])(e: => E2)(implicit F: Monad[F]): F[A] =
+    F.flatMap(ota.value)(oa => fromOption(oa)(e))
+
 }
 
 private[mtl] trait RaiseMonadPartialOrder[F[_], G[_], E] extends Raise[G, E] {
