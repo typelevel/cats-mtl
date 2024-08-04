@@ -27,7 +27,7 @@ lazy val commonNativeSettings = Seq(
   tlVersionIntroduced := List("2.12", "2.13", "3").map(_ -> "1.3.0").toMap
 )
 
-val CatsVersion = "2.11.0"
+val CatsVersion = "2.12.0"
 
 lazy val root = tlCrossRootProject.aggregate(core, laws, tests, unidocs)
 
@@ -58,7 +58,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-testkit" % CatsVersion,
       "org.scalameta" %%% "munit" % "1.0.0",
-      "org.typelevel" %%% "discipline-munit" % "2.0.0-M3"))
+      "org.typelevel" %%% "discipline-munit" % "2.0.0"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .nativeSettings(commonNativeSettings)
