@@ -22,9 +22,13 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
+// cats-mtl 1.5.0 switches to Scala Native 0.5.
+// Therefore `tlVersionIntroduced` should be reset to 1.5.0 for all scala versions in all native cross-projects.
+val commonNativeTlVersionIntroduced = List("2.12", "2.13", "3").map(_ -> "1.5.0").toMap
+
 lazy val commonNativeSettings = Seq(
   doctestGenTests := Seq.empty,
-  tlVersionIntroduced := List("2.12", "2.13", "3").map(_ -> "1.3.0").toMap
+  tlVersionIntroduced := commonNativeTlVersionIntroduced
 )
 
 val CatsVersion = "2.12.0"
