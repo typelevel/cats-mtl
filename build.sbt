@@ -1,4 +1,4 @@
-ThisBuild / tlBaseVersion := "1.4"
+ThisBuild / tlBaseVersion := "1.5"
 ThisBuild / startYear := Some(2021)
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
@@ -22,12 +22,16 @@ lazy val commonJsSettings = Seq(
   doctestGenTests := Seq.empty
 )
 
+// cats-mtl 1.5.0 switches to Scala Native 0.5.
+// Therefore `tlVersionIntroduced` should be reset to 1.5.0 for all scala versions in all native cross-projects.
+val commonNativeTlVersionIntroduced = List("2.12", "2.13", "3").map(_ -> "1.5.0").toMap
+
 lazy val commonNativeSettings = Seq(
   doctestGenTests := Seq.empty,
-  tlVersionIntroduced := List("2.12", "2.13", "3").map(_ -> "1.3.0").toMap
+  tlVersionIntroduced := commonNativeTlVersionIntroduced
 )
 
-val CatsVersion = "2.11.0"
+val CatsVersion = "2.12.0"
 
 lazy val root = tlCrossRootProject.aggregate(core, laws, tests, unidocs)
 
@@ -58,7 +62,7 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-testkit" % CatsVersion,
       "org.scalameta" %%% "munit" % "1.0.0",
-      "org.typelevel" %%% "discipline-munit" % "2.0.0-M3"))
+      "org.typelevel" %%% "discipline-munit" % "2.0.0"))
   .jsSettings(commonJsSettings)
   .jvmSettings(commonJvmSettings)
   .nativeSettings(commonNativeSettings)
