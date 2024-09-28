@@ -11,7 +11,7 @@ ThisBuild / developers := List(
 
 val Scala213 = "2.13.15"
 
-ThisBuild / crossScalaVersions := Seq("3.3.3", "2.12.20", Scala213)
+ThisBuild / crossScalaVersions := Seq("3.3.4", "2.12.20", Scala213)
 ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
 
 lazy val commonJvmSettings = Seq(
