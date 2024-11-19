@@ -17,7 +17,7 @@ Let's look at an example of how to use this function:
 
 ```scala mdoc
 import cats._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl._
 import cats.mtl.implicits._
 

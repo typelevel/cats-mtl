@@ -19,7 +19,7 @@ First we'll add the actual service call with its parameters and result types:
 ```scala mdoc
 import cats._
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl.Tell
 
 case class ServiceParams(option1: String, option2: Int)

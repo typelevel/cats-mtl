@@ -19,7 +19,7 @@ Here's a quick example of how you might use it:
 
 ```scala mdoc
 import cats._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl._
 
 def parseNumber[F[_]: Applicative](in: String)(implicit F: Raise[F, String]): F[Int] = {

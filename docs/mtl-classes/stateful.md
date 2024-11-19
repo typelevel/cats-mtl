@@ -23,7 +23,7 @@ Let's say we have the following function to access a service:
 ```scala mdoc
 import cats._
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl.Stateful
 
 case class ServiceResult(id: Int, companies: List[String])
