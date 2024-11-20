@@ -11,7 +11,7 @@ Let's have a look at an example of how one could do this:
 ```scala mdoc
 import cats._
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl._
 import cats.mtl.implicits._
 

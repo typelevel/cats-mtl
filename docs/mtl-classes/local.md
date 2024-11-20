@@ -18,7 +18,7 @@ Here's a quick example of how it works:
 ```scala mdoc
 import cats._
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl._
 
 def calculateContentLength[F[_]: Applicative](implicit F: Ask[F, String]): F[Int] =

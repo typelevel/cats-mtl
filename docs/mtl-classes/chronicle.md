@@ -46,7 +46,7 @@ We can prohibit bad user data by using a computation halting `confess` and nudge
 ```scala mdoc
 import cats.Monad
 import cats.data._
-import cats.implicits._
+import cats.syntax.all._
 import cats.mtl.Chronicle
 
 type Failures = NonEmptyChain[String]
