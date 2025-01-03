@@ -57,7 +57,7 @@ class HandleTests extends BaseSuite {
     }
 
     val test =
-      Handle.allow[F, Error](implicit h => Error.Second.raise.as("nope")) recover {
+      Handle.allow[F, Error](implicit h => Error.Second.raise.as("nope")) rescue {
         case Error.First => "0".pure[F]
         case Error.Second => "1".pure[F]
         case Error.Third => "2".pure[F]
@@ -82,8 +82,8 @@ class HandleTests extends BaseSuite {
         val _ =
           h2 // it's helpful to test the raise syntax infers even when multiple handles are present
         Error1.Third.raise.as("nope")
-      } recover { e => e.toString.pure[F] }
-    } recover {
+      } rescue { e => e.toString.pure[F] }
+    } rescue {
       case Error1.First => "first1".pure[F]
       case Error1.Second => "second1".pure[F]
       case Error1.Third => "third1".pure[F]
@@ -117,7 +117,7 @@ class HandleTests extends BaseSuite {
             cats.mtl.laws.discipline.HandleTests[F, Error].handle[Int])
         }
       }
-    } recover { case Error(_) => ().pure[F] }
+    } rescue { case Error(_) => ().pure[F] }
 
     test.value.value
     ()

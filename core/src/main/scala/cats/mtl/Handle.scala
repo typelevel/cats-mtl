@@ -231,7 +231,7 @@ object Handle extends HandleInstances {
       new Inner(body)
 
     final class Inner[A](body: Handle[F, E] => F[A])(implicit F: ApplicativeThrow[F]) {
-      def recover(h: E => F[A]): F[A] = {
+      def rescue(h: E => F[A]): F[A] = {
         val Marker = new AnyRef
 
         def inner[B](fb: F[B])(f: E => F[B]): F[B] =
