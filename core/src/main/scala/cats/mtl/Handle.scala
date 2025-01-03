@@ -222,7 +222,7 @@ object Handle extends HandleInstances {
 
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 
-  def ensure[F[_], E]: AdHocSyntax[F, E] =
+  def allow[F[_], E]: AdHocSyntax[F, E] =
     new AdHocSyntax[F, E]
 
   final class AdHocSyntax[F[_], E] {

@@ -57,7 +57,7 @@ class HandleTests extends BaseSuite {
     }
 
     val test =
-      Handle.ensure[F, Error](implicit h => Error.Second.raise.as("nope")) recover {
+      Handle.allow[F, Error](implicit h => Error.Second.raise.as("nope")) recover {
         case Error.First => "0".pure[F]
         case Error.Second => "1".pure[F]
         case Error.Third => "2".pure[F]
@@ -77,8 +77,8 @@ class HandleTests extends BaseSuite {
 
     sealed trait Error2 extends Product with Serializable
 
-    val test = Handle.ensure[F, Error1] { implicit h1 =>
-      Handle.ensure[F, Error2] { implicit h2 =>
+    val test = Handle.allow[F, Error1] { implicit h1 =>
+      Handle.allow[F, Error2] { implicit h2 =>
         val _ =
           h2 // it's helpful to test the raise syntax infers even when multiple handles are present
         Error1.Third.raise.as("nope")
@@ -109,11 +109,11 @@ class HandleTests extends BaseSuite {
     implicit val eqThrowable: Eq[Throwable] =
       Eq.fromUniversalEquals[Throwable]
 
-    val test = Handle.ensure[F, Error] { implicit h =>
+    val test = Handle.allow[F, Error] { implicit h =>
       EitherT liftF {
         Eval later {
           checkAll(
-            "Handle.ensure[F, Error]",
+            "Handle.allow[F, Error]",
             cats.mtl.laws.discipline.HandleTests[F, Error].handle[Int])
         }
       }
