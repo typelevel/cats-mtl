@@ -68,8 +68,8 @@ trait Raise[F[_], -E] extends Serializable {
 
   def raise[E2 <: E, A](e: E2): F[A]
 
-  def catchNonFatal[E2 <: E, A](a: => A)(f: Throwable => E2)(
-      implicit A: Applicative[F]): F[A] = {
+  def catchNonFatal[E2 <: E, A](
+      a: => A)(f: Throwable => E2)(implicit A: Applicative[F]): F[A] = {
     try A.pure(a)
     catch {
       case NonFatal(ex) => raise(f(ex))

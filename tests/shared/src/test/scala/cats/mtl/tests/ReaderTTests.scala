@@ -105,7 +105,8 @@ class ReaderTTests extends BaseSuite {
       checkAll(
         "ReaderT[ReaderT[Option, StringWrapper, *], Int, String].imap",
         LocalTests[ReaderT[ReaderT[Option, StringWrapper, *], Int, *], String]
-          .local[String, String])
+          .local[String, String]
+      )
       checkAll(
         "Local[ReaderT[ReaderT[Option, StringWrapper, *], Int, *], StringWrapper]",
         SerializableTests.serializable(
