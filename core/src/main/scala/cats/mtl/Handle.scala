@@ -218,14 +218,15 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
     }
 }
 
-object Handle extends HandleInstances {
+object Handle extends HandleInstances with HandleVariant {
 
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 
-  def allow[F[_], E]: AdHocSyntax[F, E] =
-    new AdHocSyntax[F, E]
 
-  final class AdHocSyntax[F[_], E] {
+  def allowF[F[_], E]: AdHocSyntaxTired[F, E] =
+    new AdHocSyntaxTired[F, E]
+
+  final class AdHocSyntaxTired[F[_], E] {
 
     def apply[A](body: Handle[F, E] => F[A])(implicit F: ApplicativeThrow[F]): Inner[A] =
       new Inner(body)
@@ -252,7 +253,7 @@ object Handle extends HandleInstances {
     }
   }
 
-  private final case class Submarine[E](e: E, marker: AnyRef)
+  private[mtl] final case class Submarine[E](e: E, marker: AnyRef)
       extends RuntimeException
       with NoStackTrace
 }
