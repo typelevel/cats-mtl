@@ -55,7 +55,7 @@ Related Cats links (the core):
 ### Community
 
 People are expected to follow the
-[Scala Code of Conduct](https://www.scala-lang.org/conduct/) when
+[Typelevel Code of Conduct](https://typelevel.org/code-of-conduct) when
 discussing cats-mtl on the Github page, Gitter channel, or other
 venues.
 
