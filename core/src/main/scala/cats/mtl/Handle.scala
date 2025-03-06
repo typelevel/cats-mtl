@@ -222,7 +222,6 @@ object Handle extends HandleInstances with HandleVariant {
 
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 
-
   def allowF[F[_], E]: AdHocSyntaxTired[F, E] =
     new AdHocSyntaxTired[F, E]
 

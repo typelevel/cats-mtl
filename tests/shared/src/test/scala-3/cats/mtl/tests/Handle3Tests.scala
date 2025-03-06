@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 Typelevel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cats
 package mtl
 package tests
@@ -5,8 +21,10 @@ package tests
 import cats.data.EitherT
 import cats.mtl.syntax.all.*
 import cats.syntax.all.*
+import cats.mtl.Handle.*
 
 class Handle3Tests extends BaseSuite:
+
   type F[A] = EitherT[Eval, Throwable, A]
 
   test("submerge custom errors (scala 3)"):
@@ -14,8 +32,8 @@ class Handle3Tests extends BaseSuite:
       case First, Second, Third
 
     val test =
-      Handle.allow[Error]:
-        (Error.Second.raise.as("nope"): F[String])
+      allow[Error]:
+        Error.Second.raise[F, String].as("nope")
       .rescue:
         case Error.First => "0".pure[F]
         case Error.Second => "1".pure[F]
@@ -29,8 +47,8 @@ class Handle3Tests extends BaseSuite:
     enum Error2:
       case Fourth
     val test =
-      Handle.allow[Error1]:
-        Handle.allow[Error2]:
+      allow[Error1]:
+        allow[Error2]:
           Error1.Third.raise[F, String].as("nope")
         .rescue:
           case e => e.toString.pure[F]
