@@ -25,11 +25,10 @@ trait HandleVariant { this: Handle.type =>
 
   final class AdHocSyntaxWired[E]:
 
-    def apply[F[_], A](body: Handle[F, E] ?=> F[A])(
-        implicit F: ApplicativeThrow[F]): Inner[F, A] =
+    def apply[F[_], A](body: Handle[F, E] ?=> F[A])(using ApplicativeThrow[F]): Inner[F, A] =
       new Inner(body)
 
-    final class Inner[F[_], A](body: Handle[F, E] ?=> F[A])(implicit F: ApplicativeThrow[F]):
+    final class Inner[F[_], A](body: Handle[F, E] ?=> F[A])(using ApplicativeThrow[F]):
       def rescue(h: E => F[A]): F[A] =
         val Marker = new AnyRef
 
