@@ -2,10 +2,9 @@ package cats
 package mtl
 package tests
 
-import cats.data.{EitherT, Kleisli, WriterT}
-import cats.laws.discipline.arbitrary._
-import cats.mtl.syntax.all._
-import cats.syntax.all._
+import cats.data.EitherT
+import cats.mtl.syntax.all.*
+import cats.syntax.all.*
 
 class Handle3Tests extends BaseSuite:
   type F[A] = EitherT[Eval, Throwable, A]
@@ -24,22 +23,19 @@ class Handle3Tests extends BaseSuite:
 
     assert(test.value.value.toOption == Some("1"))
 
-// this doesn't work, sadly
-/*  test("submerge two independent errors (scala 3)"):
+  test("submerge two independent errors (scala 3)"):
     enum Error1:
       case First, Second, Third
-
     enum Error2:
       case Fourth
-
     val test =
       Handle.allow[Error1]:
         Handle.allow[Error2]:
-          Error1.Third.raise.as("nope")
-        .rescue: e => e.toString.pure[F]
+          Error1.Third.raise[F, String].as("nope")
+        .rescue:
+          case e => e.toString.pure[F]
       .rescue:
         case Error1.First => "first1".pure[F]
         case Error1.Second => "second1".pure[F]
         case Error1.Third => "third1".pure[F]
-
-    assert(test.value.value.toOption == Some("third1"))*/
+    assert(test.value.value.toOption == Some("third1"))
