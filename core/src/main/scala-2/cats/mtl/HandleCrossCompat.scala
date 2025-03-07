@@ -17,4 +17,4 @@
 package cats
 package mtl
 
-trait HandleVariant
+private[mtl] trait HandleCrossCompat

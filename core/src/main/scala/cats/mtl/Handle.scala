@@ -218,7 +218,7 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
     }
 }
 
-object Handle extends HandleInstances with HandleVariant {
+object Handle extends HandleInstances with HandleCrossCompat {
 
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 

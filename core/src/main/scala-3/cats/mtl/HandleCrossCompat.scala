@@ -17,7 +17,7 @@
 package cats
 package mtl
 
-trait HandleVariant { this: Handle.type =>
+private[mtl] trait HandleCrossCompat { this: Handle.type =>
   import Handle.Submarine
 
   def allow[E]: AdHocSyntaxWired[E] =
