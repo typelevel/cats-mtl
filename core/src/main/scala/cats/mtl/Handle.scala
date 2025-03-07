@@ -223,32 +223,33 @@ object Handle extends HandleInstances with HandleVariant {
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 
   def allowF[F[_], E]: AdHocSyntaxTired[F, E] =
-    new AdHocSyntaxTired[F, E]
+    new AdHocSyntaxTired[F, E](())
 
-  final class AdHocSyntaxTired[F[_], E] {
-
-    def apply[A](body: Handle[F, E] => F[A])(implicit F: ApplicativeThrow[F]): Inner[A] =
+  @scala.annotation.nowarn("msg=dubious usage of method hashCode with unit value")
+  private[mtl] final class AdHocSyntaxTired[F[_], E](private val unit: Unit) extends AnyVal {
+    def apply[A](body: Handle[F, E] => F[A]): Inner[F, E, A] =
       new Inner(body)
+  }
 
-    final class Inner[A](body: Handle[F, E] => F[A])(implicit F: ApplicativeThrow[F]) {
-      def rescue(h: E => F[A]): F[A] = {
-        val Marker = new AnyRef
+  private[mtl] final class Inner[F[_], E, A](private val body: Handle[F, E] => F[A])
+      extends AnyVal {
+    def rescue(h: E => F[A])(implicit F: ApplicativeThrow[F]): F[A] = {
+      val Marker = new AnyRef
 
-        def inner[B](fb: F[B])(f: E => F[B]): F[B] =
-          ApplicativeThrow[F].handleErrorWith(fb) {
-            case Submarine(e, Marker) => f(e.asInstanceOf[E])
-            case t => ApplicativeThrow[F].raiseError(t)
-          }
+      def inner[B](fb: F[B])(f: E => F[B]): F[B] =
+        ApplicativeThrow[F].handleErrorWith(fb) {
+          case Submarine(e, Marker) => f(e.asInstanceOf[E])
+          case t => ApplicativeThrow[F].raiseError(t)
+        }
 
-        val fa = body(new Handle[F, E] {
-          def applicative = Applicative[F]
-          def raise[E2 <: E, B](e: E2): F[B] =
-            ApplicativeThrow[F].raiseError(Submarine(e, Marker))
-          def handleWith[B](fb: F[B])(f: E => F[B]): F[B] = inner(fb)(f)
-        })
+      val fa = body(new Handle[F, E] {
+        def applicative = Applicative[F]
+        def raise[E2 <: E, B](e: E2): F[B] =
+          ApplicativeThrow[F].raiseError(Submarine(e, Marker))
+        def handleWith[B](fb: F[B])(f: E => F[B]): F[B] = inner(fb)(f)
+      })
 
-        inner(fa)(h)
-      }
+      inner(fa)(h)
     }
   }
 
