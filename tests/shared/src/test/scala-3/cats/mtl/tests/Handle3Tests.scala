@@ -23,7 +23,7 @@ import cats.mtl.syntax.all.*
 import cats.syntax.all.*
 import cats.mtl.Handle.*
 
-class Handle3Tests extends BaseSuite:
+class Handle3Tests extends munit.FunSuite:
 
   type F[A] = EitherT[Eval, Throwable, A]
 
@@ -39,7 +39,7 @@ class Handle3Tests extends BaseSuite:
         case Error.Second => "1".pure[F]
         case Error.Third => "2".pure[F]
 
-    assert(test.value.value.toOption == Some("1"))
+    assert.equals(test.value.value.toOption, Some("1"))
 
   test("submerge two independent errors (scala 3)"):
     enum Error1:
@@ -56,4 +56,4 @@ class Handle3Tests extends BaseSuite:
         case Error1.First => "first1".pure[F]
         case Error1.Second => "second1".pure[F]
         case Error1.Third => "third1".pure[F]
-    assert(test.value.value.toOption == Some("third1"))
+    assert.equals(test.value.value.toOption, Some("third1"))
