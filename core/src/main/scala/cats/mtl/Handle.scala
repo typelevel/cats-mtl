@@ -223,10 +223,9 @@ object Handle extends HandleInstances with HandleCrossCompat {
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
 
   def allowF[F[_], E]: AdHocSyntaxTired[F, E] =
-    new AdHocSyntaxTired[F, E](())
+    new AdHocSyntaxTired[F, E](0)
 
-  @scala.annotation.nowarn("msg=dubious usage of method hashCode with unit value")
-  private[mtl] final class AdHocSyntaxTired[F[_], E](private val unit: Unit) extends AnyVal {
+  private[mtl] final class AdHocSyntaxTired[F[_], E](private val dummy: Byte) extends AnyVal {
     def apply[A](body: Handle[F, E] => F[A]): Inner[F, E, A] =
       new Inner(body)
   }
