@@ -28,7 +28,7 @@ private[mtl] trait HandleCrossCompat { this: Handle.type =>
       new InnerWired(body)
 
   private[mtl] final class InnerWired[F[_], E, A](body: Handle[F, E] ?=> F[A]):
-    def rescue(h: E => F[A]): ApplicativeThrow[F] ?=> F[A] =
+    def rescue(h: E => F[A])(using ApplicativeThrow[F]): F[A] =
       val Marker = new AnyRef
 
       def inner[B](fb: F[B])(f: E => F[B]): F[B] =
