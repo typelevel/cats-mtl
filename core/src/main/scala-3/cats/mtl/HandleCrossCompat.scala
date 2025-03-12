@@ -18,29 +18,36 @@ package cats
 package mtl
 
 private[mtl] trait HandleCrossCompat { this: Handle.type =>
-  import Handle.Submarine
 
   inline def allow[E]: AdHocSyntaxWired[E] =
     new AdHocSyntaxWired[E]()
 
   private[mtl] final class AdHocSyntaxWired[E]:
     inline def apply[F[_], A](inline body: Handle[F, E] ?=> F[A]): InnerWired[F, E, A] =
-      new InnerWired(body)
+      new InnerWired(convert(body))
 
-  private[mtl] final class InnerWired[F[_], E, A](body: Handle[F, E] ?=> F[A]):
-    def rescue(h: E => F[A])(using ApplicativeThrow[F]): F[A] =
-      val Marker = new AnyRef
+  inline def convert[A, B](inline f: A ?=> B): A => B =
+    implicit a: A => f
 
-      def inner[B](fb: F[B])(f: E => F[B]): F[B] =
-        ApplicativeThrow[F].handleErrorWith(fb):
-          case Submarine(e, Marker) => f(e.asInstanceOf[E])
-          case t => ApplicativeThrow[F].raiseError(t)
-
-      given Handle[F, E] with
-        def applicative = Applicative[F]
-        def raise[E2 <: E, B](e: E2): F[B] =
-          ApplicativeThrow[F].raiseError(Submarine(e, Marker))
-        def handleWith[B](fb: F[B])(f: E => F[B]): F[B] = inner(fb)(f)
-
-      inner(body)(h)
 }
+
+private[mtl] final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends AnyVal:
+  import Handle.Submarine
+  inline def rescue(inline h: E => F[A])(using ApplicativeThrow[F]): F[A] =
+    val Marker = new AnyRef
+
+    def inner[B](fb: F[B], f: E => F[B]): F[B] =
+      ApplicativeThrow[F].handleErrorWith(fb):
+        case Submarine(e, Marker) => f(e.asInstanceOf[E])
+        case t => ApplicativeThrow[F].raiseError(t)
+
+    inner[A](body(InnerHandle(Marker)), h)
+
+class InnerHandle[F[_]: ApplicativeThrow, E](Marker: AnyRef) extends Handle[F, E]:
+  import Handle.Submarine
+  def applicative = Applicative[F]
+  def raise[E2 <: E, B](e: E2): F[B] = ApplicativeThrow[F].raiseError(Submarine(e, Marker))
+  def handleWith[B](fb: F[B])(f: E => F[B]): F[B] =
+    ApplicativeThrow[F].handleErrorWith(fb):
+      case Submarine(e, Marker) => f(e.asInstanceOf[E])
+      case t => ApplicativeThrow[F].raiseError(t)
