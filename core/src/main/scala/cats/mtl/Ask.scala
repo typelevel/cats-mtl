@@ -45,7 +45,7 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound(
   "Could not find an implicit instance of Ask[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit fask: Ask[${F}, ${E}])\n")
-trait Ask[F[_], +E] extends Serializable {
+trait Ask[F[_], +E] extends Serializable { outer =>
   def applicative: Applicative[F]
 
   def ask[E2 >: E]: F[E2]
@@ -56,6 +56,17 @@ trait Ask[F[_], +E] extends Serializable {
 
   def fromKleisli[A](ka: Kleisli[F, E, A])(implicit F: FlatMap[F]): F[A] =
     ask.flatMap(ka.run(_))
+
+  /** Modify the context `F` using the transformation `f`. */
+  def mapK[G[_]](fk: F ~> G)(implicit G: Applicative[G]): Ask[G, E] =
+    new Ask[G, E] {
+      def applicative: Applicative[G] = G
+      def ask[E2 >: E]: G[E2] = fk(outer.ask[E2])
+    }
+
+  /** Modify the context `F` using an implicit [[`KindTransformer`]] from `F` to `G`. */
+  def mapK[G[_]: Applicative](implicit kt: KindTransformer[F, G]): Ask[G, E] =
+    mapK(kt.liftK)
 }
 
 private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
