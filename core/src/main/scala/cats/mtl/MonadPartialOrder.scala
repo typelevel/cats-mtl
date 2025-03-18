@@ -26,9 +26,12 @@ import cats.data._
  *
  * Original idea by Kris Nuttycombe.
  */
-trait MonadPartialOrder[F[_], G[_]] extends (F ~> G) {
+trait MonadPartialOrder[F[_], G[_]] extends LiftValue[F, G] {
   def monadF: Monad[F]
   def monadG: Monad[G]
+
+  final def applicativeF: Applicative[F] = monadF
+  final def applicativeG: Applicative[G] = monadG
 }
 
 private[mtl] trait MonadPartialOrderInstances {
