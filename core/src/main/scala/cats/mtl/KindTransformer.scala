@@ -66,6 +66,8 @@ trait KindTransformer[F[_], G[_]] {
 }
 
 object KindTransformer {
+  def apply[F[_], G[_]](implicit kt: KindTransformer[F, G]): KindTransformer[F, G] = kt
+
   implicit def id[F[_]]: KindTransformer[F, F] =
     new KindTransformer[F, F] {
       val liftK: F ~> F = FunctionK.id
