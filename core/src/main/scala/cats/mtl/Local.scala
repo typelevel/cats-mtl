@@ -49,10 +49,22 @@ import scala.annotation.implicitNotFound
  */
 @implicitNotFound(
   "Could not find an implicit instance of Local[${F}, ${E}]. If you have a\nvalue of type ${E} in scope, or a way of computing one, you may want to construct\na value of type Kleisli for this call-site, rather than type ${F}. An example type:\n\n  Kleisli[${F}, ${E}, *]\n\nIf you do not have an ${E} or a way of getting one, you should add\nan implicit parameter of this type to your function. For example:\n\n  (implicit flocal: Local[${F}, ${E}])\n")
-trait Local[F[_], E] extends Ask[F, E] with Serializable {
+trait Local[F[_], E] extends Ask[F, E] with Serializable { outer =>
   def local[A](fa: F[A])(f: E => E): F[A]
 
   def scope[A](fa: F[A])(e: E): F[A] = local(fa)(_ => e)
+
+  override def mapK[G[_]](implicit G: Applicative[G], kt: KindTransformer[F, G]): Local[G, E] =
+    new Local[G, E] {
+      def applicative: Applicative[G] = G
+      def ask[E2 >: E]: G[E2] = kt.liftK(outer.ask)
+      def local[A](ga: G[A])(f: E => E): G[A] =
+        kt.limitedMapK(ga) {
+          new (F ~> F) {
+            def apply[B](fb: F[B]): F[B] = outer.local(fb)(f)
+          }
+        }
+    }
 }
 
 private[mtl] trait LowPriorityLocalInstances extends LowPriorityLocalInstancesCompat {
