@@ -29,7 +29,7 @@ trait KindTransformerTests[F[_], G[_]] extends Laws {
 
   def laws: KindTransformerLaws[F, G] = KindTransformerLaws[F, G]
 
-  def kindTransformer[A: Arbitrary](
+  def kindTransformer[A](
       implicit arbFA: Arbitrary[F[A]],
       arbGA: Arbitrary[G[A]],
       arbFF: Arbitrary[F ~> F],
