@@ -28,15 +28,22 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     {
-      Listen[WriterStrId, String]
-      Listen[WriterTStrWriterTInt, String]
-      Listen[WriterTStrWriterTInt, Vector[Int]]
+      KindTransformer[Id, Id]
+      KindTransformer[Id, OptionTId]
+      KindTransformer[Id, EitherTStrId]
+      KindTransformer[Id, EitherTIntId]
+      KindTransformer[Id, IorTStrId]
+      KindTransformer[Id, IorTIntId]
+      KindTransformer[Id, KleisliStrId]
+      KindTransformer[Id, KleisliIntId]
+      KindTransformer[Id, StateTStrId]
+      KindTransformer[Id, StateTIntId]
     }
 
     {
-      Raise[EitherStrId, String]
-      // Raise[EitherTStrEitherTInt, Int]
-      Raise[EitherTStrEitherTInt, String]
+      Listen[WriterStrId, String]
+      Listen[WriterTStrWriterTInt, String]
+      Listen[WriterTStrWriterTInt, Vector[Int]]
     }
 
     {
@@ -46,7 +53,13 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     {
-      Stateful[StateStrId, String]
+      Raise[EitherTStrId, String]
+      // Raise[EitherTStrEitherTInt, Int]
+      Raise[EitherTStrEitherTInt, String]
+    }
+
+    {
+      Stateful[StateTStrId, String]
       Stateful[StateTStrStateTInt, String]
       Stateful[StateTStrStateTInt, Int]
     }
