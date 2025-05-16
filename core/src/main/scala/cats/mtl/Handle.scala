@@ -20,6 +20,7 @@ package mtl
 import cats.data._
 
 import scala.annotation.implicitNotFound
+import scala.util.control.NoStackTrace
 
 @implicitNotFound(
   "Could not find an implicit instance of Handle[${F}, ${E}]. If you\nhave a good way of handling errors of type ${E} at this location, you may want\nto construct a value of type EitherT for this call-site, rather than ${F}.\nAn example type:\n\n  EitherT[${F}, ${E}, *]\n\nThis is analogous to writing try/catch around this call. The EitherT will\n\"catch\" the errors of type ${E}.\n\nIf you do not wish to handle errors of type ${E} at this location, you should\nadd an implicit parameter of this type to your function. For example:\n\n  (implicit fhandle: Handle[${F}, ${E}}])\n")
@@ -217,6 +218,41 @@ private[mtl] trait HandleInstances extends HandleLowPriorityInstances {
     }
 }
 
-object Handle extends HandleInstances {
+object Handle extends HandleInstances with HandleCrossCompat {
+
   def apply[F[_], E](implicit ev: Handle[F, E]): Handle[F, E] = ev
+
+  def allowF[F[_], E]: AdHocSyntaxTired[F, E] =
+    new AdHocSyntaxTired[F, E](0)
+
+  private[mtl] final class AdHocSyntaxTired[F[_], E](private val dummy: Byte) extends AnyVal {
+    def apply[A](body: Handle[F, E] => F[A]): Inner[F, E, A] =
+      new Inner(body)
+  }
+
+  private[mtl] final class Inner[F[_], E, A](private val body: Handle[F, E] => F[A])
+      extends AnyVal {
+    def rescue(h: E => F[A])(implicit F: ApplicativeThrow[F]): F[A] = {
+      val Marker = new AnyRef
+
+      def inner[B](fb: F[B])(f: E => F[B]): F[B] =
+        ApplicativeThrow[F].handleErrorWith(fb) {
+          case Submarine(e, Marker) => f(e.asInstanceOf[E])
+          case t => ApplicativeThrow[F].raiseError(t)
+        }
+
+      val fa = body(new Handle[F, E] {
+        def applicative = Applicative[F]
+        def raise[E2 <: E, B](e: E2): F[B] =
+          ApplicativeThrow[F].raiseError(Submarine(e, Marker))
+        def handleWith[B](fb: F[B])(f: E => F[B]): F[B] = inner(fb)(f)
+      })
+
+      inner(fa)(h)
+    }
+  }
+
+  private[mtl] final case class Submarine[E](e: E, marker: AnyRef)
+      extends RuntimeException
+      with NoStackTrace
 }
