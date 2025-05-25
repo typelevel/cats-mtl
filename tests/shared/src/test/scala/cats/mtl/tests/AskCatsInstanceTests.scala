@@ -34,7 +34,7 @@ class AskCatsInstanceTests extends BaseSuite {
   checkAll(
     "Applicative[Ask[Option, *]]",
     ApplicativeTests[Ask[Option, *]](
-      Ask.applicativeAsk[Option] // make sure we test the weaker applicative instance
+      using Ask.applicativeAsk[Option] // make sure we test the weaker applicative instance
     ).applicative[String, String, String]
   )
 
