@@ -26,24 +26,24 @@ private[mtl] trait HandleCrossCompat { this: Handle.type =>
     inline def apply[F[_], A](inline body: Handle[F, E] ?=> F[A]): InnerWired[F, E, A] =
       new InnerWired(convert(body))
 
-  inline def convert[A, B](inline f: A ?=> B): A => B =
+  private inline def convert[A, B](inline f: A ?=> B): A => B =
     implicit a: A => f
 
 }
 
-private[mtl] final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends AnyVal:
-  import Handle.Submarine
+private final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends AnyVal:
   inline def rescue(inline h: E => F[A])(using ApplicativeThrow[F]): F[A] =
     val Marker = new AnyRef
 
-    def inner[B](fb: F[B], f: E => F[B]): F[B] =
-      ApplicativeThrow[F].handleErrorWith(fb):
-        case Submarine(e, Marker) => f(e.asInstanceOf[E])
-        case t => ApplicativeThrow[F].raiseError(t)
+    inner(body(InnerHandle(Marker)), h, Marker)
 
-    inner[A](body(InnerHandle(Marker)), h)
+private inline def inner[F[_], E, A](fb: F[A], f: E => F[A], Marker: AnyRef)(
+    using ApplicativeThrow[F]): F[A] =
+  ApplicativeThrow[F].handleErrorWith(fb):
+    case Handle.Submarine(e, Marker) => f(e.asInstanceOf[E])
+    case t => ApplicativeThrow[F].raiseError(t)
 
-class InnerHandle[F[_]: ApplicativeThrow, E](Marker: AnyRef) extends Handle[F, E]:
+private final class InnerHandle[F[_]: ApplicativeThrow, E](Marker: AnyRef) extends Handle[F, E]:
   import Handle.Submarine
   def applicative = Applicative[F]
   def raise[E2 <: E, B](e: E2): F[B] = ApplicativeThrow[F].raiseError(Submarine(e, Marker))
