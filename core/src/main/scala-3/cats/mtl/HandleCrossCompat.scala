@@ -17,25 +17,23 @@
 package cats
 package mtl
 
-private[mtl] trait HandleCrossCompat { this: Handle.type =>
+private[mtl] trait HandleCrossCompat:
 
   inline def allow[E]: AdHocSyntaxWired[E] =
     new AdHocSyntaxWired[E]()
 
-  private[mtl] final class AdHocSyntaxWired[E]:
-    inline def apply[F[_], A](inline body: Handle[F, E] ?=> F[A]): InnerWired[F, E, A] =
-      new InnerWired(convert(body))
+private final class AdHocSyntaxWired[E]:
+  inline def apply[F[_], A](inline body: Handle[F, E] ?=> F[A]): InnerWired[F, E, A] =
+    new InnerWired(convert(body))
 
-  private inline def convert[A, B](inline f: A ?=> B): A => B =
-    implicit a: A => f
-
-}
+private inline def convert[A, B](inline f: A ?=> B): A => B =
+  implicit a: A => f
 
 private final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends AnyVal:
-  inline def rescue(inline h: E => F[A])(using ApplicativeThrow[F]): F[A] =
+  inline def rescue(inline f: E => F[A])(using ApplicativeThrow[F]): F[A] =
     val Marker = new AnyRef
 
-    inner(body(InnerHandle(Marker)), h, Marker)
+    inner(body(InnerHandle(Marker)), f, Marker)
 
 private inline def inner[F[_], E, A](fb: F[A], f: E => F[A], Marker: AnyRef)(
     using ApplicativeThrow[F]): F[A] =
