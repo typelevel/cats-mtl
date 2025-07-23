@@ -35,7 +35,7 @@ private final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends A
 
     inner(body(InnerHandle(Marker)), f, Marker)
 
-private inline def inner[F[_], E, A](fb: F[A], f: E => F[A], Marker: AnyRef)(
+private inline def inner[F[_], E, A](inline fb: F[A], inline f: E => F[A], Marker: AnyRef)(
     using ApplicativeThrow[F]): F[A] =
   ApplicativeThrow[F].handleErrorWith(fb):
     case Handle.Submarine(e, Marker) => f(e.asInstanceOf[E])
