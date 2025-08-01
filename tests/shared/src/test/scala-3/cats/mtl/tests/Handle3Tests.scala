@@ -57,3 +57,18 @@ class Handle3Tests extends munit.FunSuite:
         case Error1.Second => "second1".pure[F]
         case Error1.Third => "third1".pure[F]
     assert.equals(test.value.value.toOption, Some("third1"))
+
+  test("submerge two independent errors with union(scala 3)"):
+    enum Error1:
+      case First, Second, Third
+    enum Error2:
+      case Fourth
+    val test =
+      allow[Error1 | Error2]:
+        Error1.Third.raise[F, String].as("nope")
+      .rescue:
+        case Error1.First => "first1".pure[F]
+        case Error1.Second => "second1".pure[F]
+        case Error1.Third => "third1".pure[F]
+        case Error2.Fourth => "fourth1".pure[F]
+    assert.equals(test.value.value.toOption, Some("third1"))
