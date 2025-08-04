@@ -1,4 +1,6 @@
-ThisBuild / tlBaseVersion := "1.5"
+// import laika.helium.config._
+import laika.config.{ChoiceConfig, SelectionConfig, Selections}
+ThisBuild / tlBaseVersion := "1.6"
 ThisBuild / startYear := Some(2021)
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
@@ -79,7 +81,18 @@ lazy val docs = project
   .in(file("site"))
   .enablePlugins(TypelevelSitePlugin)
   .settings(
+    scalaVersion := "3.3.4",
     tlFatalWarnings := false,
-    laikaConfig ~= (_.withRawContent)
+    laikaConfig ~= {
+      _.withConfigValue(
+        Selections(
+          SelectionConfig(
+            "scala-version",
+            ChoiceConfig("scala-3", "Scala 3"),
+            ChoiceConfig("scala-2", "Scala 2")
+          )
+        )
+      )
+    }
   )
   .dependsOn(core.jvm)
