@@ -1,6 +1,6 @@
 // import laika.helium.config._
 import laika.config.{ChoiceConfig, SelectionConfig, Selections}
-ThisBuild / tlBaseVersion := "1.5"
+ThisBuild / tlBaseVersion := "1.6"
 ThisBuild / startYear := Some(2021)
 ThisBuild / developers := List(
   tlGitHubDev("SystemFw", "Fabio Labella"),
