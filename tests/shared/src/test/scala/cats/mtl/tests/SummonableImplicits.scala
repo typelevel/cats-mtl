@@ -18,6 +18,8 @@ package cats
 package mtl
 package tests
 
+import cats.data.{ReaderWriterStateT => RWST, _}
+
 final class SummonableImplicits extends BaseSuite {
 
   locally {
@@ -28,15 +30,41 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     {
-      Listen[WriterStrId, String]
-      Listen[WriterTStrWriterTInt, String]
-      Listen[WriterTStrWriterTInt, Vector[Int]]
+      LiftValue[Id, Id]
+      LiftValue[Id, OptionTId]
+      LiftValue[Id, EitherTStrId]
+      LiftValue[Id, EitherTIntId]
+      LiftValue[Id, IorTStrId]
+      LiftValue[Id, IorTIntId]
+      LiftValue[Id, KleisliStrId]
+      LiftValue[Id, KleisliIntId]
+      LiftValue[Id, WriterTStrId]
+      LiftValue[Id, WriterTIntId]
+      LiftValue[Id, StateTStrId]
+      LiftValue[Id, StateTIntId]
+      LiftValue[Id, RWST[Id, Int, Int, Int, *]]
+      LiftValue[Id, RWST[Id, String, String, String, *]]
+      LiftValue[Id, OptionT[IorT[Id, Int, *], *]]
     }
 
     {
-      Raise[EitherStrId, String]
-      // Raise[EitherTStrEitherTInt, Int]
-      Raise[EitherTStrEitherTInt, String]
+      LiftKind[Id, Id]
+      LiftKind[Id, OptionTId]
+      LiftKind[Id, EitherTStrId]
+      LiftKind[Id, EitherTIntId]
+      LiftKind[Id, IorTStrId]
+      LiftKind[Id, IorTIntId]
+      LiftKind[Id, KleisliStrId]
+      LiftKind[Id, KleisliIntId]
+      LiftKind[Id, WriterTStrId]
+      LiftKind[Id, WriterTIntId]
+      LiftKind[Id, OptionT[IorT[Id, Int, *], *]]
+    }
+
+    {
+      Listen[WriterTStrId, String]
+      Listen[WriterTStrWriterTInt, String]
+      Listen[WriterTStrWriterTInt, Vector[Int]]
     }
 
     {
@@ -46,13 +74,19 @@ final class SummonableImplicits extends BaseSuite {
     }
 
     {
-      Stateful[StateStrId, String]
+      Raise[EitherTStrId, String]
+      // Raise[EitherTStrEitherTInt, Int]
+      Raise[EitherTStrEitherTInt, String]
+    }
+
+    {
+      Stateful[StateTStrId, String]
       Stateful[StateTStrStateTInt, String]
       Stateful[StateTStrStateTInt, Int]
     }
 
     {
-      Tell[WriterStrId, String]
+      Tell[WriterTStrId, String]
       Tell[WriterTStrWriterTInt, String]
       Tell[WriterTStrWriterTInt, Vector[Int]]
     }
