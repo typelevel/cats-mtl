@@ -19,9 +19,11 @@ package mtl
 package tests
 
 import cats.data._
+import cats.laws.discipline.SerializableTests
 import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
 import cats.mtl.laws.discipline.LiftKindTests
+import cats.mtl.laws.discipline.LocalTests
 import org.scalacheck.Arbitrary
 
 class LiftKindLawTests extends BaseSuite {
@@ -79,4 +81,26 @@ class LiftKindLawTests extends BaseSuite {
     "LiftKind[List, WriterT[OptionT[List, *], Int, *]]",
     LiftKindTests[List, WriterT[OptionT[List, *], Int, *]].liftValue[String, Int]
   )
+
+  // lift Local
+  locally {
+    implicit val liftedLocal: Local[OptionT[IorT[Reader[Int, *], Int, *], *], Int] =
+      Local[Reader[Int, *], Int].liftTo[OptionT[IorT[Reader[Int, *], Int, *], *]]
+    checkAll(
+      "Local[OptionT[IorT[Reader[Int, *], Int, *], *], *], Int]",
+      LocalTests[OptionT[IorT[Reader[Int, *], Int, *], *], Int].local[String, Int]
+    )
+    SerializableTests.serializable(Local[OptionT[IorT[Reader[Int, *], Int, *], *], Int])
+  }
+  locally {
+    implicit val liftedLocal: Local[OptionT[IorT[Reader[Int, *], Int, *], *], Int] =
+      Local[Reader[Int, *], Int]
+        .liftTo[IorT[Reader[Int, *], Int, *]]
+        .liftTo[OptionT[IorT[Reader[Int, *], Int, *], *]]
+    checkAll(
+      "Local[OptionT[IorT[Reader[Int, *], Int, *], *], *], Int]",
+      LocalTests[OptionT[IorT[Reader[Int, *], Int, *], *], Int].local[String, Int]
+    )
+    SerializableTests.serializable(Local[OptionT[IorT[Reader[Int, *], Int, *], *], Int])
+  }
 }

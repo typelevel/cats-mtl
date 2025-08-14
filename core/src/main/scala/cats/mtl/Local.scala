@@ -53,6 +53,9 @@ trait Local[F[_], E] extends Ask[F, E] with Serializable {
   def local[A](fa: F[A])(f: E => E): F[A]
 
   def scope[A](fa: F[A])(e: E): F[A] = local(fa)(_ => e)
+
+  def liftTo[G[_]](implicit lift: LiftKind[F, G]): Local[G, E] =
+    new Local.Lifted(this, lift)
 }
 
 private[mtl] trait LowPriorityLocalInstances extends LowPriorityLocalInstancesCompat {
@@ -174,6 +177,21 @@ private[mtl] trait LocalInstances extends LowPriorityLocalInstances {
 }
 
 object Local extends LocalInstances {
+  private final class Lifted[F[_], G[_], E](
+      protected[this] val underlying: Local[F, E],
+      protected[this] val lift: LiftKind[F, G]
+  ) extends Local[G, E]
+      with Ask.Lifted[F, G, E] {
+    def local[A](ga: G[A])(f: E => E): G[A] =
+      lift.limitedMapK(ga) {
+        new (F ~> F) {
+          def apply[B](fb: F[B]): F[B] = underlying.local(fb)(f)
+        }
+      }
+    override def liftTo[H[_]](implicit liftGH: LiftKind[G, H]): Local[H, E] =
+      new Lifted(underlying, lift.andThen(liftGH))
+  }
+
   def apply[F[_], A](implicit local: Local[F, A]): Local[F, A] = local
 
   def local[F[_], E, A](fa: F[A])(f: E => E)(implicit local: Local[F, E]): F[A] =
