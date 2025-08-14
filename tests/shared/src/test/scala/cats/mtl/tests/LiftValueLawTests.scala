@@ -19,7 +19,10 @@ package mtl
 package tests
 
 import cats.data.{ReaderWriterStateT => RWST, _}
+import cats.laws.discipline.SerializableTests
+import cats.laws.discipline.arbitrary._
 import cats.laws.discipline.eq._
+import cats.mtl.laws.discipline.AskTests
 import cats.mtl.laws.discipline.LiftValueTests
 import org.scalacheck.Arbitrary
 
@@ -105,4 +108,24 @@ class LiftValueLawTests extends BaseSuite {
     "LiftValue[List, WriterT[OptionT[List, *], Int, *]]",
     LiftValueTests[List, WriterT[OptionT[List, *], Int, *]].liftValue[String, Int]
   )
+
+  // lift Ask
+  locally {
+    implicit val liftedAsk: Ask[OptionT[IorT[Id, Int, *], *], Int] =
+      Ask.const[Id, Int](42).liftTo[OptionT[IorT[Id, Int, *], *]]
+    checkAll(
+      "Ask[OptionT[IorT[Id, Int, *], *], Int]",
+      AskTests[OptionT[IorT[Id, Int, *], *], Int].ask[String]
+    )
+    SerializableTests.serializable(Ask[OptionT[IorT[Id, Int, *], *], Int])
+  }
+  locally {
+    implicit val liftedAsk: Ask[OptionT[IorT[Id, Int, *], *], Int] =
+      Ask.const[Id, Int](42).liftTo[IorT[Id, Int, *]].liftTo[OptionT[IorT[Id, Int, *], *]]
+    checkAll(
+      "Ask[OptionT[IorT[Id, Int, *], *], Int]",
+      AskTests[OptionT[IorT[Id, Int, *], *], Int].ask[String]
+    )
+    SerializableTests.serializable(Ask[OptionT[IorT[Id, Int, *], *], Int])
+  }
 }

@@ -56,6 +56,9 @@ trait Ask[F[_], +E] extends Serializable {
 
   def fromKleisli[A](ka: Kleisli[F, E, A])(implicit F: FlatMap[F]): F[A] =
     ask.flatMap(ka.run(_))
+
+  def liftTo[G[_]](implicit lift: LiftValue[F, G]): Ask[G, E] =
+    new Ask.LiftedImpl(this, lift)
 }
 
 private[mtl] trait AskForMonadPartialOrder[F[_], G[_], E] extends Ask[G, E] {
@@ -108,6 +111,22 @@ private[mtl] trait AskInstances extends LowPriorityAskInstances {
 }
 
 object Ask extends AskInstances {
+
+  private[mtl] trait Lifted[F[_], G[_], E] extends Ask[G, E] {
+    protected[this] def underlying: Ask[F, E]
+    protected[this] def lift: LiftValue[F, G]
+
+    def applicative: Applicative[G] = lift.applicativeG
+    def ask[E2 >: E]: G[E2] = lift(underlying.ask[E2])
+
+    override def liftTo[H[_]](implicit liftGH: LiftValue[G, H]): Ask[H, E] =
+      new LiftedImpl(underlying, lift.andThen(liftGH))
+  }
+
+  private final class LiftedImpl[F[_], G[_], E](
+      protected[this] val underlying: Ask[F, E],
+      protected[this] val lift: LiftValue[F, G]
+  ) extends Lifted[F, G, E]
 
   def apply[F[_], E](implicit ask: Ask[F, E]): Ask[F, E] =
     ask
