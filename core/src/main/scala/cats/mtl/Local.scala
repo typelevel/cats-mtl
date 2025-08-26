@@ -54,6 +54,7 @@ trait Local[F[_], E] extends Ask[F, E] with Serializable {
 
   def scope[A](fa: F[A])(e: E): F[A] = local(fa)(_ => e)
 
+  /** Lifts this `Local`'s context from `F` to `G`. */
   def liftTo[G[_]](implicit lift: LiftKind[F, G]): Local[G, E] =
     new Local.Lifted(this, lift)
 }
