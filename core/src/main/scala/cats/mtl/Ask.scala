@@ -57,6 +57,7 @@ trait Ask[F[_], +E] extends Serializable {
   def fromKleisli[A](ka: Kleisli[F, E, A])(implicit F: FlatMap[F]): F[A] =
     ask.flatMap(ka.run(_))
 
+  /** Lifts this `Ask`'s context from `F` to `G`. */
   def liftTo[G[_]](implicit lift: LiftValue[F, G]): Ask[G, E] =
     new Ask.LiftedImpl(this, lift)
 }
