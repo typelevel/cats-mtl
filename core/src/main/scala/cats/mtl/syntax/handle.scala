@@ -21,7 +21,10 @@ package syntax
 import cats.data.EitherT
 
 trait HandleSyntax {
-  implicit def toHandleOps[F[_], A](fa: F[A]): HandleOps[F, A] = new HandleOps(fa)
+  implicit def catsMtlSyntaxToHandleOps[F[_], A](fa: F[A]): HandleOps[F, A] = new HandleOps(fa)
+
+  @deprecated("use catsMtlSyntaxToHandleOps", "1.6.1") def toHandleOps[F[_], A](
+      fa: F[A]): HandleOps[F, A] = catsMtlSyntaxToHandleOps(fa)
 }
 
 final class HandleOps[F[_], A](val fa: F[A]) extends AnyVal {

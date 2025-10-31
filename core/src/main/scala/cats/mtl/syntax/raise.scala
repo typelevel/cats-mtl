@@ -19,7 +19,10 @@ package mtl
 package syntax
 
 trait RaiseSyntax {
-  implicit def toRaiseOps[E](e: E): RaiseOps[E] = new RaiseOps(e)
+  implicit def catsMtlSyntaxToRaiseOps[E](e: E): RaiseOps[E] = new RaiseOps(e)
+
+  @deprecated("use catsMtlSyntaxToRaiseOps", "1.6.1") def toRaiseOps[E](e: E): RaiseOps[E] =
+    catsMtlSyntaxToRaiseOps(e)
 }
 
 final class RaiseOps[E](val e: E) extends AnyVal {

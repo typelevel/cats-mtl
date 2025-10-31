@@ -21,11 +21,19 @@ package syntax
 import cats.data.Ior
 
 trait ChronicleSyntax {
-  implicit def toChronicleOps[F[_], A](fa: F[A]): ChronicleOps[F, A] =
+  implicit def catsMtlSyntaxToChronicleOps[F[_], A](fa: F[A]): ChronicleOps[F, A] =
     new ChronicleOps[F, A](fa)
-  implicit def toChronicleIdOps[E](e: E): ChronicleIdOps[E] = new ChronicleIdOps[E](e)
-  implicit def toChronicleIorOps[A, E](ior: E Ior A): ChronicleIorOps[A, E] =
+  implicit def catsMtlSyntaxToChronicleIdOps[E](e: E): ChronicleIdOps[E] =
+    new ChronicleIdOps[E](e)
+  implicit def catsMtlSyntaxToChronicleIorOps[A, E](ior: E Ior A): ChronicleIorOps[A, E] =
     new ChronicleIorOps[A, E](ior)
+
+  @deprecated("use catsMtlSyntaxToChronicleOps", "1.6.1") def toChronicleOps[F[_], A](
+      fa: F[A]): ChronicleOps[F, A] = catsMtlSyntaxToChronicleOps[F, A](fa)
+  @deprecated("use catsMtlSyntaxToChronicleIdOps", "1.6.1") def toChronicleIdOps[E](
+      e: E): ChronicleIdOps[E] = catsMtlSyntaxToChronicleIdOps[E](e)
+  @deprecated("use catsMtlSyntaxToChronicleIorOps", "1.6.1") def toChronicleIorOps[A, E](
+      ior: E Ior A): ChronicleIorOps[A, E] = catsMtlSyntaxToChronicleIorOps[A, E](ior)
 }
 
 final class ChronicleOps[F[_], A](val fa: F[A]) extends AnyVal {
