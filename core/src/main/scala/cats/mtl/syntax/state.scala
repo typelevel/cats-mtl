@@ -22,10 +22,11 @@ trait StateSyntax {
   implicit def catsMtlSyntaxToSetOps[S](e: S): SetOps[S] = new SetOps(e)
   implicit def catsMtlSyntaxToModifyOps[S](f: S => S): ModifyOps[S] = new ModifyOps(f)
 
-  @deprecated("use catsMtlSyntaxToSetOps", "1.6.1") def toSetOps[S](e: S): SetOps[S] =
+  @deprecated("use catsMtlSyntaxToSetOps", "1.7.0")
+  def toSetOps[S](e: S): SetOps[S] =
     catsMtlSyntaxToSetOps(e)
-  @deprecated("use catsMtlSyntaxToModifyOps", "1.6.1") def toModifyOps[S](
-      f: S => S): ModifyOps[S] = catsMtlSyntaxToModifyOps(f)
+  @deprecated("use catsMtlSyntaxToModifyOps", "1.7.0")
+  def toModifyOps[S](f: S => S): ModifyOps[S] = catsMtlSyntaxToModifyOps(f)
 }
 
 final class SetOps[S](val s: S) extends AnyVal {

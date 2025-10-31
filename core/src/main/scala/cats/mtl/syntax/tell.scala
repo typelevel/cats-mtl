@@ -22,10 +22,11 @@ trait TellSyntax {
   implicit def catsMtlSyntaxToTellOps[L](e: L): TellOps[L] = new TellOps(e)
   implicit def catsMtlSyntaxToTupleOps[L, A](t: (L, A)): TupleOps[L, A] = new TupleOps(t)
 
-  @deprecated("use catsMtlSyntaxToTellOps", "1.6.1") def toTellOps[L](e: L): TellOps[L] =
+  @deprecated("use catsMtlSyntaxToTellOps", "1.7.0")
+  def toTellOps[L](e: L): TellOps[L] =
     catsMtlSyntaxToTellOps(e)
-  @deprecated("use catsMtlSyntaxToTupleOps", "1.6.1") def toTupleOps[L, A](
-      t: (L, A)): TupleOps[L, A] = catsMtlSyntaxToTupleOps(t)
+  @deprecated("use catsMtlSyntaxToTupleOps", "1.7.0")
+  def toTupleOps[L, A](t: (L, A)): TupleOps[L, A] = catsMtlSyntaxToTupleOps(t)
 }
 
 final class TupleOps[L, A](val t: (L, A)) extends AnyVal {

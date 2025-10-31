@@ -21,8 +21,8 @@ package syntax
 trait AskSyntax {
   implicit def catsMtlSyntaxToReaderOps[E, A](fun: E => A): ReaderOps[E, A] = new ReaderOps(fun)
 
-  @deprecated("use catsMtlSyntaxToReaderOps", "1.6.1") def toReaderOps[E, A](
-      fun: E => A): ReaderOps[E, A] = catsMtlSyntaxToReaderOps(fun)
+  @deprecated("use catsMtlSyntaxToReaderOps", "1.7.0")
+  def toReaderOps[E, A](fun: E => A): ReaderOps[E, A] = catsMtlSyntaxToReaderOps(fun)
 }
 
 final class ReaderOps[E, A](val fun: E => A) extends AnyVal {

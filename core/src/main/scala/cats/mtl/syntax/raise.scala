@@ -21,7 +21,8 @@ package syntax
 trait RaiseSyntax {
   implicit def catsMtlSyntaxToRaiseOps[E](e: E): RaiseOps[E] = new RaiseOps(e)
 
-  @deprecated("use catsMtlSyntaxToRaiseOps", "1.6.1") def toRaiseOps[E](e: E): RaiseOps[E] =
+  @deprecated("use catsMtlSyntaxToRaiseOps", "1.7.0")
+  def toRaiseOps[E](e: E): RaiseOps[E] =
     catsMtlSyntaxToRaiseOps(e)
 }
 
