@@ -19,7 +19,10 @@ package mtl
 package syntax
 
 trait LocalSyntax {
-  implicit def toLocalOps[F[_], A](fa: F[A]): LocalOps[F, A] = new LocalOps(fa)
+  implicit def catsMtlSyntaxToLocalOps[F[_], A](fa: F[A]): LocalOps[F, A] = new LocalOps(fa)
+
+  @deprecated("use catsMtlSyntaxToLocalOps", "1.7.0")
+  def toLocalOps[F[_], A](fa: F[A]): LocalOps[F, A] = catsMtlSyntaxToLocalOps(fa)
 }
 
 final class LocalOps[F[_], A](val fa: F[A]) extends AnyVal {

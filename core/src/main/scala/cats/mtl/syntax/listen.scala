@@ -19,7 +19,10 @@ package mtl
 package syntax
 
 trait ListenSyntax {
-  implicit def toListenOps[F[_], A](fa: F[A]): ListenOps[F, A] = new ListenOps(fa)
+  implicit def catsMtlSyntaxToListenOps[F[_], A](fa: F[A]): ListenOps[F, A] = new ListenOps(fa)
+
+  @deprecated("use catsMtlSyntaxToListenOps", "1.7.0")
+  def toListenOps[F[_], A](fa: F[A]): ListenOps[F, A] = catsMtlSyntaxToListenOps(fa)
 }
 
 final class ListenOps[F[_], A](val fa: F[A]) extends AnyVal {
