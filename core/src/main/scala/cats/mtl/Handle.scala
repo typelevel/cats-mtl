@@ -18,6 +18,9 @@ package cats
 package mtl
 
 import cats.data._
+import cats.syntax.applicative._
+import cats.syntax.either._
+import cats.syntax.functor._
 
 import scala.annotation.implicitNotFound
 import scala.util.control.NoStackTrace
@@ -235,21 +238,37 @@ object Handle extends HandleInstances with HandleCrossCompat {
     def rescue(h: E => F[A])(implicit F: ApplicativeThrow[F]): F[A] = {
       val Marker = new AnyRef
 
-      def inner[B](fb: F[B])(f: E => F[B]): F[B] =
-        ApplicativeThrow[F].handleErrorWith(fb) {
-          case Submarine(e, Marker) => f(e.asInstanceOf[E])
-          case t => ApplicativeThrow[F].raiseError(t)
-        }
+      val fa = body(new InnerHandle(Marker))
 
-      val fa = body(new Handle[F, E] {
-        def applicative = Applicative[F]
-        def raise[E2 <: E, B](e: E2): F[B] =
-          ApplicativeThrow[F].raiseError(Submarine(e, Marker))
-        def handleWith[B](fb: F[B])(f: E => F[B]): F[B] = inner(fb)(f)
-      })
-
-      inner(fa)(h)
+      inner(fa, h, Marker)
     }
+
+    def attempt(implicit F: ApplicativeThrow[F]): F[Either[E, A]] = {
+      val Marker = new AnyRef
+
+      val fa = body(new InnerHandle(Marker))
+
+      inner(fa.map(_.asRight), _.asLeft.pure[F], Marker)
+    }
+
+    private def inner[B](fb: F[B], f: E => F[B], Marker: AnyRef)(
+        implicit F: ApplicativeThrow[F]): F[B] =
+      ApplicativeThrow[F].handleErrorWith(fb) {
+        case Submarine(e, Marker) => f(e.asInstanceOf[E])
+        case t => ApplicativeThrow[F].raiseError(t)
+      }
+
+  }
+
+  private final class InnerHandle[F[_]: ApplicativeThrow, E](Marker: AnyRef)
+      extends Handle[F, E] {
+    def applicative = Applicative[F]
+    def raise[E2 <: E, B](e: E2): F[B] = ApplicativeThrow[F].raiseError(Submarine(e, Marker))
+    def handleWith[B](fb: F[B])(f: E => F[B]): F[B] =
+      ApplicativeThrow[F].handleErrorWith(fb) {
+        case Submarine(e, Marker) => f(e.asInstanceOf[E])
+        case t => ApplicativeThrow[F].raiseError(t)
+      }
   }
 
   private[mtl] final case class Submarine[E](e: E, marker: AnyRef)
