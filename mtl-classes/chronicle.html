@@ -114,14 +114,14 @@
     <li class="level1 nav-leaf"><a href="../design.html">cats-mtl Design</a></li>
     <li class="level1 nav-leaf"><a href="../contributing.html">Contributing</a></li>
     <li class="level1 nav-header">mtl-classes</li>
-    <li class="level2 active nav-leaf"><a href="#">Chronicle</a></li>
-    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
     <li class="level2 nav-leaf"><a href="ask.html">Ask</a></li>
-    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
-    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
-    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
-    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 active nav-leaf"><a href="#">Chronicle</a></li>
     <li class="level2 nav-leaf"><a href="handle.html">Handle</a></li>
+    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
+    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
+    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
+    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
   </ul>
 
 </nav>
@@ -210,24 +210,18 @@
         Pretty neat, next let&#39;s actually run this program to see if what we did was correct.
         We can do that with <code>Ior</code>:</p>
         <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">luka</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;Luka&quot;</span><span>, </span><span class="string-literal">&quot;secret&quot;</span><span>)
-</span><span class="comment">// luka: Ior[Failures, User] = Left(a = Singleton(a = &quot;Password too short&quot;))
+</span><span class="comment">// luka: Ior[Failures, User] = Left(Singleton(&quot;Password too short&quot;))
 </span><span class="keyword">val</span><span> </span><span class="identifier">john</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;john.doe&quot;</span><span>, </span><span class="string-literal">&quot;secret123&quot;</span><span>)
 </span><span class="comment">// john: Ior[Failures, User] = Both(
 //   a = Append(
-//     leftNE = Singleton(a = &quot;Dot in name is deprecated&quot;),
-//     rightNE = Singleton(a = &quot;Password should be longer&quot;)
+//     leftNE = Singleton(&quot;Dot in name is deprecated&quot;),
+//     rightNE = Singleton(&quot;Password should be longer&quot;)
 //   ),
-//   b = User(
-//     name = Username(value = &quot;john.doe&quot;),
-//     pw = Password(value = &quot;secret123&quot;)
-//   )
+//   b = User(name = Username(&quot;john.doe&quot;), pw = Password(&quot;secret123&quot;))
 // )
 </span><span class="keyword">val</span><span> </span><span class="identifier">jane</span><span> = </span><span class="identifier">validateUser</span><span>[</span><span class="type-name">Ior</span><span>[</span><span class="type-name">Failures</span><span>, *]](</span><span class="string-literal">&quot;jane&quot;</span><span>, </span><span class="string-literal">&quot;reallysecurepassword&quot;</span><span>)
 </span><span class="comment">// jane: Ior[Failures, User] = Right(
-//   b = User(
-//     name = Username(value = &quot;jane&quot;),
-//     pw = Password(value = &quot;reallysecurepassword&quot;)
-//   )
+//   User(name = Username(&quot;jane&quot;), pw = Password(&quot;reallysecurepassword&quot;))
 // )</span></code></pre>
         <p>Apart from <code>Ior</code> instances for <code>Chronicle</code> also include its <code>IorT</code> and any monad transformer stack where <code>Ior</code> or <code>IorT</code> appear.</p>
 

@@ -114,14 +114,14 @@
     <li class="level1 nav-leaf"><a href="../design.html">cats-mtl Design</a></li>
     <li class="level1 nav-leaf"><a href="../contributing.html">Contributing</a></li>
     <li class="level1 nav-header">mtl-classes</li>
-    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
-    <li class="level2 active nav-leaf"><a href="#">Tell</a></li>
     <li class="level2 nav-leaf"><a href="ask.html">Ask</a></li>
-    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
-    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
-    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
-    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
     <li class="level2 nav-leaf"><a href="handle.html">Handle</a></li>
+    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
+    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
+    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
+    <li class="level2 active nav-leaf"><a href="#">Tell</a></li>
   </ul>
 
 </nav>
@@ -176,9 +176,9 @@
         <pre class="keep-together pdf epub"><code class="nohighlight"><span class="keyword">val</span><span> (</span><span class="identifier">log</span><span>, </span><span class="identifier">result</span><span>): (</span><span class="type-name">Chain</span><span>[</span><span class="type-name">String</span><span>], </span><span class="type-name">ServiceResult</span><span>) =
   </span><span class="identifier">serviceCallWithLog</span><span>[</span><span class="type-name">Writer</span><span>[</span><span class="type-name">Chain</span><span>[</span><span class="type-name">String</span><span>], *]](</span><span class="type-name">ServiceParams</span><span>(</span><span class="string-literal">&quot;business&quot;</span><span>, </span><span class="number-literal">42</span><span>)).</span><span class="identifier">run</span><span>
 </span><span class="comment">// log: Chain[String] = Append(
-//   leftNE = Singleton(a = &quot;Call to service with business and 42&quot;),
+//   leftNE = Singleton(&quot;Call to service with business and 42&quot;),
 //   rightNE = Singleton(
-//     a = &quot;Service returned: userId: 0; companies: List(Raven Enterprises)&quot;
+//     &quot;Service returned: userId: 0; companies: List(Raven Enterprises)&quot;
 //   )
 // )
 // result: ServiceResult = ServiceResult(

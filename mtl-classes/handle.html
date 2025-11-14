@@ -114,14 +114,14 @@
     <li class="level1 nav-leaf"><a href="../design.html">cats-mtl Design</a></li>
     <li class="level1 nav-leaf"><a href="../contributing.html">Contributing</a></li>
     <li class="level1 nav-header">mtl-classes</li>
-    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
-    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
     <li class="level2 nav-leaf"><a href="ask.html">Ask</a></li>
-    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
-    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
-    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
-    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
     <li class="level2 active nav-leaf"><a href="#">Handle</a></li>
+    <li class="level2 nav-leaf"><a href="raise.html">Raise</a></li>
+    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
+    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
+    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
   </ul>
 
 </nav>
@@ -173,11 +173,9 @@
 }
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">err</span><span> = </span><span class="identifier">notRecovered</span><span>[</span><span class="type-name">Either</span><span>[</span><span class="type-name">String</span><span>, *]]
-</span><span class="comment">// err: Either[String, Boolean] = Left(
-//   value = &quot;&#39;foo&#39; could not be parsed as a number&quot;
-// )
+</span><span class="comment">// err: Either[String, Boolean] = Left(&quot;&#39;foo&#39; could not be parsed as a number&quot;)
 </span><span class="keyword">val</span><span> </span><span class="identifier">result</span><span> = </span><span class="identifier">recovered</span><span>[</span><span class="type-name">Either</span><span>[</span><span class="type-name">String</span><span>, *]]
-</span><span class="comment">// result: Either[String, Boolean] = Right(value = false)</span></code></pre>
+</span><span class="comment">// result: Either[String, Boolean] = Right(false)</span></code></pre>
         
         <h3 id="error-propagation-with-allow-and-rescue" class="section"><a class="anchor-link left" href="#error-propagation-with-allow-and-rescue"><i class="icofont-laika link">&#xef71;</i></a>Error propagation with <code>allow</code> and <code>rescue</code></h3>
         <p>In addition to the traditional <code>raise</code> and <code>handleWith</code> mechanism, <code>Handle</code> supports <code>allow</code> and <code>rescue</code> functions which provides a concise, intuitive and performant way to raise and handle domain-specific errors, with syntax inspired by <code>try/catch</code> blocks.</p>
@@ -233,7 +231,7 @@
     </span><span class="keyword">case</span><span> </span><span class="type-name">DomainError</span><span>.</span><span class="type-name">Failed</span><span> =&gt; </span><span class="type-name">Either</span><span>.</span><span class="identifier">right</span><span>(</span><span class="string-literal">&quot;Handled Failed&quot;</span><span>)
     </span><span class="keyword">case</span><span> </span><span class="type-name">DomainError</span><span>.</span><span class="type-name">Derped</span><span> =&gt; </span><span class="type-name">Either</span><span>.</span><span class="identifier">right</span><span>(</span><span class="string-literal">&quot;Handled Derped&quot;</span><span>)
   }
-</span><span class="comment">// submarine: Either[Throwable, String] = Right(value = &quot;Handled Failed&quot;)</span></code></pre>
+</span><span class="comment">// submarine: Either[Throwable, String] = Right(&quot;Handled Failed&quot;)</span></code></pre>
           </div>
         </div>
         <p>Notice that <code>DomainError</code> is a regular ADT (algebraic data type) and does not extend <code>Exception</code>. With <code>allow</code> (<code>allowF</code> in Scala 2) and <code>rescue</code>, you can raise and handle errors of your own types—not just exceptions—using syntax that feels like familiar exception handling, but in a purely functional and type-safe way.</p>

@@ -114,14 +114,14 @@
     <li class="level1 nav-leaf"><a href="../design.html">cats-mtl Design</a></li>
     <li class="level1 nav-leaf"><a href="../contributing.html">Contributing</a></li>
     <li class="level1 nav-header">mtl-classes</li>
-    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
-    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
     <li class="level2 nav-leaf"><a href="ask.html">Ask</a></li>
-    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
-    <li class="level2 active nav-leaf"><a href="#">Raise</a></li>
-    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
-    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="chronicle.html">Chronicle</a></li>
     <li class="level2 nav-leaf"><a href="handle.html">Handle</a></li>
+    <li class="level2 active nav-leaf"><a href="#">Raise</a></li>
+    <li class="level2 nav-leaf"><a href="local.html">Local</a></li>
+    <li class="level2 nav-leaf"><a href="stateful.html">Stateful</a></li>
+    <li class="level2 nav-leaf"><a href="listen.html">Listen</a></li>
+    <li class="level2 nav-leaf"><a href="tell.html">Tell</a></li>
   </ul>
 
 </nav>
@@ -162,10 +162,10 @@
 }
 
 </span><span class="keyword">val</span><span> </span><span class="identifier">valid</span><span> = </span><span class="identifier">parseNumber</span><span>[</span><span class="type-name">Either</span><span>[</span><span class="type-name">String</span><span>, *]](</span><span class="string-literal">&quot;123&quot;</span><span>)
-</span><span class="comment">// valid: Either[String, Int] = Right(value = 123)
+</span><span class="comment">// valid: Either[String, Int] = Right(123)
 </span><span class="keyword">val</span><span> </span><span class="identifier">invalid</span><span> = </span><span class="identifier">parseNumber</span><span>[</span><span class="type-name">Either</span><span>[</span><span class="type-name">String</span><span>, *]](</span><span class="string-literal">&quot;123abc&quot;</span><span>)
 </span><span class="comment">// invalid: Either[String, Int] = Left(
-//   value = &quot;&#39;123abc&#39; could not be parsed as a number&quot;
+//   &quot;&#39;123abc&#39; could not be parsed as a number&quot;
 // )</span></code></pre>
 
         
