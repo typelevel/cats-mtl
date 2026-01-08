@@ -92,6 +92,36 @@ class HandleTests extends BaseSuite {
     assert(test.value.value.toOption == Some("third1"))
   }
 
+  test("attempt - return Either[E, A]") {
+    sealed trait Error extends Product with Serializable
+
+    object Error {
+      case object First extends Error
+      case object Second extends Error
+      case object Third extends Error
+    }
+
+    val success =
+      Handle.allowF[F, Error](_ => EitherT.pure("all good")).attempt
+
+    val failure =
+      Handle.allowF[F, Error](implicit h => Error.Second.raise.as("nope")).attempt
+
+    assert(success.value.value == Right(Right("all good")))
+    assert(failure.value.value == Right(Left(Error.Second)))
+  }
+
+  test("attempt - propagate unhandled exceptions") {
+    sealed trait Error extends Product with Serializable
+
+    val exception = new RuntimeException("oops")
+
+    val test =
+      Handle.allowF[F, Error](_ => EitherT.leftT[Eval, Unit](exception)).attempt
+
+    assert(test.value.value == Left(exception))
+  }
+
   {
     final case class Error(value: Int)
 
