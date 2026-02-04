@@ -28,3 +28,4 @@ trait AllSyntax
     with HandleSyntax
     with ChronicleSyntax
     with OptionSyntax
+    with EitherSyntax
