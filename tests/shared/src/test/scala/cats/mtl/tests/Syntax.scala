@@ -78,8 +78,12 @@ final class Syntax extends BaseSuite {
           raise: Raise[F, Foo]): Unit = {
 
         val _ = (
+          // cats.mtl.syntax.option.*
           Some("abc").liftTo[F](Bar(123)): F[String],
-          Some(Bar(456)).raiseTo[F]: F[Unit]
+          Some(Bar(456)).raiseTo[F]: F[Unit],
+          // cats.mtl.syntax.either.*
+          Left[Bar, String](Bar(789)).liftTo[F]: F[String],
+          Right[Bar, String]("def").liftTo[F]: F[String]
         )
       }
 
