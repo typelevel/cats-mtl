@@ -70,6 +70,20 @@ final class Syntax extends BaseSuite {
         bar[F] *> Bar(42).raise
 
       val _ = foo[Either[Foo, *]]
+
+      def fooWithApplicativeError[F[_]](implicit
+          // `Applicative` is required by `liftTo`.
+          // `ApplicativeError` is used to enforce checks for non-ambiguity.
+          F: ApplicativeError[F, Foo],
+          raise: Raise[F, Foo]): Unit = {
+
+        val _ = (
+          Some("abc").liftTo[F](Bar(123)): F[String],
+          Some(Bar(456)).raiseTo[F]: F[Unit]
+        )
+      }
+
+      fooWithApplicativeError[Either[Foo, *]]
     }
 
     test("Handle") {

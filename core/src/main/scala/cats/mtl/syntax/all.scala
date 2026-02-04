@@ -27,3 +27,4 @@ trait AllSyntax
     with TellSyntax
     with HandleSyntax
     with ChronicleSyntax
+    with OptionSyntax
