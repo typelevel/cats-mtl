@@ -17,6 +17,10 @@
 package cats
 package mtl
 
+import cats.syntax.applicative.*
+import cats.syntax.either.*
+import cats.syntax.functor.*
+
 private[mtl] trait HandleCrossCompat:
 
   inline def allow[E]: AdHocSyntaxWired[E] =
@@ -34,6 +38,13 @@ private final class InnerWired[F[_], E, A](body: Handle[F, E] => F[A]) extends A
     val Marker = new AnyRef
 
     inner(body(InnerHandle(Marker)), f, Marker)
+
+  inline def attempt(using ApplicativeThrow[F]): F[Either[E, A]] =
+    val Marker = new AnyRef
+    inner[F, E, Either[E, A]](
+      body(InnerHandle(Marker)).map(_.asRight),
+      _.asLeft.pure[F],
+      Marker)
 
 private inline def inner[F[_], E, A](inline fb: F[A], inline f: E => F[A], Marker: AnyRef)(
     using ApplicativeThrow[F]): F[A] =

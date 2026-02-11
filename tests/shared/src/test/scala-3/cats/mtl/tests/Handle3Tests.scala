@@ -72,3 +72,33 @@ class Handle3Tests extends munit.FunSuite:
         case Error1.Third => "third1".pure[F]
         case Error2.Fourth => "fourth1".pure[F]
     assert.equals(test.value.value.toOption, Some("third1"))
+
+  test("attempt - return Either[E, A]"):
+    enum Error:
+      case First, Second, Third
+
+    val success: F[Either[Error, String]] =
+      allow[Error]:
+        EitherT.rightT[Eval, Throwable]("all good")
+      .attempt
+
+    val failure =
+      allow[Error]:
+        Error.Second.raise[F, String].as("nope")
+      .attempt
+
+    assert(success.value.value == Right(Right("all good")))
+    assert(failure.value.value == Right(Left(Error.Second)))
+
+  test("attempt - propagate unhandled exceptions"):
+    enum Error:
+      case First, Second, Third
+
+    val exception = new RuntimeException("oops")
+
+    val test =
+      allow[Error]:
+        EitherT.leftT[Eval, Unit](exception)
+      .attempt
+
+    assert(test.value.value == Left(exception))
