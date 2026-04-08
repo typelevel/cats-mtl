@@ -11,7 +11,7 @@ ThisBuild / developers := List(
   tlGitHubDev("edmundnoble", "Edmund Noble")
 )
 
-val Scala213 = "2.13.18"
+val Scala213 = "3.8.1"
 
 ThisBuild / crossScalaVersions := Seq("3.3.6", "2.12.21", Scala213)
 ThisBuild / tlVersionIntroduced := Map("3" -> "1.2.1")
