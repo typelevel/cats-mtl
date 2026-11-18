@@ -84,7 +84,7 @@ lazy val docs = project
     scalaVersion := "3.3.4",
     tlFatalWarnings := false,
     laikaConfig ~= {
-      _.withConfigValue(
+      _.withRawContent.withConfigValue(
         Selections(
           SelectionConfig(
             "scala-version",
